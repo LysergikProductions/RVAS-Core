@@ -5,6 +5,12 @@
 // Internal use only. Do not change or you'll break the entire thing.
 config.version = 22
 
+// remove less technical but otherwise useful console output
+devesp = false
+
+// verbose console output
+debug = true
+
 // ------------------------ //
 // --- MOVEMENT PATCHES --- //
 // ------------------------ //
@@ -174,6 +180,3 @@ misc.survival = true
 
 // Enable or disable the prank /kit command. false = disabled true = enabled [default]
 funny.kit = false
-
-// Enable EXTREMELY LOUD debugging. false = disabled true = enabled
-debug = false

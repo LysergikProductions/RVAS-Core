@@ -23,7 +23,7 @@ public void onKill(PlayerDeathEvent e) {
 
 	//e.setDeathMessage(ChatColor.RED + killed + " has been slain by " + killer);
 	
-	if (Config.getValue("debug").equals("true")) {
+	if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
 		if (killed != null) {
 			System.out.println("[core.events.pvp] "+killer+" killed "+killed+" from "+killerLoc);
 			System.out.println("[core.events.pvp] Incrementing killTotal for "+killer);
