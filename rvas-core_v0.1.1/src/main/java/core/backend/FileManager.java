@@ -75,8 +75,8 @@ public class FileManager {
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
 		
-		Files.readAllLines(killstats_user_database.toPath()).forEach(val ->
-		PlayerMeta.KillStats.put(UUID.fromString(val.split(":")[0]), Integer.parseInt(val.split(":")[1]))
-		);
+		//Files.readAllLines(killstats_user_database.toPath()).forEach(val ->
+		//PlayerMeta.KillStats.put(UUID.fromString(val.split(":")[0]), Integer.parseInt(val.split(":")[1]))
+		//);
 	}
 }

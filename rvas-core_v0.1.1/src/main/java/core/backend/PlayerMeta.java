@@ -265,19 +265,19 @@ public class PlayerMeta
 
 	// --- PVP -- //
 	
-	public static void incKillTotal(Player p, int inc) {
+	public static void incKillTotal(Player p, double inc) {
 		if (KillStats.containsKey(p.getUniqueId())) {
-			int k = KillStats.get("killstats");
+			double k = KillStats.get("killstats");
 			k += inc;
 			KillStats.put(p.getUniqueId(), k);
 		} else {
-			KillStats.put(p.getUniqueId(), 0);
+			KillStats.put(p.getUniqueId(), 0.0);
 		}
 	}
 	
-	public static double getKills(OfflinePlayer p) {
-		return (KillStats.containsKey(p.getUniqueId())) ? KillStats.get(p.getUniqueId()) : 0;
-	}
+	//public static double getKills(OfflinePlayer p) {
+	//	return (KillStats.containsKey(p.getUniqueId())) ? KillStats.get(p.getUniqueId()) : 0;
+	//}
 	
 	//public static void writeKillStats() throws IOException {
 	//	List<String> list = new ArrayList();
