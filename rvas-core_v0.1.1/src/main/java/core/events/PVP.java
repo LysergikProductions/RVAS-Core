@@ -39,7 +39,7 @@ public class PVP implements Listener {
 			}
 		
 			//e.setDeathMessage(ChatColor.RED + your text here);
-			PlayerMeta.incKillTotal(killer, 1.0);
+			PlayerMeta.incKillTotal(killer, 1);
 			
 			if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
 				if (killed != null) {

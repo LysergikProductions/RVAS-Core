@@ -284,13 +284,10 @@ public class PlayerMeta {
 		return (KillStats.containsKey(p.getUniqueId())) ? KillStats.get(p.getUniqueId()) : 0;
 	}
 	
-	public static void writeKillStats() throws IOException {
-		List<String> list = new ArrayList();
-	
-		KillStats.keySet().forEach(user -> list.add(user.toString() + ":" + Math.rint(KillStats.get(user))));
-	
-		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
-	}
+	// set KillStats.db's structure to uuid | int kills and save data to database accordingly
+//	public static void writeKillStats(UUID id, int totalKills) throws IOException {
+//		KillStats.setString(id, name)
+//	}
 	
 	// --- OTHER -- //
 
