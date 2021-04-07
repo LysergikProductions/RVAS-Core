@@ -32,22 +32,24 @@ public class Main extends JavaPlugin implements Listener {
 
 		instance = this;
 
+		System.out.println("[core.main] Initializing RVAS-core");
+		
 		// Required files load
-		System.out.println("[core] Creating required files if they do not exist...");
+		System.out.println("[core.main] Creating required files if they do not exist...");
 		try {
 			FileManager.setup();
 		} catch (IOException e) {
-			System.out.println("[core] An error occured creating the necessary files.");
+			System.out.println("[core.main] An error occured creating the necessary files.");
 		}
 
 		// Load required files
-		System.out.println("[core] Loading files..");
+		System.out.println("[core.main] Loading files..");
 		try {
 			PlayerMeta.loadDonators();
 			PlayerMeta.loadMuted();
 			PlayerMeta.loadLagfags();
 		} catch (IOException e) {
-			System.out.println("[core] An error occured loading files.");
+			System.out.println("[core.main] An error occured loading files.");
 		}
 
 		// Load timers
@@ -126,13 +128,13 @@ public class Main extends JavaPlugin implements Listener {
 		NotificationHandler = new Notifications();
 		getServer().getPluginManager().registerEvents(NotificationHandler, this);
 
-		System.out.println("[core] Finished loading.");
+		System.out.println("[core.main] Finished loading.");
 	}
 
 	@Override
 	public void onDisable()
 	{
-		System.out.println("[core] Saving files...");
+		System.out.println("[core.main] Saving files...");
 		try
 		{
 			PlayerMeta.saveDonators();
@@ -141,7 +143,7 @@ public class Main extends JavaPlugin implements Listener {
 			PlayerMeta.writePlaytime();
 		} catch (IOException ex)
 		{
-			System.out.println("[core] Failed to save one or more files.");
+			System.out.println("[core.main] Failed to save one or more files.");
 		}
 	}
 }

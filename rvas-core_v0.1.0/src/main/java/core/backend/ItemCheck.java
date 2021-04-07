@@ -49,10 +49,10 @@ public class ItemCheck {
 		
 		if(Config.getValue("debug").equals("true")) {
 			if(player != null) {
-				System.out.println("[core] CHECK: "+trigger+", "+item.getType().toString()+", "+player.getName()+", ("+player.getLocation().getX()+", "+player.getLocation().getY()+", "+player.getLocation().getZ()+")");
+				System.out.println("[core.backend.itemcheck] CHECK: "+trigger+", "+item.getType().toString()+", "+player.getName()+", ("+player.getLocation().getX()+", "+player.getLocation().getY()+", "+player.getLocation().getZ()+")");
 			}
 			else {
-				System.out.println("[core] CHECK: "+trigger+", "+item.getType().toString()+", NON-PLAYER");
+				System.out.println("[core.backend] CHECK: "+trigger+", "+item.getType().toString()+", NON-PLAYER");
 			}
 		}
 		

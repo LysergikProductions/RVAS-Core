@@ -130,13 +130,13 @@ public class Connection implements Listener {
 		if (!done) {
 			try {
 				allMotds = new ArrayList<String>(Arrays.asList(motds));
-				System.out.println("[core] Loading " + motds.length + " custom MOTDs...");
+				System.out.println("[core.events.connection] Loading " + motds.length + " custom MOTDs...");
 				allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
 			} catch (IOException e1) {
 				allMotds = new ArrayList<String>(Arrays.asList(motds));
 			}
 			done = true;
-			System.out.println("[core] Loaded " + allMotds.size() + " MOTDs");
+			System.out.println("[core.events.connection] Loaded " + allMotds.size() + " MOTDs");
 		}
 		int rnd = r.nextInt(allMotds.size());
 		String tps = new DecimalFormat("#.##").format(LagProcessor.getTPS());

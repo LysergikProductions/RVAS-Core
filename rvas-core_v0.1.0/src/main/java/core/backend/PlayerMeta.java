@@ -55,7 +55,7 @@ public class PlayerMeta
 			saveDonators();
 		} catch (IOException e)
 		{
-			System.out.println("[core] Failed to save donators.");
+			System.out.println("[core.backend.playermeta] Failed to save donators.");
 		}
 	}
 
@@ -73,7 +73,7 @@ public class PlayerMeta
 			try {
 				saveMuted();
 			} catch (IOException e) {
-				System.out.println("[core] Failed to save mutes.");
+				System.out.println("[core.backend.playermeta] Failed to save mutes.");
 			}
 		}
 		
@@ -124,7 +124,7 @@ public class PlayerMeta
 					saveMuted();
 				} catch (IOException e)
 				{
-					System.out.println("[core] Failed to save mutes.");
+					System.out.println("[core.backend.playermeta] Failed to save mutes.");
 				}
 			}
 			Chat.violationLevels.remove(uuid);
@@ -141,7 +141,7 @@ public class PlayerMeta
 			try {
 				saveMuted();
 			} catch (IOException e) {
-				System.out.println("[core] Failed to save mutes.");
+				System.out.println("[core.backend.playermeta] Failed to save mutes.");
 			}
 		}
 		p.spigot().sendMessage(new TextComponent("§7§oYou are now " + muteType + "muted."));
@@ -167,7 +167,7 @@ public class PlayerMeta
 		try {
 			saveLagfags();
 		} catch (IOException e) {
-			System.out.println("[core] Failed to save lagfags.");
+			System.out.println("[core.backend.playermeta] Failed to save laggers.");
 		}
 	}
 

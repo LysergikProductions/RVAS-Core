@@ -146,7 +146,7 @@ public class Move implements Listener {
 					long now = System.currentTimeMillis() / 1000;
 					if (now - lastCacheFlush >= cacheFlushPeriod)
 					{
-						System.out.println("[core] flushing agro chunk caches");
+						System.out.println("[core.events.move] flushing agro chunk caches");
 						playerChunks.clear();
 						lastCacheFlush = now;
 					}
