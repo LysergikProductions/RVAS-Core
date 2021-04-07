@@ -1,0 +1,15 @@
+[
+  {
+    "user": {
+      "type": "player",
+      "name": "sinse420",
+      "uniqueId": "a6b6e3a1-a1ec-4fee-9d6d-f5e495c3e9d7"
+    },
+    "time": 1617761847137,
+    "type": "Sampler",
+    "data": {
+      "type": "url",
+      "value": "https://spark.lucko.me/#Dwj1bvKWbJ"
+    }
+  }
+]
