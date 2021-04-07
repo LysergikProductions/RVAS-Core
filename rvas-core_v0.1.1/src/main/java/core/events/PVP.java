@@ -34,6 +34,6 @@ public class PVP implements Listener {
 				System.out.println("[core] "+killer+" killed "+killed+" from "+killerLoc);
 			}
 		}
-		PlayerMeta.incKillTotal(e.getEntity().getKiller());
+		PlayerMeta.incKillTotal(e.getEntity().getKiller(), 1);
 	}
 }
