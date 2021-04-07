@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import org.bukkit.event.player.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.entity.EntityResurrectEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+//import org.bukkit.event.entity.PlayerQuitEvent;
+//import org.bukkit.event.entity.EntityResurrectEvent;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
@@ -34,8 +34,6 @@ public class PVP implements Listener {
 				System.out.println("[core] "+killer+" killed "+killed+" from "+killerLoc);
 			}
 		}
-		if (killed && killer != null) {
-			PlayerMeta.incKillTotal(e.getEntity().getKiller());
-		}
+		PlayerMeta.incKillTotal(e.getEntity().getKiller());
 	}
 }

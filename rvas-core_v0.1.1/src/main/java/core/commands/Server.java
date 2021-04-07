@@ -24,7 +24,7 @@ public class Server implements CommandExecutor {
 				"§c========== GENERAL ==========", "§cServer Uptime:§7 " + Utilities.calculateTime(ServerMeta.getUptime()),
 				"§cCurrent Population:§7 " + Bukkit.getOnlinePlayers().size(),
 				"§cCurrent TPS:§7 " + new DecimalFormat("#.##").format(LagProcessor.getTPS()),
-				"§cCurrent Speed Limit:§7 " + (LagProcessor.getTPS() <= 15 ? "36" : "48") + " blocks per second",
+				"§cCurrent Speed Limit:§7 " + (LagProcessor.getTPS() <= 15 ? "36" : "96") + " blocks per second",
 				"§cSpeed Limit Kicks:§7 " + SpeedLimit.totalKicks,
 				"§cAnti-Cheat Enabled: §7" + (LagProcessor.getTPS() <= 10 ? "True" : "False"),
 				"§c========== PLAYER ==========", "§cUnique Joins (§eSince Map Creation§c):§7 " + Bukkit.getOfflinePlayers().length,

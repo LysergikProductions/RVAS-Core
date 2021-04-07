@@ -2,7 +2,7 @@ package core.backend;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import core.events.Chat;
-import core.events.PVP;
+//import core.events.PVP;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -265,23 +265,27 @@ public class PlayerMeta
 
 	// --- PVP -- //
 	
-	public static void incKillTotal(Player p) {
+	public static void incKillTotal(Player p, double inc) {
 		if (KillStats.containsKey(p.getUniqueId())) {
-			double value = KillStats.getDouble("killTotal");
-			value += 1;
-			value.put("killTotal", kills);
+			double value = KillStats.get("killTotal");
+			value += inc;
+			value.put("killTotal", value);
 		} else {
 			value.put("killTotal", 0);
 		}
 	}
 	
-	public static void writeKillStats() throws IOException {
-		List<String> list = new ArrayList();
-
-		KillStats.keySet().forEach(user -> list.add(user.toString() + ":" + Math.rint(KillStats.get(user))));
-
-		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
+	public static double getKills(OfflinePlayer p) {
+		return (KillStats.containsKey(p.getUniqueId())) ? KillStats.get(p.getUniqueId()) : 0;
 	}
+	
+	//public static void writeKillStats() throws IOException {
+	//	List<String> list = new ArrayList();
+	//
+	//	KillStats.keySet().forEach(user -> list.add(user.toString() + ":" + Math.rint(KillStats.get(user))));
+	//
+	//	Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
+	//}
 	
 	// --- OTHER -- //
 

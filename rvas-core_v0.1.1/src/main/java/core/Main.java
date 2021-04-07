@@ -142,7 +142,7 @@ public class Main extends JavaPlugin implements Listener {
 			PlayerMeta.saveMuted();
 			PlayerMeta.saveLagfags();
 			PlayerMeta.writePlaytime();
-			PVP.writeKillStats();
+			//PVP.writeKillStats();
 		} catch (IOException ex)
 		{
 			System.out.println("[core.main] Failed to save one or more files.");
