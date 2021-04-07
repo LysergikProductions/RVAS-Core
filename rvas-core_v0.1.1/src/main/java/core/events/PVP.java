@@ -26,7 +26,7 @@ public void onKill(PlayerDeathEvent e) {
 	
 	if(Config.getValue("debug").equals("true")) {
 		if(player != null) {
-			System.out.println("[core.backend.pvp] "+killed+" slain by "+killer+" near "+killer.getLocation().getX()+", "+player.getLocation().getY()+", "+player.getLocation().getZ());
+			System.out.println("[core.backend.pvp] "+killed+" slain by "+killer+" near "+killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ());
 		}
 	}
 }
