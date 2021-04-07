@@ -34,6 +34,12 @@ public class Stats implements CommandExecutor {
 					Main.Top = Bukkit.getOfflinePlayer(u);
 				}
 			}
+			for (UUID u : PlayerMeta.KillStats.keySet()) {
+				if (PlayerMeta.Playtimes.get(u) > largest) {
+					largest = PlayerMeta.Playtimes.get(u);
+					Main.Top = Bukkit.getOfflinePlayer(u);
+				}
+			}
 		}
 
 		if (args.length != 0) {
@@ -44,12 +50,14 @@ public class Stats implements CommandExecutor {
 					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 					String firstPlayed = sdf.format(date);
 					String lastPlayed = sdf.format(new Date(largestPlayer.getLastPlayed()));
-					Arrays.asList("§6--- §6§l " + largestPlayer.getName() + "§r§6's Statistics ---",
+					Arrays.asList(
+							"§6--- §6§l " + largestPlayer.getName() + "§r§6's Statistics ---",
 							"§6Joined: §6§l" + firstPlayed, "§6Last seen: §6§l" + lastPlayed,
 							"§6Ranking: §6§l#" + PlayerMeta.getRank(largestPlayer),
-							"§6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)))
-							.forEach(s -> player.spigot().sendMessage(
-							new TextComponent(s)));
+							"§6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)),
+							"§6Total Kills: " + PlayerMeta.getKills(player)
+							)
+							.forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
 					return true;
 				case "leaderboard":
 					player.spigot().sendMessage(new TextComponent("§6--- §6§lTop Five Players ---"));
@@ -101,14 +109,16 @@ public class Stats implements CommandExecutor {
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 			String firstPlayed = sdf.format(date);
 			String lastPlayed = sdf.format(new Date(player.getLastPlayed()));
-			Arrays.asList("§6--- §6§l " + player.getName() + "§r§6's Statistics ---",
+			Arrays.asList(
+					"§6--- §6§l " + player.getName() + "§r§6's Statistics ---",
 					"§6Joined: §6§l" + firstPlayed,
 					"§6Last seen: §6§l" + lastPlayed,
 					"§6Ranking: §6§l#" + PlayerMeta.getRank(player),
-					"§6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(player)))
+					"§6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(player)),
+					"§6Total Kills: " + PlayerMeta.getKills(player)
+					)
 					.forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
 			return true;
 		}
 	}
-
 }

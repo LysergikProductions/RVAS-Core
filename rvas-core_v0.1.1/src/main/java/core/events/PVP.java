@@ -22,8 +22,17 @@ public class PVP implements Listener {
 		Player killer = killed.getKiller();
 		
 		String killedName = killed.getName();
-		String killerName = killer.getName();
-		String killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
+		String killerName = "";
+		String killerLoc = "";
+		
+		if (killer != null) {
+			killerName = killer.getName();
+			killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
+		} else {
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("[core.events.pvp] killer = null");
+			}
+		}
 	
 		//e.setDeathMessage(ChatColor.RED + your text here);
 		
