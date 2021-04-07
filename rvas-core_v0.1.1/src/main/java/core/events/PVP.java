@@ -30,8 +30,9 @@ public void onKill(PlayerDeathEvent e) {
 		if(player != null) {
 			System.out.println("[core.backend.pvp] "+killed+" slain by "+killer+" near "+killerLoc);
 		}
-		else {
-			System.out.println("[core] "+killed+" slain by "+killer+" near "+killerLoc);
+	} else {
+		if(player != null) {
+			System.out.println("[core] "+killed+" slain by "+killer+" from "+killerLoc);
 		}
 	}
 }
