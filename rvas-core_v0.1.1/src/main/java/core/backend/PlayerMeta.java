@@ -2,6 +2,7 @@ package core.backend;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import core.events.Chat;
+import core.events.PVP;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,7 @@ public class PlayerMeta
 	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<UUID, Double>();
 
 	public static HashMap<UUID, Double> Playtimes = new HashMap<UUID, Double>();
+	public static HashMap<UUID, Double> KillStats = new HashMap<UUID, Double>();
 
 	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
 
@@ -265,11 +267,11 @@ public class PlayerMeta
 	
 	public static void incKillTotal(Player p) {
 		if (KillStats.containsKey(p.getUniqueId())) {
-			double kills = KillStats.getDouble("killTotal");
-			kills += 1;
-			KillStats.put("killTotal", kills);
+			double value = KillStats.getDouble("killTotal");
+			value += 1;
+			value.put("killTotal", kills);
 		} else {
-			KillStats.put("killTotal", 0);
+			value.put("killTotal", 0);
 		}
 	}
 	

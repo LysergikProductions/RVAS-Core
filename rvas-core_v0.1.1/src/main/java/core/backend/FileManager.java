@@ -58,9 +58,8 @@ public class FileManager {
 		}
 
 		if (!lagfag_user_database.exists()) lagfag_user_database.createNewFile();
-
-
 		if (!playtime_user_database.exists()) playtime_user_database.createNewFile();
+		if (!killstats_user_database.exists()) killstats_user_database.createNewFile();
 
 		Config.load();
 
@@ -74,6 +73,10 @@ public class FileManager {
 
 		Files.readAllLines(playtime_user_database.toPath()).forEach(val ->
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
+		);
+		
+		Files.readAllLines(killstats_user_database.toPath()).forEach(val ->
+		PlayerMeta.KillStats.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
 	}
 }
