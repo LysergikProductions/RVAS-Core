@@ -261,6 +261,26 @@ public class PlayerMeta
 		Files.write(Paths.get("plugins/core/playtime.db"), String.join("\n", list).getBytes());
 	}
 
+	// --- PVP -- //
+	
+	public static void incKillTotal(Player p) {
+		if (KillStats.containsKey(p.getUniqueId())) {
+			double kills = KillStats.getDouble("killTotal");
+			kills += 1;
+			KillStats.put("killTotal", kills);
+		} else {
+			KillStats.put("killTotal", 0);
+		}
+	}
+	
+	public static void writeKillStats() throws IOException {
+		List<String> list = new ArrayList();
+
+		KillStats.keySet().forEach(user -> list.add(user.toString() + ":" + Math.rint(KillStats.get(user))));
+
+		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
+	}
+	
 	// --- OTHER -- //
 
 	public enum MuteType {

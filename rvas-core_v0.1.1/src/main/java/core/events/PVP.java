@@ -2,18 +2,21 @@ package core.events;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Chunk;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Container;
-import org.bukkit.block.CreatureSpawner;
+//import org.bukkit.Chunk;
+//import org.bukkit.GameMode;
+//import org.bukkit.Material;
+//import org.bukkit.block.Block;
+//import org.bukkit.block.Container;
+//import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
 import org.bukkit.event.player.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.entity.EntityResurrectEvent;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
@@ -26,13 +29,17 @@ public void onKill(PlayerDeathEvent e) {
 
 	//e.setDeathMessage(ChatColor.RED + killed + " has been slain by " + killer);
 	
-	if(Config.getValue("debug").equals("true")) {
-		if(player != null) {
+	if (Config.getValue("debug").equals("true")) {
+		if (killed != null) {
 			System.out.println("[core.backend.pvp] "+killed+" slain by "+killer+" near "+killerLoc);
+			System.out.println("[core.backend.pvp] Incrementing killTotal for "+killer);
 		}
 	} else {
-		if(player != null) {
+		if (killed != null) {
 			System.out.println("[core] "+killed+" slain by "+killer+" from "+killerLoc);
 		}
+	}
+	if (killed && killer != null) {
+		incKillTotal(e.getEntity().getKiller())
 	}
 }

@@ -26,6 +26,7 @@ public class FileManager {
 		File lagfag_user_database = new File(plugin_work_path + "lagfag.db");
 		File playtime_user_database = new File(plugin_work_path + "playtime.db");
 		File stronghold_portals = new File(plugin_work_path + "strong-portals.db");
+		File kill_stats = new File(plugin_work_path + "killstats.db");
 
 		//
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
@@ -35,6 +36,7 @@ public class FileManager {
 		if (!used_donor_codes.exists()) used_donor_codes.createNewFile();
 		if (!muted_user_database.exists()) muted_user_database.createNewFile();
 		if (!stronghold_portals.exists()) stronghold_portals.createNewFile();
+		if (!kill_stats.exists()) kill_stats.createNewFile();
 
 		if (!server_statistics_list.exists()) {
 			server_statistics_list.createNewFile();
