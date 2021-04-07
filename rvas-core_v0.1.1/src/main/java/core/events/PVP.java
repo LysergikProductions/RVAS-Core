@@ -22,11 +22,16 @@ import core.backend.PlayerMeta;
 public void onKill(PlayerDeathEvent e) {
 	String killed = e.getEntity().getName();
 	String killer = e.getEntity().getKiller().getName();
+	String killerLoc = e.getEntity().getKiller().getLocation().getX()+", "+e.getEntity().getKiller().getLocation().getY()+", "+e.getEntity().getKiller().getLocation().getZ()
+
 	//e.setDeathMessage(ChatColor.RED + killed + " has been slain by " + killer);
 	
 	if(Config.getValue("debug").equals("true")) {
 		if(player != null) {
-			System.out.println("[core.backend.pvp] "+killed+" slain by "+killer+" near "+killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ());
+			System.out.println("[core.backend.pvp] "+killed+" slain by "+killer+" near "+killerLoc);
+		}
+		else {
+			System.out.println("[core] "+killed+" slain by "+killer+" near "+killerLoc);
 		}
 	}
 }
