@@ -33,16 +33,14 @@ public class Main extends JavaPlugin implements Listener {
 		instance = this;
 
 		System.out.println("[core.main] Initializing RVAS-core");
-		
-		// Required files load
 		System.out.println("[core.main] Creating required files if they do not exist...");
+		
 		try {
 			FileManager.setup();
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured creating the necessary files.");
 		}
 
-		// Load required files
 		System.out.println("[core.main] Loading files..");
 		try {
 			PlayerMeta.loadDonators();
@@ -69,25 +67,25 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new SpeedLimit(), this);
 
 		// Disable Wither spawn sound
-		ProtocolLibrary.getProtocolManager()
-				.addPacketListener(new PacketAdapter(this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT)
-				{
-					@Override
-					public void onPacketSending(PacketEvent event)
-					{
-						PacketContainer packetContainer = event.getPacket();
-						if (packetContainer.getIntegers().read(0) == 1023)
-						{
-							packetContainer.getBooleans().write(0, false);
-						}
-					}
-				});
+		//ProtocolLibrary.getProtocolManager()
+		//		.addPacketListener(new PacketAdapter(this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT)
+		//		{
+		//			@Override
+		//			public void onPacketSending(PacketEvent event)
+		//			{
+		//				PacketContainer packetContainer = event.getPacket();
+		//				if (packetContainer.getIntegers().read(0) == 1023)
+		//				{
+		//					packetContainer.getBooleans().write(0, false);
+		//				}
+		//			}
+		//		});
 
 		// Define banned & special blocks
 		// Banned materials.
-		ItemCheck.Banned.addAll(Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.COMMAND_BLOCK,
+		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
-				Material.END_PORTAL_FRAME, Material.SPAWNER, Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK));
+				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK));
 		// Items that need to be specially rebuilt.
 		ItemCheck.Special.addAll(Arrays.asList(Material.ENCHANTED_BOOK, Material.POTION, Material.LINGERING_POTION,
 				Material.TIPPED_ARROW, Material.SPLASH_POTION, Material.WRITTEN_BOOK, Material.FILLED_MAP,
