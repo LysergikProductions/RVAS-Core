@@ -25,9 +25,9 @@ public class ItemCheck {
 	public static ArrayList<Material> Banned = new ArrayList<>(), Special = new ArrayList<>(), LegalHeads = new ArrayList<>();
 	{
 		// Banned materials.
-		Banned.addAll(Arrays.asList(Material.BEDROCK, Material.BARRIER, Material.COMMAND_BLOCK,
+		Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
-				Material.END_PORTAL_FRAME, Material.SPAWNER, Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID, Material.FARMLAND));
+				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 		// Items that need to be specially rebuilt.
 		Special.addAll(Arrays.asList(Material.ENCHANTED_BOOK, Material.POTION, Material.LINGERING_POTION,
 			Material.TIPPED_ARROW, Material.SPLASH_POTION, Material.WRITTEN_BOOK, Material.FILLED_MAP,
@@ -155,7 +155,6 @@ public class ItemCheck {
 									}
 								}
 							}
-
 							if (hasConflict) continue;
 						}
 
