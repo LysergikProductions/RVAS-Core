@@ -61,16 +61,16 @@ local.properties
 # Typically, this file would be tracked if it contains build/dependency configurations:
 .project
 
-protocol3/dependency-reduced-pom.xml
+core/dependency-reduced-pom.xml
 
 #intellij stuff
 .idea
 *.iml
 
 #p3 specific
-protocol3/.settings/*
-protocol3/.settings
-protocol3/target
+core/.settings/*
+core/.settings
+core/target
 
 *.class
 
