@@ -18,22 +18,25 @@ import core.backend.PlayerMeta;
 public class PVP implements Listener {
 	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
-		String killed = e.getEntity().getName();
-		String killer = e.getEntity().getKiller().getName();
-		String killerLoc = e.getEntity().getKiller().getLocation().getX()+", "+e.getEntity().getKiller().getLocation().getY()+", "+e.getEntity().getKiller().getLocation().getZ();
+		Player killed = e.getEntity();
+		Player killer = killed.getKiller();
+		
+		String killedName = killed.getName();
+		String killerName = killer.getName();
+		String killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
 	
 		//e.setDeathMessage(ChatColor.RED + killed + " has been slain by " + killer);
 		
 		if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
 			if (killed != null) {
-				System.out.println("[core.events.pvp] "+killer+" killed "+killed+" from "+killerLoc);
-				System.out.println("[core.events.pvp] Incrementing killTotal for "+killer);
+				System.out.println("[core.events.pvp] "+killerName+" killed "+killedName+" from "+killerLoc);
+				System.out.println("[core.events.pvp] Incrementing killTotal for "+killerName);
 			}
 		} else if (Config.getValue("devesp").equals("false")) {
 			if (killed != null) {
-				System.out.println("[core] "+killer+" killed "+killed+" from "+killerLoc);
+				System.out.println("[core] "+killerName+" killed "+killedName+" from "+killerLoc);
 			}
 		}
-		PlayerMeta.incKillTotal(e.getEntity().getKiller(), 1);
+		PlayerMeta.incKillTotal(killer, 1);
 	}
 }

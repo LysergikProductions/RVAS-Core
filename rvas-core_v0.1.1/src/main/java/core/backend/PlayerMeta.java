@@ -265,13 +265,13 @@ public class PlayerMeta
 
 	// --- PVP -- //
 	
-	public static void incKillTotal(Player p, double inc) {
+	public static void incKillTotal(Player p, int inc) {
 		if (KillStats.containsKey(p.getUniqueId())) {
-			double value = KillStats.get("killTotal");
-			value += inc;
-			value.put("killTotal", value);
+			int k = KillStats.get("killstats");
+			k += inc;
+			KillStats.put(p.getUniqueId(), k);
 		} else {
-			value.put("killTotal", 0);
+			KillStats.put(p.getUniqueId(), 0);
 		}
 	}
 	
