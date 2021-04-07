@@ -13,8 +13,8 @@ public class About implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
-		player.spigot().sendMessage(new TextComponent("§7RVAS-core by sinse420. Originally sourced from core.3.1 by d2k11.")); // :)
-		TextComponent message = new TextComponent("§7RVAS-core is §7§lopen source§r§7. You can access the GitHub by clicking this message.");
+		player.spigot().sendMessage(new TextComponent("§7RVAS-core by sinse420. Originally sourced from protocol3 by d2k11.")); // :)
+		TextComponent message = new TextComponent("§7RVAS-core is §7§lopen source§r§7. Access the GitHub by clicking this message.");
 		message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));
 		player.spigot().sendMessage(message);
 		return true;
