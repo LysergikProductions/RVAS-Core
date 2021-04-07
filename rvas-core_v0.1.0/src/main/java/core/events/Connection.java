@@ -116,7 +116,7 @@ public class Connection implements Listener {
 	}
 
 	private String[] motds = {
-			"i'm not high, we're high" , "RIP boiling water, you will be mist" , "we want all vanilla exploits"
+			"i'm not high, we're high" , "RIP boiling water, you will be mist" , "vanilla exploits rejoice!" , "needs more carpet"
 			};
 
 	private Random r = new Random();
@@ -149,6 +149,6 @@ public class Connection implements Listener {
 				e.setMotd("§9rvas test §7| §aopen §7| §9TPS: " + tps);
 			}
 		}
-		e.setMaxPlayers(1);
+		e.setMaxPlayers(20);
 	}
 }
