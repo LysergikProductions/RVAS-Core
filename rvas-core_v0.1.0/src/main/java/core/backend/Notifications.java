@@ -1,4 +1,4 @@
-package protocol3.backend;
+package core.backend;
 
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
@@ -137,5 +137,4 @@ public class Notifications implements Listener {
 			c.createMessage("<" + e.getPlayer().getName() + "> : " + e.getMessage()).subscribe();
 		}
 	}
-
 }

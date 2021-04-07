@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -10,7 +10,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.Arrays;
 
-// OP-only say command.
+// OP-only say command
 
 public class Say implements CommandExecutor
 {

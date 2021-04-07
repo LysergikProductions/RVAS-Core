@@ -1,4 +1,4 @@
-package protocol3.backend;
+package core.backend;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -59,5 +59,4 @@ public class ServerMeta {
 			}
 		}
 	}
-
 }

@@ -1,4 +1,4 @@
-package protocol3.events;
+package core.events;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
-import protocol3.backend.Config;
+import core.backend.Config;
 
 public class LagPrevention implements Listener, Runnable {
 	public static int currentWithers = 0;

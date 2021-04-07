@@ -1,9 +1,9 @@
-package protocol3.tasks;
+package core.tasks;
 
 import java.util.TimerTask;
 
-import protocol3.backend.Scheduler;
-import protocol3.commands.VoteMute;
+import core.backend.Scheduler;
+import core.commands.VoteMute;
 
 // Tps processor
 public class OnTick extends TimerTask {

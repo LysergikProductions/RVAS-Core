@@ -1,4 +1,4 @@
-package protocol3.backend;
+package core.backend;
 
 /* Calculate the exponentially weighted moving average of TPS */
 public class LagProcessor implements Runnable {

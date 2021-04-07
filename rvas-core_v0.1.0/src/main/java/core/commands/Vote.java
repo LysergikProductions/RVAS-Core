@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,8 +7,6 @@ import org.bukkit.command.CommandSender;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-
-// Discord command
 
 public class Vote implements CommandExecutor {
 

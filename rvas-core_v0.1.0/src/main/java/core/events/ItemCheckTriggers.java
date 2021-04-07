@@ -1,4 +1,4 @@
-package protocol3.events;
+package core.events;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Material;
@@ -14,9 +14,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
-import protocol3.backend.Config;
-import protocol3.backend.ItemCheck;
-import protocol3.backend.PlayerMeta;
+import core.backend.Config;
+import core.backend.ItemCheck;
+import core.backend.PlayerMeta;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -123,5 +123,4 @@ public class ItemCheckTriggers implements Listener {
 				return;
 		}
 	}
-
 }

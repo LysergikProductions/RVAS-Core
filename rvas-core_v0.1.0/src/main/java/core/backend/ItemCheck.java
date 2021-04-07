@@ -1,4 +1,4 @@
-package protocol3.backend;
+package core.backend;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,10 +49,10 @@ public class ItemCheck {
 		
 		if(Config.getValue("debug").equals("true")) {
 			if(player != null) {
-				System.out.println("[protocol3] CHECK: "+trigger+", "+item.getType().toString()+", "+player.getName()+", ("+player.getLocation().getX()+", "+player.getLocation().getY()+", "+player.getLocation().getZ()+")");
+				System.out.println("[core] CHECK: "+trigger+", "+item.getType().toString()+", "+player.getName()+", ("+player.getLocation().getX()+", "+player.getLocation().getY()+", "+player.getLocation().getZ()+")");
 			}
 			else {
-				System.out.println("[protocol3] CHECK: "+trigger+", "+item.getType().toString()+", NON-PLAYER");
+				System.out.println("[core] CHECK: "+trigger+", "+item.getType().toString()+", NON-PLAYER");
 			}
 		}
 		
@@ -357,5 +357,4 @@ public class ItemCheck {
 		}
 		return false;
 	}
-
 }

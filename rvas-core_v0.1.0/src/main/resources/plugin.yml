@@ -1,9 +1,9 @@
-main: protocol3.Main
-name: protocol3
-version: 1.0.0
+main: core.Main
+name: core
+version: 0.1.0
 api-version: 1.16
 depend: [ ProtocolLib ]
-author: d2k11
+author: sinse420
 commands:
   kit:
    description: funny command

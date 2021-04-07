@@ -1,4 +1,4 @@
-package protocol3.events;
+package core.events;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -15,10 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import protocol3.backend.Config;
-import protocol3.backend.ItemCheck;
-import protocol3.backend.LruCache;
-import protocol3.backend.PlayerMeta;
+import core.backend.Config;
+import core.backend.ItemCheck;
+import core.backend.LruCache;
+import core.backend.PlayerMeta;
 
 import java.util.*;
 
@@ -146,7 +146,7 @@ public class Move implements Listener {
 					long now = System.currentTimeMillis() / 1000;
 					if (now - lastCacheFlush >= cacheFlushPeriod)
 					{
-						System.out.println("[protocol3] flushing agro chunk caches");
+						System.out.println("[core] flushing agro chunk caches");
 						playerChunks.clear();
 						lastCacheFlush = now;
 					}
@@ -313,5 +313,4 @@ public class Move implements Listener {
 			}
 		}
 	}
-
 }

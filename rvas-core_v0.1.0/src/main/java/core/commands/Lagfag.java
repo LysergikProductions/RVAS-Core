@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,9 +14,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.PlayerMeta;
+import core.backend.PlayerMeta;
 
-// funny command haha
+// Make game unplayable for laggers
 
 public class Lagfag implements CommandExecutor {
 
@@ -38,7 +38,7 @@ public class Lagfag implements CommandExecutor {
 			Player op = (Player) sender;
 			switch (args[0]) {
 				case "cam":
-					Bukkit.getScheduler().runTaskAsynchronously(protocol3.Main.instance, () -> {
+					Bukkit.getScheduler().runTaskAsynchronously(core.Main.instance, () -> {
 						while (true) {
 
 							Player finalOp  = (Player) sender;
@@ -46,7 +46,7 @@ public class Lagfag implements CommandExecutor {
 							players.forEach(p -> {
 								if (p.isOp())
 									return;
-								Bukkit.getScheduler().runTask(protocol3.Main.instance, () -> {
+								Bukkit.getScheduler().runTask(core.Main.instance, () -> {
 									finalOp.setGameMode(GameMode.SPECTATOR);
 									finalOp.teleport(p.getLocation());
 								});

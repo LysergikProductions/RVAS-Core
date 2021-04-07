@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
@@ -6,15 +6,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import protocol3.backend.Config;
-import protocol3.backend.Pair;
-import protocol3.backend.PlayerMeta;
-import protocol3.backend.Utilities;
-import protocol3.events.SpeedLimit;
+import core.backend.Config;
+import core.backend.Pair;
+import core.backend.PlayerMeta;
+import core.backend.Utilities;
+import core.events.SpeedLimit;
 
 import java.io.IOException;
 import java.util.*;
-
 
 public class Admin implements CommandExecutor {
 
@@ -114,5 +113,4 @@ public class Admin implements CommandExecutor {
 		player.spigot().sendMessage(new TextComponent("§csinse420: §7Systems Administrator, Developer, Founder"));
 		return true;
 	}
-
 }

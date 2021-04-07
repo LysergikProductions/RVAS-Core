@@ -1,4 +1,4 @@
-package protocol3.backend;
+package core.backend;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,7 +17,7 @@ public class Config {
 	}
 
 	public static void load() throws IOException {
-		Files.readAllLines(Paths.get("plugins/protocol3/config.txt")).stream()
+		Files.readAllLines(Paths.get("plugins/core/config.txt")).stream()
 				.filter(cases -> !cases.startsWith("//"))
 				.filter(cases -> !(cases.length() == 0)).forEach( val ->
 					_values.put(val.split("=")[0].trim(), val.split("=")[1].trim()));

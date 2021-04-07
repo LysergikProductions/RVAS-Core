@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.Config;
-import protocol3.backend.PlayerMeta;
-import protocol3.backend.PlayerMeta.MuteType;
-
-// Vote mute
+import core.backend.Config;
+import core.backend.PlayerMeta;
+import core.backend.PlayerMeta.MuteType;
 
 public class VoteMute implements CommandExecutor {
 	static HashMap<UUID, Integer> _votes = new HashMap<UUID, Integer>();

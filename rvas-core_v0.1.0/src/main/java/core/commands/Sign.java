@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -20,9 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.ItemCheck;
-
-// Tag command
+import core.backend.ItemCheck;
 
 public class Sign implements CommandExecutor
 {

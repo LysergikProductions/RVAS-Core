@@ -1,4 +1,4 @@
-package protocol3.backend;
+package core.backend;
 
 public class Pair<L,R>
 {
@@ -29,4 +29,3 @@ public class Pair<L,R>
 			this.right.equals(pairo.getRight());
 	}
 }
-

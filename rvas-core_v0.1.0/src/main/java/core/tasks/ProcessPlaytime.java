@@ -1,4 +1,4 @@
-package protocol3.tasks;
+package core.tasks;
 
 import java.util.TimerTask;
 
@@ -6,13 +6,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.LagProcessor;
-import protocol3.backend.PlayerMeta;
-import protocol3.backend.Scheduler;
-import protocol3.backend.ServerMeta;
-import protocol3.backend.Utilities;
-import protocol3.commands.VoteMute;
-import protocol3.events.Chat;
+import core.backend.LagProcessor;
+import core.backend.PlayerMeta;
+import core.backend.Scheduler;
+import core.backend.ServerMeta;
+import core.backend.Utilities;
+import core.commands.VoteMute;
+import core.events.Chat;
 
 // Playtime processor
 public class ProcessPlaytime extends TimerTask {

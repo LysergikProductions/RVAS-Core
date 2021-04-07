@@ -1,5 +1,5 @@
 // ########################################### //
-// ### PROTOCOL3 MASTER CONFIGURATION FILE ### //
+// ### RVAS-core MASTER CONFIGURATION FILE ### //
 // ########################################### //
 
 // Internal use only. Do not change or you'll break the entire thing.
@@ -9,13 +9,14 @@ config.version = 22
 // --- MOVEMENT PATCHES --- //
 // ------------------------ //
 
-// Enable or disable roof protection. false = disabled true = enabled [default]
+// Enable or disable over-roof protection. false = disabled [default] || true = enabled
 movement.block.roof = false
 
-// Enable or disable floor protection. false = disabled true = enabled [default]
+// Enable or disable under-floor protection. false = disabled || true = enabled [default]
 movement.block.floor = true
 
-// Enable or disable illegal placement protection. false = disabled true = enabled [default]
+// Enable or disable illegal placement protection. false = disabled [default] || true = enabled
+// currently potentially bugged
 movement.block.chunkcheck = false
 
 // Solidify the floor of the overworld and nether and the roof of the nether. false = disabled [default] true = enabled
@@ -27,38 +28,38 @@ movement.block.chunkcheck.solidify_bedrock = false
 // --- BLOCK PATCHES --- //
 // --------------------- //
 
-// Disallow illegal block placement. false = disabled true = enabled [default]
+// Disallow illegal block placement. false = disabled [default] ||  true = enabled
 place.illegal = false
 
-// Disallow illegal block placement by OPs. false = disabled true = enabled [default]
+// Disallow illegal block placement by OPs. false = disabled [default] || true = enabled
 place.illegal.ops = false
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //
 // ---------------------------- //
 
-// Enable or disable the entire patch. false = disabled true = enabled [default]
+// Enable or disable the entire patch. false = disabled || true = enabled [default]
 item.illegal = false
 
-// Enable or disable overstacked items. false = disabled true = enabled [default]
+// Enable or disable overstacked items. false = disabled || true = enabled [default]
 item.illegal.stacked = true
 
-// Enable or disable playerheads. false = disabled [default] true = enabled
+// Enable or disable playerheads. false = disabled [default] || true = enabled
 item.illegal.heads = false
 
-// Enable or disable scanning on join. false = disabled true = enabled [default]
+// Enable or disable scanning on join. false = disabled || true = enabled [default]
 item.illegal.onjoin = true
 
-// Enable or disable unbreakable items. false = disabled [default] true = enabled
+// Enable or disable unbreakable items. false = disabled [default] || true = enabled
 item.illegal.unbreakable = false
 
-// Enable or disable exclusive enchants. false = disabled [default] true = enabled
+// Enable or disable exclusive enchants. false = disabled [default] || true = enabled
 item.illegal.exclusive = false
 
-// Enable or disable invalid enchants. false = disabled [default] true = enabled
+// Enable or disable invalid enchants. false = disabled [default] || true = enabled
 item.illegal.invalid = false
 
-// Enable or disable aggressive checks. false = disabled true = enabled [default]
+// Enable or disable aggressive checks. false = disabled || true = enabled [default]
 // Can cause some lag on lower-end servers
 item.illegal.agro = false
 
@@ -77,29 +78,29 @@ item.illegal.agro.flush_period = 3600
 // --- VOTING --- //
 // -------------- //
 
-// Enable or disable vote reward. false = disabled true = enabled [default]
+// Enable or disable vote reward. false = disabled || true = enabled [default]
 vote.enable = true
 
-// Enable or disable manual execution of vote reward. Use for debug only. false = disabled [default] true = enabled
+// Enable or disable manual execution of vote reward. Use for debug only. false = disabled [default] || true = enabled
 vote.debug = false
 
 // Vote reward multiplier. default = 1
 vote.multiplier = 1
 
-// Vote reward also heals player to max health. false = disabled true = enabled [default]
+// Vote reward also heals player to max health. false = disabled || true = enabled [default]
 vote.heal = false
 
 // -------------- //
 // --- MUTING --- //
 // -------------- //
 
-// Enable vote muting. false = disabled true = enabled [default]
+// Enable vote muting. false = disabled || true = enabled [default]
 mute.enabled = true
 
 // Percent of population that needs to vote before a mute is ordered. Default: 40
 mute.pop = 51
 
-// Enable voting by already-muted persons. false = disabled true = enabled [default]
+// Enable voting by already-muted persons. false = disabled || true = enabled [default]
 mute.hypocrisy = true
 
 // ------------ //
@@ -152,10 +153,10 @@ spam.ops = true
 // Force the server IP. true/false. default = false
 motd.force = false
 
-// Server IP to force. string value. default = avas.cc
+// Server IP to force. string value. default = RVAS
 motd.force.name = RVAS
 
-// Discord link. string value. default = https://discord.gg/YugxaGU
+// Discord link. string value. default = tbd
 discord.link = tbd
 
 // ------------ //

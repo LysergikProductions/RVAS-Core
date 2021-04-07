@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -11,7 +11,6 @@ import java.util.Objects;
 
 public class Kill implements CommandExecutor
 {
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof ConsoleCommandSender) && args.length == 0) {

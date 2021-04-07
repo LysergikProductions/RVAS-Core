@@ -1,4 +1,4 @@
-package protocol3.events;
+package core.events;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,12 +17,12 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
-import protocol3.Main;
-import protocol3.backend.Config;
-import protocol3.backend.LagProcessor;
-import protocol3.backend.Pair;
-import protocol3.backend.ServerMeta;
-import protocol3.commands.Admin;
+import core.Main;
+import core.backend.Config;
+import core.backend.LagProcessor;
+import core.backend.Pair;
+import core.backend.ServerMeta;
+import core.commands.Admin;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class SpeedLimit implements Listener

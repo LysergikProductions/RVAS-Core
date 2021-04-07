@@ -1,4 +1,4 @@
-package protocol3.events;
+package core.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -11,10 +11,10 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-import protocol3.backend.*;
-import protocol3.commands.Admin;
-import protocol3.commands.Kit;
-import protocol3.commands.ToggleJoinMessages;
+import core.backend.*;
+import core.commands.Admin;
+import core.commands.Kit;
+import core.commands.ToggleJoinMessages;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Random;
 
 // Connection Events
-// protocol3. ~~DO NOT REDISTRIBUTE!~~ n/a 3/6/2021
+// core. ~~DO NOT REDISTRIBUTE!~~ n/a 3/6/2021
 
 public class Connection implements Listener {
 	
@@ -130,13 +130,13 @@ public class Connection implements Listener {
 		if (!done) {
 			try {
 				allMotds = new ArrayList<String>(Arrays.asList(motds));
-				System.out.println("[protocol3] Loading " + motds.length + " custom MOTDs...");
-				allMotds.addAll(Files.readAllLines(Paths.get("plugins/protocol3/motds.txt")));
+				System.out.println("[core] Loading " + motds.length + " custom MOTDs...");
+				allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
 			} catch (IOException e1) {
 				allMotds = new ArrayList<String>(Arrays.asList(motds));
 			}
 			done = true;
-			System.out.println("[protocol3] Loaded " + allMotds.size() + " MOTDs");
+			System.out.println("[core] Loaded " + allMotds.size() + " MOTDs");
 		}
 		int rnd = r.nextInt(allMotds.size());
 		String tps = new DecimalFormat("#.##").format(LagProcessor.getTPS());

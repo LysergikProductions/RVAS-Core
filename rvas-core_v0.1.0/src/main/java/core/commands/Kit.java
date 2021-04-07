@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.Config;
-import protocol3.backend.PlayerMeta;
+import core.backend.Config;
+import core.backend.PlayerMeta;
 
 // funny command haha
 
@@ -35,5 +35,4 @@ public class Kit implements CommandExecutor {
 			return true;
 		}
 	}
-
 }

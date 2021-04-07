@@ -1,4 +1,4 @@
-package protocol3.events;
+package core.events;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,14 +17,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.Config;
-import protocol3.backend.PlayerMeta;
-import protocol3.backend.ServerMeta;
-import protocol3.backend.PlayerMeta.MuteType;
-import protocol3.commands.Admin;
-
-// Chat Events
-// protocol3. ~~DO NOT REDISTRIBUTE!~~ n/a 3/6/2021
+import core.backend.Config;
+import core.backend.PlayerMeta;
+import core.backend.ServerMeta;
+import core.backend.PlayerMeta.MuteType;
+import core.commands.Admin;
 
 public class Chat implements Listener {
 	// yes dupehand belongs below, it sends a rude message to non-admins if they try to use it

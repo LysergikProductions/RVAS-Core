@@ -1,11 +1,11 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>protocol3</groupId>
+    <groupId>core</groupId>
     <artifactId>p3</artifactId>
     <version>3</version>
     <name>p3</name>
-    <description>AVAS Protocol 3</description>
+    <description>RVAS-core</description>
 
     <repositories>
 
@@ -63,7 +63,7 @@
     </dependencies>
 
     <build>
-        <finalName>p3</finalName>
+        <finalName>rvas-core-0.1.0</finalName>
         <plugins>
             <!-- download source code in Eclipse, best practice-->
             <plugin>
@@ -100,7 +100,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>protocol3.Main</mainClass>
+                                    <mainClass>core.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

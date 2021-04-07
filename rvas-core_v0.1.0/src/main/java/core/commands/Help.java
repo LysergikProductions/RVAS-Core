@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

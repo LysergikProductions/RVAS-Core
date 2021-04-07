@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,9 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.PlayerMeta;
-
-// Message
+import core.backend.PlayerMeta;
 
 public class Message implements CommandExecutor {
 

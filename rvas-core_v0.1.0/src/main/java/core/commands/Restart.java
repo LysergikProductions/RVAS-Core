@@ -1,12 +1,12 @@
-package protocol3.commands;
+package core.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.PlayerMeta;
-import protocol3.backend.Utilities;
+import core.backend.PlayerMeta;
+import core.backend.Utilities;
 
 // INTERNAL USE ONLY
 
@@ -21,5 +21,4 @@ public class Restart implements CommandExecutor {
 		Utilities.restart(args.length != 0);
 		return true;
 	}
-
 }

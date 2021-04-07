@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,11 +16,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.Main;
-import protocol3.backend.PlayerMeta;
-import protocol3.backend.Utilities;
-
-// funny command haha
+import core.Main;
+import core.backend.PlayerMeta;
+import core.backend.Utilities;
 
 public class Stats implements CommandExecutor {
 

@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -7,9 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.PlayerMeta;
-
-// funny command haha
+import core.backend.PlayerMeta;
 
 public class Redeem implements CommandExecutor {
 
@@ -37,5 +35,4 @@ public class Redeem implements CommandExecutor {
 			return true;
 		}
 	}
-
 }

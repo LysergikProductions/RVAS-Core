@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -9,13 +9,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.LagProcessor;
-import protocol3.backend.PlayerMeta;
-import protocol3.backend.ServerMeta;
-import protocol3.backend.Utilities;
-import protocol3.events.LagPrevention;
-import protocol3.events.SpeedLimit;
-import protocol3.tasks.ProcessPlaytime;
+import core.backend.LagProcessor;
+import core.backend.PlayerMeta;
+import core.backend.ServerMeta;
+import core.backend.Utilities;
+import core.events.LagPrevention;
+import core.events.SpeedLimit;
+import core.tasks.ProcessPlaytime;
 
 public class Server implements CommandExecutor {
 	@Override
@@ -30,7 +30,7 @@ public class Server implements CommandExecutor {
 				"§c========== PLAYER ==========", "§cUnique Joins (§eSince Map Creation§c):§7 " + Bukkit.getOfflinePlayers().length,
 				"§cUnique Joins (§eSince Stats Update§c):§7 " + PlayerMeta.Playtimes.keySet().size(),
 				"§cDonators:§7 " + PlayerMeta._donatorList.size(),
-				"§cLagfags:§7 " + PlayerMeta._lagfagList.size(),
+				//"§cLagfags:§7 " + PlayerMeta._lagfagList.size(),
 				"§cPermanent Mutes:§7 " + PlayerMeta._permanentMutes.size(),
 				"§cOP Accounts:§7 " + Bukkit.getOperators().size(),
 				"§c=========== DEBUG ===========", "§cServer Restarting: §7" + (Utilities.restarting ? "True" : "False"),

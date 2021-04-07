@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -17,8 +17,8 @@ import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.Config;
-import protocol3.backend.PlayerMeta;
+import core.backend.Config;
+import core.backend.PlayerMeta;
 
 // INTERNAL USE ONLY
 
@@ -65,5 +65,4 @@ public class DupeHand implements CommandExecutor {
 			return true;
 		}
 	}
-
 }

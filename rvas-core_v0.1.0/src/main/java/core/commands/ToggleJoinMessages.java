@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-
-// funny command haha
 
 public class ToggleJoinMessages implements CommandExecutor {
 	public static List<UUID> disabledJoinMessages = new ArrayList<UUID>();

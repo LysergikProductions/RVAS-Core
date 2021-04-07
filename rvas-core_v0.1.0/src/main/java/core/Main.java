@@ -1,4 +1,4 @@
-package protocol3;
+package core;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -11,12 +11,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import protocol3.backend.*;
-import protocol3.commands.*;
-import protocol3.events.*;
-import protocol3.tasks.AutoAnnouncer;
-import protocol3.tasks.OnTick;
-import protocol3.tasks.ProcessPlaytime;
+import core.backend.*;
+import core.commands.*;
+import core.events.*;
+import core.tasks.AutoAnnouncer;
+import core.tasks.OnTick;
+import core.tasks.ProcessPlaytime;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -33,21 +33,21 @@ public class Main extends JavaPlugin implements Listener {
 		instance = this;
 
 		// Required files load
-		System.out.println("[protocol3] Creating required files if they do not exist...");
+		System.out.println("[core] Creating required files if they do not exist...");
 		try {
 			FileManager.setup();
 		} catch (IOException e) {
-			System.out.println("[protocol3] An error occured creating the necessary files.");
+			System.out.println("[core] An error occured creating the necessary files.");
 		}
 
 		// Load required files
-		System.out.println("[protocol3] Loading files..");
+		System.out.println("[core] Loading files..");
 		try {
 			PlayerMeta.loadDonators();
 			PlayerMeta.loadMuted();
 			PlayerMeta.loadLagfags();
 		} catch (IOException e) {
-			System.out.println("[protocol3] An error occured loading files.");
+			System.out.println("[core] An error occured loading files.");
 		}
 
 		// Load timers
@@ -126,13 +126,13 @@ public class Main extends JavaPlugin implements Listener {
 		NotificationHandler = new Notifications();
 		getServer().getPluginManager().registerEvents(NotificationHandler, this);
 
-		System.out.println("[protocol3] Finished loading.");
+		System.out.println("[core] Finished loading.");
 	}
 
 	@Override
 	public void onDisable()
 	{
-		System.out.println("[protocol3] Saving files...");
+		System.out.println("[core] Saving files...");
 		try
 		{
 			PlayerMeta.saveDonators();
@@ -141,7 +141,7 @@ public class Main extends JavaPlugin implements Listener {
 			PlayerMeta.writePlaytime();
 		} catch (IOException ex)
 		{
-			System.out.println("[protocol3] Failed to save one or more files.");
+			System.out.println("[core] Failed to save one or more files.");
 		}
 	}
 }

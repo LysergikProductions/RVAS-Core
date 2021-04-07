@@ -1,4 +1,4 @@
-package protocol3.commands;
+package core.commands;
 
 import java.text.DecimalFormat;
 
@@ -9,9 +9,7 @@ import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.LagProcessor;
-
-// TPS check
+import core.backend.LagProcessor;
 
 public class Tps implements CommandExecutor {
 

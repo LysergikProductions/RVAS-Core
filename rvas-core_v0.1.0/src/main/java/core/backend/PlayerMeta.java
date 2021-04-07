@@ -1,7 +1,7 @@
-package protocol3.backend;
+package core.backend;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.events.Chat;
+import core.events.Chat;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -55,7 +55,7 @@ public class PlayerMeta
 			saveDonators();
 		} catch (IOException e)
 		{
-			System.out.println("[protocol3] Failed to save donators.");
+			System.out.println("[core] Failed to save donators.");
 		}
 	}
 
@@ -73,7 +73,7 @@ public class PlayerMeta
 			try {
 				saveMuted();
 			} catch (IOException e) {
-				System.out.println("[protocol3] Failed to save mutes.");
+				System.out.println("[core] Failed to save mutes.");
 			}
 		}
 		
@@ -124,7 +124,7 @@ public class PlayerMeta
 					saveMuted();
 				} catch (IOException e)
 				{
-					System.out.println("[protocol3] Failed to save mutes.");
+					System.out.println("[core] Failed to save mutes.");
 				}
 			}
 			Chat.violationLevels.remove(uuid);
@@ -141,7 +141,7 @@ public class PlayerMeta
 			try {
 				saveMuted();
 			} catch (IOException e) {
-				System.out.println("[protocol3] Failed to save mutes.");
+				System.out.println("[core] Failed to save mutes.");
 			}
 		}
 		p.spigot().sendMessage(new TextComponent("§7§oYou are now " + muteType + "muted."));
@@ -167,7 +167,7 @@ public class PlayerMeta
 		try {
 			saveLagfags();
 		} catch (IOException e) {
-			System.out.println("[protocol3] Failed to save lagfags.");
+			System.out.println("[core] Failed to save lagfags.");
 		}
 	}
 
@@ -178,31 +178,31 @@ public class PlayerMeta
 
 	public static void saveLagfags() throws IOException {
 		List<String> list = _lagfagList.keySet().stream().map(u -> u.toString() + ":" + _lagfagList.get(u)).collect(Collectors.toList());
-		Files.write(Paths.get("plugins/protocol3/lagfag.db"), String.join("\n", list).getBytes());
+		Files.write(Paths.get("plugins/core/lagfag.db"), String.join("\n", list).getBytes());
 	}
 
 	public static void loadLagfags() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("plugins/protocol3/lagfag.db"));
+		List<String> lines = Files.readAllLines(Paths.get("plugins/core/lagfag.db"));
 		lines.forEach(val -> _lagfagList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
 	}
 
 	// --- SAVE/LOAD DONATORS --- //
 
 	public static void loadDonators() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("plugins/protocol3/donator.db"));
+		List<String> lines = Files.readAllLines(Paths.get("plugins/core/donator.db"));
 		lines.forEach(val -> _donatorList.add(UUID.fromString(val)));
 	}
 
 	public static void saveDonators() throws IOException {
 		List<String> list = _donatorList.stream().map(UUID::toString).collect(Collectors.toList());
-		Files.write(Paths.get("plugins/protocol3/donator.db"), String.join("\n", list).getBytes());
-		Files.write(Paths.get("plugins/protocol3/codes/used.db"), String.join("\n", UsedDonorCodes).getBytes());
+		Files.write(Paths.get("plugins/core/donator.db"), String.join("\n", list).getBytes());
+		Files.write(Paths.get("plugins/core/codes/used.db"), String.join("\n", UsedDonorCodes).getBytes());
 	}
 
 	// --- SAVE/LOAD MUTED --- //
 
 	public static void loadMuted() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("plugins/protocol3/muted.db"));
+		List<String> lines = Files.readAllLines(Paths.get("plugins/core/muted.db"));
 		lines.forEach(val -> _permanentMutes.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
 	}
 
@@ -211,7 +211,7 @@ public class PlayerMeta
 		for(UUID key : _permanentMutes.keySet()) {
 			lines.add(key.toString() + ":" + _permanentMutes.get(key));
 		}
-		Files.write(Paths.get("plugins/protocol3/muted.db"), String.join("\n", lines).getBytes());
+		Files.write(Paths.get("plugins/core/muted.db"), String.join("\n", lines).getBytes());
 	}
 
 	// --- PLAYTIME --- //
@@ -258,7 +258,7 @@ public class PlayerMeta
 
 		Playtimes.keySet().forEach(user -> list.add(user.toString() + ":" + Math.rint(Playtimes.get(user))));
 
-		Files.write(Paths.get("plugins/protocol3/playtime.db"), String.join("\n", list).getBytes());
+		Files.write(Paths.get("plugins/core/playtime.db"), String.join("\n", list).getBytes());
 	}
 
 	// --- OTHER -- //

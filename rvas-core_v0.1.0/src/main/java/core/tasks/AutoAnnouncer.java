@@ -1,4 +1,4 @@
-package protocol3.tasks;
+package core.tasks;
 
 import java.text.DecimalFormat;
 import java.util.Random;
@@ -7,8 +7,8 @@ import java.util.TimerTask;
 import org.bukkit.Bukkit;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import protocol3.backend.LagProcessor;
-import protocol3.backend.Scheduler;
+import core.backend.LagProcessor;
+import core.backend.Scheduler;
 
 public class AutoAnnouncer extends TimerTask {
 	Random r = new Random();
