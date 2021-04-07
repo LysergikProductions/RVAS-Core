@@ -28,7 +28,7 @@ public void onKill(PlayerDeathEvent e) {
 			System.out.println("[core.events.pvp] "+killer+" killed "+killed+" from "+killerLoc);
 			System.out.println("[core.events.pvp] Incrementing killTotal for "+killer);
 		}
-	} else {
+	} else if (Config.getValue("devesp").equals("false")) {
 		if (killed != null) {
 			System.out.println("[core] "+killer+" killed "+killed+" from "+killerLoc);
 		}
