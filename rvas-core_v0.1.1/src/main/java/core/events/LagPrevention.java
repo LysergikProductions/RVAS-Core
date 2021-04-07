@@ -65,7 +65,7 @@ public class LagPrevention implements Listener, Runnable {
 		worldTypes.add("world_nether");
 		worldTypes.add("world_the_end");
 		final int[] toRet = {0};
-		int witherLimit = Integer.parseInt(Config.getValue("wither.skull.max_age"));
+		int skullLimit = Integer.parseInt(Config.getValue("wither.skull.max_age"));
 
 		final List<Entity> entities = new ArrayList<>();
 		worldTypes.forEach(worldType -> {
@@ -73,7 +73,7 @@ public class LagPrevention implements Listener, Runnable {
 			entities.addAll(Bukkit.getWorld(worldType).getEntities().stream().filter(e -> (e instanceof WitherSkull))
 					.collect(Collectors.toList()));
 			toRet[0]=0;
-			entities.stream().filter(e -> e.getTicksLived() >= witherLimit && e.getCustomName() == null).forEach(e -> {
+			entities.stream().filter(e -> e.getTicksLived() >= skullLimit && e.getCustomName() == null).forEach(e -> {
 				toRet[0]++;
 				Bukkit.getWorld(worldType).getEntities().remove(e);
 			});

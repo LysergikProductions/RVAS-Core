@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>core</groupId>
-    <artifactId>p3</artifactId>
-    <version>3</version>
-    <name>p3</name>
+    <artifactId>rvas</artifactId>
+    <version>0</version>
+    <name>rvas</name>
     <description>RVAS-core</description>
 
     <repositories>
@@ -63,7 +63,7 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.1.0</finalName>
+        <finalName>rvas-core-0.1.1-019</finalName>
         <plugins>
             <!-- download source code in Eclipse, best practice-->
             <plugin>
