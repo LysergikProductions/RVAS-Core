@@ -40,6 +40,9 @@ public class PVP implements Listener {
 			if (killed != null) {
 				System.out.println("[core.events.pvp] "+killerName+" killed "+killedName+" from "+killerLoc);
 				System.out.println("[core.events.pvp] Incrementing killTotal for "+killerName);
+				
+				String total = PlayerMeta.getKills(killer);
+				System.out.println("[core.events.pvp] "+killerName+"'s killTotal: "+total);
 			}
 		} else if (Config.getValue("devesp").equals("false")) {
 			if (killed != null) {
