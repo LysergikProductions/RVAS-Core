@@ -68,9 +68,9 @@ core/dependency-reduced-pom.xml
 *.iml
 
 #p3 specific
-core/.settings/*
-core/.settings
-core/target
+rvas-core_v0.1.1/.settings/*
+rvas-core_v0.1.1/.settings
+rvas-core_v0.1.1/target
 
 *.class
 
