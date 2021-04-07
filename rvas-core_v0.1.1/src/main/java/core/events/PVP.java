@@ -2,12 +2,6 @@ package core.events;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-//import org.bukkit.Chunk;
-//import org.bukkit.GameMode;
-//import org.bukkit.Material;
-//import org.bukkit.block.Block;
-//import org.bukkit.block.Container;
-//import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -31,15 +25,15 @@ public void onKill(PlayerDeathEvent e) {
 	
 	if (Config.getValue("debug").equals("true")) {
 		if (killed != null) {
-			System.out.println("[core.backend.pvp] "+killed+" slain by "+killer+" near "+killerLoc);
-			System.out.println("[core.backend.pvp] Incrementing killTotal for "+killer);
+			System.out.println("[core.events.pvp] "+killer+" killed "+killed+" from "+killerLoc);
+			System.out.println("[core.events.pvp] Incrementing killTotal for "+killer);
 		}
 	} else {
 		if (killed != null) {
-			System.out.println("[core] "+killed+" slain by "+killer+" from "+killerLoc);
+			System.out.println("[core] "+killer+" killed "+killed+" from "+killerLoc);
 		}
 	}
 	if (killed && killer != null) {
-		incKillTotal(e.getEntity().getKiller())
+		PlayerMeta.incKillTotal(e.getEntity().getKiller())
 	}
 }
