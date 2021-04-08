@@ -35,49 +35,43 @@ public class Move implements Listener {
 	static Random r = new Random();
 
 	@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event)
-	{
-		// This method is actually fired upon head rotate to; if the player's coords did
-		// not change,
-		// don't fire this event
-
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Player p = event.getPlayer();
+		UUID playerUuid = p.getUniqueId();
+		
+		boolean needsCheck = false;
+		boolean inNether = p.getLocation().getWorld().getName().endsWith("the_nether");
+		boolean inEnd = p.getLocation().getWorld().getName().endsWith("the_end");
+		double yCoord = p.getLocation().getY();
+		
+		// This method is actually fired upon head rotate to, so
+		// if the player's coords didn't change, return/ignore
 		if (event.getFrom().getBlockX() == event.getTo().getBlockX()
 				&& event.getFrom().getBlockY() == event.getTo().getBlockY()
 				&& event.getFrom().getBlockZ() == event.getTo().getBlockZ())
 			return;
 
-		if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL))
-		{
+		// Ensure survival-mode players are not invulnerable
+		if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
 			event.getPlayer().setInvulnerable(false);
 		}
 
-		// lagfag torture
+		// Make game unplayable for laggers //(remodel this behaviour completely)
 		if (PlayerMeta.isLagfag(event.getPlayer()))
 		{
 			int randomNumber = r.nextInt(9);
-
-			if (randomNumber == 5 || randomNumber == 6)
-			{
+			if (randomNumber == 5 || randomNumber == 6) {
 				event.getPlayer().spigot().sendMessage(new TextComponent("§cThis is what you get for being a lagfag!"));
 				event.setCancelled(true);
 				return;
 			}
 
 			randomNumber = r.nextInt(250);
-
-			if (randomNumber == 21)
-			{
+			if (randomNumber == 21) {
 				event.getPlayer().kickPlayer("§6fuck you lol");
 				return;
 			}
 		}
-
-		Player p = event.getPlayer();
-		UUID playerUuid = p.getUniqueId();
-		boolean needsCheck = false;
-		boolean inNether = p.getLocation().getWorld().getName().endsWith("the_nether");
-		boolean inEnd = p.getLocation().getWorld().getName().endsWith("the_end");
-		boolean y = p.getLocation().getY();
 
 		// -- ILLEGAL PLACEMENT PATCH -- //
 		boolean illegalItemAgro = Boolean.parseBoolean(Config.getValue("item.illegal.agro"));
@@ -85,8 +79,7 @@ public class Move implements Listener {
 
 		// Check every chunk the player enters
 
-		if (!lastChunks.containsKey(playerUuid))
-		{
+		if (!lastChunks.containsKey(playerUuid)) {
 			lastChunks.put(playerUuid, p.getLocation().getChunk());
 			needsCheck = true;
 		} else {
@@ -96,8 +89,9 @@ public class Move implements Listener {
 			}
 		}
 
-		if (Config.getValue("movement.block.chunkcheck").equals("false"))
+		if (Config.getValue("movement.block.chunkcheck").equals("false")) {
 			needsCheck = false;
+		}
 		
 		if (inEnd) {
 			needsCheck = false;
@@ -281,25 +275,25 @@ public class Move implements Listener {
 		// -- ROOF AND FLOOR PATCH -- //
 
 		// kill players on the roof of the nether
-		if (inNether && y > 127 && Config.getValue("movement.block.roof").equals("true"))
+		if (inNether && yCoord > 127 && Config.getValue("movement.block.roof").equals("true"))
 			p.setHealth(0);
 
 		// kill players below ground in overworld and nether
-		if (!inEnd && y <= 0 && Config.getValue("movement.block.floor").equals("true"))
+		if (!inEnd && yCoord <= 0 && Config.getValue("movement.block.floor").equals("true"))
 			p.setHealth(0);
 	}
 	
 	@EventHandler
 	public void onEntityMove(EntityMoveEvent e) {
-		boolean inNether = e.getLocation().getWorld().getName().endsWith("the_nether");
-		boolean inEnd = e.getLocation().getWorld().getName().endsWith("the_end");
-		boolean y = e.getEntity().getLocation().getY();
+		boolean inNether = e.getEntity().getLocation().getWorld().getName().endsWith("the_nether");
+		boolean inEnd = e.getEntity().getLocation().getWorld().getName().endsWith("the_end");
+		double yCoord = e.getEntity().getLocation().getY();
 		
-		if (inNether && y > 127 && Config.getValue("movement.block.roof").equals("true")) {
+		if (inNether && yCoord > 127 && Config.getValue("movement.block.roof").equals("true")) {
 			e.getEntity().setHealth(0);
 			return;
 		}
-		if (!inEnd && y <= 0 && Config.getValue("movement.block.floor").equals("true")) {
+		if (!inEnd && yCoord <= 0 && Config.getValue("movement.block.floor").equals("true")) {
 			e.getEntity().setHealth(0);
 			return;
 		}
