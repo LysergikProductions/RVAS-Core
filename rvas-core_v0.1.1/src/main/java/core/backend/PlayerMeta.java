@@ -113,10 +113,11 @@ public class PlayerMeta {
 			if (_permanentMutes.containsKey(uuid))
 			{
 				String ip = _permanentMutes.get(uuid);
-				HashMap<UUID, String> modified = new HashMap<UUID, String>();
-				modified = _permanentMutes;
-				for(UUID val : modified.keySet()) {
+				for(UUID val : _permanentMutes.keySet()) {
 					if(_permanentMutes.get(val).equals(ip)) {
+						_permanentMutes.remove(val);
+					}
+					if(val.equals(uuid)) {
 						_permanentMutes.remove(val);
 					}
 				}
@@ -125,7 +126,7 @@ public class PlayerMeta {
 					saveMuted();
 				} catch (IOException e)
 				{
-					System.out.println("[core.backend.playermeta] Failed to save mutes.");
+					System.out.println("[protocol3] Failed to save mutes.");
 				}
 			}
 			Chat.violationLevels.remove(uuid);
