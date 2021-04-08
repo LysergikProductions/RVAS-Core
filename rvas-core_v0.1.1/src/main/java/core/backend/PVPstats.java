@@ -8,4 +8,5 @@ public class PVPstats {
 	int deathTotal;
 	double kd;
 	int killWcrystal;
+	int logEscape;
 }
