@@ -17,8 +17,10 @@ import core.backend.PlayerMeta;
 import java.util.UUID;
 
 public class PVP implements Listener {
+
 	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
+		
 		if (Config.getValue("debug").equals("true") {
 			System.out.println("[core.events.pvp] onKill has been called");
 		}
@@ -50,7 +52,7 @@ public class PVP implements Listener {
 					System.out.println("[core.events.pvp] "+killerName+" killed "+killedName+" from "+killerLoc);
 					System.out.println("[core.events.pvp] Incrementing killTotal for "+killerName);
 					
-					double total = PlayerMeta.getKills(killer);
+					int total = PlayerMeta.getKills(killer);
 					System.out.println("[core.events.pvp] "+killerName+"'s killTotal: "+total);
 				}
 			} else if (Config.getValue("devesp").equals("false")) {
