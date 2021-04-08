@@ -24,43 +24,42 @@ public class PVP implements Listener {
 			System.out.println("[core.events.pvp] onKill has been called");
 		}
 		
-		if(e.getEntity() instanceof Player) {
-			Player killed = e.getEntity();
-			UUID killedID = e.getEntity().getUniqueId();
-			Player killer = killed.getKiller();
-			UUID killerID = e.getEntity().getKiller().getUniqueId();
-			
-			String killedName = killed.getName();
-			String killerName = "";
-			String killerLoc = "";
-			
-			if (killer != null) {
-				killerName = killer.getName();
-				killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
-			} else {
-				if (Config.getValue("debug").equals("true")) {
-					System.out.println("[core.events.pvp] killer = null");
-				}
-			}
+		Player killed = e.getEntity();
+		UUID killedID = killed.getUniqueId();
+		Player killer = killed.getKiller();
+		UUID killerID = killer.getUniqueId();
 		
-			//e.setDeathMessage(ChatColor.RED + your text here);
-			PlayerMeta.incKillTotal(killer, 1);
-			
-			if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
-				if (killed != null) {
-					System.out.println("[core.events.pvp] "+killerName+" killed "+killedName+" from "+killerLoc);
-					System.out.println("[core.events.pvp] Incrementing killTotal for "+killerName);
-					
-					int total = PlayerMeta.getKills(killer);
-					System.out.println("[core.events.pvp] "+killerName+"'s killTotal: "+total);
-				}
-			} else if (Config.getValue("devesp").equals("false")) {
-				if (killed != null) {
-					System.out.println("[core] "+killerName+" killed "+killedName+" from "+killerLoc);
-				}
+		String killedName = killed.getName();
+		String killerName = "";
+		String killerLoc = "";
+		
+		if (killer != null) {
+			killerName = killer.getName();
+			killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
 			}
 		} else {
-			System.out.println("[core.event.pvp] determined entity is not an instance of player");
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("[core.events.pvp] killer = null");
+			}
+		}
+	
+		//e.setDeathMessage(ChatColor.RED + your text here);
+		PlayerMeta.incKillTotal(killer, 1);
+		
+		if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
+			if (killed != null) {
+				System.out.println("[core.events.pvp] "+killerName+" killed "+killedName+" from "+killerLoc);
+				System.out.println("[core.events.pvp] Incrementing killTotal for "+killerName);
+				
+				int total = PlayerMeta.getKills(killer);
+				System.out.println("[core.events.pvp] "+killerName+"'s killTotal: "+total);
+			}
+		} else if (Config.getValue("devesp").equals("false")) {
+			if (killed != null) {
+				System.out.println("[core] "+killerName+" killed "+killedName+" from "+killerLoc);
+			}
 		}
 	}
 }

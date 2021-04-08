@@ -27,11 +27,11 @@ public class Stats implements CommandExecutor {
 		Player player = (Player) sender;
 
 		if (Main.Top == null) {
-			double largest1 = 0;
+			double largest = 0;
 			
 			for (UUID u : PlayerMeta.Playtimes.keySet()) {
-				if (PlayerMeta.Playtimes.get(u) > largest1) {
-					largest1 = PlayerMeta.Playtimes.get(u);
+				if (PlayerMeta.Playtimes.get(u) > largest) {
+					largest = PlayerMeta.Playtimes.get(u);
 					Main.Top = Bukkit.getOfflinePlayer(u);
 				}
 			}
@@ -53,7 +53,7 @@ public class Stats implements CommandExecutor {
 							"§6Joined: §6§l" + firstPlayed, "§6Last seen: §6§l" + lastPlayed,
 							"§6Ranking: §6§l#" + PlayerMeta.getRank(largestPlayer),
 							"§6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)),
-							"§6Total Kills: " + PlayerMeta.getKills(largestPlayer)
+							"§6Total Kills: " + PlayerMeta.getKills(player)
 							)
 							.forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
 					return true;
