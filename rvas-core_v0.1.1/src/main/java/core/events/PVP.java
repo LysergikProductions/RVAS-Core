@@ -2,26 +2,25 @@ package core.events;
 
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import java.util.UUID;
+
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
 import org.bukkit.event.entity.PlayerDeathEvent;
-//import org.bukkit.event.entity.PlayerQuitEvent;
-//import org.bukkit.event.entity.EntityResurrectEvent;
+import org.bukkit.event.entity.EntityResurrectEvent;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
-import java.util.UUID;
 
 public class PVP implements Listener {
 
 	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
 		
-		if (Config.getValue("debug").equals("true") {
+		if (Config.getValue("debug").equals("true")) {
 			System.out.println("[core.events.pvp] onKill has been called");
 		}
 		
