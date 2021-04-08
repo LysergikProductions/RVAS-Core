@@ -113,7 +113,9 @@ public class PlayerMeta {
 			if (_permanentMutes.containsKey(uuid))
 			{
 				String ip = _permanentMutes.get(uuid);
-				for(UUID val : _permanentMutes.keySet()) {
+				HashMap<UUID, String> modified = new HashMap<UUID, String>();
+				modified = _permanentMutes;
+				for(UUID val : modified.keySet()) {
 					if(_permanentMutes.get(val).equals(ip)) {
 						_permanentMutes.remove(val);
 					}
