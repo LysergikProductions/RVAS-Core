@@ -27,21 +27,19 @@ public class Stats implements CommandExecutor {
 		Player player = (Player) sender;
 
 		if (Main.Top == null) {
-			double largest = 0;
+			double largest1 = 0;
+			
 			for (UUID u : PlayerMeta.Playtimes.keySet()) {
-				if (PlayerMeta.Playtimes.get(u) > largest) {
-					largest = PlayerMeta.Playtimes.get(u);
-					Main.Top = Bukkit.getOfflinePlayer(u);
-				}
-			}
-			for (UUID u : PlayerMeta.KillStats.keySet()) {
-				if (PlayerMeta.Playtimes.get(u) > largest) {
-					largest = PlayerMeta.Playtimes.get(u);
+				if (PlayerMeta.Playtimes.get(u) > largest1) {
+					largest1 = PlayerMeta.Playtimes.get(u);
 					Main.Top = Bukkit.getOfflinePlayer(u);
 				}
 			}
 		}
 
+		//PVPstats stats = PVPstats.fromLine(line);
+		//if (stats != null) { PlayerMeta.pvp_stats.put(stats.playerid, stats); }
+		
 		if (args.length != 0) {
 			switch (args[0]) {
 				case "top":

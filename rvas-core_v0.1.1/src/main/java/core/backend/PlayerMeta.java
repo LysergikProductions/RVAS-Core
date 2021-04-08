@@ -23,7 +23,7 @@ public class PlayerMeta {
 	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<UUID, Double>();
 
 	public static HashMap<UUID, Double> Playtimes = new HashMap<UUID, Double>();
-	public static HashMap<UUID, Double> KillStats = new HashMap<UUID, Double>();
+	public static Map <UUID, PVPstats> sKillStats = new HashMap<>();
 
 	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
 
@@ -264,29 +264,27 @@ public class PlayerMeta {
 
 	// --- PVP -- //
 	
-	public static void incKillTotal(Player p, double inc) {
-		if (KillStats.containsKey(p.getUniqueId())) {
-			double k = KillStats.get("killstats");
-			k += inc;
-			KillStats.put(p.getUniqueId(), k);
+	public static void incKillTotal(Player p, int inc) {
+		if (sKillStats.containsKey(p.getUniqueId())) {
+			PVPstats id = sKillStats.get(p.getUniqueId());
+			id.killTotal += inc;
 		} else {
-			KillStats.put(p.getUniqueId(), 0.0);
-		}
-		if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
-			System.out.println("Player p = "+p+"\n");
+			PVPstats id = sKillStats.get(p.getUniqueId());
+			id.killTotal = 1;
 		}
 	}
 	
-	public static double getKills(OfflinePlayer p) {
+	public static int getKills(OfflinePlayer p) {
+		PVPstats id = sKillStats.get(p.getUniqueId());
+		
 		if (Config.getValue("debug").equals("true")) {
-			System.out.println("[core.backend.playermeta] getting kills for "+p);
+			System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+id.killTotal);
 		}
-		return (KillStats.containsKey(p.getUniqueId())) ? KillStats.get(p.getUniqueId()) : 0;
+		return (id.killTotal);
 	}
 	
-	// set KillStats.db's structure to uuid | int kills and save data to database accordingly
-//	public static void writeKillStats(UUID id, int totalKills) throws IOException {
-//		KillStats.setString(id, name)
+//	public static void writesKillStats(UUID id, int totalKills) throws IOException {
+//		sKillStats.setString(id, name)
 //	}
 	
 	// --- OTHER -- //
