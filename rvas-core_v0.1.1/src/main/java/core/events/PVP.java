@@ -19,6 +19,10 @@ import java.util.UUID;
 public class PVP implements Listener {
 	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
+		if (Config.getValue("debug").equals("true") {
+			System.out.println("[core.events.pvp] onKill has been called");
+		}
+		
 		if(e.getEntity() instanceof Player) {
 			Player killed = e.getEntity();
 			UUID killedID = e.getEntity().getUniqueId();
@@ -55,7 +59,7 @@ public class PVP implements Listener {
 				}
 			}
 		} else {
-			return;
+			System.out.println("[core.event.pvp] determined entity is not an instance of player");
 		}
 	}
 }
