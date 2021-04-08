@@ -77,6 +77,7 @@ public class Move implements Listener {
 		boolean needsCheck = false;
 		boolean inNether = p.getLocation().getWorld().getName().endsWith("the_nether");
 		boolean inEnd = p.getLocation().getWorld().getName().endsWith("the_end");
+		boolean y = p.getLocation().getY();
 
 		// -- ILLEGAL PLACEMENT PATCH -- //
 		boolean illegalItemAgro = Boolean.parseBoolean(Config.getValue("item.illegal.agro"));
@@ -280,23 +281,25 @@ public class Move implements Listener {
 		// -- ROOF AND FLOOR PATCH -- //
 
 		// kill players on the roof of the nether
-		if (inNether && p.getLocation().getY() > 127 && Config.getValue("movement.block.roof").equals("true"))
+		if (inNether && y > 127 && Config.getValue("movement.block.roof").equals("true"))
 			p.setHealth(0);
 
 		// kill players below ground in overworld and nether
-		if (!inEnd && p.getLocation().getY() <= 0 && Config.getValue("movement.block.floor").equals("true"))
+		if (!inEnd && y <= 0 && Config.getValue("movement.block.floor").equals("true"))
 			p.setHealth(0);
 	}
 	
 	@EventHandler
 	public void onEntityMove(EntityMoveEvent e) {
-		boolean inNether = e.getEntity().getLocation().getWorld().getName().equals("world_nether");
-		boolean inEnd = e.getEntity().getLocation().getWorld().getName().equals("world_the_end");
-		if (inNether && e.getEntity().getLocation().getY() > 127 && Config.getValue("movement.block.roof").equals("true")) {
+		boolean inNether = e.getLocation().getWorld().getName().endsWith("the_nether");
+		boolean inEnd = e.getLocation().getWorld().getName().endsWith("the_end");
+		boolean y = e.getEntity().getLocation().getY();
+		
+		if (inNether && y > 127 && Config.getValue("movement.block.roof").equals("true")) {
 			e.getEntity().setHealth(0);
 			return;
 		}
-		if (!inEnd && e.getEntity().getLocation().getY() <= 0 && Config.getValue("movement.block.floor").equals("true")) {
+		if (!inEnd && y <= 0 && Config.getValue("movement.block.floor").equals("true")) {
 			e.getEntity().setHealth(0);
 			return;
 		}
@@ -305,9 +308,9 @@ public class Move implements Listener {
 	@EventHandler
 	public void onEntityPortal(EntityPortalEvent e) {
 		if(e.getEntityType().equals(EntityType.ENDER_CRYSTAL)) {
-			EnderCrystal entity = (EnderCrystal)e.getEntity();
-			if(entity.isShowingBottom())
-			{
+			EnderCrystal crystal = (EnderCrystal)e.getEntity();
+			
+			if(crystal.isShowingBottom()) {
 				e.setCancelled(true);
 				return;
 			}
