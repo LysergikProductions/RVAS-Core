@@ -53,7 +53,7 @@ public class Stats implements CommandExecutor {
 							"§6Joined: §6§l" + firstPlayed, "§6Last seen: §6§l" + lastPlayed,
 							"§6Ranking: §6§l#" + PlayerMeta.getRank(largestPlayer),
 							"§6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)),
-							"§6Total Kills: " + PlayerMeta.getKills(player)
+							"§6Total Kills: " + PlayerMeta.getKills(largestPlayer)
 							)
 							.forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
 					return true;
