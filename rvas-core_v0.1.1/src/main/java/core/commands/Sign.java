@@ -22,8 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.md_5.bungee.api.chat.TextComponent;
 import core.backend.ItemCheck;
 
-public class Sign implements CommandExecutor
-{
+public class Sign implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -110,10 +109,8 @@ public class Sign implements CommandExecutor
 		lores.add(verify);
 
 		im.setLore(lores);
-
 		i.setItemMeta(im);
 
 		return true;
 	}
-
 }

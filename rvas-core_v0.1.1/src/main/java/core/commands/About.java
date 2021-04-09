@@ -29,6 +29,7 @@ public class About implements CommandExecutor {
 		
 		source.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));
 		license.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.gnu.org/licenses/agpl-3.0.en.html"));
+		license.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://www.gnu.org/licenses/agpl-3.0.en.html")));
 		
 		Arrays.asList(by, source, license)
 		.forEach(ln -> sender.spigot().sendMessage(ln));
