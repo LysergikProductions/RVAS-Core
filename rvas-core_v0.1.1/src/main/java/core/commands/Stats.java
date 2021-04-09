@@ -50,6 +50,8 @@ public class Stats implements CommandExecutor {
 		TextComponent title_pre = new TextComponent("--- ");
 		TextComponent title_name = new TextComponent(player.getName());
 		TextComponent title_suf = new TextComponent("\'s Statistics ---");
+		TextComponent top5_head = new TextComponent("--- Top Five Players ---");
+		
 		TextComponent joined_a = new TextComponent("Joined: ");
 		TextComponent joined_b = new TextComponent(firstPlayed);
 		TextComponent lastSeen_a = new TextComponent("Last seen: ");
@@ -73,6 +75,8 @@ public class Stats implements CommandExecutor {
 		
 		tkills_a.setColor(ChatColor.BLUE); tkills_a.setBold(true);
 		
+		top5_head.setColor(ChatColor.GOLD); top5_head.setBold(true);
+		
 		// parse components into 1-line components
 		TextComponent title = new TextComponent(title_pre, title_name, title_suf);
 		TextComponent joined = new TextComponent(joined_a, joined_b);
@@ -90,25 +94,38 @@ public class Stats implements CommandExecutor {
 			switch (args[0]) {
 				case "top":
 					Arrays.asList(title, joined, lastSeen, rank, toptime, tkills)
-					.forEach(s -> player.spigot().sendMessage(s));
+					.forEach(ln -> player.spigot().sendMessage(ln));
 					return true;
 					
 				case "leaderboard":
-					player.spigot().sendMessage(new TextComponent("--- Top Five Players ---"));
+					player.spigot().sendMessage(top5_head);
 					HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
 					int x = 0;
 					HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
 					for (UUID u : leaders.keySet()) {
 						realLeaders.put(u, leaders.get(u));
 					}
+					
+					ArrayList<TextComponent> list = new ArrayList<>();
 					for (UUID p : realLeaders.keySet()) {
 						x++;
-						player.spigot().sendMessage(Bukkit.getOfflinePlayer(p).getName() == null ?
-								new TextComponent(
-								"#" + x + ": [unknown], " + Utilities.calculateTime(realLeaders.get(p))) :
-								new TextComponent("#" + x + ": " + Bukkit.getOfflinePlayer(p).getName() + ", "
-								+ Utilities.calculateTime(realLeaders.get(p))));
+						TextComponent a = new TextComponent("#" + x + ": "); a.setBold(true);
+						
+						if (Bukkit.getOfflinePlayer(p).getName() == null) {
+							TextComponent b = new TextComponent("[unknown], " + Utilities.calculateTime(realLeaders.get(p)));
+							TextComponent c = new TextComponent(a, b);
+							
+							c.setColor(ChatColor.GOLD);
+							list.add(c);
+						} else {
+							TextComponent b = new TextComponent(Bukkit.getOfflinePlayer(p).getName() + ", " + Utilities.calculateTime(realLeaders.get(p)));
+							TextComponent c = new TextComponent(a, b);
+							
+							c.setColor(ChatColor.GOLD);
+							list.add(c);
+						}
 					}
+					list.forEach(ln -> player.spigot().sendMessage(ln));
 					return true;
 			}
 
@@ -122,7 +139,7 @@ public class Stats implements CommandExecutor {
 			}
 			
 		    List<String> message = new ArrayList<String>();		    
-			message.add("--- " + p.getName() + "'s Statistics ---");
+			message.add("--- " + p.getName() + "\'s Statistics ---");
 			message.add("Joined: " + firstPlayed);
 			message.add("Last seen: " + lastPlayed);
 			

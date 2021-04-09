@@ -5,6 +5,10 @@
 // Internal use only. Do not change or you'll break the entire thing.
 config.version = 22
 
+//uuid / ign for your current admin/owner op account
+adminid = 
+admin = sinse420
+
 // remove less technical but otherwise useful console output
 devesp = false
 

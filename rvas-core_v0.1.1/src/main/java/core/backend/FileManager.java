@@ -1,8 +1,6 @@
 package core.backend;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -75,8 +73,11 @@ public class FileManager {
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
 		
+		//FileWriter fw = new FileWriter(fileName:"/plugins/core/killstats.db");
+		//BufferedWriter bw = new BufferedWriter(fw);
+		
 		//Files.readAllLines(killstats_user_database.toPath()).forEach(val ->
-		//PlayerMeta.sKillStats.put(UUID.fromString(val.split(":")[0]), Integer.parseInt(val.split(":")[1]))
+		//PlayerMeta.sKillStats.put()
 		//);
 	}
 }
