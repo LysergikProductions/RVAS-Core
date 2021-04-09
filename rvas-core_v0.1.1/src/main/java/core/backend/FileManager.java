@@ -76,7 +76,7 @@ public class FileManager {
 		);
 		
 		//Files.readAllLines(killstats_user_database.toPath()).forEach(val ->
-		//PlayerMeta.KillStats.put(String toLine(val.split(":")[0]), Integer.parseInt(val.split(":")[1]))
+		//PlayerMeta.sKillStats.put(UUID.fromString(val.split(":")[0]), Integer.parseInt(val.split(":")[1]))
 		//);
 	}
 }

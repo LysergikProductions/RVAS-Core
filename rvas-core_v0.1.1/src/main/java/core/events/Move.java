@@ -44,8 +44,7 @@ public class Move implements Listener {
 		boolean inEnd = p.getLocation().getWorld().getName().endsWith("the_end");
 		double yCoord = p.getLocation().getY();
 		
-		// This method is actually fired upon head rotate to, so
-		// if the player's coords didn't change, return/ignore
+		// This method is actually fired upon head rotate too, so skip event if the player's coords didn't change
 		if (event.getFrom().getBlockX() == event.getTo().getBlockX()
 				&& event.getFrom().getBlockY() == event.getTo().getBlockY()
 				&& event.getFrom().getBlockZ() == event.getTo().getBlockZ())

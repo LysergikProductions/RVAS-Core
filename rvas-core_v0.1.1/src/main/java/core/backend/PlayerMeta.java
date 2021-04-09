@@ -44,19 +44,16 @@ public class PlayerMeta {
 	{
 		if (status)
 		{
-			if (!_donatorList.contains(p.getUniqueId()))
-			{
+			if (!_donatorList.contains(p.getUniqueId())) {
 				_donatorList.add(p.getUniqueId());
 			}
-		} else
-		{
+		} else {
 			_donatorList.remove(p.getUniqueId());
 		}
-		try
-		{
+
+		try {
 			saveDonators();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			System.out.println("[core.backend.playermeta] Failed to save donators.");
 		}
 	}
@@ -279,16 +276,23 @@ public class PlayerMeta {
 	
 	public static int getKills(OfflinePlayer p) {
 		PVPstats id = sKillStats.get(p.getUniqueId());
-		
-		if (Config.getValue("debug").equals("true")) {
-			System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+id.killTotal);
+		if (id != null) {
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+id.killTotal);
+			}
+			return id.killTotal;
+		} else {
+			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null");
+			return 0;
 		}
-		return (id.killTotal);
 	}
 	
-//	public static void writesKillStats(UUID id, int totalKills) throws IOException {
-//		sKillStats.setString(id, name)
-//	}
+	public static void writeKills() throws IOException {
+		List<String> list = new ArrayList();
+
+		sKillStats.keySet().forEach(user -> list.add(user.toString() + ":" + sKillStats.get(user)));
+		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
+	}
 	
 	// --- OTHER -- //
 

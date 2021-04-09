@@ -9,4 +9,8 @@ public class PVPstats {
 	double kd;
 	int killWcrystal;
 	int logEscape;
+	
+	public PVPstats(UUID playerid) {
+		this.playerid = playerid; this.killTotal = 0;
+	}
 }

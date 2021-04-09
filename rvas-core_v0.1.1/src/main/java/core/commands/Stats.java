@@ -48,17 +48,16 @@ public class Stats implements CommandExecutor {
 					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 					String firstPlayed = sdf.format(date);
 					String lastPlayed = sdf.format(new Date(largestPlayer.getLastPlayed()));
-					Arrays.asList(
-							"ยง6--- ยง6ยงl " + largestPlayer.getName() + "ยงrยง6's Statistics ---",
-							"ยง6Joined: ยง6ยงl" + firstPlayed, "ยง6Last seen: ยง6ยงl" + lastPlayed,
-							"ยง6Ranking: ยง6ยงl#" + PlayerMeta.getRank(largestPlayer),
-							"ยง6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)),
-							"ยง6Total Kills: " + PlayerMeta.getKills(player)
-							)
-							.forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
+					Arrays.asList("ง6--- ง6งl " + largestPlayer.getName() + "งrง6's Statistics ---",
+							"ง6Joined: ง6งl" + firstPlayed, "ง6Last seen: ง6งl" + lastPlayed,
+							"ง6Ranking: ง6งl#" + PlayerMeta.getRank(largestPlayer),
+							"ง6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)),
+							"ง6Total Kills: " + PlayerMeta.getKills(largestPlayer)
+					).forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
 					return true;
+					
 				case "leaderboard":
-					player.spigot().sendMessage(new TextComponent("ยง6--- ยง6ยงlTop Five Players ---"));
+					player.spigot().sendMessage(new TextComponent("ง6--- ง6งlTop Five Players ---"));
 					HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
 					int x = 0;
 					HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
@@ -69,8 +68,8 @@ public class Stats implements CommandExecutor {
 						x++;
 						player.spigot().sendMessage(Bukkit.getOfflinePlayer(p).getName() == null ?
 								new TextComponent(
-								"ยง6ยงl#" + x + "ยงrยง6: [unknown], " + Utilities.calculateTime(realLeaders.get(p))) :
-								new TextComponent("ยง6ยงl#" + x + "ยงrยง6: " + Bukkit.getOfflinePlayer(p).getName() + ", "
+								"ง6งl#" + x + "งrง6: [unknown], " + Utilities.calculateTime(realLeaders.get(p))) :
+								new TextComponent("ง6งl#" + x + "งrง6: " + Bukkit.getOfflinePlayer(p).getName() + ", "
 								+ Utilities.calculateTime(realLeaders.get(p))));
 					}
 					return true;
@@ -78,10 +77,10 @@ public class Stats implements CommandExecutor {
 
 			OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
 			if (p == null) {
-				player.spigot().sendMessage(new TextComponent("ยงcThis player has never joined."));
+				player.spigot().sendMessage(new TextComponent("งcThis player has never joined."));
 				return true;
 			} else if (!p.hasPlayedBefore()) {
-				player.spigot().sendMessage(new TextComponent("ยงcThis player has never joined."));
+				player.spigot().sendMessage(new TextComponent("งcThis player has never joined."));
 				return true;
 			}
 			Date date = new Date(p.getFirstPlayed());
@@ -89,16 +88,17 @@ public class Stats implements CommandExecutor {
 			String firstPlayed = sdf.format(date);
 			String lastPlayed = sdf.format(new Date(p.getLastPlayed()));
 		    List<String> message = new ArrayList<String>();
-			message.add("ยง6--- ยง6ยงl " + p.getName() + "ยงrยง6's Statistics ---");
-			message.add("ยง6Joined: ยง6ยงl" + firstPlayed);
-			message.add("ยง6Last seen: ยง6ยงl" + lastPlayed);
+			message.add("ง6--- ง6งl " + p.getName() + "งrง6's Statistics ---");
+			message.add("ง6Joined: ง6งl" + firstPlayed);
+			message.add("ง6Last seen: ง6งl" + lastPlayed);
 			
 			if(!PlayerMeta.Playtimes.containsKey(p.getUniqueId())) {
-				message.add("ยง6ยงoSome statistics cannot be shown (untracked).");
+				message.add("ง6งoSome statistics cannot be shown (untracked).");
 			}
 			else {
-				message.add("ยง6Ranking: ยง6ยงl#" + PlayerMeta.getRank(p));
-				message.add("ยง6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(p)));
+				message.add("ง6Ranking: ง6งl#" + PlayerMeta.getRank(p));
+				message.add("ง6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(p)));
+				message.add("ง6Total Kills: " + PlayerMeta.getKills(p));
 			}
 			message.forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
 			return true;
@@ -107,15 +107,13 @@ public class Stats implements CommandExecutor {
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 			String firstPlayed = sdf.format(date);
 			String lastPlayed = sdf.format(new Date(player.getLastPlayed()));
-			Arrays.asList(
-					"ยง6--- ยง6ยงl " + player.getName() + "ยงrยง6's Statistics ---",
-					"ยง6Joined: ยง6ยงl" + firstPlayed,
-					"ยง6Last seen: ยง6ยงl" + lastPlayed,
-					"ยง6Ranking: ยง6ยงl#" + PlayerMeta.getRank(player),
-					"ยง6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(player)),
-					"ยง6Total Kills: " + PlayerMeta.getKills(player)
-					)
-					.forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
+			Arrays.asList("ง6--- ง6งl " + player.getName() + "งrง6's Statistics ---",
+					"ง6Joined: ง6งl" + firstPlayed,
+					"ง6Last seen: ง6งl" + lastPlayed,
+					"ง6Ranking: ง6งl#" + PlayerMeta.getRank(player),
+					"ง6Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(player)),
+					"ง6Total Kills: " + PlayerMeta.getKills(player)
+			).forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
 			return true;
 		}
 	}
