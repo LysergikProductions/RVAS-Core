@@ -18,14 +18,14 @@ public class Discord implements CommandExecutor {
 		
 		if (link != "" && link != "" && link != null) {
 			TextComponent message = new TextComponent("Click this message to join the Discord.");
+			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
+			message.setColor(ChatColor.GOLD);
+			sender.spigot().sendMessage(message);
 		} else {
 			TextComponent message = new TextComponent("Discord coming soon!");
+			message.setColor(ChatColor.GOLD);
+			sender.spigot().sendMessage(message);
 		}
-		
-		message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Config.getValue("discord.link")));
-		message.setColor(ChatColor.GOLD);
-		sender.spigot().sendMessage(message);
-		// If the player (or console) uses our command correct, we can return true
 		return true;
 	}
 }
