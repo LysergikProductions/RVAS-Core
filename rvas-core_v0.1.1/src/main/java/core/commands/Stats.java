@@ -15,7 +15,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+
 import core.Main;
 import core.backend.PlayerMeta;
 import core.backend.Utilities;
@@ -37,23 +39,60 @@ public class Stats implements CommandExecutor {
 			}
 		}
 
-		//PVPstats stats = PVPstats.fromLine(line);
-		//if (stats != null) { PlayerMeta.pvp_stats.put(stats.playerid, stats); }
+		Date date = new Date(player.getFirstPlayed());
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 		
+		String firstPlayed = sdf.format(date);
+		String lastPlayed = sdf.format(new Date(player.getLastPlayed()));
+		OfflinePlayer largestPlayer = Main.Top;
+		
+		// get all uniquley stylable components
+		TextComponent title_pre = new TextComponent("--- ");
+		TextComponent title_name = new TextComponent(player.getName());
+		TextComponent title_suf = new TextComponent("'s Statistics ---");
+		TextComponent joined_a = new TextComponent("Joined: ");
+		TextComponent joined_b = new TextComponent(firstPlayed);
+		TextComponent lastSeen_a = new TextComponent("Last seen: ");
+		TextComponent lastSeen_b = new TextComponent(lastPlayed);
+		TextComponent rank_a = new TextComponent("Ranking: ");
+		TextComponent rank_b = new TextComponent("" + PlayerMeta.getRank(player));
+		TextComponent playtime_a = new TextComponent("Time played: ");
+		TextComponent playtime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(player)));
+		TextComponent toptime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)));
+		TextComponent tkills_a = new TextComponent("Total PVP Kills: ");
+		TextComponent tkills_b = new TextComponent("" + PlayerMeta.getKills(player));
+		
+		// style individual components
+		joined_a.setColor(ChatColor.BLUE);
+		joined_a.setBold(true);
+		lastSeen_a.setColor(ChatColor.BLUE);
+		lastSeen_a.setBold(true);
+		rank_a.setColor(ChatColor.BLUE);
+		rank_a.setBold(true);
+		playtime_a.setColor(ChatColor.BLUE);
+		playtime_a.setBold(true);
+		tkills_a.setColor(ChatColor.BLUE);
+		tkills_a.setBold(true);
+		
+		// parse components into 1-line components
+		TextComponent title = new TextComponent(title_pre, title_name, title_suf);
+		TextComponent joined = new TextComponent(joined_a, joined_b);
+		TextComponent lastSeen = new TextComponent(lastSeen_a, lastSeen_b);
+		TextComponent rank = new TextComponent(rank_a, rank_b);
+		TextComponent playtime = new TextComponent(playtime_a, playtime_b);
+		TextComponent toptime = new TextComponent(playtime_a, toptime_b);
+		TextComponent tkills = new TextComponent(tkills_a, tkills_b);
+		
+		// style lines of multiple components at once
+		title.setColor(ChatColor.YELLOW);
+		title.setBold(true);
+		
+		// check args
 		if (args.length != 0) {
 			switch (args[0]) {
 				case "top":
-					OfflinePlayer largestPlayer = Main.Top;
-					Date date = new Date(largestPlayer.getFirstPlayed());
-					SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-					String firstPlayed = sdf.format(date);
-					String lastPlayed = sdf.format(new Date(largestPlayer.getLastPlayed()));
-					Arrays.asList("--- " + largestPlayer.getName() + "'s Statistics ---",
-							"Joined: " + firstPlayed, "Last seen: " + lastPlayed,
-							"Ranking: #" + PlayerMeta.getRank(largestPlayer),
-							"Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)),
-							"Total Kills: " + PlayerMeta.getKills(largestPlayer)
-					).forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
+					// store components in array then print 1 line at a time in chat
+					Arrays.asList(title, joined, lastSeen, rank, toptime, tkills).forEach(s -> player.spigot().sendMessage(s));
 					return true;
 					
 				case "leaderboard":
@@ -83,13 +122,8 @@ public class Stats implements CommandExecutor {
 				player.spigot().sendMessage(new TextComponent("This player has never joined."));
 				return true;
 			}
-			Date date = new Date(p.getFirstPlayed());
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 			
-			String firstPlayed = sdf.format(date);
-			String lastPlayed = sdf.format(new Date(p.getLastPlayed()));
-		    List<String> message = new ArrayList<String>();
-		    
+		    List<String> message = new ArrayList<String>();		    
 			message.add("--- " + p.getName() + "'s Statistics ---");
 			message.add("Joined: " + firstPlayed);
 			message.add("Last seen: " + lastPlayed);
@@ -101,22 +135,11 @@ public class Stats implements CommandExecutor {
 				message.add("Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(p)));
 				message.add("Total Kills: " + PlayerMeta.getKills(p));
 			}
-			message.forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
+			
+			message.forEach(ln -> player.spigot().sendMessage(new TextComponent(ln)));
 			return true;
 		} else { // user supplied no arguments, so..
-			Date date = new Date(player.getFirstPlayed());
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-			
-			String firstPlayed = sdf.format(date);
-			String lastPlayed = sdf.format(new Date(player.getLastPlayed()));
-			
-			Arrays.asList("--- " + player.getName() + "'s Statistics ---",
-					"Joined: " + firstPlayed,
-					"Last seen: " + lastPlayed,
-					"Ranking: " + PlayerMeta.getRank(player),
-					"Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(player)),
-					"Total Kills: " + PlayerMeta.getKills(player)
-			).forEach(s -> player.spigot().sendMessage(new TextComponent(s)));
+			Arrays.asList(title, joined, lastSeen, rank, playtime, tkills).forEach(ln -> player.spigot().sendMessage(ln));
 			return true;
 		}
 	}
