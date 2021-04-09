@@ -16,7 +16,7 @@ public class Discord implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String link = Config.getValue("discord.link");
 		
-		if (link != "" && link != "" && link != null) {
+		if (link != "tbd" && link != "" && link != null) {
 			TextComponent message = new TextComponent("Click this message to join the Discord.");
 			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
 			message.setColor(ChatColor.GOLD);
