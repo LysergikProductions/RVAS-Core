@@ -7,6 +7,11 @@ import java.util.TimerTask;
 import org.bukkit.Bukkit;
 
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+
 import core.backend.LagProcessor;
 import core.backend.Scheduler;
 
@@ -57,8 +62,13 @@ public class AutoAnnouncer extends TimerTask {
 				Bukkit.spigot().broadcast(new TextComponent("§6Do /help to see the commands available to you."));
 				break;
 			default:
-				Bukkit.spigot().broadcast(new TextComponent(
-						"§6RVAS is open-source! Available at https://github.com/LysergikProductions/RVAS-Core."));
+				TextComponent source = new TextComponent("RVAS-core is open-source (AGPLv3)! Click this message to access the repository.");
+				source.setColor(ChatColor.GOLD); source.setItalic(true);
+				
+				source.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));
+				source.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("see the source code by clicking here")));
+				
+				Bukkit.spigot().broadcast(source);
 				break;
 		}
 		Scheduler.setLastTaskId("autoAnnounce");

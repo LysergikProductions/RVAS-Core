@@ -39,7 +39,7 @@ movement.block.chunkcheck.solidify_bedrock = false
 // --------------------- //
 
 // Disallow illegal block placement. false = disabled [default] ||  true = enabled
-place.illegal = false
+place.illegal = true
 
 // Disallow illegal block placement by OPs. false = disabled [default] || true = enabled
 place.illegal.ops = false
@@ -48,8 +48,11 @@ place.illegal.ops = false
 // --- ILLEGAL ITEM PATCHES --- //
 // ---------------------------- //
 
+// skip illegals checks for ops?
+skip.ops = true
+
 // Enable or disable the entire patch. false = disabled || true = enabled [default]
-item.illegal = false
+item.illegal = true
 
 // Enable or disable overstacked items. false = disabled || true = enabled [default]
 item.illegal.stacked = true
