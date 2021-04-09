@@ -49,7 +49,7 @@ public class Stats implements CommandExecutor {
 		// get all uniquley stylable components
 		TextComponent title_pre = new TextComponent("--- ");
 		TextComponent title_name = new TextComponent(player.getName());
-		TextComponent title_suf = new TextComponent("'s Statistics ---");
+		TextComponent title_suf = new TextComponent("\'s Statistics ---");
 		TextComponent joined_a = new TextComponent("Joined: ");
 		TextComponent joined_b = new TextComponent(firstPlayed);
 		TextComponent lastSeen_a = new TextComponent("Last seen: ");
@@ -63,16 +63,15 @@ public class Stats implements CommandExecutor {
 		TextComponent tkills_b = new TextComponent("" + PlayerMeta.getKills(player));
 		
 		// style individual components
-		joined_a.setColor(ChatColor.BLUE);
-		joined_a.setBold(true);
-		lastSeen_a.setColor(ChatColor.BLUE);
-		lastSeen_a.setBold(true);
-		rank_a.setColor(ChatColor.BLUE);
-		rank_a.setBold(true);
-		playtime_a.setColor(ChatColor.BLUE);
-		playtime_a.setBold(true);
-		tkills_a.setColor(ChatColor.BLUE);
-		tkills_a.setBold(true);
+		joined_a.setColor(ChatColor.BLUE); joined_a.setBold(true);
+		
+		lastSeen_a.setColor(ChatColor.BLUE); lastSeen_a.setBold(true);
+		
+		rank_a.setColor(ChatColor.BLUE); rank_a.setBold(true);
+		
+		playtime_a.setColor(ChatColor.BLUE); playtime_a.setBold(true);
+		
+		tkills_a.setColor(ChatColor.BLUE); tkills_a.setBold(true);
 		
 		// parse components into 1-line components
 		TextComponent title = new TextComponent(title_pre, title_name, title_suf);
@@ -84,15 +83,14 @@ public class Stats implements CommandExecutor {
 		TextComponent tkills = new TextComponent(tkills_a, tkills_b);
 		
 		// style lines of multiple components at once
-		title.setColor(ChatColor.YELLOW);
-		title.setBold(true);
+		title.setColor(ChatColor.YELLOW); title.setBold(true);
 		
 		// check args
 		if (args.length != 0) {
 			switch (args[0]) {
 				case "top":
-					// store components in array then print 1 line at a time in chat
-					Arrays.asList(title, joined, lastSeen, rank, toptime, tkills).forEach(s -> player.spigot().sendMessage(s));
+					Arrays.asList(title, joined, lastSeen, rank, toptime, tkills)
+					.forEach(s -> player.spigot().sendMessage(s));
 					return true;
 					
 				case "leaderboard":
@@ -139,7 +137,8 @@ public class Stats implements CommandExecutor {
 			message.forEach(ln -> player.spigot().sendMessage(new TextComponent(ln)));
 			return true;
 		} else { // user supplied no arguments, so..
-			Arrays.asList(title, joined, lastSeen, rank, playtime, tkills).forEach(ln -> player.spigot().sendMessage(ln));
+			Arrays.asList(title, joined, lastSeen, rank, playtime, tkills)
+			.forEach(ln -> player.spigot().sendMessage(ln));
 			return true;
 		}
 	}
