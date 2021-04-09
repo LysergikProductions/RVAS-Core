@@ -8,8 +8,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 import core.backend.LagProcessor;
 import core.backend.PlayerMeta;
@@ -20,6 +22,7 @@ import core.events.SpeedLimit;
 import core.tasks.ProcessPlaytime;
 
 public class Server implements CommandExecutor {
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String speedLimit = LagProcessor.getTPS() <= 15 ? "36" : "96" + " bps";
@@ -111,8 +114,11 @@ public class Server implements CommandExecutor {
 		
 		// style full component-lines at once
 		title.setColor(ChatColor.RED); title.setBold(true);
-		player_head.setColor(ChatColor.YELLOW); player_head.setBold(false);
-		debug_head.setColor(ChatColor.YELLOW); debug_head.setBold(false);
+		player_head.setColor(ChatColor.GOLD); player_head.setBold(false);
+		debug_head.setColor(ChatColor.GOLD); debug_head.setBold(false);
+		
+		// add functionality to components
+		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Those who intentionally lag the server can no longer place or break any blocks.")));
 		
 		// create output structure and send to chat (withers currently removed from output)
 		Arrays.asList(title, tps, slimit, skicks, acr, player_head, players, ujoins, donos, laggers, pmutes, ops, debug_head, restart, rtrig)
