@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 import core.Main;
+import core.backend.PVPstats;
 
 public class FileManager {
 
@@ -26,7 +27,6 @@ public class FileManager {
 		File stronghold_portals = new File(plugin_work_path + "strong-portals.db");
 		File killstats_user_database = new File(plugin_work_path + "killstats.db");
 
-		//
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!donor_code_directory.exists()) donor_code_directory.mkdir();
 		if (!donor_list.exists()) donor_list.createNewFile();
@@ -34,7 +34,6 @@ public class FileManager {
 		if (!used_donor_codes.exists()) used_donor_codes.createNewFile();
 		if (!muted_user_database.exists()) muted_user_database.createNewFile();
 		if (!stronghold_portals.exists()) stronghold_portals.createNewFile();
-		if (!killstats_user_database.exists()) killstats_user_database.createNewFile();
 
 		if (!server_statistics_list.exists()) {
 			server_statistics_list.createNewFile();
@@ -76,8 +75,12 @@ public class FileManager {
 		//FileWriter fw = new FileWriter(fileName:"/plugins/core/killstats.db");
 		//BufferedWriter bw = new BufferedWriter(fw);
 		
-		//Files.readAllLines(killstats_user_database.toPath()).forEach(val ->
-		//PlayerMeta.sKillStats.put()
-		//);
+		//Files.readAllLines(killstats_user_database.toPath())
+		//	.forEach(line) -> PlayerMeta.sKillStats.put(val));
+			
+		Files.readAllLines(killstats_user_database.toPath()).forEach(line -> {
+			PVPstats id = PVPstats.fromString(line);
+			PlayerMeta.sKillStats.put(id.playerid, id);
+		});
 	}
 }

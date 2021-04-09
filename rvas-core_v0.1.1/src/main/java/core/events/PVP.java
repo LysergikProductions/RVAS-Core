@@ -48,6 +48,10 @@ public class PVP implements Listener {
 		//e.setDeathMessage(ChatColor.RED + your text here);
 		PlayerMeta.incKillTotal(killer, 1);
 		
+		if (Config.getValue("debug").equals("true")) {
+			System.out.println("(DEBUG) killed " + killed + ". Your new total is " + PlayerMeta.getKills(killer));
+		}
+		
 		if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
 			if (killed != null) {
 				System.out.println("[core.events.pvp] "+killerName+" killed "+killedName+" from "+killerLoc);

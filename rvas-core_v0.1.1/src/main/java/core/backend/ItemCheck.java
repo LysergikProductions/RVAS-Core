@@ -39,11 +39,15 @@ public class ItemCheck {
 	}
 
 	public static void IllegalCheck(ItemStack item, String trigger, Player player) {
-		// Check for configs that stop checks
-		if (Config.getValue("item.illegal").equals("false") || player.isOp() && Config.getValue("skip.ops").equals("true")) return;
-
 		// Dont check null items or air
 		if (item == null || item.getType().equals(Material.AIR)) return;
+		
+		// Check for more reasons to cancel IllegalCheck()
+		if (Config.getValue("item.illegal").equals("false") ||
+				player.isOp() && Config.getValue("skip.ops").equals("true") &&
+				!Banned.contains(item.getType())) {
+			return;
+		}
 		
 		if(Config.getValue("debug").equals("true")) {
 			if(player != null) {

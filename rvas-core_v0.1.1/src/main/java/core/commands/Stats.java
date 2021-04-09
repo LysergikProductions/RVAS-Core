@@ -27,6 +27,7 @@ public class Stats implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
+		OfflinePlayer offp = (Player) sender;
 
 		if (Main.Top == null) {
 			double largest = 0;
@@ -148,7 +149,7 @@ public class Stats implements CommandExecutor {
 			} else {
 				message.add("Ranking: #" + PlayerMeta.getRank(p));
 				message.add("Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(p)));
-				message.add("Total Kills: " + PlayerMeta.getKills(p));
+				message.add("Total Kills: " + PlayerMeta.getKills(player));
 			}
 			
 			message.forEach(ln -> player.spigot().sendMessage(new TextComponent(ln)));

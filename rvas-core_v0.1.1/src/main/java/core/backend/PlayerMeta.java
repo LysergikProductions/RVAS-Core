@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -267,32 +268,42 @@ public class PlayerMeta {
 	public static void incKillTotal(Player p, int inc) {
 		if (sKillStats.containsKey(p.getUniqueId())) {
 			PVPstats id = sKillStats.get(p.getUniqueId());
+			Bukkit.spigot().broadcast(new TextComponent("" + id.killTotal));
 			id.killTotal += inc;
+			Bukkit.spigot().broadcast(new TextComponent("" + id.killTotal));
 		} else {
 			PVPstats id = sKillStats.get(p.getUniqueId());
+			Bukkit.spigot().broadcast(new TextComponent("" + id.killTotal));
 			id.killTotal = 1;
+			Bukkit.spigot().broadcast(new TextComponent("" + id.killTotal));
 		}
 	}
 	
-	public static int getKills(OfflinePlayer p) {
-		PVPstats id = sKillStats.get(p.getUniqueId());
-		if (id != null) {
+	public static PVPstats constructStats(Player p) {
+		PVPstats out = new PVPstats(p.getUniqueId(), 0);
+		return out;
+	}
+	
+	public static int getKills(Player p) {
+		PVPstats player = sKillStats.get(p.getUniqueId());
+		if (player != null) {
 			if (Config.getValue("debug").equals("true")) {
-				System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+id.killTotal);
+				System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+player.killTotal);
 			}
-			return id.killTotal;
+			return player.killTotal;
 		} else {
-			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null");
-			return 0;
+			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null. Constructing new PVPstats object.");
+			PVPstats newPlayer = constructStats(p);
+			return newPlayer.killTotal;
 		}
 	}
-	
-	public static void writeKills() throws IOException {
-		List<String> list = new ArrayList();
 
-		sKillStats.keySet().forEach(user -> list.add(user.toString() + ":" + sKillStats.get(user)));
-		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
-	}
+//	public static void writeKills() throws IOException {
+//		List<String> list = new ArrayList();
+
+//		sKillStats.keySet().forEach(user -> list.add(user.toString() + ":" + sKillStats.get(user)));
+//		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
+//	}
 	
 	// --- OTHER -- //
 
