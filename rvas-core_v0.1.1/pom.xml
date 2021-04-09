@@ -63,7 +63,7 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.1.1-055</finalName>
+        <finalName>rvas-core-0.1.1-056</finalName>
         <plugins>
             <!-- download source code in Eclipse, best practice-->
             <plugin>

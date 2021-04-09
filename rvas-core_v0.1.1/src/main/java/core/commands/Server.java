@@ -22,7 +22,7 @@ public class Server implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Arrays.asList(
 				"§c========== GENERAL ==========", "§cServer Uptime:§7 " + Utilities.calculateTime(ServerMeta.getUptime()),
-				"§cCurrent Population:§7 " + Bukkit.getOnlinePlayers().size(),
+				"§cConnected Players§7 " + Bukkit.getOnlinePlayers().size(),
 				"§cCurrent TPS:§7 " + new DecimalFormat("#.##").format(LagProcessor.getTPS()),
 				"§cCurrent Speed Limit:§7 " + (LagProcessor.getTPS() <= 15 ? "36" : "96") + " blocks per second",
 				"§cSpeed Limit Kicks:§7 " + SpeedLimit.totalKicks,
@@ -30,7 +30,7 @@ public class Server implements CommandExecutor {
 				"§c========== PLAYER ==========", "§cUnique Joins (§eSince Map Creation§c):§7 " + Bukkit.getOfflinePlayers().length,
 				"§cUnique Joins (§eSince Stats Update§c):§7 " + PlayerMeta.Playtimes.keySet().size(),
 				"§cDonators:§7 " + PlayerMeta._donatorList.size(),
-				//"§cLagfags:§7 " + PlayerMeta._lagfagList.size(),
+				"§cLagPrisoners:§7 " + PlayerMeta._lagfagList.size(),
 				"§cPermanent Mutes:§7 " + PlayerMeta._permanentMutes.size(),
 				"§cOP Accounts:§7 " + Bukkit.getOperators().size(),
 				"§c=========== DEBUG ===========", "§cServer Restarting: §7" + (Utilities.restarting ? "True" : "False"),
