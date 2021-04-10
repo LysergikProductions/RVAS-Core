@@ -1,7 +1,7 @@
 # RVAS-Core
 The core plugin behind RVAS; still in beta.
 
-For full admin functionality, please enter your uuid and current ign for the intended in-game account.
+For full admin functionality, please enter your uuid and current ign for the intended in-game account in `core\config.txt`
 
 This will allow rvas-core to cancel certain commands sent by op's immediately, and gives you an in-chat prompt to allow the action (action requests get stored in a queue for later review if the account is offline.
 

@@ -235,28 +235,13 @@ public class Move implements Listener {
 
 							block.setType(Material.AIR);
 						}
-
-						// make sure the floor is solid in both dimensions at y=1
-						if (solidifyBedrock && y == 1 && !(block.getType().equals(Material.BEDROCK)))
-						{
-							block.setType(Material.BEDROCK);
-							continue;
-						}
-
-						// make sure the nether ceiling is solid at y=127
-						if (solidifyBedrock && inNether && y == 127 && !(block.getType().equals(Material.BEDROCK)))
-						{
-							block.setType(Material.BEDROCK);
-							continue;
-						}
 					}
 				}
 			}
 
 			// If frames and no spawner, make sure there's not more than 12.
 			// Sometimes portal rooms generate half in one chunk and half in another chunk,
-			// but no portal will ever contain
-			// more than 12 frames
+			// but no portal chunk will ever contain more than 12 frames
 
 			if (!frames.isEmpty() && !containsSpawner)
 			{
@@ -278,7 +263,7 @@ public class Move implements Listener {
 			p.setHealth(0);
 
 		// kill players below ground in overworld and nether
-		if (!inEnd && yCoord <= 0 && Config.getValue("movement.block.floor").equals("true"))
+		if (!inEnd && yCoord < 0 && Config.getValue("movement.block.floor").equals("true"))
 			p.setHealth(0);
 	}
 	
@@ -292,7 +277,7 @@ public class Move implements Listener {
 			e.getEntity().setHealth(0);
 			return;
 		}
-		if (!inEnd && yCoord <= 0 && Config.getValue("movement.block.floor").equals("true")) {
+		if (!inEnd && yCoord < 0 && Config.getValue("movement.block.floor").equals("true")) {
 			e.getEntity().setHealth(0);
 			return;
 		}
@@ -300,6 +285,8 @@ public class Move implements Listener {
 	
 	@EventHandler
 	public void onEntityPortal(EntityPortalEvent e) {
+		// prevent ender crystals with bottoms showing from making it through portals
+		// in current versions of paper (build =< 586), these crystals break chunks around them
 		if(e.getEntityType().equals(EntityType.ENDER_CRYSTAL)) {
 			EnderCrystal crystal = (EnderCrystal)e.getEntity();
 			
