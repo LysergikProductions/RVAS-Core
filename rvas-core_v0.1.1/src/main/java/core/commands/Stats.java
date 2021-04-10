@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,6 +21,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import core.Main;
 import core.backend.PlayerMeta;
 import core.backend.Utilities;
+import core.tasks.ChatPrint;
 
 public class Stats implements CommandExecutor {
 	
@@ -100,12 +101,12 @@ public class Stats implements CommandExecutor {
 					
 				case "leaderboard":
 					player.spigot().sendMessage(top5_head);
-					PlayerMeta.printLeaders(player);
+					ChatPrint.printLeaders(player);
 					return true;
 					
 				case "5":// change printLeaders to be able to take a desired list size argument
 					player.spigot().sendMessage(top5_head);
-					PlayerMeta.printLeaders(player);
+					ChatPrint.printLeaders(player);
 					return true;
 			}
 

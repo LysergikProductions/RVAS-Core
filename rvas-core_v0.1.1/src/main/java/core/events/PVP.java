@@ -7,10 +7,12 @@ import java.util.UUID;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityResurrectEvent;
+import org.bukkit.Bukkit;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
@@ -44,27 +46,23 @@ public class PVP implements Listener {
 				System.out.println("[core.events.pvp] killer = null");
 			}
 		}
-	
-		//e.setDeathMessage(ChatColor.RED + your text here);
+		
 		PlayerMeta.incKillTotal(killer, 1);
 		
-		if (Config.getValue("debug").equals("true")) {
-			System.out.println("(DEBUG) killed " + killed + ". Your new total is " + PlayerMeta.getKills(killer));
-		}
+		OfflinePlayer p = Bukkit.getOfflinePlayer(killer.getName());
 		
 		if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
 			if (killed != null) {
 				System.out.println("[core.events.pvp] "+killerName+" killed "+killedName+" from "+killerLoc);
 				System.out.println("[core.events.pvp] Incrementing killTotal for "+killerName);
 				
-				int kills = PlayerMeta.getKills(killer);
+				int kills = PlayerMeta.getKills(p);
 				System.out.println("[core.events.pvp] "+killerName+"'s killTotal: "+kills);
 			}
 		} else if (Config.getValue("devesp").equals("false")) {
 			if (killed != null) {
 				System.out.println("[core] "+killerName+" killed "+killedName+" from "+killerLoc);
 			}
-		}
-		
+		}	
 	}
 }
