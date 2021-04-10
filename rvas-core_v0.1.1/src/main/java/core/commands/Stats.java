@@ -23,7 +23,7 @@ import core.backend.PlayerMeta;
 import core.backend.Utilities;
 
 public class Stats implements CommandExecutor {
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
@@ -49,7 +49,6 @@ public class Stats implements CommandExecutor {
 		// get all uniquley stylable components
 		TextComponent title_pre = new TextComponent("--- ");
 		TextComponent title_name = new TextComponent(player.getName());
-		
 		TextComponent title_suf = new TextComponent("'s Statistics ---");
 		TextComponent top5_head = new TextComponent("--- Top Five Players ---");
 		
@@ -92,6 +91,7 @@ public class Stats implements CommandExecutor {
 		
 		// check args
 		if (args.length != 0) {
+			// there is an arg, so now decide what to do..
 			switch (args[0]) {
 				case "top":
 					Arrays.asList(title, joined, lastSeen, rank, toptime, tkills)
@@ -100,33 +100,12 @@ public class Stats implements CommandExecutor {
 					
 				case "leaderboard":
 					player.spigot().sendMessage(top5_head);
-					HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
-					int x = 0;
-					HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
-					for (UUID u : leaders.keySet()) {
-						realLeaders.put(u, leaders.get(u));
-					}
+					PlayerMeta.printLeaders(player);
+					return true;
 					
-					ArrayList<TextComponent> list = new ArrayList<>();
-					for (UUID pid : realLeaders.keySet()) {
-						x++;
-						TextComponent a = new TextComponent("#" + x + ": "); a.setBold(true);
-						
-						if (Bukkit.getOfflinePlayer(pid).getName() == null) {
-							TextComponent b = new TextComponent("[unknown], " + Utilities.calculateTime(realLeaders.get(pid)));
-							TextComponent c = new TextComponent(a, b);
-							
-							c.setColor(ChatColor.GOLD);
-							list.add(c);
-						} else {
-							TextComponent b = new TextComponent(Bukkit.getOfflinePlayer(pid).getName() + ", " + Utilities.calculateTime(realLeaders.get(pid)));
-							TextComponent c = new TextComponent(a, b);
-							
-							c.setColor(ChatColor.GOLD);
-							list.add(c);
-						}
-					}
-					list.forEach(ln -> player.spigot().sendMessage(ln));
+				case "5":// change printLeaders to be able to take a desired list size argument
+					player.spigot().sendMessage(top5_head);
+					PlayerMeta.printLeaders(player);
 					return true;
 			}
 

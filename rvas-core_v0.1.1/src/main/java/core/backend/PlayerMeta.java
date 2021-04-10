@@ -1,6 +1,7 @@
 package core.backend;
 
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
 import core.events.Chat;
 import core.backend.Config;
 
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import core.backend.PVPstats;
 
 public class PlayerMeta {
@@ -330,5 +332,35 @@ public class PlayerMeta {
 
 	public static boolean isOp(CommandSender sender) {
 		return (sender instanceof Player) ? sender.isOp() : sender instanceof ConsoleCommandSender;
+	}
+	
+	public static void printLeaders(Player sender) {
+		HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
+		int x = 0;
+		HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
+		for (UUID u : leaders.keySet()) {
+			realLeaders.put(u, leaders.get(u));
+		}
+		
+		ArrayList<TextComponent> list = new ArrayList<>();
+		for (UUID pid : realLeaders.keySet()) {
+			x++;
+			TextComponent a = new TextComponent("#" + x + ": "); a.setBold(true);
+			
+			if (Bukkit.getOfflinePlayer(pid).getName() == null) {
+				TextComponent b = new TextComponent("[unknown], " + Utilities.calculateTime(realLeaders.get(pid)));
+				TextComponent c = new TextComponent(a, b);
+				
+				c.setColor(ChatColor.GOLD);
+				list.add(c);
+			} else {
+				TextComponent b = new TextComponent(Bukkit.getOfflinePlayer(pid).getName() + ", " + Utilities.calculateTime(realLeaders.get(pid)));
+				TextComponent c = new TextComponent(a, b);
+				
+				c.setColor(ChatColor.GOLD);
+				list.add(c);
+			}
+		}
+		list.forEach(ln -> sender.spigot().sendMessage(ln));
 	}
 }
