@@ -267,15 +267,32 @@ public class PlayerMeta {
 	
 	public static void incKillTotal(Player p, int inc) {
 		if (sKillStats.containsKey(p.getUniqueId())) {
-			PVPstats id = sKillStats.get(p.getUniqueId());
-			Bukkit.spigot().broadcast(new TextComponent("" + id.killTotal));
-			id.killTotal += inc;
-			Bukkit.spigot().broadcast(new TextComponent("" + id.killTotal));
+			
+			if (Config.getValue("debug").equals("true")) {
+				
+				PVPstats id = sKillStats.get(p.getUniqueId());
+				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "/'s Kills: " + id.killTotal));
+				
+				id.killTotal += inc;
+				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "/'s Kills: " + id.killTotal));
+			} else {
+				
+				PVPstats id = sKillStats.get(p.getUniqueId());
+				id.killTotal += inc;
+			}
 		} else {
-			PVPstats id = sKillStats.get(p.getUniqueId());
-			Bukkit.spigot().broadcast(new TextComponent("" + id.killTotal));
-			id.killTotal = 1;
-			Bukkit.spigot().broadcast(new TextComponent("" + id.killTotal));
+			if (Config.getValue("debug").equals("true")) {
+				
+				PVPstats id = new PVPstats(p.getUniqueId(), 1);
+				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
+				
+				sKillStats.put(p.getUniqueId(), id);
+				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
+			} else {
+				
+				PVPstats id = new PVPstats(p.getUniqueId(), 1);
+				sKillStats.put(p.getUniqueId(), id);
+			}
 		}
 	}
 	

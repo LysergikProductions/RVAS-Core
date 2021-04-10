@@ -27,7 +27,6 @@ public class Stats implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
-		OfflinePlayer offp = (Player) sender;
 
 		if (Main.Top == null) {
 			double largest = 0;
@@ -108,18 +107,18 @@ public class Stats implements CommandExecutor {
 					}
 					
 					ArrayList<TextComponent> list = new ArrayList<>();
-					for (UUID p : realLeaders.keySet()) {
+					for (UUID pid : realLeaders.keySet()) {
 						x++;
 						TextComponent a = new TextComponent("#" + x + ": "); a.setBold(true);
 						
-						if (Bukkit.getOfflinePlayer(p).getName() == null) {
-							TextComponent b = new TextComponent("[unknown], " + Utilities.calculateTime(realLeaders.get(p)));
+						if (Bukkit.getOfflinePlayer(pid).getName() == null) {
+							TextComponent b = new TextComponent("[unknown], " + Utilities.calculateTime(realLeaders.get(pid)));
 							TextComponent c = new TextComponent(a, b);
 							
 							c.setColor(ChatColor.GOLD);
 							list.add(c);
 						} else {
-							TextComponent b = new TextComponent(Bukkit.getOfflinePlayer(p).getName() + ", " + Utilities.calculateTime(realLeaders.get(p)));
+							TextComponent b = new TextComponent(Bukkit.getOfflinePlayer(pid).getName() + ", " + Utilities.calculateTime(realLeaders.get(pid)));
 							TextComponent c = new TextComponent(a, b);
 							
 							c.setColor(ChatColor.GOLD);

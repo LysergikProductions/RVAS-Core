@@ -121,7 +121,7 @@ public class Server implements CommandExecutor {
 		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Those who intentionally lag the server can no longer place or break any blocks.")));
 		
 		// create output structure and send to chat (withers currently removed from output)
-		Arrays.asList(title, tps, slimit, skicks, acr, player_head, players, ujoins, donos, laggers, pmutes, ops, debug_head, restart, rtrig)
+		Arrays.asList(new TextComponent(""), title, tps, slimit, skicks, acr, player_head, players, ujoins, donos, laggers, pmutes, ops, debug_head, restart, rtrig)
 		.forEach(ln -> sender.spigot().sendMessage(ln));
 		return true;
 	}

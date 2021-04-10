@@ -110,6 +110,7 @@ public class Admin implements CommandExecutor {
 				return true;
 			}
 		}
+		player.spigot().sendMessage(new TextComponent(""));
 		player.spigot().sendMessage(new TextComponent("§csinse420: §7Systems Administrator, Developer, Founder"));
 		return true;
 	}
