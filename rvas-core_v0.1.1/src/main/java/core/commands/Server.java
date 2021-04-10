@@ -17,6 +17,7 @@ import core.backend.LagProcessor;
 import core.backend.PlayerMeta;
 import core.backend.ServerMeta;
 import core.backend.Utilities;
+import core.backend.Config;
 import core.events.LagPrevention;
 import core.events.SpeedLimit;
 import core.tasks.ProcessPlaytime;
@@ -25,11 +26,12 @@ public class Server implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		String speedLimit = LagProcessor.getTPS() <= 15 ? "36" : "96" + " bps";
+		String speedLimit = LagProcessor.getTPS() <= 15 ? Config.getValue("speedlimit.tier_two") : Config.getValue("speedlimit.tier_one") + " bps";
 		String antiCheat = LagProcessor.getTPS() <= 10 ? "True" : "False";
 		
 		// get all uniquley stylable components starting with headers //
-		TextComponent title = new TextComponent("=========== SERVER HEALTH ===========");
+		TextComponent title_sep = new TextComponent("===========");
+		TextComponent title_name = new TextComponent(" SERVER HEALTH ");
 		TextComponent player_head = new TextComponent("=========== PLAYERS ===========");
 		TextComponent debug_head = new TextComponent("=========== DEBUG ===========");
 		
@@ -67,6 +69,8 @@ public class Server implements CommandExecutor {
 		TextComponent withers_b = new TextComponent("" + LagPrevention.currentWithers);
 		
 		// style individual components //
+		title_sep.setColor(ChatColor.GRAY);
+		
 		players_a.setColor(ChatColor.RED); players_a.setBold(true);
 		
 		tps_a.setColor(ChatColor.RED); tps_a.setBold(true);
@@ -96,6 +100,7 @@ public class Server implements CommandExecutor {
 		withers_a.setColor(ChatColor.RED); withers_a.setBold(true);
 		
 		// parse components into 1-line components
+		TextComponent title = new TextComponent(title_sep, title_name, title_sep);
 		TextComponent players = new TextComponent(players_a, players_b);
 		TextComponent tps = new TextComponent(tps_a, tps_b);
 		TextComponent slimit = new TextComponent(slimit_a, slimit_b);
@@ -113,7 +118,6 @@ public class Server implements CommandExecutor {
 		TextComponent withers = new TextComponent(withers_a, withers_b);
 		
 		// style full component-lines at once
-		title.setColor(ChatColor.RED); title.setBold(true);
 		player_head.setColor(ChatColor.GOLD); player_head.setBold(false);
 		debug_head.setColor(ChatColor.GOLD); debug_head.setBold(false);
 		

@@ -32,7 +32,8 @@ public class LagPrevention implements Listener, Runnable {
 		}
 	}
 
-	public static int getWithers() {
+	public static int getWithers() { // disabled for performance reasons; to reimplement later
+		/*
 		ArrayList<String> worldTypes = new ArrayList<>();
 		worldTypes.add("world");// check compatibility for world names other than "world"
 		worldTypes.add("world_nether");// check compatibility for world names other than "world"
@@ -54,8 +55,9 @@ public class LagPrevention implements Listener, Runnable {
 						w.setHealth(0);
 					}
 				});
-		});
-		return toRet[0];
+		});*/
+		return 0;
+		//return toRet[0];
 	}
 
 	// Remove old skulls
