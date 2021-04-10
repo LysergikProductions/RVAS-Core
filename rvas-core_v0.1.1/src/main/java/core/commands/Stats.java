@@ -49,7 +49,8 @@ public class Stats implements CommandExecutor {
 		// get all uniquley stylable components
 		TextComponent title_pre = new TextComponent("--- ");
 		TextComponent title_name = new TextComponent(player.getName());
-		TextComponent title_suf = new TextComponent("\'s Statistics ---");
+		
+		TextComponent title_suf = new TextComponent("'s Statistics ---");
 		TextComponent top5_head = new TextComponent("--- Top Five Players ---");
 		
 		TextComponent joined_a = new TextComponent("Joined: ");
@@ -129,29 +130,46 @@ public class Stats implements CommandExecutor {
 					return true;
 			}
 
-			OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
-			if (p == null) {
+			// user has submitted a username argument, so..
+			OfflinePlayer p2 = Bukkit.getOfflinePlayer(args[0]);
+			
+			Date datewarg = new Date(p2.getFirstPlayed());
+			String firstPlayedwarg = sdf.format(date);
+			String lastPlayedwarg = sdf.format(new Date(p2.getLastPlayed()));
+			
+			TextComponent title_namewarg = new TextComponent(p2.getName());
+			TextComponent joinedwarg_b = new TextComponent(firstPlayedwarg);
+			TextComponent lastSeenwarg_b = new TextComponent(lastPlayedwarg);
+			TextComponent rankwarg_b = new TextComponent("" + PlayerMeta.getRank(p2));
+			TextComponent playtimewarg_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(p2)));
+			TextComponent tkillswarg_b = new TextComponent("" + PlayerMeta.getKills(p2));
+			
+			TextComponent titlewarg = new TextComponent(title_pre, title_namewarg, title_suf);
+			TextComponent joinedwarg = new TextComponent(joined_a, joinedwarg_b);
+			TextComponent lastSeenwarg = new TextComponent(lastSeen_a, lastSeenwarg_b);
+			TextComponent rank_warg = new TextComponent(rank_a, rankwarg_b);
+			TextComponent playtime_warg = new TextComponent(playtime_a, playtimewarg_b);
+			TextComponent tkills_warg = new TextComponent(tkills_a, tkillswarg_b);	
+			
+			titlewarg.setColor(ChatColor.YELLOW); titlewarg.setBold(true);
+			
+			if (p2 == null) {
 				player.spigot().sendMessage(new TextComponent("This player has never joined."));
 				return true;
-			} else if (!p.hasPlayedBefore()) {
+			} else if (!p2.hasPlayedBefore()) {
 				player.spigot().sendMessage(new TextComponent("This player has never joined."));
 				return true;
 			}
 			
-		    List<String> message = new ArrayList<String>();		    
-			message.add("--- " + p.getName() + "\'s Statistics ---");
-			message.add("Joined: " + firstPlayed);
-			message.add("Last seen: " + lastPlayed);
+			Arrays.asList(titlewarg, joinedwarg, lastSeenwarg)
+			.forEach(ln -> player.spigot().sendMessage(ln));
 			
-			if(!PlayerMeta.Playtimes.containsKey(p.getUniqueId())) {
-				message.add("Found no data for this user.");
+			if(!PlayerMeta.Playtimes.containsKey(p2.getUniqueId())) {
+				player.spigot().sendMessage(new TextComponent("Found no data for this user."));
 			} else {
-				message.add("Ranking: #" + PlayerMeta.getRank(p));
-				message.add("Time played: " + Utilities.calculateTime(PlayerMeta.getPlaytime(p)));
-				message.add("Total Kills: " + PlayerMeta.getKills(player));
+				Arrays.asList(rank_warg, playtime_warg, tkills_warg)
+				.forEach(ln -> player.spigot().sendMessage(ln));
 			}
-			
-			message.forEach(ln -> player.spigot().sendMessage(new TextComponent(ln)));
 			return true;
 		} else { // user supplied no arguments, so..
 			Arrays.asList(title, joined, lastSeen, rank, playtime, tkills)

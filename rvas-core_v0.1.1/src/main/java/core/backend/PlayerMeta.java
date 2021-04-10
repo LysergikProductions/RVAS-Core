@@ -296,12 +296,12 @@ public class PlayerMeta {
 		}
 	}
 	
-	public static PVPstats constructStats(Player p) {
-		PVPstats out = new PVPstats(p.getUniqueId(), 0);
+	public static PVPstats constructStats(OfflinePlayer p) {
+		PVPstats out = new PVPstats(p.getUniqueId(), 1);
 		return out;
 	}
 	
-	public static int getKills(Player p) {
+	public static int getKills(OfflinePlayer p) {
 		PVPstats player = sKillStats.get(p.getUniqueId());
 		if (player != null) {
 			if (Config.getValue("debug").equals("true")) {
