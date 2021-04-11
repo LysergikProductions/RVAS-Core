@@ -56,7 +56,8 @@ public class BlockListener implements Listener {
 			event.setCancelled(true);
 			Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
 		// protect nether roof	
-		} else if (block.getWorld().getEnvironment().equals(Environment.NETHER) && block.getLocation().getY() == 127) {
+		} else if (block.getWorld().getEnvironment().equals(Environment.NETHER) && block.getLocation().getY() == 127 &&
+				Config.getValue("protect.bedrock.roof").equals("true")) {
 			
 			event.setCancelled(true);
 			Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));

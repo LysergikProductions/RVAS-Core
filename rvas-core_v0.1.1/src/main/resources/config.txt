@@ -39,8 +39,11 @@ place.illegal = true
 // Disallow illegal block placement by OPs. false = disabled [default] || true = enabled
 place.illegal.ops = false
 
-//Protect Bedrock Floor
+//Protect Bedrock Floor (in all dimensions)
 protect.bedrock.floor = true
+
+//Protect Bedrock Roof (in the nether)
+protect.bedrock.roof = true
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //
