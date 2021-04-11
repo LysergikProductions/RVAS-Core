@@ -32,8 +32,8 @@ public class Server implements CommandExecutor {
 		// get all uniquley stylable components starting with headers //
 		TextComponent title_sep = new TextComponent("===========");
 		TextComponent title_name = new TextComponent(" SERVER HEALTH ");
-		TextComponent player_head = new TextComponent("=========== PLAYERS ===========");
-		TextComponent debug_head = new TextComponent("=========== DEBUG ===========");
+		TextComponent player_head_name = new TextComponent(" PLAYERS ");
+		TextComponent debug_head_name = new TextComponent(" DEBUG ");
 		
 		//GENERAL
 		TextComponent players_a = new TextComponent("Connected Players: ");
@@ -101,6 +101,9 @@ public class Server implements CommandExecutor {
 		
 		// parse components into 1-line components
 		TextComponent title = new TextComponent(title_sep, title_name, title_sep);
+		TextComponent player_head = new TextComponent(title_sep, player_head_name, title_sep);
+		TextComponent debug_head = new TextComponent(title_sep, debug_head_name, title_sep);
+		
 		TextComponent players = new TextComponent(players_a, players_b);
 		TextComponent tps = new TextComponent(tps_a, tps_b);
 		TextComponent slimit = new TextComponent(slimit_a, slimit_b);
@@ -118,8 +121,6 @@ public class Server implements CommandExecutor {
 		TextComponent withers = new TextComponent(withers_a, withers_b);
 		
 		// style full component-lines at once
-		player_head.setColor(ChatColor.GOLD); player_head.setBold(false);
-		debug_head.setColor(ChatColor.GOLD); debug_head.setBold(false);
 		
 		// add functionality to components
 		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Those who intentionally lag the server can no longer place or break any blocks.")));

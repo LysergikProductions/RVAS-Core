@@ -29,20 +29,9 @@ public class ItemCheckTriggers implements Listener {
 
 	static Random r = new Random();
 
-	@EventHandler
+	// --- stuff to redo in BlockListener
+	/*@EventHandler
 	public void onPlace(BlockPlaceEvent e) {
-		
-		// No roof placement
-		if(e.getBlock().getLocation().getY() > 127 && e.getBlock().getLocation().getWorld().getName().equals("world_nether")) {
-			e.setCancelled(true);
-			return;
-		}
-		
-		// Exempt ender portal frames; they are illegal but this event
-		// gets
-		// triggered when player adds eye of ender to portal to fire it.
-		if (e.getItemInHand().getType().equals(Material.ENDER_EYE))
-			return;
 
 		if (PlayerMeta.isLagfag(e.getPlayer())) {
 			Arrays.stream(lagItems).filter(m -> e.getBlock().getType().equals(m)).forEach(m -> e.setCancelled(true));
@@ -56,11 +45,6 @@ public class ItemCheckTriggers implements Listener {
 			}
 		}
 
-		if (Config.getValue("place.illegal").equals("true")) {
-			if (Config.getValue("place.illegal.ops").equals("false") && e.getPlayer().isOp()) {
-				return;
-			}
-
 			// Check if item isn't placeable
 
 			ItemCheck.Banned.stream().filter(m -> e.getBlock().getType().equals(m)).forEach(m -> {
@@ -72,7 +56,7 @@ public class ItemCheckTriggers implements Listener {
 			});
 
 		}
-	}
+	}*/
 
 	@EventHandler
 	public void onDispense(BlockDispenseArmorEvent e) {
@@ -112,15 +96,6 @@ public class ItemCheckTriggers implements Listener {
 	public void onInventoryClick(InventoryClickEvent e) {
 		if (Config.getValue("item.illegal.agro").equals("true")) {
 			ItemCheck.IllegalCheck(e.getCurrentItem(), "INVENTORY_CLICK", (Player)e.getWhoClicked());
-		}
-	}
-	
-	@EventHandler
-	public void onBlockBreak(BlockBreakEvent e) {
-		// No roof breaking
-		if(e.getBlock().getLocation().getY() > 127 && e.getBlock().getLocation().getWorld().getName().equals("world_nether")) {
-				e.setCancelled(true);
-				return;
 		}
 	}
 }
