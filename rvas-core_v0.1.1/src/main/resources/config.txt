@@ -29,11 +29,6 @@ movement.block.floor = true
 // currently potentially bugged
 movement.block.chunkcheck = false
 
-// Solidify the floor of the overworld and nether and the roof of the nether. false = disabled [default] true = enabled
-// WARNING: has a major impact on performance when multiple players are traveling. DO NOT KEEP THIS OPTION ON! 
-// Use it in short bursts if you need to repair bedrock layers.
-movement.block.chunkcheck.solidify_bedrock = false
-
 // --------------------- //
 // --- BLOCK PATCHES --- //
 // --------------------- //
@@ -43,6 +38,9 @@ place.illegal = true
 
 // Disallow illegal block placement by OPs. false = disabled [default] || true = enabled
 place.illegal.ops = false
+
+//Protect Bedrock Floor
+protect.bedrock.floor = true
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //

@@ -23,21 +23,31 @@ public class BlockListener implements Listener {
 	public void onBedrockBreak(BlockBreakEvent event) {
 		
 		Block block = event.getBlock();
+		Player breaker = event.getPlayer();
 		
-		// ignore blockBreak events when the block isn't bedrock
+		// ignore blockBreak events when the block isn't bedrock or if user / uuid is listed as admin
 		if (!block.getType().equals(Material.BEDROCK)) {
+			return;
+		} else if (Config.getValue("admin").equals(breaker.getName()) && Config.getValue("adminid").equals(breaker.getUniqueId())) {
+			if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
+				System.out.println("admin: " + Config.getValue("admin"));
+				System.out.println("breaker: " + breaker.getName());
+				System.out.println("adminid: " + Config.getValue("adminid"));
+				System.out.println("breakerid: " + breaker.getUniqueId());
+			}
 			return;
 		}
 		
-		Player breaker = event.getPlayer();
 		Bukkit.spigot().broadcast(new TextComponent(breaker.getName() + " just broke a bedrock block!"));
 		
 		// protect bedrock floor
-		if (block.getLocation().getY() < 1) {
+		if (block.getLocation().getY() < 1 && Config.getValue("protect.bedrock.floor").equals("true")) {
+			
 			event.setCancelled(true);
 			Bukkit.spigot().broadcast(new TextComponent(breaker.getName() + "'s BlockBreakEvent was cancelled."));
 			
-		} else if (block.getWorld().getEnvironment().equals(Environment.NETHER) && block.getLocation().getY() > 126) {
+		} else if (block.getWorld().getEnvironment().equals(Environment.NETHER) && block.getLocation().getY() == 127) {
+			
 			event.setCancelled(true);
 			Bukkit.spigot().broadcast(new TextComponent(breaker.getName() + "'s BlockBreakEvent was cancelled."));
 		}

@@ -103,7 +103,6 @@ public class Move implements Listener {
 		if (needsCheck) {
 			boolean containsSpawner = false;
 			boolean portalsIllegal = false;
-			boolean solidifyBedrock = Boolean.parseBoolean(Config.getValue("movement.block.chunkcheck.solidify_bedrock"));
 			Chunk c = p.getLocation().getChunk();
 
 			// Portals dont spawn PAST! a 25000 block radius of spawn
