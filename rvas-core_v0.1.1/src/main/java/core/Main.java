@@ -67,6 +67,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new SpeedLimit(), this);
 		getServer().getPluginManager().registerEvents(new PVP(), this);
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
+		getServer().getPluginManager().registerEvents(new OpListener(), this);
 
 		// Disable Wither spawn sound
 		//ProtocolLibrary.getProtocolManager()
