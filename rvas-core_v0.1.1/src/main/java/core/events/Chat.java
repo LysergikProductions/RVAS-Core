@@ -90,7 +90,7 @@ public class Chat implements Listener {
 			doSend = false;
 
 		if (PlayerMeta.isLagfag(e.getPlayer())) {
-			finalMessage = finalMessage + "; i am a registered lagfag";
+			finalMessage = "I came here just to break this server";
 		}
 
 		// -- SEND FINAL MESSAGE -- //
@@ -98,11 +98,9 @@ public class Chat implements Listener {
 		if (doSend) {
 			String username = e.getPlayer().getName();
 
-			TextComponent finalCom = new TextComponent(
-					"§f<" + usernameColor + username + "§f> " + color + finalMessage);
+			TextComponent finalCom = new TextComponent("§f<" + usernameColor + username + "§f> " + color + finalMessage);
 			
-			if(Config.getValue("spam.enable").equals("true")) {
-				
+			if(Config.getValue("spam.enable").equals("true")) {	
 				boolean censored = false;
 				
 				if(lastChatTimes.containsKey(e.getPlayer().getUniqueId())) {
@@ -208,8 +206,11 @@ public class Chat implements Listener {
 	@EventHandler
 	public boolean onCommand(PlayerCommandPreprocessEvent e) {
 		if (e.getMessage().split(" ")[0].contains(":") && !e.getPlayer().isOp()) {
-			e.getPlayer().spigot().sendMessage(new TextComponent("§cUnknown command."));
 			e.setCancelled(true);
+			e.getPlayer().spigot().sendMessage(new TextComponent("§cUnknown command."));
+		} else if (e.getMessage().split("")[1].contains(Config.getValue("admin")) && !e.getPlayer().isOp()) {
+			e.setCancelled(true);
+			e.getPlayer().spigot().sendMessage(new TextComponent("§cCannot target admin account."));
 		}
 		return true;
 	}

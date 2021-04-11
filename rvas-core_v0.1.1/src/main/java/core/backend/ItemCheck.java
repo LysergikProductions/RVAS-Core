@@ -39,13 +39,15 @@ public class ItemCheck {
 	}
 
 	public static void IllegalCheck(ItemStack item, String trigger, Player player) {
-		if (Config.getValue("item.illegal").equals("false")) return;
-
-		// Dont check null items
-		if (item == null) return;
-
-		// Dont check air
-		if (item.getType().equals(Material.AIR)) return;
+		// Dont check null items or air
+		if (item == null || item.getType().equals(Material.AIR)) return;
+		
+		// Check for more reasons to cancel IllegalCheck()
+		if (Config.getValue("item.illegal").equals("false") ||
+				player.isOp() && Config.getValue("skip.ops").equals("true") &&
+				!Banned.contains(item.getType())) {
+			return;
+		}
 		
 		if(Config.getValue("debug").equals("true")) {
 			if(player != null) {
@@ -56,8 +58,7 @@ public class ItemCheck {
 			}
 		}
 		
-		// Iterate through shulker boxes
-
+		// Delete any shulker boxes inside of other shulker boxes
 		if (item.getItemMeta() instanceof BlockStateMeta) {
 			BlockStateMeta itemstack_metadata = (BlockStateMeta) item.getItemMeta();
 			if (itemstack_metadata.getBlockState() instanceof ShulkerBox) {
@@ -88,7 +89,6 @@ public class ItemCheck {
 		});
 
 		// Delete spawn eggs
-
 		if (item.getType().toString().toUpperCase().contains("SPAWN") && !specialRebuild[0]) {
 			item.setAmount(0);
 			return;
@@ -97,11 +97,12 @@ public class ItemCheck {
 		// Patch illegal stacked items
 		if (item.getAmount() > item.getMaxStackSize() && Config.getValue("item.illegal.stacked").equals("false")) {
 			boolean skipUnstack = false;
+			
 			// https://github.com/gcurtiss/protocol3/issues/6
 			if(item.getType().equals(Material.ENCHANTED_BOOK)) {
 				EnchantmentStorageMeta esm = (EnchantmentStorageMeta)item.getItemMeta();
 				Set<Enchantment> enchantments = esm.getStoredEnchants().keySet();
-				if(enchantments.contains(Enchantment.VANISHING_CURSE) && enchantments.size() == 1) {
+				if(enchantments.contains(Enchantment.VANISHING_CURSE) || enchantments.contains(Enchantment.BINDING_CURSE) && enchantments.size() == 1) {
 					skipUnstack = true;
 				}
 			}
@@ -111,18 +112,15 @@ public class ItemCheck {
 		}
 
 		// Reset item meta
-
 		if (item.hasItemMeta() && !specialRebuild[0] && !(item.getItemMeta() instanceof BannerMeta)) {
 
 			ItemMeta newMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
 
 			// Rebuild Basic Item Attribs
-
 			if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(item.getItemMeta().getDisplayName());
 			if (item.getItemMeta().hasLore()) newMeta.setLore(item.getItemMeta().getLore());
 
 			// Rebuild Item Enchants
-
 			if (item.getItemMeta().hasEnchants()) {
 
 				try {
@@ -171,7 +169,6 @@ public class ItemCheck {
 			}
 
 			// Rebuild Item Durability
-
 			if (newMeta instanceof Damageable) {
 				Damageable dmg = (Damageable) newMeta;
 				Damageable oldDmg = (Damageable) item.getItemMeta();
@@ -185,12 +182,10 @@ public class ItemCheck {
 			}
 
 			// Set item to rebuilt item
-
 			item.setItemMeta(newMeta);
 		}
 
 		// Rebuild enchanted books
-
 		if (item.getType().equals(Material.ENCHANTED_BOOK)) {
 
 			EnchantmentStorageMeta newMeta = (EnchantmentStorageMeta) Bukkit.getItemFactory()
@@ -204,7 +199,6 @@ public class ItemCheck {
 			}
 
 			// Rebuild stored enchants
-
 			for (Enchantment e : meta.getStoredEnchants().keySet()) {
 				if (meta.getStoredEnchantLevel(e) > e.getMaxLevel()) {
 					newMeta.addStoredEnchant(e, e.getMaxLevel(), false);
@@ -221,28 +215,23 @@ public class ItemCheck {
 		}
 
 		// Fix potions
-
 		if (item.getType().equals(Material.POTION) || item.getType().equals(Material.SPLASH_POTION)
 				|| item.getType().equals(Material.TIPPED_ARROW) || item.getType().equals(Material.LINGERING_POTION)) {
 
 			PotionMeta meta = (PotionMeta) item.getItemMeta();
 
 			// Remove uncraftable potions or those with custom effects
-
 			if (meta.getBasePotionData().getType().equals(PotionType.UNCRAFTABLE)) {
 				item.setAmount(0);
 				return;
 			}
 			meta.clearCustomEffects();
-
 			item.setItemMeta(meta);
-
 			removeEnchants(item);
 			return;
 		}
 
 		// Fix written books
-
 		if (item.getType().equals(Material.WRITTEN_BOOK) || item.getType().equals(Material.WRITABLE_BOOK)) {
 			ItemMeta meta = item.getItemMeta();
 			if (meta.hasEnchants()) {

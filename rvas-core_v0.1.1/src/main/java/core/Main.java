@@ -65,6 +65,8 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new ItemCheckTriggers(), this);
 		getServer().getPluginManager().registerEvents(new LagPrevention(), this);
 		getServer().getPluginManager().registerEvents(new SpeedLimit(), this);
+		getServer().getPluginManager().registerEvents(new PVP(), this);
+		getServer().getPluginManager().registerEvents(new BlockListener(), this);
 
 		// Disable Wither spawn sound
 		//ProtocolLibrary.getProtocolManager()
@@ -122,6 +124,8 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("server").setExecutor(new Server());
 		this.getCommand("help").setExecutor(new Help());
 
+		// Initialize 
+		
 		// Enable discord notifications for this instance
 		NotificationHandler = new Notifications();
 		getServer().getPluginManager().registerEvents(NotificationHandler, this);
@@ -139,6 +143,7 @@ public class Main extends JavaPlugin implements Listener {
 			PlayerMeta.saveMuted();
 			PlayerMeta.saveLagfags();
 			PlayerMeta.writePlaytime();
+			//PVP.writeKillStats();
 		} catch (IOException ex)
 		{
 			System.out.println("[core.main] Failed to save one or more files.");

@@ -1,12 +1,15 @@
 package core.backend;
 
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
 import core.events.Chat;
+import core.backend.Config;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,8 +17,9 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PlayerMeta
-{
+import core.backend.PVPstats;
+
+public class PlayerMeta {
 
 	public static List<UUID> _donatorList = new ArrayList<UUID>();
 	
@@ -23,6 +27,7 @@ public class PlayerMeta
 	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<UUID, Double>();
 
 	public static HashMap<UUID, Double> Playtimes = new HashMap<UUID, Double>();
+	public static Map <UUID, PVPstats> sKillStats = new HashMap<>();
 
 	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
 
@@ -42,19 +47,16 @@ public class PlayerMeta
 	{
 		if (status)
 		{
-			if (!_donatorList.contains(p.getUniqueId()))
-			{
+			if (!_donatorList.contains(p.getUniqueId())) {
 				_donatorList.add(p.getUniqueId());
 			}
-		} else
-		{
+		} else {
 			_donatorList.remove(p.getUniqueId());
 		}
-		try
-		{
+
+		try {
 			saveDonators();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			System.out.println("[core.backend.playermeta] Failed to save donators.");
 		}
 	}
@@ -111,7 +113,9 @@ public class PlayerMeta
 			if (_permanentMutes.containsKey(uuid))
 			{
 				String ip = _permanentMutes.get(uuid);
-				for(UUID val : _permanentMutes.keySet()) {
+				HashMap<UUID, String> modified = new HashMap<UUID, String>();
+				modified = _permanentMutes;
+				for(UUID val : modified.keySet()) {
 					if(_permanentMutes.get(val).equals(ip)) {
 						_permanentMutes.remove(val);
 					}
@@ -124,7 +128,7 @@ public class PlayerMeta
 					saveMuted();
 				} catch (IOException e)
 				{
-					System.out.println("[core.backend.playermeta] Failed to save mutes.");
+					System.out.println("[protocol3] Failed to save mutes.");
 				}
 			}
 			Chat.violationLevels.remove(uuid);
@@ -261,6 +265,65 @@ public class PlayerMeta
 		Files.write(Paths.get("plugins/core/playtime.db"), String.join("\n", list).getBytes());
 	}
 
+	// --- PVP -- //
+	
+	public static void incKillTotal(Player p, int inc) {
+		if (sKillStats.containsKey(p.getUniqueId())) {
+			
+			if (Config.getValue("debug").equals("true")) {
+				
+				PVPstats id = sKillStats.get(p.getUniqueId());
+				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
+				
+				id.killTotal += inc;
+				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
+			} else {
+				
+				PVPstats id = sKillStats.get(p.getUniqueId());
+				id.killTotal += inc;
+			}
+		} else {
+			if (Config.getValue("debug").equals("true")) {
+				
+				PVPstats id = new PVPstats(p.getUniqueId(), 1);
+				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
+				
+				sKillStats.put(p.getUniqueId(), id);
+				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
+			} else {
+				
+				PVPstats id = new PVPstats(p.getUniqueId(), 1);
+				sKillStats.put(p.getUniqueId(), id);
+			}
+		}
+	}
+	
+	public static PVPstats constructStats(OfflinePlayer p) {
+		PVPstats out = new PVPstats(p.getUniqueId(), 1);
+		return out;
+	}
+	
+	public static int getKills(OfflinePlayer p) {
+		PVPstats player = sKillStats.get(p.getUniqueId());
+		if (player != null) {
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+player.killTotal);
+			}
+			return player.killTotal;
+		} else {
+			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null. Constructing new PVPstats object.");
+			PVPstats newPlayer = constructStats(p);
+			return newPlayer.killTotal;
+		}
+	}
+
+//	public static void writeKills() throws IOException {
+//		List<String> list = new ArrayList();
+
+//		sKillStats.keySet().forEach(user -> list.add(user.toString() + ":" + sKillStats.get(user)));
+//		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
+//	}
+	
 	// --- OTHER -- //
 
 	public enum MuteType {

@@ -1,13 +1,12 @@
 package core.backend;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
 
 import core.Main;
+import core.backend.PVPstats;
 
 public class FileManager {
 
@@ -26,8 +25,8 @@ public class FileManager {
 		File lagfag_user_database = new File(plugin_work_path + "lagfag.db");
 		File playtime_user_database = new File(plugin_work_path + "playtime.db");
 		File stronghold_portals = new File(plugin_work_path + "strong-portals.db");
+		File killstats_user_database = new File(plugin_work_path + "killstats.db");
 
-		//
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!donor_code_directory.exists()) donor_code_directory.mkdir();
 		if (!donor_list.exists()) donor_list.createNewFile();
@@ -56,9 +55,8 @@ public class FileManager {
 		}
 
 		if (!lagfag_user_database.exists()) lagfag_user_database.createNewFile();
-
-
 		if (!playtime_user_database.exists()) playtime_user_database.createNewFile();
+		if (!killstats_user_database.exists()) killstats_user_database.createNewFile();
 
 		Config.load();
 
@@ -73,5 +71,16 @@ public class FileManager {
 		Files.readAllLines(playtime_user_database.toPath()).forEach(val ->
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
+		
+		//FileWriter fw = new FileWriter(fileName:"/plugins/core/killstats.db");
+		//BufferedWriter bw = new BufferedWriter(fw);
+		
+		//Files.readAllLines(killstats_user_database.toPath())
+		//	.forEach(line) -> PlayerMeta.sKillStats.put(val));
+			
+		Files.readAllLines(killstats_user_database.toPath()).forEach(line -> {
+			PVPstats id = PVPstats.fromString(line);
+			PlayerMeta.sKillStats.put(id.playerid, id);
+		});
 	}
 }

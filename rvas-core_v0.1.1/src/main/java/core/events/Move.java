@@ -35,48 +35,42 @@ public class Move implements Listener {
 	static Random r = new Random();
 
 	@EventHandler
-	public void onPlayerMove(PlayerMoveEvent event)
-	{
-		// This method is actually fired upon head rotate to; if the player's coords did
-		// not change,
-		// don't fire this event
-
+	public void onPlayerMove(PlayerMoveEvent event) {
+		Player p = event.getPlayer();
+		UUID playerUuid = p.getUniqueId();
+		
+		boolean needsCheck = false;
+		boolean inNether = p.getLocation().getWorld().getName().endsWith("the_nether");
+		boolean inEnd = p.getLocation().getWorld().getName().endsWith("the_end");
+		double yCoord = p.getLocation().getY();
+		
+		// This method is actually fired upon head rotate too, so skip event if the player's coords didn't change
 		if (event.getFrom().getBlockX() == event.getTo().getBlockX()
 				&& event.getFrom().getBlockY() == event.getTo().getBlockY()
 				&& event.getFrom().getBlockZ() == event.getTo().getBlockZ())
 			return;
 
-		if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL))
-		{
+		// Ensure survival-mode players are not invulnerable
+		if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
 			event.getPlayer().setInvulnerable(false);
 		}
 
-		// lagfag torture
+		// Make game unplayable for laggers //(remodel this behaviour completely)
 		if (PlayerMeta.isLagfag(event.getPlayer()))
 		{
 			int randomNumber = r.nextInt(9);
-
-			if (randomNumber == 5 || randomNumber == 6)
-			{
+			if (randomNumber == 5 || randomNumber == 6) {
 				event.getPlayer().spigot().sendMessage(new TextComponent("§cThis is what you get for being a lagfag!"));
 				event.setCancelled(true);
 				return;
 			}
 
 			randomNumber = r.nextInt(250);
-
-			if (randomNumber == 21)
-			{
+			if (randomNumber == 21) {
 				event.getPlayer().kickPlayer("§6fuck you lol");
 				return;
 			}
 		}
-
-		Player p = event.getPlayer();
-		UUID playerUuid = p.getUniqueId();
-		boolean needsCheck = false;
-		boolean inNether = p.getLocation().getWorld().getName().endsWith("the_nether");
-		boolean inEnd = p.getLocation().getWorld().getName().endsWith("the_end");
 
 		// -- ILLEGAL PLACEMENT PATCH -- //
 		boolean illegalItemAgro = Boolean.parseBoolean(Config.getValue("item.illegal.agro"));
@@ -84,8 +78,7 @@ public class Move implements Listener {
 
 		// Check every chunk the player enters
 
-		if (!lastChunks.containsKey(playerUuid))
-		{
+		if (!lastChunks.containsKey(playerUuid)) {
 			lastChunks.put(playerUuid, p.getLocation().getChunk());
 			needsCheck = true;
 		} else {
@@ -95,8 +88,9 @@ public class Move implements Listener {
 			}
 		}
 
-		if (Config.getValue("movement.block.chunkcheck").equals("false"))
+		if (Config.getValue("movement.block.chunkcheck").equals("false")) {
 			needsCheck = false;
+		}
 		
 		if (inEnd) {
 			needsCheck = false;
@@ -109,7 +103,6 @@ public class Move implements Listener {
 		if (needsCheck) {
 			boolean containsSpawner = false;
 			boolean portalsIllegal = false;
-			boolean solidifyBedrock = Boolean.parseBoolean(Config.getValue("movement.block.chunkcheck.solidify_bedrock"));
 			Chunk c = p.getLocation().getChunk();
 
 			// Portals dont spawn PAST! a 25000 block radius of spawn
@@ -241,28 +234,13 @@ public class Move implements Listener {
 
 							block.setType(Material.AIR);
 						}
-
-						// make sure the floor is solid in both dimensions at y=1
-						if (solidifyBedrock && y == 1 && !(block.getType().equals(Material.BEDROCK)))
-						{
-							block.setType(Material.BEDROCK);
-							continue;
-						}
-
-						// make sure the nether ceiling is solid at y=127
-						if (solidifyBedrock && inNether && y == 127 && !(block.getType().equals(Material.BEDROCK)))
-						{
-							block.setType(Material.BEDROCK);
-							continue;
-						}
 					}
 				}
 			}
 
 			// If frames and no spawner, make sure there's not more than 12.
 			// Sometimes portal rooms generate half in one chunk and half in another chunk,
-			// but no portal will ever contain
-			// more than 12 frames
+			// but no portal chunk will ever contain more than 12 frames
 
 			if (!frames.isEmpty() && !containsSpawner)
 			{
@@ -280,23 +258,25 @@ public class Move implements Listener {
 		// -- ROOF AND FLOOR PATCH -- //
 
 		// kill players on the roof of the nether
-		if (inNether && p.getLocation().getY() > 127 && Config.getValue("movement.block.roof").equals("true"))
+		if (inNether && yCoord > 127 && Config.getValue("movement.block.roof").equals("true"))
 			p.setHealth(0);
 
 		// kill players below ground in overworld and nether
-		if (!inEnd && p.getLocation().getY() <= 0 && Config.getValue("movement.block.floor").equals("true"))
+		if (!inEnd && yCoord < 0 && Config.getValue("movement.block.floor").equals("true"))
 			p.setHealth(0);
 	}
 	
 	@EventHandler
 	public void onEntityMove(EntityMoveEvent e) {
-		boolean inNether = e.getEntity().getLocation().getWorld().getName().equals("world_nether");
-		boolean inEnd = e.getEntity().getLocation().getWorld().getName().equals("world_the_end");
-		if (inNether && e.getEntity().getLocation().getY() > 127 && Config.getValue("movement.block.roof").equals("true")) {
+		boolean inNether = e.getEntity().getLocation().getWorld().getName().endsWith("the_nether");
+		boolean inEnd = e.getEntity().getLocation().getWorld().getName().endsWith("the_end");
+		double yCoord = e.getEntity().getLocation().getY();
+		
+		if (inNether && yCoord > 127 && Config.getValue("movement.block.roof").equals("true")) {
 			e.getEntity().setHealth(0);
 			return;
 		}
-		if (!inEnd && e.getEntity().getLocation().getY() <= 0 && Config.getValue("movement.block.floor").equals("true")) {
+		if (!inEnd && yCoord < 0 && Config.getValue("movement.block.floor").equals("true")) {
 			e.getEntity().setHealth(0);
 			return;
 		}
@@ -304,10 +284,12 @@ public class Move implements Listener {
 	
 	@EventHandler
 	public void onEntityPortal(EntityPortalEvent e) {
+		// prevent ender crystals with bottoms showing from making it through portals
+		// in current versions of paper (build =< 586), these crystals break chunks around them
 		if(e.getEntityType().equals(EntityType.ENDER_CRYSTAL)) {
-			EnderCrystal entity = (EnderCrystal)e.getEntity();
-			if(entity.isShowingBottom())
-			{
+			EnderCrystal crystal = (EnderCrystal)e.getEntity();
+			
+			if(crystal.isShowingBottom()) {
 				e.setCancelled(true);
 				return;
 			}

@@ -5,6 +5,16 @@
 // Internal use only. Do not change or you'll break the entire thing.
 config.version = 22
 
+//uuid / ign for your current admin/owner op account
+adminid = 
+admin = sinse420
+
+// remove less technical but otherwise useful console output
+devesp = false
+
+// verbose console output
+debug = true
+
 // ------------------------ //
 // --- MOVEMENT PATCHES --- //
 // ------------------------ //
@@ -19,27 +29,31 @@ movement.block.floor = true
 // currently potentially bugged
 movement.block.chunkcheck = false
 
-// Solidify the floor of the overworld and nether and the roof of the nether. false = disabled [default] true = enabled
-// WARNING: has a major impact on performance when multiple players are traveling. DO NOT KEEP THIS OPTION ON! 
-// Use it in short bursts if you need to repair bedrock layers.
-movement.block.chunkcheck.solidify_bedrock = false
-
 // --------------------- //
 // --- BLOCK PATCHES --- //
 // --------------------- //
 
 // Disallow illegal block placement. false = disabled [default] ||  true = enabled
-place.illegal = false
+place.illegal = true
 
 // Disallow illegal block placement by OPs. false = disabled [default] || true = enabled
 place.illegal.ops = false
+
+//Protect Bedrock Floor (in all dimensions)
+protect.bedrock.floor = true
+
+//Protect Bedrock Roof (in the nether)
+protect.bedrock.roof = true
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //
 // ---------------------------- //
 
+// skip illegals checks for ops?
+skip.ops = true
+
 // Enable or disable the entire patch. false = disabled || true = enabled [default]
-item.illegal = false
+item.illegal = true
 
 // Enable or disable overstacked items. false = disabled || true = enabled [default]
 item.illegal.stacked = true
@@ -174,6 +188,3 @@ misc.survival = true
 
 // Enable or disable the prank /kit command. false = disabled true = enabled [default]
 funny.kit = false
-
-// Enable EXTREMELY LOUD debugging. false = disabled true = enabled
-debug = false
