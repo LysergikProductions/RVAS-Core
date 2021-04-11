@@ -13,7 +13,7 @@ admin = sinse420
 devesp = false
 
 // verbose console output
-debug = true
+debug = false
 
 // ------------------------ //
 // --- MOVEMENT PATCHES --- //
@@ -23,21 +23,22 @@ debug = true
 movement.block.roof = false
 
 // Enable or disable under-floor protection. false = disabled || true = enabled [default]
-movement.block.floor = true
+movement.block.floor = false
 
 // Enable or disable illegal placement protection. false = disabled [default] || true = enabled
-// currently potentially bugged
 movement.block.chunkcheck = false
 
 // --------------------- //
 // --- BLOCK PATCHES --- //
 // --------------------- //
 
-// Disallow illegal block placement. false = disabled [default] ||  true = enabled
-place.illegal = true
+// Prevent anyone placing blocks on the nether roof
+protect.roof.noplacement = false
 
-// Disallow illegal block placement by OPs. false = disabled [default] || true = enabled
-place.illegal.ops = false
+// Whether to cancel placement of blocks that are unobtainable in survival mode without commands
+//(true = cancel placements)
+protect.banned.place = true
+protect.banned.place.ops = true
 
 //Protect Bedrock Floor (in all dimensions)
 protect.bedrock.floor = true
