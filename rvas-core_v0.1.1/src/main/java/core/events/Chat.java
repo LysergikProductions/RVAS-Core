@@ -40,19 +40,15 @@ public class Chat implements Listener {
 		// Cancel this event so we can override vanilla chat
 		e.setCancelled(true);
 
-		// Don't execute period if the player is muted
+		// Don't execute if the player is muted
 		if (PlayerMeta.isMuted(e.getPlayer()) || (PlayerMeta.MuteAll && !e.getPlayer().isOp()))
 			return;
 
 		// -- CREATE PROPERTIES --
-
-		// Chat color to send the message with.
-		String color;
-		// The final edited message.
-		String finalMessage = e.getMessage();
-		// If we should send the final message.
+		
 		boolean doSend = true;
-		// The username color.
+		String finalMessage = e.getMessage();
+		String color;
 		String usernameColor;
 
 		// -- SET CHAT COLORS -- //
@@ -86,11 +82,14 @@ public class Chat implements Listener {
 
 		// -- CHECKS -- //
 
-		if (isBlank(finalMessage))
+		if (isBlank(finalMessage)) {
 			doSend = false;
-
-		if (PlayerMeta.isLagfag(e.getPlayer())) {
-			finalMessage = "I came here just to break this server";
+		} else if (PlayerMeta.isLagfag(e.getPlayer())) {
+			finalMessage = ":'(";
+		}
+		
+		if (finalMessage.contains("/deop") || finalMessage.contains("/op")) {
+			
 		}
 
 		// -- SEND FINAL MESSAGE -- //

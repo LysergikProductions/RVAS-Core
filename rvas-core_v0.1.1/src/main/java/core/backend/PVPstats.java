@@ -13,7 +13,7 @@ public class PVPstats {
 	int logEscape;
 	
 	public PVPstats(UUID playerid, int killTotal) {
-		this.playerid = playerid; this.killTotal = 0;
+		this.playerid = playerid; this.killTotal = killTotal;
 	}
 	
 	public static PVPstats fromString(String line) {

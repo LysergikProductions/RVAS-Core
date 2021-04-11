@@ -299,7 +299,7 @@ public class PlayerMeta {
 	}
 	
 	public static PVPstats constructStats(OfflinePlayer p) {
-		PVPstats out = new PVPstats(p.getUniqueId(), 1);
+		PVPstats out = new PVPstats(p.getUniqueId(), 0);
 		return out;
 	}
 	
