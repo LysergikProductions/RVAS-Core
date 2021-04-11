@@ -24,7 +24,7 @@ public class OpListener implements Listener {
 	
 	// prevent ops from using certain commands
 	// this happens *before* OP Lock sees the message,
-	//making OPLock a great failsafe for rogue use of /op and /deop
+	// making OPLock a great failsafe for rogue use of /op and /deop
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
 		
@@ -34,11 +34,28 @@ public class OpListener implements Listener {
 		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
 		if (!admin_name.equals(sender_name) || !admin_id.equals(sender_id)) {
-			if (event.getMessage().contains("op") ||
-					event.getMessage().contains("summon") ||
-					event.getMessage().contains("give") ||
-					event.getMessage().contains("set") ||
-					event.getMessage().contains("replace")) {
+			if (event.getMessage().contains("/op") ||
+					event.getMessage().contains("/deop") ||
+					event.getMessage().contains("/execute") ||
+					event.getMessage().contains("/summon") ||
+					event.getMessage().contains("/give") ||
+					event.getMessage().contains("/set") ||
+					event.getMessage().contains("/replace") ||
+					event.getMessage().contains("/enchant") ||
+					event.getMessage().contains("/time") ||
+					event.getMessage().contains("/weather") ||
+					event.getMessage().contains("/schedule") ||
+					event.getMessage().contains("/data") ||
+					event.getMessage().contains("/fill") ||
+					event.getMessage().contains("/save") ||
+					event.getMessage().contains("/loot") ||
+					event.getMessage().contains("/experience") ||
+					event.getMessage().contains("/forceload") ||
+					event.getMessage().contains("/function") ||
+					event.getMessage().contains("/spreadplayers") ||
+					event.getMessage().contains("/xp") ||
+					event.getMessage().contains("/reload") ||
+					event.getMessage().contains("/gamerule")) {
 				
 				event.setCancelled(true);
 				event.getPlayer().spigot().sendMessage(new TextComponent("no"));

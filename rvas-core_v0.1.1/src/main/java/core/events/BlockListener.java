@@ -117,6 +117,11 @@ public class BlockListener implements Listener {
 		String admin_name = Config.getValue("admin");
 		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
+		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
+		if (block.getType().toString().contains("SHULKER_BOX") && !placer.getGameMode().equals(GameMode.SURVIVAL)) {
+			event.setCancelled(true);
+		}
+		
 		// anti roof-placement
 		if (Config.getValue("protect.roof.noplacement").equals("true")) {
 			if(block.getLocation().getY() > 127 && block.getLocation().getWorld().getName().endsWith("the_nether")) {

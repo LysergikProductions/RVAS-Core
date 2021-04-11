@@ -35,7 +35,7 @@ movement.block.chunkcheck = false
 // Prevent anyone placing blocks on the nether roof
 protect.roof.noplacement = false
 
-// Whether to cancel placement of blocks that are unobtainable in survival mode without commands
+// Whether to cancel placement of blocks that are unobtainable in no-commands survival-mode
 //(true = cancel placements)
 protect.banned.place = true
 protect.banned.place.ops = true
