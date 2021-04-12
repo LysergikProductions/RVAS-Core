@@ -5,46 +5,58 @@
 // Internal use only. Do not change or you'll break the entire thing.
 config.version = 22
 
-//uuid / ign for your current admin/owner op account
+// ------------------ //
+// --- IMPORTANT  --- //
+// ------------------ //
+
+// uuid for the full access in-game account
 adminid = 
+
+// ign for the full access in-game account
 admin = sinse420
 
-// remove less technical but otherwise useful console output
+// remove less technical but otherwise useful console output (may globally broadcast some events info in chat)
 devesp = false
 
-// verbose console output
+// verbose console output (may globally broadcast some events info in chat)
 debug = false
 
-// ------------------------ //
-// --- MOVEMENT PATCHES --- //
-// ------------------------ //
+// ----------------------- //
+// --- MOVEMENT CHECKS --- //
+// ----------------------- //
 
-// Enable or disable over-roof protection. false = disabled [default] || true = enabled
-movement.block.roof = false
+// Instantly kill players above y=127 in the nether
+movement.kill.roof = false
 
-// Enable or disable under-floor protection. false = disabled || true = enabled [default]
-movement.block.floor = false
+// Instantly kill players under the bedrock floor
+movement.kill.floor = false
 
-// Enable or disable illegal placement protection. false = disabled [default] || true = enabled
-movement.block.chunkcheck = false
+// Use players' movement events to delete existing illegal items from the world
+movement.illegals.check = false
 
-// --------------------- //
-// --- BLOCK PATCHES --- //
-// --------------------- //
+// ------------------------- //
+// --- PLACEMENT PATCHES --- //
+// ------------------------- //
 
 // Prevent anyone placing blocks on the nether roof
 protect.roof.noplacement = false
 
 // Whether to cancel placement of blocks that are unobtainable in no-commands survival-mode
 //(true = cancel placements)
+
 protect.banned.place = true
 protect.banned.place.ops = true
 
-//Protect Bedrock Floor (in all dimensions)
-protect.bedrock.floor = true
+// --------------------------- //
+// --- BLOCK BREAK PATCHES --- //
+// --------------------------- //
 
-//Protect Bedrock Roof (in the nether)
+//Protect bedrock floor (in all dimensions) / roof (in the nether)
+//** DOES NOT PREVENT VANILLA BLOCK BREAK EXPLOITS**//
+// You can enable and disable those exploits in the paper.yml config-file on your server ("allow-permanent-block-break-exploits")
+
 protect.bedrock.roof = true
+protect.bedrock.floor = true
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //
@@ -118,17 +130,17 @@ mute.pop = 51
 // Enable voting by already-muted persons. false = disabled || true = enabled [default]
 mute.hypocrisy = true
 
-// ------------ //
+// ----------- //
 // --- LAG --- //
 // ----------- //
 
-// Global wither limit. default = 1000
-wither.limit = 1000
+// Global wither limit. default = 710
+wither.limit = 710
 // Global wither skull age limit. default = 4800 (4 minutes in ticks if server is running at 20TPS)
 wither.skull.max_age = 2400
 
-// Global speed limit when TPS is 20. default = 48
-speedlimit.tier_one = 80
+// Global speed limit when TPS is 20. default = 76
+speedlimit.tier_one = 76
 // Global speed limit when TPS is 15 or less. default = 36
 speedlimit.tier_two = 36
 // Medium kick speed limit (grace period is 2 seconds)

@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.Inventory;
@@ -22,17 +23,26 @@ import core.backend.Config;
 
 public class OpListener implements Listener {
 	
-	// prevent ops from using certain commands
-	// this happens *before* OP Lock sees the message,
+	// this happens *before* OP Lock will see the message,
 	// making OPLock a great failsafe for rogue use of /op and /deop
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
 		
-		String sender_name = event.getPlayer().getName();
-		UUID sender_id = event.getPlayer().getUniqueId();
+		Player sender = event.getPlayer();
+		String sender_name = sender.getName();
+		UUID sender_id = sender.getUniqueId();
 		String admin_name = Config.getValue("admin");
 		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
+		// allow ops to use /execute, but only for teleporting between dimensions
+		if (event.getMessage().startsWith("/execute in the_end run tp") ||
+				event.getMessage().startsWith("/execute in the_nether run tp") ||
+				event.getMessage().startsWith("/execute in overworld run tp") &&
+				sender.isOp()) {
+			return;
+		}
+		
+		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!admin_name.equals(sender_name) || !admin_id.equals(sender_id)) {
 			if (event.getMessage().contains("/op") ||
 					event.getMessage().contains("/deop") ||
@@ -58,14 +68,25 @@ public class OpListener implements Listener {
 					event.getMessage().contains("/gamerule")) {
 				
 				event.setCancelled(true);
-				event.getPlayer().spigot().sendMessage(new TextComponent("no"));
+				sender.spigot().sendMessage(new TextComponent("no"));
+				
+			} else if (event.getMessage().contains("@a")) {
+				
+				event.setCancelled(true);
+				sender.spigot().sendMessage(new TextComponent("You cannot target everyone!"));
+				
+			} else if (event.getMessage().contains(admin_name)) {
+				
+				event.setCancelled(true);
+				sender.spigot().sendMessage(new TextComponent("You cannot target " + admin_name));
 			}
 		}
 	}
 	
 	// stop every user/admin from changing game modes of non op players to anything other than survival mode
 	@EventHandler
-	public void onModeChange (PlayerGameModeChangeEvent event) {
+	public void onModeChange(PlayerGameModeChangeEvent event) {
+		
 		//Bukkit.spigot().broadcast(new TextComponent("PlayerGameModeChangeEvent triggered."));
 		if (!event.getNewGameMode().equals(GameMode.SURVIVAL) && !event.getPlayer().isOp()) {
 			
@@ -76,7 +97,7 @@ public class OpListener implements Listener {
 	
 	// Only allow admin to shift-duplicate items or take items from the creative inventory
 	@EventHandler
-	public void onCreativeEvent (InventoryCreativeEvent event) {
+	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
 		String player_name = event.getWhoClicked().getName();
 		UUID player_id = event.getWhoClicked().getUniqueId();

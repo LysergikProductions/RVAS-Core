@@ -43,18 +43,6 @@ public class ItemCheckTriggers implements Listener {
 				return;
 			}
 		}
-
-			// Check if item isn't placeable
-
-			ItemCheck.Banned.stream().filter(m -> e.getBlock().getType().equals(m)).forEach(m -> {
-				e.setCancelled(true);
-				ItemCheck.IllegalCheck(e.getItemInHand(), "ILLEGAL_BLOCK_PLACED", e.getPlayer());
-				if (Config.getValue("item.illegal.agro").equals("true")) {
-					e.getPlayer().getInventory().forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "ILLEGAL_BLOCK_PLACED_AGGRESSIVE", e.getPlayer()));
-				}
-			});
-
-		}
 	}*/
 
 	@EventHandler

@@ -36,13 +36,13 @@ public class Move implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		Player p = event.getPlayer();
-		UUID playerUuid = p.getUniqueId();
+		Player player = event.getPlayer();
+		UUID playerUuid = player.getUniqueId();
 		
 		boolean needsCheck = false;
-		boolean inNether = p.getLocation().getWorld().getName().endsWith("the_nether");
-		boolean inEnd = p.getLocation().getWorld().getName().endsWith("the_end");
-		double yCoord = p.getLocation().getY();
+		boolean inNether = player.getLocation().getWorld().getName().endsWith("the_nether");
+		boolean inEnd = player.getLocation().getWorld().getName().endsWith("the_end");
+		double yCoord = player.getLocation().getY();
 		
 		// This method is actually fired upon head rotate too, so skip event if the player's coords didn't change
 		if (event.getFrom().getBlockX() == event.getTo().getBlockX()
@@ -51,23 +51,33 @@ public class Move implements Listener {
 			return;
 
 		// Ensure survival-mode players are not invulnerable
-		if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
-			event.getPlayer().setInvulnerable(false);
+		if (player.getGameMode().equals(GameMode.SURVIVAL) && !player.isOp()) {
+			player.setInvulnerable(false);
 		}
 
-		// Make game unplayable for laggers //(remodel this behaviour completely)
-		if (PlayerMeta.isLagfag(event.getPlayer()))
-		{
+		// -- ROOF AND FLOOR PATCH -- //
+
+		// kill players on the roof of the nether
+		if (inNether && yCoord > 127 && Config.getValue("movement.block.roof").equals("true"))
+			player.setHealth(0);
+
+		// kill players below ground in overworld and nether
+		if (!inEnd && yCoord < 0 && Config.getValue("movement.block.floor").equals("true"))
+			player.setHealth(0);
+		
+		// Make game unplayable for laggers
+		if (PlayerMeta.isLagfag(player)) {
 			int randomNumber = r.nextInt(9);
+			
 			if (randomNumber == 5 || randomNumber == 6) {
-				event.getPlayer().spigot().sendMessage(new TextComponent("§cThis is what you get for being a lagfag!"));
+				player.spigot().sendMessage(new TextComponent("§cThis is what you get!"));
 				event.setCancelled(true);
 				return;
 			}
 
 			randomNumber = r.nextInt(250);
 			if (randomNumber == 21) {
-				event.getPlayer().kickPlayer("§6fuck you lol");
+				player.kickPlayer("§6lmao -tries to move-");
 				return;
 			}
 		}
@@ -77,33 +87,25 @@ public class Move implements Listener {
 		int cacheFlushPeriod = Integer.parseInt(Config.getValue("item.illegal.agro.flush_period"));
 
 		// Check every chunk the player enters
-
 		if (!lastChunks.containsKey(playerUuid)) {
-			lastChunks.put(playerUuid, p.getLocation().getChunk());
+			
+			lastChunks.put(playerUuid, player.getLocation().getChunk());
 			needsCheck = true;
-		} else {
-			if (lastChunks.get(playerUuid) != p.getLocation().getChunk()) {
-				lastChunks.put(playerUuid, p.getLocation().getChunk());
-				needsCheck = true;
-			}
+			
+		} else if (lastChunks.get(playerUuid) != player.getLocation().getChunk()) {
+			
+			lastChunks.put(playerUuid, player.getLocation().getChunk());
+			needsCheck = true;
 		}
 
-		if (Config.getValue("movement.block.chunkcheck").equals("false")) {
-			needsCheck = false;
-		}
-		
-		if (inEnd) {
-			needsCheck = false;
-		}
-
-		if (inEnd) {
+		if (Config.getValue("movement.illegals.check").equals("false") || inEnd) {
 			needsCheck = false;
 		}
 
 		if (needsCheck) {
 			boolean containsSpawner = false;
 			boolean portalsIllegal = false;
-			Chunk c = p.getLocation().getChunk();
+			Chunk c = player.getLocation().getChunk();
 
 			// Portals dont spawn PAST! a 25000 block radius of spawn
 
@@ -117,15 +119,8 @@ public class Move implements Listener {
 			// Create an array of frames because a certain amount of frames are necessary
 			// for an end portal
 			// If the number of end portals is exactly 12, allow it to exist
-			// Also consider silverfish spawners, they don't occur naturally anywhere except
-			// for strongholds
 
 			List<Block> frames = new ArrayList();
-
-			// Todo : Read Docs on what the server considers tile entities. From there we
-			// can check even quicker at containers and other blocks.
-			// Arrays.stream(c.getTileEntities()).filter(tileEntities -> tileEntities
-			// instanceof Container)
 
 			// aggressive mode: check all containers for illegal items and destroy them
 			// TODO check if this misses any containers
@@ -145,13 +140,13 @@ public class Move implements Listener {
 					}
 				}
 
-				LruCache<Chunk, Boolean> currentPlayerChunks = playerChunks.get(p);
+				LruCache<Chunk, Boolean> currentPlayerChunks = playerChunks.get(player);
 
 				// new player, make a new cache
 				if (currentPlayerChunks == null)
 				{
 					currentPlayerChunks = new LruCache<>(Integer.parseInt(Config.getValue("item.illegal.agro.chunk_count")));
-					playerChunks.put(p, currentPlayerChunks);
+					playerChunks.put(player, currentPlayerChunks);
 				}
 
 				// check all player caches
@@ -170,7 +165,7 @@ public class Move implements Listener {
 					// Containers.
 					Arrays.stream(c.getTileEntities()).filter(tileEntities -> tileEntities instanceof Container)
 							.forEach(blockState -> ((Container) blockState).getInventory()
-									.forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "CONTAINER_CHECK", event.getPlayer())));
+									.forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "CONTAINER_CHECK", player)));
 				}
 
 				// it was either previously checked or we just checked it, so add it to the cache
@@ -183,7 +178,7 @@ public class Move implements Listener {
 				{
 					for (int y = 0; y < 256; y++)
 					{
-						Block block = p.getWorld().getBlockAt(X + x, y, Z + z);
+						Block block = player.getWorld().getBlockAt(X + x, y, Z + z);
 
 						// handle unbreakable objects
 						if (block.getType().getHardness() == -1)
@@ -242,8 +237,7 @@ public class Move implements Listener {
 			// Sometimes portal rooms generate half in one chunk and half in another chunk,
 			// but no portal chunk will ever contain more than 12 frames
 
-			if (!frames.isEmpty() && !containsSpawner)
-			{
+			/*if (!frames.isEmpty() && !containsSpawner) {
 				frames.forEach(block -> {
 					if (!block.getType().equals(Material.END_PORTAL_FRAME))
 						frames.remove(block);
@@ -252,33 +246,7 @@ public class Move implements Listener {
 				{
 					frames.forEach(block -> block.setType(Material.AIR));
 				}
-			}
-		}
-
-		// -- ROOF AND FLOOR PATCH -- //
-
-		// kill players on the roof of the nether
-		if (inNether && yCoord > 127 && Config.getValue("movement.block.roof").equals("true"))
-			p.setHealth(0);
-
-		// kill players below ground in overworld and nether
-		if (!inEnd && yCoord < 0 && Config.getValue("movement.block.floor").equals("true"))
-			p.setHealth(0);
-	}
-	
-	@EventHandler
-	public void onEntityMove(EntityMoveEvent e) {
-		boolean inNether = e.getEntity().getLocation().getWorld().getName().endsWith("the_nether");
-		boolean inEnd = e.getEntity().getLocation().getWorld().getName().endsWith("the_end");
-		double yCoord = e.getEntity().getLocation().getY();
-		
-		if (inNether && yCoord > 127 && Config.getValue("movement.block.roof").equals("true")) {
-			e.getEntity().setHealth(0);
-			return;
-		}
-		if (!inEnd && yCoord < 0 && Config.getValue("movement.block.floor").equals("true")) {
-			e.getEntity().setHealth(0);
-			return;
+			}*/
 		}
 	}
 	
