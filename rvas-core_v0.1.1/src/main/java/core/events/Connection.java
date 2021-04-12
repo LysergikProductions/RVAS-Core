@@ -108,8 +108,10 @@ public class Connection implements Listener {
 
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
-		if (e.getPlayer().isOp()) return;
+
 		e.setQuitMessage(null);
+		if (e.getPlayer().isOp()) return;
+		
 		if (!PlayerMeta.isMuted(e.getPlayer()) && !Kit.kickedFromKit.contains(e.getPlayer().getUniqueId())) {
 			doJoinMessage(MessageType.LEAVE, e.getPlayer());
 		}

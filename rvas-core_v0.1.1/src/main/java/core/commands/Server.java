@@ -26,7 +26,34 @@ public class Server implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		String speedLimit = LagProcessor.getTPS() <= 15 ? Config.getValue("speedlimit.tier_two") : Config.getValue("speedlimit.tier_one") + " bps";
+		
+		double tier1 = Double.parseDouble(Config.getValue("speedlimit.tier_one"));
+		double tier2 = Double.parseDouble(Config.getValue("speedlimit.tier_two"));
+		double tier3 = Double.parseDouble(Config.getValue("speedlimit.tier_three"));
+		double tier4 = Double.parseDouble(Config.getValue("speedlimit.tier_four"));
+		double tier5 = Double.parseDouble(Config.getValue("speedlimit.tier_five"));
+		
+		final double speed_limit;
+		double tps = LagProcessor.getTPS();
+		
+		if (tps >= 16.0) {
+			speed_limit = tier1;
+			
+		} else if (tps < 16.0 && tps >= 14.0) {
+			speed_limit = tier2;
+			
+		} else if (tps < 14.0 && tps >= 10.0) {
+			speed_limit = tier3;
+			
+		} else if (tps < 10.0 && tps >= 7.0) {
+			speed_limit = tier4;
+			
+		} else if (tps < 7) {
+			speed_limit = tier5;
+		} else {
+			speed_limit = tier1;
+		}
+		
 		String antiCheat = LagProcessor.getTPS() <= 10 ? "True" : "False";
 		
 		// get all uniquley stylable components starting with headers //
@@ -41,7 +68,7 @@ public class Server implements CommandExecutor {
 		TextComponent tps_a = new TextComponent("Current TPS: ");
 		TextComponent tps_b = new TextComponent(new DecimalFormat("#.##").format(LagProcessor.getTPS()));
 		TextComponent slimit_a = new TextComponent("Current Speed Limit: ");
-		TextComponent slimit_b = new TextComponent(speedLimit + " bps");
+		TextComponent slimit_b = new TextComponent(speed_limit + " bps");
 		TextComponent skicks_a = new TextComponent("Speed Limit Kicks: ");
 		TextComponent skicks_b = new TextComponent("" + SpeedLimit.totalKicks);
 		TextComponent acr_a = new TextComponent("Anti-Cheat Enabled: ");
@@ -105,7 +132,7 @@ public class Server implements CommandExecutor {
 		TextComponent debug_head = new TextComponent(title_sep, debug_head_name, title_sep);
 		
 		TextComponent players = new TextComponent(players_a, players_b);
-		TextComponent tps = new TextComponent(tps_a, tps_b);
+		TextComponent tpsText = new TextComponent(tps_a, tps_b);
 		TextComponent slimit = new TextComponent(slimit_a, slimit_b);
 		TextComponent skicks = new TextComponent(skicks_a, skicks_b);
 		TextComponent acr = new TextComponent(acr_a, acr_b);
@@ -120,13 +147,11 @@ public class Server implements CommandExecutor {
 		TextComponent rtrig = new TextComponent(rtrig_a, rtrig_b, rtrig_c);
 		TextComponent withers = new TextComponent(withers_a, withers_b);
 		
-		// style full component-lines at once
-		
 		// add functionality to components
 		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Those who intentionally lag the server can no longer place or break any blocks.")));
 		
-		// create output structure and send to chat (withers currently removed from output)
-		Arrays.asList(new TextComponent(""), title, tps, slimit, skicks, acr, player_head, players, ujoins, donos, laggers, pmutes, ops, debug_head, restart, rtrig)
+		// create output structure and send to chat (acr & withers currently removed from output)
+		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, player_head, players, ujoins, donos, laggers, pmutes, ops, debug_head, restart, rtrig)
 		.forEach(ln -> sender.spigot().sendMessage(ln));
 		return true;
 	}

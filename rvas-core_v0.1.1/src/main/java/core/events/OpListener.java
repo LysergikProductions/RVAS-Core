@@ -52,7 +52,8 @@ public class OpListener implements Listener {
 					event.getMessage().contains("/execute") ||
 					event.getMessage().contains("/summon") ||
 					event.getMessage().contains("/give") ||
-					event.getMessage().contains("/set") ||
+					event.getMessage().contains("/setblock") ||
+					event.getMessage().contains("/difficulty") ||
 					event.getMessage().contains("/replace") ||
 					event.getMessage().contains("/enchant") ||
 					event.getMessage().contains("/time") ||

@@ -74,9 +74,6 @@ item.illegal.stacked = true
 // Are player heads illegal?
 item.illegal.heads = false
 
-// Remove these items from player inventories when they join
-item.illegal.onjoin = true
-
 // Enable or disable unbreakable items. false = disabled [default] || true = enabled
 item.illegal.unbreakable = false
 
@@ -85,6 +82,9 @@ item.illegal.exclusive = false
 
 // Enable or disable invalid enchants. false = disabled [default] || true = enabled
 item.illegal.invalid = false
+
+// Remove these items from player inventories when they join
+item.illegal.onjoin = true
 
 // Enable or disable aggressive checks. false = disabled || true = enabled [default]
 // Can cause some lag on lower-end servers
