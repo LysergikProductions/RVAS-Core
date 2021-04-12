@@ -115,10 +115,10 @@ public class Chat implements Listener {
 						}
 					}
 				}
-			
+				
 				if(lastChatMessages.containsKey(e.getPlayer().getUniqueId())) {
-					// case: chat is suspected spam
-					if(similarity(lastChatMessages.get(e.getPlayer().getUniqueId()), finalMessage) * 100 > Integer.parseInt(Config.getValue("spam.max_similarity"))) {
+					// player sent two messages in a row, but now how similar are they?
+					if(similarity(lastChatMessages.get(e.getPlayer().getUniqueId()), finalMessage) * 100 > Integer.parseInt(Config.getValue("spam.min_similarity"))) {
 						
 						censored = true;
 						

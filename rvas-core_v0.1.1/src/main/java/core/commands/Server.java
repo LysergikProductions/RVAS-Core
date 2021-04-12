@@ -41,7 +41,7 @@ public class Server implements CommandExecutor {
 		TextComponent tps_a = new TextComponent("Current TPS: ");
 		TextComponent tps_b = new TextComponent(new DecimalFormat("#.##").format(LagProcessor.getTPS()));
 		TextComponent slimit_a = new TextComponent("Current Speed Limit: ");
-		TextComponent slimit_b = new TextComponent(speedLimit);
+		TextComponent slimit_b = new TextComponent(speedLimit + " bps");
 		TextComponent skicks_a = new TextComponent("Speed Limit Kicks: ");
 		TextComponent skicks_b = new TextComponent("" + SpeedLimit.totalKicks);
 		TextComponent acr_a = new TextComponent("Anti-Cheat Enabled: ");

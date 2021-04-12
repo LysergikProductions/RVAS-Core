@@ -39,116 +39,137 @@ public class SpeedLimit implements Listener
 	public static int totalKicks = 0;
 
 	// Speedlimit monitor
-	public static void scheduleSlTask()
-	{
+	public static void scheduleSlTask() {
+		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, () -> {
 
 			if (lastCheck < 0) {
 				lastCheck = System.currentTimeMillis();
 				return;
 			}
+			
+			double tier1 = Double.parseDouble(Config.getValue("speedlimit.tier_one"));
+			double tier2 = Double.parseDouble(Config.getValue("speedlimit.tier_two"));
+			double tier3 = Double.parseDouble(Config.getValue("speedlimit.tier_three"));
+			double tier4 = Double.parseDouble(Config.getValue("speedlimit.tier_four"));
+			double tier5 = Double.parseDouble(Config.getValue("speedlimit.tier_five"));
+			double medium_kick = Integer.parseInt(Config.getValue("speedlimit.medium_kick"));
+			double hard_kick = Integer.parseInt(Config.getValue("speedlimit.hard_kick"));
+			final double speed_limit;
 
 			long now = System.currentTimeMillis();
 			double duration = (now - lastCheck) / 1000.0;
 			lastCheck = now;
 
 			double tps = LagProcessor.getTPS();
-
-			double allowed = (tps >= 15.0) ? Integer.parseInt(Config.getValue("speedlimit.tier_one"))
-					: Integer.parseInt(Config.getValue("speedlimit.tier_two"));
-
-			double medium_kick = Integer.parseInt(Config.getValue("speedlimit.medium_kick"));
-			double hard_kick = Integer.parseInt(Config.getValue("speedlimit.hard_kick"));
+			
+			if (tps >= 16.0) {
+				speed_limit = tier1;
+				
+			} else if (tps < 16.0 && tps >= 14.0) {
+				speed_limit = tier2;
+				
+			} else if (tps < 14.0 && tps >= 10.0) {
+				speed_limit = tier3;
+				
+			} else if (tps < 10.0 && tps >= 7.0) {
+				speed_limit = tier4;
+				
+			} else if (tps < 7) {
+				speed_limit = tier5;
+			} else {
+				speed_limit = tier1;
+			}
 
 			speeds.clear();
 
 			Bukkit.getOnlinePlayers().stream().filter(player -> !player.isOp()).forEach(player -> {
-						// updated teleported player position
-						if (tped.contains(player.getUniqueId())) {
-							tped.remove(player.getUniqueId());
-							locs.put(player.getUniqueId(), player.getLocation().clone());
-							return;
-						}
+				// updated teleported player position
+				if (tped.contains(player.getUniqueId())) {
+					tped.remove(player.getUniqueId());
+					locs.put(player.getUniqueId(), player.getLocation().clone());
+					return;
+				}
 
-						// set previous location if it doesn't exist and bail
-						Location previous_location = locs.get(player.getUniqueId());
-						if (previous_location == null) {
-							locs.put(player.getUniqueId(), player.getLocation().clone());
-							return;
-						}
-						Location new_location = player.getLocation().clone();
-						if (new_location.equals(previous_location)) {
-							return;
-						}
-						new_location.setY(previous_location.getY()); // only consider movement in X/Z
+				// set previous location if it doesn't exist and bail
+				Location previous_location = locs.get(player.getUniqueId());
+				if (previous_location == null) {
+					locs.put(player.getUniqueId(), player.getLocation().clone());
+					return;
+				}
+				Location new_location = player.getLocation().clone();
+				if (new_location.equals(previous_location)) {
+					return;
+				}
+				new_location.setY(previous_location.getY()); // only consider movement in X/Z
 
-						if (previous_location.getWorld() != new_location.getWorld())
-						{
-							locs.remove(player.getUniqueId());
-							return;
-						}
+				if (previous_location.getWorld() != new_location.getWorld())
+				{
+					locs.remove(player.getUniqueId());
+					return;
+				}
 
-						Integer grace = gracePeriod.get(player.getUniqueId());
-						if (grace == null) {
-							grace = GRACE_PERIOD;
-						}
+				Integer grace = gracePeriod.get(player.getUniqueId());
+				if (grace == null) {
+					grace = GRACE_PERIOD;
+				}
 
-						Vector v = new_location.subtract(previous_location).toVector();
-						double speed = Math.round(v.length() / duration * 10.0) / 10.0;
-						
-						if(speed > allowed+1 && (Config.getValue("speedlimit.agro").equals("true") || Admin.disableWarnings)) {
-							ServerMeta.kickWithDelay(player,
-									Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
-							totalKicks++;
-							return;
-						}
+				Vector v = new_location.subtract(previous_location).toVector();
+				double speed = Math.round(v.length() / duration * 10.0) / 10.0;
+				
+				if(speed > speed_limit+ 1 && (Config.getValue("speedlimit.agro").equals("true") || Admin.disableWarnings)) {
+					ServerMeta.kickWithDelay(player,
+							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
+					totalKicks++;
+					return;
+				}
 
-						// insta-kick above hard kick speed
-						if (speed > hard_kick)
-						{
-							gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
-							ServerMeta.kickWithDelay(player,
-									Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
-							totalKicks++;
-							return;
-						}
+				// insta-kick above hard kick speed
+				if (speed > hard_kick)
+				{
+					gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
+					ServerMeta.kickWithDelay(player,
+							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
+					totalKicks++;
+					return;
+				}
 
-						// medium-kick: set grace period to 2 sec
-						if (speed > medium_kick)
-						{
-							if (grace > 2)
-								grace = 2;
-						}
+				// medium-kick: set grace period to 2 sec
+				if (speed > medium_kick)
+				{
+					if (grace > 2)
+						grace = 2;
+				}
 
-						// player is going too fast, warn or kick
-						// +1 for leniency
-						if (speed > allowed+1)
-						{
-							if (grace == 0) {
-								gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
-								ServerMeta.kickWithDelay(player,
-										Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
-								totalKicks++;
-								return;
-							} else {
-								// display speed with one decimal
-								player.spigot().sendMessage(new TextComponent("§4Your speed is " + speed + ", speed limit is " + allowed + ". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));
-							}
+				// player is going too fast, warn or kick
+				// +1 for leniency
+				if (speed > speed_limit+1)
+				{
+					if (grace == 0) {
+						gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
+						ServerMeta.kickWithDelay(player,
+								Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
+						totalKicks++;
+						return;
+					} else {
+						// display speed with one decimal
+						player.spigot().sendMessage(new TextComponent("§4Your speed is " + speed + ", speed limit is " + speed_limit + ". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));
+					}
 
-							--grace;
-							gracePeriod.put(player.getUniqueId(), grace);
-						}
+					--grace;
+					gracePeriod.put(player.getUniqueId(), grace);
+				}
 
-						// player isn't going too fast, reset grace period
-						else {
-							if (grace < GRACE_PERIOD)
-								++grace;
-						}
+				// player isn't going too fast, reset grace period
+				else {
+					if (grace < GRACE_PERIOD)
+						++grace;
+				}
 
-						gracePeriod.put(player.getUniqueId(), grace);
-						locs.put(player.getUniqueId(), player.getLocation().clone());
-						speeds.put(player.getName(), speed);
-					});
+				gracePeriod.put(player.getUniqueId(), grace);
+				locs.put(player.getUniqueId(), player.getLocation().clone());
+				speeds.put(player.getName(), speed);
+			});
 		}, 20L, 20L);
 	}
 

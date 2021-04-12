@@ -81,186 +81,186 @@ public class Move implements Listener {
 				return;
 			}
 		}
-
-		// -- ILLEGAL PLACEMENT PATCH -- //
-		boolean illegalItemAgro = Boolean.parseBoolean(Config.getValue("item.illegal.agro"));
-		int cacheFlushPeriod = Integer.parseInt(Config.getValue("item.illegal.agro.flush_period"));
-
-		// Check every chunk the player enters
-		if (!lastChunks.containsKey(playerUuid)) {
-			
-			lastChunks.put(playerUuid, player.getLocation().getChunk());
-			needsCheck = true;
-			
-		} else if (lastChunks.get(playerUuid) != player.getLocation().getChunk()) {
-			
-			lastChunks.put(playerUuid, player.getLocation().getChunk());
-			needsCheck = true;
-		}
-
-		if (Config.getValue("movement.illegals.check").equals("false") || inEnd) {
-			needsCheck = false;
-		}
-
-		if (needsCheck) {
-			boolean containsSpawner = false;
-			boolean portalsIllegal = false;
-			Chunk c = player.getLocation().getChunk();
-
-			// Portals dont spawn PAST! a 25000 block radius of spawn
-
-			int X = c.getX() * 16;
-			int Z = c.getZ() * 16;
-			if (X <= -25000 || X >= 25000 || Z <= -25000 || Z >= 25000)
-			{
-				portalsIllegal = true;
-			}
-
-			// Create an array of frames because a certain amount of frames are necessary
-			// for an end portal
-			// If the number of end portals is exactly 12, allow it to exist
-
-			List<Block> frames = new ArrayList();
-
-			// aggressive mode: check all containers for illegal items and destroy them
-			// TODO check if this misses any containers
-			if (illegalItemAgro)
-			{
-				boolean doAgroCheck = true;
-
-				// flush chunks if it's been long enough
-				if (cacheFlushPeriod > 0)
-				{
-					long now = System.currentTimeMillis() / 1000;
-					if (now - lastCacheFlush >= cacheFlushPeriod)
-					{
-						System.out.println("[core.events.move] flushing agro chunk caches");
-						playerChunks.clear();
-						lastCacheFlush = now;
-					}
-				}
-
-				LruCache<Chunk, Boolean> currentPlayerChunks = playerChunks.get(player);
-
-				// new player, make a new cache
-				if (currentPlayerChunks == null)
-				{
-					currentPlayerChunks = new LruCache<>(Integer.parseInt(Config.getValue("item.illegal.agro.chunk_count")));
-					playerChunks.put(player, currentPlayerChunks);
-				}
-
-				// check all player caches
-				for (Map.Entry<Player, LruCache<Chunk, Boolean> > e : playerChunks.entrySet())
-				{
-					if (e.getValue().get(c) != null)
-					{
-						doAgroCheck = false;
-						break;
-					}
-				}
-
-				// if it's not in any player's cache, check it and add it to current player's cache
-				if (doAgroCheck)
-				{
-					// Containers.
-					Arrays.stream(c.getTileEntities()).filter(tileEntities -> tileEntities instanceof Container)
-							.forEach(blockState -> ((Container) blockState).getInventory()
-									.forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "CONTAINER_CHECK", player)));
-				}
-
-				// it was either previously checked or we just checked it, so add it to the cache
-				currentPlayerChunks.put(c, true);
-			}
-
-			for (int x = 0; x < 16; x++)
-			{
-				for (int z = 0; z < 16; z++)
-				{
-					for (int y = 0; y < 256; y++)
-					{
-						Block block = player.getWorld().getBlockAt(X + x, y, Z + z);
-
-						// handle unbreakable objects
-						if (block.getType().getHardness() == -1)
-						{
-
-							// ignore piston heads
-							if (block.getType().equals(Material.PISTON_HEAD)
-									|| block.getType().equals(Material.MOVING_PISTON))
-								continue;
-
-							// ignore nether portals (the purple part)
-							if (block.getType().equals(Material.NETHER_PORTAL))
-								continue;
-
-							// eliminiate illegal end portals (too close to spawn)
-							if (portalsIllegal && (block.getType().equals(Material.END_PORTAL_FRAME)
-									|| block.getType().equals(Material.END_GATEWAY)
-									|| block.getType().equals(Material.END_PORTAL)))
-							{
-								block.setType(Material.AIR);
-								continue;
-							}
-
-							// allow bedrock at y <= 4 in all worlds
-							if (block.getType().equals(Material.BEDROCK) && y <= 4)
-								continue;
-
-							// allow bedrock at y >= 123 in the nether
-							if (block.getType().equals(Material.BEDROCK) && inNether && y >= 123)
-								continue;
-
-							// check for silverfish spawners
-							if (block.getType().equals(Material.SPAWNER))
-							{
-								CreatureSpawner cs = ((CreatureSpawner) block.getState());
-								if (cs.getSpawnedType().equals(EntityType.SILVERFISH))
-								{
-									containsSpawner = true;
-								}
-							}
-
-							if (block.getType().equals(Material.END_PORTAL_FRAME)
-									|| block.getType().equals(Material.END_PORTAL))
-							{
-								frames.add(block);
-								continue;
-							}
-
-							block.setType(Material.AIR);
-						}
-					}
-				}
-			}
-
-			// If frames and no spawner, make sure there's not more than 12.
-			// Sometimes portal rooms generate half in one chunk and half in another chunk,
-			// but no portal chunk will ever contain more than 12 frames
-
-			/*if (!frames.isEmpty() && !containsSpawner) {
-				frames.forEach(block -> {
-					if (!block.getType().equals(Material.END_PORTAL_FRAME))
-						frames.remove(block);
-				});
-				if (frames.size() > 12)
-				{
-					frames.forEach(block -> block.setType(Material.AIR));
-				}
-			}*/
-		}
 	}
-	
+		
 	@EventHandler
 	public void onEntityPortal(EntityPortalEvent e) {
 		// prevent ender crystals with bottoms showing from making it through portals
-		// in current versions of paper (build =< 586), these crystals break chunks around them
+		// in current versions of paper (build =< 588), these crystals break chunks around them permanently
 		if(e.getEntityType().equals(EntityType.ENDER_CRYSTAL)) {
 			EnderCrystal crystal = (EnderCrystal)e.getEntity();
 			
-			if(crystal.isShowingBottom()) {
+			if (crystal.isShowingBottom()) {
 				e.setCancelled(true);
 				return;
 			}
 		}
 	}
 }
+// some stuff to potentially reference
+								/*
+								// -- ILLEGAL PLACEMENT PATCH -- //
+								boolean illegalItemAgro = Boolean.parseBoolean(Config.getValue("item.illegal.agro"));
+								int cacheFlushPeriod = Integer.parseInt(Config.getValue("item.illegal.agro.flush_period"));
+								
+								// Check every chunk the player enters
+								if (!lastChunks.containsKey(playerUuid)) {
+									
+									lastChunks.put(playerUuid, player.getLocation().getChunk());
+									needsCheck = true;
+									
+								} else if (lastChunks.get(playerUuid) != player.getLocation().getChunk()) {
+									
+									lastChunks.put(playerUuid, player.getLocation().getChunk());
+									needsCheck = true;
+								}
+								
+								if (Config.getValue("movement.illegals.check").equals("false") || inEnd) {
+									needsCheck = false;
+								}
+								
+								if (needsCheck) {
+									boolean containsSpawner = false;
+									boolean portalsIllegal = false;
+									Chunk c = player.getLocation().getChunk();
+								
+									// Portals dont spawn PAST! a 25000 block radius of spawn
+								
+									int X = c.getX() * 16;
+									int Z = c.getZ() * 16;
+									if (X <= -25000 || X >= 25000 || Z <= -25000 || Z >= 25000)
+									{
+										portalsIllegal = true;
+									}
+								
+									// Create an array of frames because a certain amount of frames are necessary
+									// for an end portal
+									// If the number of end portals is exactly 12, allow it to exist
+								
+									List<Block> frames = new ArrayList();
+								
+									// aggressive mode: check all containers for illegal items and destroy them
+									// TODO check if this misses any containers
+									if (illegalItemAgro)
+									{
+										boolean doAgroCheck = true;
+								
+										// flush chunks if it's been long enough
+										if (cacheFlushPeriod > 0)
+										{
+											long now = System.currentTimeMillis() / 1000;
+											if (now - lastCacheFlush >= cacheFlushPeriod)
+											{
+												System.out.println("[core.events.move] flushing agro chunk caches");
+												playerChunks.clear();
+												lastCacheFlush = now;
+											}
+										}
+								
+										LruCache<Chunk, Boolean> currentPlayerChunks = playerChunks.get(player);
+								
+										// new player, make a new cache
+										if (currentPlayerChunks == null)
+										{
+											currentPlayerChunks = new LruCache<>(Integer.parseInt(Config.getValue("item.illegal.agro.chunk_count")));
+											playerChunks.put(player, currentPlayerChunks);
+										}
+								
+										// check all player caches
+										for (Map.Entry<Player, LruCache<Chunk, Boolean> > e : playerChunks.entrySet())
+										{
+											if (e.getValue().get(c) != null)
+											{
+												doAgroCheck = false;
+												break;
+											}
+										}
+								
+										// if it's not in any player's cache, check it and add it to current player's cache
+										if (doAgroCheck)
+										{
+											// Containers.
+											Arrays.stream(c.getTileEntities()).filter(tileEntities -> tileEntities instanceof Container)
+													.forEach(blockState -> ((Container) blockState).getInventory()
+															.forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "CONTAINER_CHECK", player)));
+										}
+								
+										// it was either previously checked or we just checked it, so add it to the cache
+										currentPlayerChunks.put(c, true);
+									}
+								
+									for (int x = 0; x < 16; x++)
+									{
+										for (int z = 0; z < 16; z++)
+										{
+											for (int y = 0; y < 256; y++)
+											{
+												Block block = player.getWorld().getBlockAt(X + x, y, Z + z);
+								
+												// handle unbreakable objects
+												if (block.getType().getHardness() == -1)
+												{
+								
+													// ignore piston heads
+													if (block.getType().equals(Material.PISTON_HEAD)
+															|| block.getType().equals(Material.MOVING_PISTON))
+														continue;
+								
+													// ignore nether portals (the purple part)
+													if (block.getType().equals(Material.NETHER_PORTAL))
+														continue;
+								
+													// eliminiate illegal end portals (too close to spawn)
+													if (portalsIllegal && (block.getType().equals(Material.END_PORTAL_FRAME)
+															|| block.getType().equals(Material.END_GATEWAY)
+															|| block.getType().equals(Material.END_PORTAL)))
+													{
+														block.setType(Material.AIR);
+														continue;
+													}
+								
+													// allow bedrock at y <= 4 in all worlds
+													if (block.getType().equals(Material.BEDROCK) && y <= 4)
+														continue;
+								
+													// allow bedrock at y >= 123 in the nether
+													if (block.getType().equals(Material.BEDROCK) && inNether && y >= 123)
+														continue;
+								
+													// check for silverfish spawners
+													if (block.getType().equals(Material.SPAWNER))
+													{
+														CreatureSpawner cs = ((CreatureSpawner) block.getState());
+														if (cs.getSpawnedType().equals(EntityType.SILVERFISH))
+														{
+															containsSpawner = true;
+														}
+													}
+								
+													if (block.getType().equals(Material.END_PORTAL_FRAME)
+															|| block.getType().equals(Material.END_PORTAL))
+													{
+														frames.add(block);
+														continue;
+													}
+								
+													block.setType(Material.AIR);
+												}
+											}
+										}
+									}
+								
+									// If frames and no spawner, make sure there's not more than 12.
+									// Sometimes portal rooms generate half in one chunk and half in another chunk,
+									// but no portal chunk will ever contain more than 12 frames
+								
+									if (!frames.isEmpty() && !containsSpawner) {
+										frames.forEach(block -> {
+											if (!block.getType().equals(Material.END_PORTAL_FRAME))
+												frames.remove(block);
+										});
+										if (frames.size() > 12)
+										{
+											frames.forEach(block -> block.setType(Material.AIR));
+										}
+									}*/

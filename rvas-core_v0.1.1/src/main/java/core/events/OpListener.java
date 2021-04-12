@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.GameMode;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -23,7 +24,7 @@ import core.backend.Config;
 
 public class OpListener implements Listener {
 	
-	// this happens *before* OP Lock will see the message,
+	// this happens *before* OP Lock will see the command,
 	// making OPLock a great failsafe for rogue use of /op and /deop
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
@@ -31,6 +32,7 @@ public class OpListener implements Listener {
 		Player sender = event.getPlayer();
 		String sender_name = sender.getName();
 		UUID sender_id = sender.getUniqueId();
+		
 		String admin_name = Config.getValue("admin");
 		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
@@ -46,6 +48,7 @@ public class OpListener implements Listener {
 		if (!admin_name.equals(sender_name) || !admin_id.equals(sender_id)) {
 			if (event.getMessage().contains("/op") ||
 					event.getMessage().contains("/deop") ||
+					event.getMessage().contains("/ban") ||
 					event.getMessage().contains("/execute") ||
 					event.getMessage().contains("/summon") ||
 					event.getMessage().contains("/give") ||
@@ -99,14 +102,21 @@ public class OpListener implements Listener {
 	@EventHandler
 	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
-		String player_name = event.getWhoClicked().getName();
-		UUID player_id = event.getWhoClicked().getUniqueId();
+		HumanEntity player = event.getWhoClicked();
+		String player_name = player.getName();
+		UUID player_id = player.getUniqueId();
+		
 		String admin_name = Config.getValue("admin");
 		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
 		//Bukkit.spigot().broadcast(new TextComponent("InventoryCreativeEvent triggered."));
 		if (!admin_name.equals(player_name) || !admin_id.equals(player_id)) {
+			
 			event.setCancelled(true);
+			
+			if (!player.isOp()) {
+				player.setGameMode(GameMode.SURVIVAL);
+			}			
 			//Bukkit.spigot().broadcast(new TextComponent("InventoryCreativeEvent was cancelled for " + player_name));
 		}
 	}

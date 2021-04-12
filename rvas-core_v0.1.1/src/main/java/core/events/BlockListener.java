@@ -58,7 +58,7 @@ public class BlockListener implements Listener {
 		// prevent creative players from breaking certain blocks but completely ignore admin account
 		if (!admin_name.equals(breaker_name) || !admin_id.equals(breaker_id)) {
 			
-			if (!breaker.getGameMode().equals(GameMode.SURVIVAL) && BreakBanned.contains(block.getType())) {
+			if (BreakBanned.contains(block.getType())) {
 				
 				event.setCancelled(true);
 				
@@ -89,10 +89,14 @@ public class BlockListener implements Listener {
 					if (debug.equals("true") && devesp.equals("true")) {
 						Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
 					}
-				}//else if (block.getType().equals(Material.END_PORTAL_FRAME)) {
-					//code
-				//}
-			}
+				}/* else if (block.getWorld().getEnvironment().equals(Environment.END) &&
+						block.getLocation().getY() == 64 &&
+						) {
+					
+				}*/
+			}//else if (block.getType().equals(Material.END_PORTAL_FRAME)) {
+				//code
+			//}
 		}
 	}
 	
@@ -119,7 +123,9 @@ public class BlockListener implements Listener {
 		
 		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
 		if (block.getType().toString().contains("SHULKER_BOX") && !placer.getGameMode().equals(GameMode.SURVIVAL)) {
-			event.setCancelled(true);
+			if (!admin_name.equals(placer_name) || !admin_id.equals(placer_id)) {
+				event.setCancelled(true);
+			}
 		}
 		
 		// anti roof-placement

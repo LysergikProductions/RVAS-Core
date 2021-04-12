@@ -6,6 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
+
+import core.backend.Config;
 import core.backend.LagProcessor;
 import core.backend.PlayerMeta;
 import core.backend.Scheduler;
@@ -59,7 +61,9 @@ public class ProcessPlaytime extends TimerTask {
 		}
 
 		// Check if we need a restart
-		if (LagProcessor.getTPS() < 9) {
+		
+		Double rThreshold = Double.parseDouble(Config.getValue("restart.threshold"));
+		if (LagProcessor.getTPS() < rThreshold) {
 			lowTpsCounter += sinceLast;
 			if (lowTpsCounter >= 300000) {
 				Utilities.restart(true);

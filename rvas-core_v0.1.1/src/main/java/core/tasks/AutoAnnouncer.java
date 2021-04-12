@@ -43,14 +43,6 @@ public class AutoAnnouncer extends TimerTask {
 				Bukkit.spigot().broadcast(
 						new TextComponent("§6You can sign items to show them as uniquely yours by doing §l/sign."));
 				break;
-			//case 5:
-			//	Bukkit.spigot()
-			//			.broadcast(new TextComponent("§6You can buy donor for life for $20 at https://avas.cc/donate"));
-			//	break;
-			//case 6:
-			//	Bukkit.spigot()
-			//			.broadcast(new TextComponent("§6You can buy an MOTD for life for $10 at https://avas.cc/donate"));
-			//	break;
 			case 3:
 				Bukkit.spigot().broadcast(
 						new TextComponent("§6You can toggle death messages with /tdm, and join messages with /tjm."));
@@ -60,6 +52,9 @@ public class AutoAnnouncer extends TimerTask {
 				break;
 			case 5:
 				Bukkit.spigot().broadcast(new TextComponent("§6Do /help to see the commands available to you."));
+				break;
+			case 6:
+				Bukkit.spigot().broadcast(new TextComponent("§6Use /server to see the current speed limit and other information."));
 				break;
 			default:
 				TextComponent source = new TextComponent("RVAS-core is open-source (AGPLv3)! Click this message to access the repository.");
