@@ -5,6 +5,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import core.Main;
 import core.backend.PVPstats;
 
@@ -71,12 +79,6 @@ public class FileManager {
 		Files.readAllLines(playtime_user_database.toPath()).forEach(val ->
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
-		
-		//FileWriter fw = new FileWriter(fileName:"/plugins/core/killstats.db");
-		//BufferedWriter bw = new BufferedWriter(fw);
-		
-		//Files.readAllLines(killstats_user_database.toPath())
-		//	.forEach(line) -> PlayerMeta.sKillStats.put(val));
 			
 		Files.readAllLines(killstats_user_database.toPath()).forEach(line -> {
 			PVPstats id = PVPstats.fromString(line);

@@ -1,20 +1,32 @@
 package core.backend;
 
 import java.util.UUID;
+import java.io.Serializable;
 
 import org.bukkit.entity.Player;
 
-public class PVPstats {
+public class PVPstats implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	UUID playerid;
 	int killTotal;
 	int deathTotal;
-	double kd;
+	
 	int killWcrystal;
 	int logEscape;
 	
-	public PVPstats(UUID playerid, int killTotal) {
+	PVPstats() {
+		
+	};
+	
+	PVPstats(UUID playerid, int killTotal) {
 		this.playerid = playerid; this.killTotal = killTotal;
 	}
+	
+	@Override
+    public String toString() {
+        return playerid + ":" + killTotal;
+    }
 	
 	public static PVPstats fromString(String line) {
 		String[] stats = line.split(":");

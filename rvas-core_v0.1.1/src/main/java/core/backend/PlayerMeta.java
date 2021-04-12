@@ -11,7 +11,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.Bukkit;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -317,12 +317,19 @@ public class PlayerMeta {
 		}
 	}
 
-//	public static void writeKills() throws IOException {
-//		List<String> list = new ArrayList();
+	public static void writeKills() throws IOException {
+		
+		FileOutputStream f = new FileOutputStream(new File("plugins/core/killstats.db"));
+        ObjectOutputStream o = new ObjectOutputStream(f);
 
-//		sKillStats.keySet().forEach(user -> list.add(user.toString() + ":" + sKillStats.get(user)));
-//		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());
-//	}
+		sKillStats.keySet().forEach(user -> {
+			  try {
+				    o.writeObject(sKillStats.get(user));
+				  } catch (IOException e) {
+				    throw new UncheckedIOException(e); // Or whatever.
+				  }
+				});
+	}
 	
 	// --- OTHER -- //
 

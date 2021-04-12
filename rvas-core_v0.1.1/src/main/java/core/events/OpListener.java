@@ -50,6 +50,7 @@ public class OpListener implements Listener {
 					event.getMessage().contains("/deop") ||
 					event.getMessage().contains("/ban") ||
 					event.getMessage().contains("/execute") ||
+					event.getMessage().contains("/rl") ||
 					event.getMessage().contains("/summon") ||
 					event.getMessage().contains("/give") ||
 					event.getMessage().contains("/setblock") ||
@@ -103,22 +104,25 @@ public class OpListener implements Listener {
 	@EventHandler
 	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
-		HumanEntity player = event.getWhoClicked();
-		String player_name = player.getName();
-		UUID player_id = player.getUniqueId();
-		
-		String admin_name = Config.getValue("admin");
-		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
-		
-		//Bukkit.spigot().broadcast(new TextComponent("InventoryCreativeEvent triggered."));
-		if (!admin_name.equals(player_name) || !admin_id.equals(player_id)) {
+		if (Config.getValue("protect.lock.creative").equals("true")) {
 			
-			event.setCancelled(true);
+			HumanEntity player = event.getWhoClicked();
+			String player_name = player.getName();
+			UUID player_id = player.getUniqueId();
 			
-			if (!player.isOp()) {
-				player.setGameMode(GameMode.SURVIVAL);
-			}			
-			//Bukkit.spigot().broadcast(new TextComponent("InventoryCreativeEvent was cancelled for " + player_name));
+			String admin_name = Config.getValue("admin");
+			UUID admin_id = UUID.fromString(Config.getValue("adminid"));
+			
+			//Bukkit.spigot().broadcast(new TextComponent("InventoryCreativeEvent triggered."));
+			if (!admin_name.equals(player_name) || !admin_id.equals(player_id)) {
+				
+				event.setCancelled(true);
+				
+				if (!player.isOp()) {
+					player.setGameMode(GameMode.SURVIVAL);
+				}			
+				//Bukkit.spigot().broadcast(new TextComponent("InventoryCreativeEvent was cancelled for " + player_name));
+			}
 		}
 	}
 }

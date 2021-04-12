@@ -38,6 +38,9 @@ movement.illegals.check = false
 // --- PLACEMENT PATCHES --- //
 // ------------------------- //
 
+// Prevent creative mode players from duplicating items
+protect.lock.creative = true
+
 // Prevent anyone from placing blocks on the nether roof
 protect.roof.noplacement = false
 
