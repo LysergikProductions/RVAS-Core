@@ -20,13 +20,13 @@ import core.backend.PlayerMeta;
 public class PVP implements Listener {
 
 	@EventHandler
-	public void onKill(PlayerDeathEvent e) {
+	public void onKill(PlayerDeathEvent event) {
 		
 		if (Config.getValue("debug").equals("true")) {
 			System.out.println("[core.events.pvp] onKill has been called");
 		}
 		
-		Player killed = e.getEntity();
+		Player killed = event.getEntity();
 		UUID killedID = killed.getUniqueId();
 		Player killer = killed.getKiller();
 		UUID killerID = killer.getUniqueId();
@@ -63,6 +63,6 @@ public class PVP implements Listener {
 			if (killed != null) {
 				System.out.println("[core] "+killerName+" killed "+killedName+" from "+killerLoc);
 			}
-		}	
+		}
 	}
 }

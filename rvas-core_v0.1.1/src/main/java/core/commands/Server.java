@@ -89,7 +89,7 @@ public class Server implements CommandExecutor {
 		// DEBUG
 		TextComponent restart_a = new TextComponent("Server Restarting: ");
 		TextComponent restart_b = new TextComponent(Utilities.restarting ? "True" : "False");
-		TextComponent rtrig_a = new TextComponent("Time below acceptable TPS: ");
+		TextComponent rtrig_a = new TextComponent("Time below threshold: ");
 		TextComponent rtrig_b = new TextComponent("" + ProcessPlaytime.lowTpsCounter);
 		TextComponent rtrig_c = new TextComponent("ms (600000ms required to restart)");
 		TextComponent withers_a = new TextComponent("Wither Count: ");
