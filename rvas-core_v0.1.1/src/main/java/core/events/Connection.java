@@ -98,6 +98,8 @@ public class Connection implements Listener {
 	}
 
 	public void doJoinMessage(MessageType msg, Player player) {
+		if (player.isOp()) return;
+		
 		String messageOut = "§7" + player.getName()
 				+ ((msg.equals(MessageType.JOIN)) ? " joined the game." : " left the game.");
 		Bukkit.getOnlinePlayers().forEach(player1 ->{
@@ -106,6 +108,7 @@ public class Connection implements Listener {
 
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
+		if (e.getPlayer().isOp()) return;
 		e.setQuitMessage(null);
 		if (!PlayerMeta.isMuted(e.getPlayer()) && !Kit.kickedFromKit.contains(e.getPlayer().getUniqueId())) {
 			doJoinMessage(MessageType.LEAVE, e.getPlayer());
@@ -140,7 +143,7 @@ public class Connection implements Listener {
 		}
 		int rnd = r.nextInt(allMotds.size());
 		String tps = new DecimalFormat("#.##").format(LagProcessor.getTPS());
-		e.setMotd("§9"+serverHostname+" §7| §5" + allMotds.get(rnd) + " §7| §9TPS: " + tps);
+		e.setMotd(serverHostname+" §7| §5" + allMotds.get(rnd) + " §7| §9TPS: " + tps);
 		if(serverHostname.equals("test")) {
 			if(Bukkit.hasWhitelist()) {
 				e.setMotd("§9rvas test §7| §4closed §7| §9TPS: " + tps);
@@ -149,6 +152,6 @@ public class Connection implements Listener {
 				e.setMotd("§9rvas test §7| §aopen §7| §9TPS: " + tps);
 			}
 		}
-		e.setMaxPlayers(20);
+		e.setMaxPlayers(10);
 	}
 }
