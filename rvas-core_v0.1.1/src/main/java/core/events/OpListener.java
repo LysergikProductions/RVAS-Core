@@ -106,7 +106,7 @@ public class OpListener implements Listener {
 	@EventHandler
 	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
-		if (Config.getValue("protect.lock.creative").equals("true")) {
+		if (!Config.getValue("protect.lock.creative").equals("false")) {
 			
 			HumanEntity player = event.getWhoClicked();
 			String player_name = player.getName();

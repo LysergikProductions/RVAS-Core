@@ -31,7 +31,10 @@ public class PVPstats implements Serializable {
 		int deathTotal = Integer.parseInt(stats[2]);
 		String kd = stats[3];
 		
+		System.out.println("playerid: " + playerid+" | killTotal: " + killTotal + " | deathTotal: " + deathTotal + " | kd: " + kd);
+		
 		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd);
+		System.out.println("PVPstats out: " + out);
 		
 		return out;
 	}

@@ -36,7 +36,7 @@ public class PlayerMeta {
 
 	public static boolean MuteAll = false;
 
-	// --- GET/SET DONATOR STATUS --- //
+	// GET/SET DONATOR STATUS //
 
 	public static boolean isDonator(Player p)
 	{
@@ -117,17 +117,20 @@ public class PlayerMeta {
 			}
 			Chat.violationLevels.remove(uuid);
 		} else if (type.equals(MuteType.TEMPORARY)) {
+			
 			muteType = "temporarily ";
 			_permanentMutes.remove(uuid);
 			if (!_temporaryMutes.containsKey(uuid))
 				_temporaryMutes.put(uuid, 0.0);
 		} else if (type.equals(MuteType.PERMANENT)) {
+			
 			muteType = "permanently ";
 			if (!_permanentMutes.contains(uuid)) _permanentMutes.add(uuid);
 			if (_temporaryMutes.containsKey(uuid)) _temporaryMutes.remove(uuid);
 			saveMuted();
-		}
-		else if(type.equals(MuteType.IP)) {
+			
+		} else if (type.equals(MuteType.IP)) {
+			
 			muteType = "permanently ";
 			setMuteType(p, MuteType.PERMANENT);
 			_ipMutes.add(getIp(p));
@@ -326,7 +329,7 @@ public class PlayerMeta {
 
 	public static void writePVPStats() throws IOException {
 		
-		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/killstats.txt"));
+		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/pvpstats.txt"));
 		
 		for (PVPstats object: sPVPStats.values()) {
 			try {

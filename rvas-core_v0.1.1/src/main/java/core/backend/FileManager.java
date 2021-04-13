@@ -32,8 +32,8 @@ public class FileManager {
 		File core_server_config = new File(plugin_work_path + "config.txt");
 		File lagfag_user_database = new File(plugin_work_path + "lagfag.db");
 		File playtime_user_database = new File(plugin_work_path + "playtime.db");
-		File pvp_stats_database = new File(plugin_work_path + "killstats.txt");
 		File motd_message_list = new File(plugin_work_path + "motds.txt");
+		File pvpstats_user_database = new File(plugin_work_path + "pvpstats.txt");
 
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!donor_code_directory.exists()) donor_code_directory.mkdir();
@@ -61,10 +61,15 @@ public class FileManager {
 			InputStream core_server_config_template = (Main.class.getResourceAsStream("/config.txt"));
 			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "config.txt"));
 		}
-
+		
 		if (!lagfag_user_database.exists()) lagfag_user_database.createNewFile();
-		if (!playtime_user_database.exists()) playtime_user_database.createNewFile();
-		if (!pvp_stats_database.exists()) pvp_stats_database.createNewFile();
+		
+		FileReader fr;
+		if (!pvpstats_user_database.exists()) {
+			fr = new FileReader(new File(plugin_work_path + "pvpstats.txt"));
+		} else {
+			fr = new FileReader(pvpstats_user_database);
+		}
 
 		Config.load();
 
@@ -75,15 +80,32 @@ public class FileManager {
 		Files.readAllLines(used_donor_codes.toPath()).forEach( val ->
 				PlayerMeta.UsedDonorCodes.add(val)
 		);
-
+		
 		Files.readAllLines(playtime_user_database.toPath()).forEach(val ->
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
 		
-		/*for (String line: Files.readAllLines(pvp_stats_database.toPath())) {
-				
-			PVPstats stats = PVPstats.fromString(line);
-			PlayerMeta.sPVPStats.put(stats.playerid, stats);		
+		//File pvp_stats_database = ;
+		//if (!pvp_stats_database.exists()) pvp_stats_database.createNewFile();
+		
+		/*public static Map<UUID, PVPstats> readCodeFile(String fileName) throws  IOException {
+		    //Create a new map instead of reusing the static (shared) one
+		    Map<UUID, PVPstats> sPVPStats = new HashMap<UUID, PVPstats>();
 		}*/
+		
+		
+		BufferedReader br = new BufferedReader(fr);
+		StringBuffer sb = new StringBuffer();
+		String line;
+		
+		while ((line=br.readLine())!=null) {
+			sb.append(line);
+			
+			PVPstats stats = PVPstats.fromString(line);
+			PlayerMeta.sPVPStats.put(stats.playerid, stats);
+			
+			sb.setLength(0);
+		}
+		fr.close();
 	}
 }

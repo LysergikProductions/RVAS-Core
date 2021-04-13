@@ -58,6 +58,10 @@ public class BlockListener implements Listener {
 		// prevent creative players from breaking certain blocks but completely ignore admin account
 		if (!admin_name.equals(breaker_name) || !admin_id.equals(breaker_id)) {
 			
+			if (!breaker.isOp()) {
+				breaker.setGameMode(GameMode.SURVIVAL);
+			}
+			
 			if (BreakBanned.contains(block.getType())) {
 				
 				event.setCancelled(true);

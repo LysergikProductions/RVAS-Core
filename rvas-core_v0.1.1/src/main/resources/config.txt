@@ -3,7 +3,7 @@
 // ########################################### //
 
 // Internal use only. Do not change or you'll break the entire thing.
-config.version = 710
+config.version = 22
 
 // ------------------ //
 // --- IMPORTANT  --- //
@@ -60,6 +60,9 @@ protect.banned.place.ops = true
 
 protect.bedrock.roof = true
 protect.bedrock.floor = true
+
+// Force non-ops into survival mode on block break events
+protect.gamemode.onbreak = true
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //
