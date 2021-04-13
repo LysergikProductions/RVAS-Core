@@ -20,8 +20,7 @@ public class FileManager {
 
 	public static void setup() throws IOException {
 		final String plugin_work_path = "plugins/core/";
-
-		// Create initial directory
+		
 		File plugin_work_directory = new File(plugin_work_path);
 		File donor_code_directory = new File(plugin_work_path + "codes");
 		File donor_list = new File(plugin_work_path + "donator.db");
@@ -63,13 +62,8 @@ public class FileManager {
 		}
 		
 		if (!lagfag_user_database.exists()) lagfag_user_database.createNewFile();
-		
-		FileReader fr;
-		if (!pvpstats_user_database.exists()) {
-			fr = new FileReader(new File(plugin_work_path + "pvpstats.txt"));
-		} else {
-			fr = new FileReader(pvpstats_user_database);
-		}
+		if (!playtime_user_database.exists()) playtime_user_database.createNewFile();
+		if (!pvpstats_user_database.exists()) pvpstats_user_database.createNewFile();
 
 		Config.load();
 
@@ -85,27 +79,13 @@ public class FileManager {
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
 		
-		//File pvp_stats_database = ;
-		//if (!pvp_stats_database.exists()) pvp_stats_database.createNewFile();
-		
-		/*public static Map<UUID, PVPstats> readCodeFile(String fileName) throws  IOException {
-		    //Create a new map instead of reusing the static (shared) one
-		    Map<UUID, PVPstats> sPVPStats = new HashMap<UUID, PVPstats>();
-		}*/
-		
-		
-		BufferedReader br = new BufferedReader(fr);
-		StringBuffer sb = new StringBuffer();
-		String line;
-		
-		while ((line=br.readLine())!=null) {
-			sb.append(line);
-			
-			PVPstats stats = PVPstats.fromString(line);
-			PlayerMeta.sPVPStats.put(stats.playerid, stats);
-			
-			sb.setLength(0);
-		}
-		fr.close();
+		Files.readAllLines(pvpstats_user_database.toPath()).forEach(val -> {
+				System.out.println("Reading pvpstats.txt: " + val);
+				
+				PVPstats user = PVPstats.fromString(val);
+				PlayerMeta.sPVPStats.put(user.playerid, user);
+				
+				System.out.println("sPVPStats is now: " + PlayerMeta.sPVPStats);
+		});
 	}
 }

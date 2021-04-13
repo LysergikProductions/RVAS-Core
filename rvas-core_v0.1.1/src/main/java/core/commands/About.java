@@ -19,7 +19,7 @@ public class About implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
 		
-		TextComponent by = new TextComponent("RVAS-core v0.1.2 (beta) by sinse420. Originally sourced from protocol3 by d2k11.");
+		TextComponent by = new TextComponent("RVAS-core v0.1.2 by sinse420. Originally sourced from protocol3 by d2k11.");
 		TextComponent source = new TextComponent("RVAS-core is open source. Access the GitHub by clicking this message.");
 		TextComponent license = new TextComponent("Licensed under AGPL-3.0.");
 		

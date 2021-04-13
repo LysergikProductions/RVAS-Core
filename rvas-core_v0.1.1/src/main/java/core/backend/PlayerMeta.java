@@ -146,7 +146,7 @@ public class PlayerMeta {
 		});
 	}
 
-	// -- LAGFAGS -- //
+	// -- LAG PRISONERS -- //
 	public static void setLagfag(Player p, boolean status) {
 		if (status) {
 			if (!_lagfagList.containsKey(p.getUniqueId())) {
@@ -158,7 +158,7 @@ public class PlayerMeta {
 		try {
 			saveLagfags();
 		} catch (IOException e) {
-			System.out.println("[core.backend.playermeta] Failed to save laggers.");
+			System.out.println("[core.backend.playermeta] Failed to save lag priosners.");
 		}
 	}
 
@@ -279,7 +279,7 @@ public class PlayerMeta {
 			
 		} else {
 			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "");
+			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "null");
 			sPVPStats.put(p.getUniqueId(), stats);
 			System.out.println(sPVPStats);
 		}
@@ -299,7 +299,7 @@ public class PlayerMeta {
 	}
 	
 	public static PVPstats constructStats(OfflinePlayer p) {
-		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0, "");
+		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0, "null");
 		return out;
 	}
 	

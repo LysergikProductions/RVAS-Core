@@ -24,14 +24,23 @@ public class PVPstats implements Serializable {
     }
 	
 	public static PVPstats fromString(String line) {
-		String[] stats = line.split(":");
+		// String line looks like: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7=f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:7:null!
+		System.out.println("Converting string to PVPstats object: " + line);
+		
+		String[] sep = line.split("=");
+		String[] stats = sep[1].split(":");
 		
 		UUID playerid = UUID.fromString(stats[0]);
-		int killTotal = Integer.parseInt(stats[1]);
-		int deathTotal = Integer.parseInt(stats[2]);
-		String kd = stats[3];
+		System.out.println("Parsed: " + playerid);
 		
-		System.out.println("playerid: " + playerid+" | killTotal: " + killTotal + " | deathTotal: " + deathTotal + " | kd: " + kd);
+		int killTotal = Integer.parseInt(stats[1]);
+		System.out.println("Parsed: " + killTotal);
+		
+		int deathTotal = Integer.parseInt(stats[2]);
+		System.out.println("Parsed: " + deathTotal);
+		
+		String kd = stats[3];
+		System.out.println("Parsed: " + kd);
 		
 		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd);
 		System.out.println("PVPstats out: " + out);
