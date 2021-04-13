@@ -48,7 +48,7 @@ public class ChatPrint {
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
 		
-		Date date = new Date(receiver.getFirstPlayed());
+		Date date = new Date(target.getFirstPlayed());
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 		
 		String firstPlayed = sdf.format(date);
