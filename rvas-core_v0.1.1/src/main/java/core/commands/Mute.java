@@ -10,8 +10,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import core.backend.PlayerMeta;
 import core.backend.PlayerMeta.MuteType;
 
-// Mute somebody. OPs only.
-
 public class Mute implements CommandExecutor {
 
 	@Override
@@ -80,10 +78,19 @@ public class Mute implements CommandExecutor {
 						"§a§l" + name + " §r§ahas unmuted §a§l" + toMute.getName() + "§r§a."));
 				PlayerMeta.setMuteType(toMute, MuteType.NONE);
 				break;
+			case "IP":
+				if(PlayerMeta.isMuted(toMute)) {
+					sender.spigot().sendMessage(new TextComponent("§cIP is already muted."));
+					break;
+				}
+				Bukkit.getServer().spigot().broadcast(new TextComponent(
+						"§4§l" + name + " §r§4has IP muted §4§l" + toMute.getName() + "§r§4."));
+				PlayerMeta.setMuteType(toMute, MuteType.IP);
 			default:
-				sender.sendMessage("§cInvalid syntax. Syntax: /mute <perm/temp/none/all> [player]");
+				sender.sendMessage("§cInvalid syntax. Syntax: /mute <perm/temp/ip/none/all> [player]");
 				return true;
 		}
 		return true;
 	}
+
 }
