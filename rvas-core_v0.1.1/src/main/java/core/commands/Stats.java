@@ -64,6 +64,8 @@ public class Stats implements CommandExecutor {
 		TextComponent toptime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)));
 		TextComponent tkills_a = new TextComponent("Total PVP Kills: ");
 		TextComponent tkills_b = new TextComponent("" + PlayerMeta.getStats(player));
+		TextComponent tdeaths_a = new TextComponent("Total PVP Deaths: ");
+		//TextComponent tdeaths_b = new TextComponent("" + PlayerMeta.getStats(player));
 		
 		// style individual components
 		joined_a.setColor(ChatColor.BLUE); joined_a.setBold(true);

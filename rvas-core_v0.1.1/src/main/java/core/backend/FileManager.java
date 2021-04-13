@@ -33,7 +33,7 @@ public class FileManager {
 		File lagfag_user_database = new File(plugin_work_path + "lagfag.db");
 		File playtime_user_database = new File(plugin_work_path + "playtime.db");
 		File stronghold_portals = new File(plugin_work_path + "strong-portals.db");
-		File killstats_user_database = new File(plugin_work_path + "killstats.txt");
+		File pvp_stats_database = new File(plugin_work_path + "killstats.txt");
 
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!donor_code_directory.exists()) donor_code_directory.mkdir();
@@ -64,7 +64,7 @@ public class FileManager {
 
 		if (!lagfag_user_database.exists()) lagfag_user_database.createNewFile();
 		if (!playtime_user_database.exists()) playtime_user_database.createNewFile();
-		if (!killstats_user_database.exists()) killstats_user_database.createNewFile();
+		if (!pvp_stats_database.exists()) pvp_stats_database.createNewFile();
 
 		Config.load();
 
@@ -79,10 +79,11 @@ public class FileManager {
 		Files.readAllLines(playtime_user_database.toPath()).forEach(val ->
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
-			
-		Files.readAllLines(killstats_user_database.toPath()).forEach(line -> {
+		
+		/*for (String line: Files.readAllLines(pvp_stats_database.toPath())) {
+				
 			PVPstats stats = PVPstats.fromString(line);
-			PlayerMeta.sPVPStats.put(stats.playerid, stats);
-		});
+			PlayerMeta.sPVPStats.put(stats.playerid, stats);*/		
+		}
 	}
 }

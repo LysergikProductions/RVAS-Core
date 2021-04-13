@@ -27,7 +27,7 @@ public class PlayerMeta {
 	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<UUID, Double>();
 
 	public static HashMap<UUID, Double> Playtimes = new HashMap<UUID, Double>();
-	public static Map <UUID, PVPstats> sPVPStats = new HashMap<>();
+	public static Map <UUID, PVPstats> sPVPStats = new HashMap<UUID, PVPstats>();
 
 	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
 
@@ -326,17 +326,18 @@ public class PlayerMeta {
 		
 		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/killstats.txt"));
 		
-		sPVPStats.keySet().forEach(user -> {			
+		for (PVPstats object: sPVPStats.values()) {
 			try {
 				System.out.println(sPVPStats);
+				System.out.println(object.toString());
 				
-				w.write(user.toString() + "\n");
+				w.write(object.toString() + "\n");
 				w.flush();
 				
 			  } catch (IOException e) {
 				  throw new UncheckedIOException(e);
 			  }
-		});
+		};
 		w.close();
 	}
 	
