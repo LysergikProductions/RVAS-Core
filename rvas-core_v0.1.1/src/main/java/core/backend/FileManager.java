@@ -83,7 +83,7 @@ public class FileManager {
 		/*for (String line: Files.readAllLines(pvp_stats_database.toPath())) {
 				
 			PVPstats stats = PVPstats.fromString(line);
-			PlayerMeta.sPVPStats.put(stats.playerid, stats);*/		
-		}
+			PlayerMeta.sPVPStats.put(stats.playerid, stats);		
+		}*/
 	}
 }

@@ -79,7 +79,6 @@ public class PlayerMeta {
 			}
 		}
 		
-		
 		return muted;
 	}
 
@@ -270,55 +269,57 @@ public class PlayerMeta {
 	public static void incKillTotal(Player p, int inc) {
 		if (sPVPStats.containsKey(p.getUniqueId())) {
 			
-			if (Config.getValue("debug").equals("true")) {
-				
-				PVPstats id = sPVPStats.get(p.getUniqueId());
-				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
-				
-				id.killTotal += inc;
-				System.out.println(sPVPStats);
-				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
-			} else {
-				
-				PVPstats id = sPVPStats.get(p.getUniqueId());
-				id.killTotal += inc;
-				System.out.println(sPVPStats);
-			}
+			PVPstats stats = sPVPStats.get(p.getUniqueId());
+			stats.killTotal += inc;
+			System.out.println(sPVPStats);
+			
 		} else {
-			if (Config.getValue("debug").equals("true")) {
-				
-				PVPstats id = new PVPstats(p.getUniqueId(), 1, 0);
-				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
-				
-				sPVPStats.put(p.getUniqueId(), id);
-				System.out.println(sPVPStats);
-				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
-			} else {
-				
-				PVPstats id = new PVPstats(p.getUniqueId(), 1, 0);
-				sPVPStats.put(p.getUniqueId(), id);
-				System.out.println(sPVPStats);
-			}
+			
+			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "");
+			sPVPStats.put(p.getUniqueId(), stats);
+			System.out.println(sPVPStats);
+		}
+	}
+	
+	public static void incDeathTotal(Player p, int inc) {
+		if (sPVPStats.containsKey(p.getUniqueId())) {
+			
+			PVPstats stats = sPVPStats.get(p.getUniqueId());
+			stats.deathTotal += inc;
+			
+		} else {
+			
+			PVPstats stats = new PVPstats(p.getUniqueId(), 0, 1, "1.00");
+			sPVPStats.put(p.getUniqueId(), stats);
 		}
 	}
 	
 	public static PVPstats constructStats(OfflinePlayer p) {
-		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0);
+		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0, "");
 		return out;
 	}
 	
-	public static int getStats(OfflinePlayer p) {
-		PVPstats player = sPVPStats.get(p.getUniqueId());
-		if (player != null) {
-			if (Config.getValue("debug").equals("true")) {
-				System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+player.killTotal);
+	public static PVPstats getStats(OfflinePlayer p) {
+		PVPstats stats = sPVPStats.get(p.getUniqueId());
+		
+		if (stats != null && sPVPStats.containsKey(p.getUniqueId())) {
+			
+			Double kills = new Double(stats.killTotal);
+			Double deaths = new Double(stats.deathTotal);
+			
+			if (deaths < 0.710) {
+				stats.kd = "Unkillable!";
+			} else {
+				stats.kd = Double.toString(kills / deaths);
 			}
 			
-			return player.killTotal;
+			return stats;
+			
 		} else {
 			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null. Constructing new PVPstats object.");
+			
 			PVPstats newPlayer = constructStats(p);
-			return newPlayer.killTotal;
+			return newPlayer;
 		}
 	}
 
