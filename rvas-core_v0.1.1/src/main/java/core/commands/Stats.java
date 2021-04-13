@@ -63,7 +63,7 @@ public class Stats implements CommandExecutor {
 		TextComponent playtime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(player)));
 		TextComponent toptime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)));
 		TextComponent tkills_a = new TextComponent("Total PVP Kills: ");
-		TextComponent tkills_b = new TextComponent("" + PlayerMeta.getKills(player));
+		TextComponent tkills_b = new TextComponent("" + PlayerMeta.getStats(player));
 		
 		// style individual components
 		joined_a.setColor(ChatColor.BLUE); joined_a.setBold(true);
@@ -122,7 +122,7 @@ public class Stats implements CommandExecutor {
 			TextComponent lastSeenwarg_b = new TextComponent(lastPlayedwarg);
 			TextComponent rankwarg_b = new TextComponent("" + PlayerMeta.getRank(p2));
 			TextComponent playtimewarg_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(p2)));
-			TextComponent tkillswarg_b = new TextComponent("" + PlayerMeta.getKills(p2));
+			TextComponent tkillswarg_b = new TextComponent("" + PlayerMeta.getStats(p2));
 			
 			TextComponent titlewarg = new TextComponent(title_pre, title_namewarg, title_suf);
 			TextComponent joinedwarg = new TextComponent(joined_a, joinedwarg_b);

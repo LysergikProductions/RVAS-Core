@@ -81,8 +81,8 @@ public class FileManager {
 		);
 			
 		Files.readAllLines(killstats_user_database.toPath()).forEach(line -> {
-			PVPstats id = PVPstats.fromString(line);
-			PlayerMeta.sKillStats.put(id.playerid, id);
+			PVPstats stats = PVPstats.fromString(line);
+			PlayerMeta.sPVPStats.put(stats.playerid, stats);
 		});
 	}
 }

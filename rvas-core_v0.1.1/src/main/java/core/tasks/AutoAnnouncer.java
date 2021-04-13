@@ -20,7 +20,7 @@ public class AutoAnnouncer extends TimerTask {
 
 	@Override
 	public void run() {
-		int rnd = r.nextInt(11);
+		int rnd = r.nextInt(10);
 
 		switch (rnd) {
 			case 0:
@@ -31,14 +31,6 @@ public class AutoAnnouncer extends TimerTask {
 				Bukkit.spigot()
 						.broadcast(new TextComponent("§6You can vote to mute a player by doing §l/vm [playername]."));
 				break;
-			//case 2:
-			//	Bukkit.spigot().broadcast(new TextComponent(
-			//			"§6You can dupe the item in your hand by holding the item you want to dupe and then voting using /vote. (not a troll)"));
-			//	break;
-			//case 3:
-			//	Bukkit.spigot().broadcast(new TextComponent(
-			//			"§6Dont forget to get your /kit starter, including §lsteak§6, basic §ldiamond armor§6, and a §lnetherite sword."));
-			//	break;
 			case 2:
 				Bukkit.spigot().broadcast(
 						new TextComponent("§6You can sign items to show them as uniquely yours by doing §l/sign."));
@@ -57,7 +49,7 @@ public class AutoAnnouncer extends TimerTask {
 				Bukkit.spigot().broadcast(new TextComponent("§6Use /server to see the current speed limit and other information."));
 				break;
 			default:
-				TextComponent source = new TextComponent("RVAS-core is open-source (AGPLv3)! Click this message to access the repository.");
+				TextComponent source = new TextComponent("RVAS-core is open-source! Click this message to access the repository.");
 				source.setColor(ChatColor.GOLD); source.setItalic(true);
 				
 				source.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));

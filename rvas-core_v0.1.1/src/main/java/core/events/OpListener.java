@@ -49,6 +49,8 @@ public class OpListener implements Listener {
 			if (event.getMessage().contains("/op") ||
 					event.getMessage().contains("/deop") ||
 					event.getMessage().contains("/ban") ||
+					event.getMessage().contains("/attribute") ||
+					event.getMessage().contains("/default") ||
 					event.getMessage().contains("/execute") ||
 					event.getMessage().contains("/rl") ||
 					event.getMessage().contains("/summon") ||

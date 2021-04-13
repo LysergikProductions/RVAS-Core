@@ -12,20 +12,20 @@ public class PVPstats implements Serializable {
 	int killTotal;
 	int deathTotal;
 	
-	int killWcrystal;
-	int logEscape;
+	//int killWcrystal;
+	//int logEscape;
 	
-	PVPstats() {
+	/*PVPstats() {
 		
-	};
+	};*/
 	
-	PVPstats(UUID playerid, int killTotal) {
-		this.playerid = playerid; this.killTotal = killTotal;
+	PVPstats(UUID playerid, int killTotal, int deathTotal) {
+		this.playerid = playerid; this.killTotal = killTotal; this.deathTotal = deathTotal;
 	}
 	
 	@Override
     public String toString() {
-        return playerid + ":" + killTotal;
+        return playerid + ":" + killTotal + ":" + deathTotal;
     }
 	
 	public static PVPstats fromString(String line) {
@@ -33,8 +33,9 @@ public class PVPstats implements Serializable {
 		
 		UUID playerid = UUID.fromString(stats[0]);
 		int killTotal = Integer.parseInt(stats[1]);
+		int deathTotal = Integer.parseInt(stats[2]);
 		
-		PVPstats out = new PVPstats(playerid, killTotal);
+		PVPstats out = new PVPstats(playerid, killTotal, deathTotal);
 		
 		return out;
 	}

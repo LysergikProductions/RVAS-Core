@@ -27,7 +27,7 @@ public class PlayerMeta {
 	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<UUID, Double>();
 
 	public static HashMap<UUID, Double> Playtimes = new HashMap<UUID, Double>();
-	public static Map <UUID, PVPstats> sKillStats = new HashMap<>();
+	public static Map <UUID, PVPstats> sPVPStats = new HashMap<>();
 
 	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
 
@@ -268,47 +268,49 @@ public class PlayerMeta {
 	// --- PVP -- //
 	
 	public static void incKillTotal(Player p, int inc) {
-		if (sKillStats.containsKey(p.getUniqueId())) {
+		if (sPVPStats.containsKey(p.getUniqueId())) {
 			
 			if (Config.getValue("debug").equals("true")) {
 				
-				PVPstats id = sKillStats.get(p.getUniqueId());
+				PVPstats id = sPVPStats.get(p.getUniqueId());
 				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
 				
 				id.killTotal += inc;
 				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
 			} else {
 				
-				PVPstats id = sKillStats.get(p.getUniqueId());
+				PVPstats id = sPVPStats.get(p.getUniqueId());
 				id.killTotal += inc;
 			}
 		} else {
 			if (Config.getValue("debug").equals("true")) {
 				
-				PVPstats id = new PVPstats(p.getUniqueId(), 1);
+				PVPstats id = new PVPstats(p.getUniqueId(), 1, 0);
 				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
 				
-				sKillStats.put(p.getUniqueId(), id);
+				sPVPStats.put(p.getUniqueId(), id);
 				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
 			} else {
 				
-				PVPstats id = new PVPstats(p.getUniqueId(), 1);
-				sKillStats.put(p.getUniqueId(), id);
+				PVPstats id = new PVPstats(p.getUniqueId(), 1, 0);
+				sPVPStats.put(p.getUniqueId(), id);
 			}
 		}
 	}
 	
 	public static PVPstats constructStats(OfflinePlayer p) {
-		PVPstats out = new PVPstats(p.getUniqueId(), 0);
+		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0);
 		return out;
 	}
 	
-	public static int getKills(OfflinePlayer p) {
-		PVPstats player = sKillStats.get(p.getUniqueId());
+	public static int getStats(OfflinePlayer p) {
+		PVPstats player = sPVPStats.get(p.getUniqueId());
 		if (player != null) {
 			if (Config.getValue("debug").equals("true")) {
 				System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+player.killTotal);
 			}
+			
+			//TextComponent out = new TextComponent();
 			return player.killTotal;
 		} else {
 			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null. Constructing new PVPstats object.");
@@ -317,18 +319,40 @@ public class PlayerMeta {
 		}
 	}
 
-	public static void writeKills() throws IOException {
+	public static void writePVPStats() throws IOException {
 		
-		FileOutputStream f = new FileOutputStream(new File("plugins/core/killstats.db"));
+		// this just does nothing
+		
+		/*FileOutputStream f = new FileOutputStream(new File("plugins/core/killstats.db"));
         ObjectOutputStream o = new ObjectOutputStream(f);
 
-		sKillStats.keySet().forEach(user -> {
+		sPVPStats.keySet().forEach(user -> {
 			  try {
-				    o.writeObject(sKillStats.get(user));
+				    o.writeObject(sPVPStats.get(user));
 				  } catch (IOException e) {
 				    throw new UncheckedIOException(e); // Or whatever.
 				  }
 				});
+		
+		o.close(); f.close();*/
+		
+		// this creates a weird situation where server restarts end up
+		//toggling between: all commands produce errors in paper/spigot command handling, and: them working normally
+		
+		/*List<String> list = new ArrayList();
+		sPVPStats.keySet().forEach(user -> list.add(user.toString()));
+
+		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());*/
+		
+		// this produces no exceptions but also does not write the contents stored in sPVPStats to the file
+		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/killstats.db"));
+		sPVPStats.keySet().forEach(user -> {			
+			try {
+				w.write(user.toString() + "\n");
+			  } catch (IOException e) {
+				  throw new UncheckedIOException(e);
+			  }
+		});
 	}
 	
 	// --- OTHER -- //
