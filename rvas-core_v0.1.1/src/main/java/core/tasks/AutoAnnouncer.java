@@ -48,6 +48,9 @@ public class AutoAnnouncer extends TimerTask {
 			case 6:
 				Bukkit.spigot().broadcast(new TextComponent("§6Use /server to see the current speed limit and other information."));
 				break;
+			case 7:
+				Bukkit.spigot().broadcast(new TextComponent("§6You can dupe the item/s in your main hand by supporting the server with /vote"));
+				break;
 			default:
 				TextComponent source = new TextComponent("RVAS-core is open-source! Click this message to access the repository.");
 				source.setColor(ChatColor.GOLD); source.setItalic(true);

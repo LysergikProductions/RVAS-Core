@@ -75,7 +75,7 @@ item.illegal = true
 item.illegal.stacked = true
 
 // Are player heads illegal?
-item.illegal.heads = false
+item.illegal.heads = true
 
 // Enable or disable unbreakable items. false = disabled [default] || true = enabled
 item.illegal.unbreakable = false
@@ -112,7 +112,7 @@ item.illegal.agro.flush_period = 3600
 vote.enable = true
 
 // Enable or disable manual execution of vote reward. Use for debug only. false = disabled [default] || true = enabled
-vote.debug = false
+vote.debug = true
 
 // Vote reward multiplier. default = 1
 vote.multiplier = 1
