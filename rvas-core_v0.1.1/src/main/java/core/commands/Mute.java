@@ -20,12 +20,12 @@ public class Mute implements CommandExecutor {
 		String name = "";
 		
 		if (!PlayerMeta.isOp(sender)) {
-			sender.sendMessage("Â§cYou can't use this.");
+			sender.sendMessage("§cYou can't use this.");
 			return true;
 		}
 
 		if (args.length < 1) {
-			sender.sendMessage("Â§cInvalid syntax. Syntax: /mute <perm/temp/none/all> [player]");
+			sender.sendMessage("§cInvalid syntax. Syntax: /mute <perm/temp/none/all> [player]");
 			return true;
 		}
 		
@@ -37,51 +37,51 @@ public class Mute implements CommandExecutor {
 			PlayerMeta.MuteAll = !PlayerMeta.MuteAll;
 			Bukkit.getServer().spigot()
 					.broadcast(PlayerMeta.MuteAll ?
-							new TextComponent("Â§4Â§l" + name + " Â§rÂ§4has silenced the chat.") :
-							new TextComponent("Â§aÂ§l" + name + " Â§rÂ§ahas unsilenced the chat."));
+							new TextComponent("§4§l" + name + " §r§4has silenced the chat.") :
+							new TextComponent("§a§l" + name + " §r§ahas unsilenced the chat."));
 			return true;
 		}
 
 		Player toMute = Bukkit.getPlayer(args[1]);
 		if (toMute == null) {
-			sender.sendMessage("Â§cPlayer is not online.");
+			sender.sendMessage("§cPlayer is not online.");
 			return true;
 		}
 		if (toMute.isOp()) {
-			sender.sendMessage("Â§cYou can't mute this person.");
+			sender.sendMessage("§cYou can't mute this person.");
 			return true;
 		}
 
 		switch (mode.toUpperCase()) {
 			case "PERM":
 				if(PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("Â§cPlayer is already muted."));
+					sender.spigot().sendMessage(new TextComponent("§cPlayer is already muted."));
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"Â§4Â§l" + name + " Â§rÂ§4has permanently muted Â§4Â§l" + toMute.getName() + " Â§rÂ§4."));
+						"§4§l" + name + " §r§4has permanently muted §4§l" + toMute.getName() + " §r§4."));
 				PlayerMeta.setMuteType(toMute, MuteType.PERMANENT);
 				break;
 			case "TEMP":
 				if(PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("Â§cPlayer is already muted."));
+					sender.spigot().sendMessage(new TextComponent("§cPlayer is already muted."));
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"Â§cÂ§l" + name + " Â§rÂ§chas temporarily muted Â§cÂ§l" + toMute.getName() + " Â§rÂ§c."));
+						"§c§l" + name + " §r§chas temporarily muted §c§l" + toMute.getName() + " §r§c."));
 				PlayerMeta.setMuteType(toMute, MuteType.TEMPORARY);
 				break;
 			case "NONE":
 				if(!PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("Â§cPlayer isn't muted."));
+					sender.spigot().sendMessage(new TextComponent("§cPlayer isn't muted."));
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"Â§aÂ§l" + name + " Â§rÂ§ahas unmuted Â§aÂ§l" + toMute.getName() + "Â§rÂ§a."));
+						"§a§l" + name + " §r§ahas unmuted §a§l" + toMute.getName() + "§r§a."));
 				PlayerMeta.setMuteType(toMute, MuteType.NONE);
 				break;
 			default:
-				sender.sendMessage("Â§cInvalid syntax. Syntax: /mute <perm/temp/none/all> [player]");
+				sender.sendMessage("§cInvalid syntax. Syntax: /mute <perm/temp/none/all> [player]");
 				return true;
 		}
 		return true;
