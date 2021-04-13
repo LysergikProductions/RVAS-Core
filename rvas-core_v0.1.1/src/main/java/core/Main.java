@@ -40,6 +40,29 @@ public class Main extends JavaPlugin implements Listener {
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured creating the necessary files.");
 		}
+		// Load commands
+		this.getCommand("kit").setExecutor(new Kit());
+		this.getCommand("mute").setExecutor(new Mute());
+		this.getCommand("dupehand").setExecutor(new DupeHand());
+		this.getCommand("vm").setExecutor(new VoteMute());
+		this.getCommand("msg").setExecutor(new Message());
+		this.getCommand("r").setExecutor(new Reply());
+		this.getCommand("say").setExecutor(new Say());
+		this.getCommand("discord").setExecutor(new Discord());
+		this.getCommand("tps").setExecutor(new Tps());
+		this.getCommand("kill").setExecutor(new Kill());
+		this.getCommand("setdonator").setExecutor(new SetDonator());
+		this.getCommand("about").setExecutor(new About());
+		this.getCommand("vote").setExecutor(new Vote());
+		this.getCommand("restart").setExecutor(new Restart());
+		this.getCommand("sign").setExecutor(new Sign());
+		this.getCommand("admin").setExecutor(new Admin());
+		this.getCommand("stats").setExecutor(new Stats());
+		this.getCommand("redeem").setExecutor(new Redeem());
+		this.getCommand("lagfag").setExecutor(new Lagfag());
+		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
+		this.getCommand("server").setExecutor(new Server());
+		this.getCommand("help").setExecutor(new Help());
 
 		System.out.println("[core.main] Loading files..");
 		try {
@@ -100,30 +123,6 @@ public class Main extends JavaPlugin implements Listener {
 
 		// Enable speed limit
 		SpeedLimit.scheduleSlTask();
-
-		// Load commands
-		this.getCommand("kit").setExecutor(new Kit());
-		this.getCommand("mute").setExecutor(new Mute());
-		this.getCommand("dupehand").setExecutor(new DupeHand());
-		this.getCommand("vm").setExecutor(new VoteMute());
-		this.getCommand("msg").setExecutor(new Message());
-		this.getCommand("r").setExecutor(new Reply());
-		this.getCommand("say").setExecutor(new Say());
-		this.getCommand("discord").setExecutor(new Discord());
-		this.getCommand("tps").setExecutor(new Tps());
-		this.getCommand("kill").setExecutor(new Kill());
-		this.getCommand("setdonator").setExecutor(new SetDonator());
-		this.getCommand("about").setExecutor(new About());
-		this.getCommand("vote").setExecutor(new Vote());
-		this.getCommand("restart").setExecutor(new Restart());
-		this.getCommand("sign").setExecutor(new Sign());
-		this.getCommand("admin").setExecutor(new Admin());
-		this.getCommand("stats").setExecutor(new Stats());
-		this.getCommand("redeem").setExecutor(new Redeem());
-		this.getCommand("lagfag").setExecutor(new Lagfag());
-		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
-		this.getCommand("server").setExecutor(new Server());
-		this.getCommand("help").setExecutor(new Help());
 
 		// Initialize 
 		

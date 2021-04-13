@@ -14,7 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import core.Main;
-import core.backend.PVPstats;
+import core.objects.PVPstats;
 
 public class FileManager {
 
@@ -33,7 +33,7 @@ public class FileManager {
 		File lagfag_user_database = new File(plugin_work_path + "lagfag.db");
 		File playtime_user_database = new File(plugin_work_path + "playtime.db");
 		File stronghold_portals = new File(plugin_work_path + "strong-portals.db");
-		File killstats_user_database = new File(plugin_work_path + "killstats.db");
+		File killstats_user_database = new File(plugin_work_path + "killstats.txt");
 
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!donor_code_directory.exists()) donor_code_directory.mkdir();

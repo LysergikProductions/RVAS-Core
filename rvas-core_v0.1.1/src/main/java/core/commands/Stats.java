@@ -21,7 +21,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import core.Main;
 import core.backend.PlayerMeta;
 import core.backend.Utilities;
-import core.tasks.ChatPrint;
+import core.backend.ChatPrint;
 
 public class Stats implements CommandExecutor {
 	

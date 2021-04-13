@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import core.backend.PVPstats;
+import core.objects.PVPstats;
 
 public class PlayerMeta {
 
@@ -276,11 +276,13 @@ public class PlayerMeta {
 				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
 				
 				id.killTotal += inc;
+				System.out.println(sPVPStats);
 				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
 			} else {
 				
 				PVPstats id = sPVPStats.get(p.getUniqueId());
 				id.killTotal += inc;
+				System.out.println(sPVPStats);
 			}
 		} else {
 			if (Config.getValue("debug").equals("true")) {
@@ -289,11 +291,13 @@ public class PlayerMeta {
 				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
 				
 				sPVPStats.put(p.getUniqueId(), id);
+				System.out.println(sPVPStats);
 				Bukkit.spigot().broadcast(new TextComponent(p.getName() + "'s Kills: " + id.killTotal));
 			} else {
 				
 				PVPstats id = new PVPstats(p.getUniqueId(), 1, 0);
 				sPVPStats.put(p.getUniqueId(), id);
+				System.out.println(sPVPStats);
 			}
 		}
 	}
@@ -310,7 +314,6 @@ public class PlayerMeta {
 				System.out.println("[core.backend.playermeta] killTotal for "+p+" is "+player.killTotal);
 			}
 			
-			//TextComponent out = new TextComponent();
 			return player.killTotal;
 		} else {
 			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null. Constructing new PVPstats object.");
@@ -321,38 +324,20 @@ public class PlayerMeta {
 
 	public static void writePVPStats() throws IOException {
 		
-		// this just does nothing
+		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/killstats.txt"));
 		
-		/*FileOutputStream f = new FileOutputStream(new File("plugins/core/killstats.db"));
-        ObjectOutputStream o = new ObjectOutputStream(f);
-
-		sPVPStats.keySet().forEach(user -> {
-			  try {
-				    o.writeObject(sPVPStats.get(user));
-				  } catch (IOException e) {
-				    throw new UncheckedIOException(e); // Or whatever.
-				  }
-				});
-		
-		o.close(); f.close();*/
-		
-		// this creates a weird situation where server restarts end up
-		//toggling between: all commands produce errors in paper/spigot command handling, and: them working normally
-		
-		/*List<String> list = new ArrayList();
-		sPVPStats.keySet().forEach(user -> list.add(user.toString()));
-
-		Files.write(Paths.get("plugins/core/killstats.db"), String.join("\n", list).getBytes());*/
-		
-		// this produces no exceptions but also does not write the contents stored in sPVPStats to the file
-		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/killstats.db"));
 		sPVPStats.keySet().forEach(user -> {			
 			try {
+				System.out.println(sPVPStats);
+				
 				w.write(user.toString() + "\n");
+				w.flush();
+				
 			  } catch (IOException e) {
 				  throw new UncheckedIOException(e);
 			  }
 		});
+		w.close();
 	}
 	
 	// --- OTHER -- //

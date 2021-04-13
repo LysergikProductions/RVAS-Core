@@ -1,16 +1,14 @@
-package core.backend;
+package core.objects;
 
 import java.util.UUID;
 import java.io.Serializable;
 
-import org.bukkit.entity.Player;
-
 public class PVPstats implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	UUID playerid;
-	int killTotal;
-	int deathTotal;
+	public UUID playerid;
+	public int killTotal;
+	public int deathTotal;
 	
 	//int killWcrystal;
 	//int logEscape;
@@ -19,13 +17,13 @@ public class PVPstats implements Serializable {
 		
 	};*/
 	
-	PVPstats(UUID playerid, int killTotal, int deathTotal) {
+	public PVPstats(UUID playerid, int killTotal, int deathTotal) {
 		this.playerid = playerid; this.killTotal = killTotal; this.deathTotal = deathTotal;
 	}
 	
 	@Override
     public String toString() {
-        return playerid + ":" + killTotal + ":" + deathTotal;
+        return playerid + "=" + playerid + ":" + killTotal + ":" + deathTotal;
     }
 	
 	public static PVPstats fromString(String line) {
