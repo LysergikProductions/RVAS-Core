@@ -67,7 +67,7 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] Loading files..");
 		try {
 			PlayerMeta.loadDonators();
-			//PlayerMeta.loadMuted();
+			PlayerMeta.loadMuted();
 			PlayerMeta.loadLagfags();
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured loading files.");

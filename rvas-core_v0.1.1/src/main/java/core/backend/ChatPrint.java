@@ -6,6 +6,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import java.util.*;
 import java.text.SimpleDateFormat;
 
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
@@ -30,16 +33,28 @@ public class ChatPrint {
 			TextComponent a = new TextComponent("#" + x + ": "); a.setBold(true);
 			
 			if (Bukkit.getOfflinePlayer(pid).getName() == null) {
+				
 				TextComponent b = new TextComponent("[unknown], " + Utilities.calculateTime(realLeaders.get(pid)));
 				TextComponent c = new TextComponent(a, b);
 				
 				c.setColor(ChatColor.GOLD);
+				
 				list.add(c);
-			} else {
+				
+			} else {// name != not null
+				
+				int kills = PlayerMeta.getStats(Bukkit.getOfflinePlayer(pid)).killTotal;
+				int deaths = PlayerMeta.getStats(Bukkit.getOfflinePlayer(pid)).deathTotal;
+				String kd = PlayerMeta.getStats(Bukkit.getOfflinePlayer(pid)).kd;
+				
 				TextComponent b = new TextComponent(Bukkit.getOfflinePlayer(pid).getName() + ", " + Utilities.calculateTime(realLeaders.get(pid)));
 				TextComponent c = new TextComponent(a, b);
 				
+				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
+				
 				c.setColor(ChatColor.GOLD);
+				c.setHoverEvent(hoverStats);
+				
 				list.add(c);
 			}
 		}

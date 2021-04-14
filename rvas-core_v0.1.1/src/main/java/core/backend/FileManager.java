@@ -80,7 +80,7 @@ public class FileManager {
 		);
 		
 		Files.readAllLines(pvpstats_user_database.toPath()).forEach(val -> {
-				System.out.println("Reading pvpstats.txt: " + val);
+				System.out.println("Reading pvpstats.txt, line = " + val);
 				
 				PVPstats user = PVPstats.fromString(val);
 				PlayerMeta.sPVPStats.put(user.playerid, user);
