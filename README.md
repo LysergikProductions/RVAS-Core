@@ -11,7 +11,7 @@ The main goal is to give server operators everything they need to get started wi
 - Bedrock floor / roof protection (configurable)
 - Tracks various player statistics (playtime, pvp-kills, and more!)
 - Can permanently mute accounts that are just bots (or for other reasons)
-- Can enforce survival mode in various ways if configured to
+- Can enforce survival mode in various ways
 - Customizable MOTDs
 
 ##### @ Server Operators

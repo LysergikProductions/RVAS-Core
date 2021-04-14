@@ -34,6 +34,16 @@ movement.kill.floor = false
 // Use players' movement events to delete existing illegal items from the world
 movement.illegals.check = false
 
+// ----------------- //
+// --- GAME MODE --- //
+// ----------------- //
+
+// Check for and enforce survival mode when non-op players place blocks
+protect.gamemode.onplace = true
+
+// Check for and enforce survival mode when non-op players break blocks
+protect.gamemode.onbreak = true
+
 // ------------------------- //
 // --- PLACEMENT PATCHES --- //
 // ------------------------- //
@@ -60,9 +70,6 @@ protect.banned.place.ops = true
 
 protect.bedrock.roof = true
 protect.bedrock.floor = true
-
-// Force non-ops into survival mode on block break events
-protect.gamemode.onbreak = true
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //
@@ -146,10 +153,10 @@ wither.limit = 710
 // Global wither skull age limit. default = 1200 (1 minute in ticks if server is running at 20TPS)
 wither.skull.max_age = 1200
 
-// Global speed limit when TPS is between 16 and 20. default = 76
+// Global speed limit when TPS is between 17 and 20. default = 76
 speedlimit.tier_one = 76
 
-// Global speed limit when TPS is between 14 and 16. default = 48
+// Global speed limit when TPS is between 14 and 17. default = 48
 speedlimit.tier_two = 48
 
 // Global speed limit when TPS is between 10 and 14. default = 32
@@ -165,7 +172,7 @@ speedlimit.tier_five = 20
 speedlimit.medium_kick = 80
 
 // Hard kick speed limit (insta-kick if exceeded)
-speedlimit.hard_kick = 100
+speedlimit.hard_kick = 96
 
 // Reconnect delay when kicked by exceeding the speed limit, in ms. default = 10000 (10s)
 speedlimit.rc_delay = 10000

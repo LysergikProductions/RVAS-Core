@@ -22,9 +22,6 @@ public class Stats implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
-		
-		TextComponent top5_head = new TextComponent("--- Top Five Players ---");
-		top5_head.setColor(ChatColor.GOLD); top5_head.setBold(true);
 
 		if (Main.Top == null) {
 			double largest = 0;
@@ -47,12 +44,10 @@ public class Stats implements CommandExecutor {
 					return true;
 					
 				case "leaderboard":
-					player.spigot().sendMessage(top5_head);
 					ChatPrint.printLeaders(player);
 					return true;
 					
 				case "5":// change printLeaders to be able to take a desired list size argument
-					player.spigot().sendMessage(top5_head);
 					ChatPrint.printLeaders(player);
 					return true;
 					

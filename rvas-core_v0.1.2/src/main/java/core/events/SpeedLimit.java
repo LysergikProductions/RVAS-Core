@@ -28,7 +28,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class SpeedLimit implements Listener
 {
 	// default: 10 second grace period
-	private static final int GRACE_PERIOD = 8;
+	private static final int GRACE_PERIOD = 5;
 
 	private static HashMap<UUID, Location> locs = new HashMap<UUID, Location>();
 	private static List<UUID> tped = new ArrayList<UUID>();
@@ -38,7 +38,7 @@ public class SpeedLimit implements Listener
 
 	public static int totalKicks = 0;
 
-	// Speedlimit monitor
+	// Speedlimit Monitor
 	public static void scheduleSlTask() {
 		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, () -> {
@@ -48,11 +48,19 @@ public class SpeedLimit implements Listener
 				return;
 			}
 			
+			// set speeds for each tier
 			double tier1 = Double.parseDouble(Config.getValue("speedlimit.tier_one"));
 			double tier2 = Double.parseDouble(Config.getValue("speedlimit.tier_two"));
 			double tier3 = Double.parseDouble(Config.getValue("speedlimit.tier_three"));
 			double tier4 = Double.parseDouble(Config.getValue("speedlimit.tier_four"));
 			double tier5 = Double.parseDouble(Config.getValue("speedlimit.tier_five"));
+			/*
+				default tier1 = 76.0;
+				default tier2 = 48.0;
+				default tier3 = 32.0;
+				default tier4 = 26.0;
+				default tier5 = 20.0;
+			*/
 			double medium_kick = Integer.parseInt(Config.getValue("speedlimit.medium_kick"));
 			double hard_kick = Integer.parseInt(Config.getValue("speedlimit.hard_kick"));
 			final double speed_limit;
@@ -63,10 +71,10 @@ public class SpeedLimit implements Listener
 
 			double tps = LagProcessor.getTPS();
 			
-			if (tps >= 16.0) {
+			if (tps >= 17.0) {
 				speed_limit = tier1;
 				
-			} else if (tps < 16.0 && tps >= 14.0) {
+			} else if (tps < 17.0 && tps >= 14.0) {
 				speed_limit = tier2;
 				
 			} else if (tps < 14.0 && tps >= 10.0) {
@@ -84,6 +92,7 @@ public class SpeedLimit implements Listener
 			speeds.clear();
 
 			Bukkit.getOnlinePlayers().stream().filter(player -> !player.isOp()).forEach(player -> {
+				
 				// updated teleported player position
 				if (tped.contains(player.getUniqueId())) {
 					tped.remove(player.getUniqueId());
@@ -97,14 +106,16 @@ public class SpeedLimit implements Listener
 					locs.put(player.getUniqueId(), player.getLocation().clone());
 					return;
 				}
+				
 				Location new_location = player.getLocation().clone();
 				if (new_location.equals(previous_location)) {
 					return;
 				}
+				
 				new_location.setY(previous_location.getY()); // only consider movement in X/Z
 
-				if (previous_location.getWorld() != new_location.getWorld())
-				{
+				if (previous_location.getWorld() != new_location.getWorld()) {
+					
 					locs.remove(player.getUniqueId());
 					return;
 				}
@@ -117,7 +128,8 @@ public class SpeedLimit implements Listener
 				Vector v = new_location.subtract(previous_location).toVector();
 				double speed = Math.round(v.length() / duration * 10.0) / 10.0;
 				
-				if(speed > speed_limit+ 1 && (Config.getValue("speedlimit.agro").equals("true") || Admin.disableWarnings)) {
+				if (speed > speed_limit+ 1 && (Config.getValue("speedlimit.agro").equals("true") || Admin.disableWarnings)) {
+					
 					ServerMeta.kickWithDelay(player,
 							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
 					totalKicks++;
@@ -125,8 +137,8 @@ public class SpeedLimit implements Listener
 				}
 
 				// insta-kick above hard kick speed
-				if (speed > hard_kick)
-				{
+				if (speed > hard_kick) {
+					
 					gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
 					ServerMeta.kickWithDelay(player,
 							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
@@ -135,33 +147,32 @@ public class SpeedLimit implements Listener
 				}
 
 				// medium-kick: set grace period to 2 sec
-				if (speed > medium_kick)
-				{
+				if (speed > medium_kick) {
+					
 					if (grace > 2)
 						grace = 2;
 				}
 
 				// player is going too fast, warn or kick
 				// +1 for leniency
-				if (speed > speed_limit+1)
-				{
+				if (speed > speed_limit+1) {
 					if (grace == 0) {
+						
 						gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
 						ServerMeta.kickWithDelay(player,
 								Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
 						totalKicks++;
 						return;
+						
 					} else {
+						
 						// display speed with one decimal
 						player.spigot().sendMessage(new TextComponent("§4Your speed is " + speed + ", speed limit is " + speed_limit + ". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));
 					}
-
 					--grace;
 					gracePeriod.put(player.getUniqueId(), grace);
-				}
-
-				// player isn't going too fast, reset grace period
-				else {
+					
+				} else {// player isn't going too fast, reset grace period
 					if (grace < GRACE_PERIOD)
 						++grace;
 				}
@@ -193,13 +204,14 @@ public class SpeedLimit implements Listener
 	}
 
 	/* get speeds sorted from fastest to lowest */
-	public static List< Pair<Double,String> > getSpeeds()
-	{
+	public static List< Pair<Double,String> > getSpeeds() {
+		
 		// create a list from the speeds map
 		List<Map.Entry<String, Double> > list =
 			new ArrayList<Map.Entry<String, Double> >(speeds.entrySet());
 
 		Collections.sort(list, new Comparator<Map.Entry<String, Double> >() {
+			
 			@Override
 			public int compare(Map.Entry<String, Double> o1,
 					Map.Entry<String, Double> o2)

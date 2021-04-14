@@ -86,7 +86,7 @@ public class ChatPrint {
 				
 				list.add(c);
 				
-			} else {// name != null
+			} else {// this leader name != null
 				
 				int kills = PlayerMeta.getStats(Bukkit.getOfflinePlayer(pid)).killTotal;
 				int deaths = PlayerMeta.getStats(Bukkit.getOfflinePlayer(pid)).deathTotal;
@@ -103,7 +103,18 @@ public class ChatPrint {
 				list.add(c);
 			}
 		}
+		
+		TextComponent top5_head = new TextComponent("--- Top Five Players ---");		
+		TextComponent ujoins_a = new TextComponent("Unique Joins: ");
+		TextComponent ujoins_b = new TextComponent("" + PlayerMeta.Playtimes.keySet().size());
+		TextComponent msg = new TextComponent(ujoins_a, ujoins_b);
+
+		top5_head.setColor(ChatColor.GOLD); top5_head.setBold(true);
+		msg.setColor(ChatColor.GRAY); msg.setItalic(true);
+		
+		receiver.spigot().sendMessage(top5_head);
 		list.forEach(ln -> receiver.spigot().sendMessage(ln));
+		receiver.spigot().sendMessage(msg);
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
@@ -132,12 +143,10 @@ public class ChatPrint {
 		TextComponent playtime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(target)));
 		TextComponent toptime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)));
 		
-		TextComponent tkills_a = new TextComponent("Total PVP Kills: ");
+		TextComponent tkills_a = new TextComponent("PVP Kills: ");
 		TextComponent tkills_b = new TextComponent("" + PlayerMeta.getStats(target).killTotal);
-		TextComponent tdeaths_a = new TextComponent("Total PVP Deaths: ");
+		TextComponent tdeaths_a = new TextComponent("PVP Deaths: ");
 		TextComponent tdeaths_b = new TextComponent("" + PlayerMeta.getStats(target).deathTotal);
-		TextComponent kd_a = new TextComponent("K/D: ");
-		TextComponent kd_b = new TextComponent("" + PlayerMeta.getStats(target).kd);
 		
 		// style individual components
 		joined_a.setColor(ChatColor.BLUE); joined_a.setBold(true);
@@ -161,11 +170,10 @@ public class ChatPrint {
 		TextComponent toptime = new TextComponent(playtime_a, toptime_b);
 		TextComponent tkills = new TextComponent(tkills_a, tkills_b);
 		TextComponent tdeaths = new TextComponent(tdeaths_a, tdeaths_b);
-		TextComponent kd = new TextComponent(kd_a, kd_b);
+		TextComponent kd = new TextComponent("K/D: " + PlayerMeta.getStats(target).kd);
 		
-		// style lines of multiple components at once
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
-		kd.setColor(ChatColor.GRAY); kd_a.setBold(false);
+		kd.setColor(ChatColor.GRAY);
 		
 		// send final message to receiver
 		Arrays.asList(title, joined, lastSeen, rank, playtime, tkills, tdeaths, kd)
