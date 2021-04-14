@@ -1,4 +1,4 @@
-# RVAS-Core v0.1.2
+# RVAS-Core v0.1.3
 The core plugin behind RVAS (Real Vanilla Anarchy Survival)
 
 The main goal is to give server operators everything they need to get started with their own *anarchy-style* minecraft server
@@ -10,7 +10,9 @@ The main goal is to give server operators everything they need to get started wi
 - Doesn't prevent any vanilla exploits by default
 - Bedrock floor / roof protection (configurable)
 - Tracks various player statistics (playtime, pvp-kills, and more!)
-- and more!
+- Can permanently mute accounts that are just bots (or for other reasons)
+- Can enforce survival mode in various ways if configured to
+- Customizable MOTDs
 
 ##### @ Server Operators
 For full admin functionality, in `core\config.txt`, please enter your uuid and current ign for the intended in-game master account
