@@ -1,8 +1,18 @@
-# RVAS-Core
-The core plugin behind RVAS; still in beta.
+# RVAS-Core v0.1.2
+The core plugin behind RVAS (Real Vanilla Anarchy Survival)
 
-For full admin functionality, please enter your uuid and current ign for the intended in-game account in `core\config.txt`
+The main goal is to give server operators everything they need to get started with their own *anarchy-style* minecraft server
 
-This will allow rvas-core to cancel certain commands sent by op's immediately, and gives you an in-chat prompt to allow the action (action requests get stored in a queue for later review if the account is offline.
+##### Features:
+- 5-tier speed limiter (configurable)
+- Operator accounts *cannot* introduce illegal items / disrupt the economy (configurable)
+- Players can vote to temporarily mute each other for 1 hour (configurable, majority required by default)
+- Doesn't prevent any vanilla exploits by default
+- Bedrock floor / roof protection (configurable)
+- Tracks various player statistics (playtime, pvp-kills, and more!)
+- and more!
 
-If the admin account is offline, then op will get notified that they must wait until you are online to request permission to use the given command.
+##### @ Server Operators
+For full admin functionality, in `core\config.txt`, please enter your uuid and current ign for the intended in-game master account
+
+This account will be **exempt** from all command / ability restrictions issued by rvas-core
