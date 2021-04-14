@@ -148,7 +148,7 @@ public class Server implements CommandExecutor {
 		TextComponent withers = new TextComponent(withers_a, withers_b);
 		
 		// add functionality to components
-		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Those who intentionally lag the server can no longer place or break any blocks.")));
+		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Trying to lag the server will result in severe consequences.")));
 		
 		// create output structure and send to chat (acr & withers currently removed from output)
 		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, player_head, players, ujoins, donos, laggers, pmutes, ops, debug_head, restart, rtrig)

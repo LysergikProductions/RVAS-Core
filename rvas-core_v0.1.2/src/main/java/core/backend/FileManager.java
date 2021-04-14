@@ -84,8 +84,11 @@ public class FileManager {
 				
 				PVPstats user = PVPstats.fromString(val);
 				PlayerMeta.sPVPStats.put(user.playerid, user);
-				
-				System.out.println("sPVPStats is now: " + PlayerMeta.sPVPStats);
 		});
+		
+		if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
+			System.out.println("sPVPStats is now: " + PlayerMeta.sPVPStats);
+			System.out.println(PlayerMeta.sPVPStats);
+		}
 	}
 }

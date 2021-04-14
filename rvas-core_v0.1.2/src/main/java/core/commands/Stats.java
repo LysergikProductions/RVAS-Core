@@ -40,10 +40,10 @@ public class Stats implements CommandExecutor {
 		
 		// check args
 		if (args.length != 0) {
+			
 			switch (args[0]) {
 				case "top":		
 					ChatPrint.printStats(player, Main.Top);
-					
 					return true;
 					
 				case "leaderboard":
@@ -55,25 +55,31 @@ public class Stats implements CommandExecutor {
 					player.spigot().sendMessage(top5_head);
 					ChatPrint.printLeaders(player);
 					return true;
+					
+				case "help":
+					ChatPrint.helpStats(player);
+					return true;
 			}
 
-			// user has submitted a username argument, so..
-			OfflinePlayer p2 = Bukkit.getOfflinePlayer(args[0]);
-			if (p2 == null ) {
+			// user has submitted a probable username argument
+			OfflinePlayer offline_player = Bukkit.getOfflinePlayer(args[0]);
+			
+			if (offline_player == null ) {
 				
 				player.spigot().sendMessage(new TextComponent("This player has never joined."));
 				return true;
-			} else if (!p2.hasPlayedBefore()) {
+				
+			} else if (!offline_player.hasPlayedBefore()) {
 				
 				player.spigot().sendMessage(new TextComponent("This player has never joined."));
 				return true;
 			}
 			
-			ChatPrint.printStats(player, p2);
+			ChatPrint.printStats(player, offline_player);
 			return true;
 			
-		} else {
-			// user supplied no arguments, so..
+		} else { // user supplied no arguments
+			
 			OfflinePlayer target = Bukkit.getOfflinePlayer(player.getUniqueId());
 			
 			ChatPrint.printStats(player, target);

@@ -19,17 +19,62 @@ import core.backend.PlayerMeta;
 import core.backend.Utilities;
 
 public class ChatPrint {
+	
+	// - HELP PAGES - //
+	
+	public static void helpGeneral(Player receiver, int page) {
+		return;
+	}
+	
+	public static void helpStats(Player receiver) {
+		
+		TextComponent head = new TextComponent("--- /stats help ---");
+		
+		TextComponent self_a = new TextComponent("/stats");
+		TextComponent players_a = new TextComponent("/stats [player name]");
+		TextComponent leaders_a = new TextComponent("/stats 5");
+		
+		TextComponent self_b = new TextComponent(" : Shows you your stats");
+		TextComponent players_b = new TextComponent(" : Shows the stats for that player");
+		TextComponent leaders_b = new TextComponent(" : Shows the top 5 players (by play-time)");
+		
+		self_b.setColor(ChatColor.GRAY);
+		players_b.setColor(ChatColor.GRAY);
+		leaders_b.setColor(ChatColor.GRAY);
+		
+		self_a.setItalic(true);
+		players_a.setItalic(true);
+		leaders_a.setItalic(true);
+		
+		TextComponent self = new TextComponent(self_a, self_b);
+		TextComponent players = new TextComponent(players_a, players_b);
+		TextComponent leaders = new TextComponent(leaders_a, leaders_b);
+		
+		receiver.spigot().sendMessage(head);
+		
+		ArrayList<TextComponent> list = new ArrayList<>();
+		list.add(self); list.add(leaders); list.add(players);
+		
+		list.forEach(ln -> receiver.spigot().sendMessage(ln));
+	}
+	
+	// - STATS PAGES - //
+	
 	public static void printLeaders(Player receiver) {
+		
 		HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
-		int x = 0;
 		HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
+		
 		for (UUID u : leaders.keySet()) {
 			realLeaders.put(u, leaders.get(u));
 		}
 		
+		int x = 0;
 		ArrayList<TextComponent> list = new ArrayList<>();
+		
 		for (UUID pid : realLeaders.keySet()) {
 			x++;
+			
 			TextComponent a = new TextComponent("#" + x + ": "); a.setBold(true);
 			
 			if (Bukkit.getOfflinePlayer(pid).getName() == null) {

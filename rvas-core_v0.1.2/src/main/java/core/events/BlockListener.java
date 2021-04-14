@@ -19,8 +19,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
 import core.backend.Config;
+import core.backend.PlayerMeta;
 
 public class BlockListener implements Listener {
+	
+	static Random r = new Random();
 	
 	public static ArrayList<Material> BreakBanned = new ArrayList<>();
 	{
@@ -34,6 +37,16 @@ public class BlockListener implements Listener {
 		PlacementBanned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
+	}
+	
+	// also check for containing keyword "BUTTON" or "MINECART" or "PRESSURE_PLATE" or "FAN" or "DOOR" or "POWDER" or endsWith "SAND"
+	public static ArrayList<Material> LagMats = new ArrayList<>();
+	{
+		LagMats.addAll(Arrays.asList(Material.REDSTONE, Material.REDSTONE_WIRE, Material.REDSTONE_BLOCK,
+				Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH, Material.ACTIVATOR_RAIL, Material.POWERED_RAIL,
+				Material.LEVER, Material.PISTON, Material.STICKY_PISTON, Material.REDSTONE_LAMP, Material.GLOWSTONE,
+				Material.OBSERVER, Material.HOPPER, Material.DROPPER, Material.REPEATER, Material.COMPARATOR,
+				Material.DISPENSER, Material.GRAVEL, Material.ARMOR_STAND, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -124,6 +137,36 @@ public class BlockListener implements Listener {
 		UUID placer_id = placer.getUniqueId();
 		String admin_name = Config.getValue("admin");
 		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
+		
+		// Make game unplayable for laggers
+		if (PlayerMeta.isLagfag(placer)) {
+			
+			if (LagMats.contains(block.getType())) {
+				event.setCancelled(true);
+			} else if (
+					block.getType().toString().endsWith("SAND") ||
+					block.getType().toString().contains("POWDER") ||
+					block.getType().toString().contains("BUTTON") ||
+					block.getType().toString().contains("PRESSURE_PLATE") ||
+					block.getType().toString().contains("MINECART") ||
+					block.getType().toString().contains("DOOR")
+					) {
+				event.setCancelled(true);
+			}
+			
+			int randomNumber = r.nextInt(9);
+			if (randomNumber == 5 || randomNumber == 6) {
+				placer.spigot().sendMessage(new TextComponent("§cYou were warned!"));
+				event.setCancelled(true);
+				return;
+			}
+
+			randomNumber = r.nextInt(250);
+			if (randomNumber == 21) {
+				placer.kickPlayer("§6lmao -tries to build stuff-");
+				return;
+			}
+		}
 		
 		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
 		if (block.getType().toString().contains("SHULKER_BOX") && !placer.getGameMode().equals(GameMode.SURVIVAL)) {
