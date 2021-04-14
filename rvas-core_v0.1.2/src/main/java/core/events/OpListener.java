@@ -72,6 +72,8 @@ public class OpListener implements Listener {
 					event.getMessage().contains("/spreadplayers") ||
 					event.getMessage().contains("/xp") ||
 					event.getMessage().contains("/reload") ||
+					event.getMessage().contains("/whitelist") ||
+					event.getMessage().contains("/worldborder") ||
 					event.getMessage().contains("/gamerule")) {
 				
 				event.setCancelled(true);

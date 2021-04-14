@@ -2,6 +2,8 @@
 // ### RVAS-CORE CONFIG PROGRAMMER FILE ### //
 // ########################################### //
 
+// THE FILE IS NOT AT ALL USED FOR NOW
+
 // ** ENTER THE IGN / UUID OF YOUR OWNER ACCOUNT TO ACCESS ALL OWNER-LEVEL COMMANDS ** \\
 admin.account.name = 
 admin.full.uuid = 
