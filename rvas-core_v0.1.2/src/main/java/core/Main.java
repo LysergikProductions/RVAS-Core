@@ -67,10 +67,12 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] Loading files..");
 		try {
 			PlayerMeta.loadDonators();
-			PlayerMeta.loadMuted();
+			// PlayerMeta.loadMuted(); // throws IOException: 
 			PlayerMeta.loadLagfags();
-		} catch (IOException e) {
-			System.out.println("[core.main] An error occured loading files.");
+			
+		} catch (IOException e) {			
+			System.out.println("[core.main] An error occured loading files..");
+			System.out.println("[core.main] " + e);
 		}
 
 		// Load timers
@@ -112,19 +114,19 @@ public class Main extends JavaPlugin implements Listener {
 		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK));
+		
 		// Items that need to be specially rebuilt.
 		ItemCheck.Special.addAll(Arrays.asList(Material.ENCHANTED_BOOK, Material.POTION, Material.LINGERING_POTION,
 				Material.TIPPED_ARROW, Material.SPLASH_POTION, Material.WRITTEN_BOOK, Material.FILLED_MAP,
 				Material.PLAYER_WALL_HEAD, Material.PLAYER_HEAD, Material.WRITABLE_BOOK, Material.BEEHIVE,
 				Material.BEE_NEST, Material.RESPAWN_ANCHOR, Material.FIREWORK_ROCKET, Material.FIREWORK_STAR,
 				Material.SHIELD));
+		
 		ItemCheck.LegalHeads.addAll(Arrays.asList(Material.CREEPER_HEAD, Material.ZOMBIE_HEAD, Material.SKELETON_SKULL,
 				Material.WITHER_SKELETON_SKULL, Material.DRAGON_HEAD));
 
 		// Enable speed limit
 		SpeedLimit.scheduleSlTask();
-
-		// Initialize 
 		
 		// Enable discord notifications for this instance
 		NotificationHandler = new Notifications();
@@ -137,16 +139,16 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDisable()
 	{
 		System.out.println("[core.main] Saving files...");
-		try
-		{
+		try {
 			PlayerMeta.saveDonators();
 			PlayerMeta.saveMuted();
 			PlayerMeta.saveLagfags();
 			PlayerMeta.writePlaytime();
 			PlayerMeta.writePVPStats();
-		} catch (IOException ex)
-		{
+			
+		} catch (IOException ex) {
 			System.out.println("[core.main] Failed to save one or more files.");
+			System.out.println("[core.main] " + ex);
 		}
 	}
 }

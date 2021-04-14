@@ -16,6 +16,7 @@ public class PVPstats implements Serializable {
 	public String kd;
 	
 	//int killWcrystal;
+	//int spawnKills;
 	//int logEscape;
 	
 	public PVPstats(UUID playerid, int killTotal, int deathTotal, String kd) {
@@ -24,11 +25,14 @@ public class PVPstats implements Serializable {
 	
 	@Override
     public String toString() {
-        return playerid + "=" + playerid + ":" + killTotal + ":" + deathTotal + ":" + kd;
+		// ** try remove the "UUID=" at the beginning of the strings
+		return playerid + "=" + playerid + ":" + killTotal + ":" + deathTotal + ":" + kd;
     }
 	
 	public static PVPstats fromString(String line) {
 		// String line looks like: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7=f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:7:null!
+		
+		// ** try remove the "UUID=" at the beginning of the strings
 		
 		String[] sep = line.split("=");
 		String[] stats = sep[1].split(":");

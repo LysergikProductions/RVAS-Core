@@ -16,6 +16,7 @@ import org.bukkit.Bukkit;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
+import core.backend.Utilities;
 
 public class PVP implements Listener {
 
@@ -47,7 +48,27 @@ public class PVP implements Listener {
 			System.out.println("[core.events.pvp] killer = null");
 		}
 		
+		// increment appropriate stats
 		PlayerMeta.incKillTotal(killer, 1);
 		PlayerMeta.incDeathTotal(killed, 1);
+		
+		// check if victim was in the spawn region on death
+		int victim_playtime = Integer.parseInt(Utilities.calculateTime(PlayerMeta.getPlaytime(killed)));
+		
+		Double cX = killed.getLocation().getX();
+		Double cZ = killed.getLocation().getZ();
+		
+		if (cX == null || cZ == null) {
+			
+			System.out.println("[core.events.PVP] failed to retrieve location for victim: " + killedName);
+			return;
+			
+		} else if (cX < 710 && cZ < 710 && cX > -710 && cZ > -710) {
+			
+			// victim was killed in the spawn region; check if new player
+			if (victim_playtime < 3600) {
+				PlayerMeta.incSpawnKill(killer, 1);
+			}
+		}
 	}
 }

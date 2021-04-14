@@ -10,8 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import core.Main;
 import core.objects.PVPstats;
@@ -79,15 +77,15 @@ public class FileManager {
 				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
 		);
 		
-		Files.readAllLines(pvpstats_user_database.toPath()).forEach(val -> {
-				System.out.println("Reading pvpstats.txt, line = " + val);
+		Files.readAllLines(pvpstats_user_database.toPath()).forEach(line -> {
+				System.out.println("Reading pvpstats.txt, line = " + line);
 				
-				PVPstats user = PVPstats.fromString(val);
-				PlayerMeta.sPVPStats.put(user.playerid, user);
+				PVPstats stats = PVPstats.fromString(line);
+				PlayerMeta.sPVPStats.put(stats.playerid, stats);
 		});
 		
 		if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
-			System.out.println("sPVPStats is now: " + PlayerMeta.sPVPStats);
+			System.out.println("sPVPStats is now: ");
 			System.out.println(PlayerMeta.sPVPStats);
 		}
 	}

@@ -293,12 +293,26 @@ public class PlayerMeta {
 			
 		} else {
 			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 0, 1, "1.00");
+			PVPstats stats = new PVPstats(p.getUniqueId(), 0, 1, "0.00");
 			sPVPStats.put(p.getUniqueId(), stats);
 		}
 	}
 	
-	public static PVPstats constructStats(OfflinePlayer p) {
+	public static void incSpawnKill (Player p, int inc) {
+		/*if (sPVPStats.containsKey(p.getUniqueId())) {
+			
+			PVPstats stats = sPVPStats.get(p.getUniqueId());
+			stats.spawnKills += inc;
+			
+		} else {
+			
+			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "0.00", 0);
+			sPVPStats.put(p.getUniqueId(), stats);
+		}*/
+		return;
+	}
+	
+	public static PVPstats getNewStats(OfflinePlayer p) {
 		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0, "null");
 		return out;
 	}
@@ -322,8 +336,8 @@ public class PlayerMeta {
 		} else {
 			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null. Constructing new PVPstats object.");
 			
-			PVPstats newPlayer = constructStats(p);
-			return newPlayer;
+			PVPstats new_stats = getNewStats(p);
+			return new_stats;
 		}
 	}
 
@@ -333,8 +347,6 @@ public class PlayerMeta {
 		
 		for (PVPstats object: sPVPStats.values()) {
 			try {
-				System.out.println(sPVPStats);
-				System.out.println(object.toString());
 				
 				w.write(object.toString() + "\n");
 				w.flush();
