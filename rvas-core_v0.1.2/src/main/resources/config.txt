@@ -143,8 +143,8 @@ mute.hypocrisy = true
 // Global wither limit. default = 710
 wither.limit = 710
 
-// Global wither skull age limit. default = 2400 (2 minutes in ticks if server is running at 20TPS)
-wither.skull.max_age = 2400
+// Global wither skull age limit. default = 1200 (1 minute in ticks if server is running at 20TPS)
+wither.skull.max_age = 1200
 
 // Global speed limit when TPS is between 16 and 20. default = 76
 speedlimit.tier_one = 76
