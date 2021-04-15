@@ -24,8 +24,18 @@ import core.backend.Config;
 
 public class OpListener implements Listener {
 	
-	// this happens *before* OP Lock will see the command,
-	// making OPLock a great failsafe for rogue use of /op and /deop
+	public static ArrayList<String> OwnerCommands = new ArrayList<>(); {
+		OwnerCommands.addAll(Arrays.asList(
+				"/op", "/deop", "/ban", "/attribute", "/default", "/execute", "/rl",
+				"/summon", "/give", "/set", "/difficulty", "/replace", "/enchant",
+				"/function", "/bukkit", "/time", "/weather", "/schedule", "/clone",
+				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
+				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
+				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
+				"/restart", "/world", "/gamerule"));
+	};
+	
+	// this happens *before* the OP Lock plugin will see the command
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
 		
@@ -37,44 +47,18 @@ public class OpListener implements Listener {
 		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
 		// allow ops to use /execute, but only for teleporting between dimensions
-		if (event.getMessage().startsWith("/execute in the_end run tp") ||
+		if (
+				event.getMessage().startsWith("/execute in the_end run tp") ||
 				event.getMessage().startsWith("/execute in the_nether run tp") ||
 				event.getMessage().startsWith("/execute in overworld run tp") &&
+				!event.getMessage().contains("@a") && !event.getMessage().contains(admin_name) &&
 				sender.isOp()) {
 			return;
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!admin_name.equals(sender_name) || !admin_id.equals(sender_id)) {
-			if (event.getMessage().contains("/op") ||
-					event.getMessage().contains("/deop") ||
-					event.getMessage().contains("/ban") ||
-					event.getMessage().contains("/attribute") ||
-					event.getMessage().contains("/default") ||
-					event.getMessage().contains("/execute") ||
-					event.getMessage().contains("/rl") ||
-					event.getMessage().contains("/summon") ||
-					event.getMessage().contains("/give") ||
-					event.getMessage().contains("/setblock") ||
-					event.getMessage().contains("/difficulty") ||
-					event.getMessage().contains("/replace") ||
-					event.getMessage().contains("/enchant") ||
-					event.getMessage().contains("/time") ||
-					event.getMessage().contains("/weather") ||
-					event.getMessage().contains("/schedule") ||
-					event.getMessage().contains("/data") ||
-					event.getMessage().contains("/fill") ||
-					event.getMessage().contains("/save") ||
-					event.getMessage().contains("/loot") ||
-					event.getMessage().contains("/experience") ||
-					event.getMessage().contains("/forceload") ||
-					event.getMessage().contains("/function") ||
-					event.getMessage().contains("/spreadplayers") ||
-					event.getMessage().contains("/xp") ||
-					event.getMessage().contains("/reload") ||
-					event.getMessage().contains("/whitelist") ||
-					event.getMessage().contains("/worldborder") ||
-					event.getMessage().contains("/gamerule")) {
+			if (OwnerCommands.contains(event.getMessage())) {
 				
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent("no"));
@@ -92,20 +76,15 @@ public class OpListener implements Listener {
 		}
 	}
 	
-	// stop every user/admin from changing game modes of non op players to anything other than survival mode
-	@EventHandler
+	@EventHandler // non-op players cannot be set to a mode besides survival mode
 	public void onModeChange(PlayerGameModeChangeEvent event) {
 		
-		//Bukkit.spigot().broadcast(new TextComponent("PlayerGameModeChangeEvent triggered."));
 		if (!event.getNewGameMode().equals(GameMode.SURVIVAL) && !event.getPlayer().isOp()) {
-			
 			event.setCancelled(true);
-			//Bukkit.spigot().broadcast(new TextComponent("PlayerGameModeChangeEvent cancelled."));
 		}
 	}
 	
-	// Only allow admin to shift-duplicate items or take items from the creative inventory
-	@EventHandler
+	@EventHandler // only allow owner account to duplicate/get items from creative mode
 	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
 		if (!Config.getValue("protect.lock.creative").equals("false")) {
@@ -117,15 +96,13 @@ public class OpListener implements Listener {
 			String admin_name = Config.getValue("admin");
 			UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 			
-			//Bukkit.spigot().broadcast(new TextComponent("InventoryCreativeEvent triggered."));
 			if (!admin_name.equals(player_name) || !admin_id.equals(player_id)) {
 				
 				event.setCancelled(true);
 				
 				if (!player.isOp()) {
 					player.setGameMode(GameMode.SURVIVAL);
-				}			
-				//Bukkit.spigot().broadcast(new TextComponent("InventoryCreativeEvent was cancelled for " + player_name));
+				}
 			}
 		}
 	}
