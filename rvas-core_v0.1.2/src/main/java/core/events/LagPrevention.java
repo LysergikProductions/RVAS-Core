@@ -12,6 +12,7 @@ import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.World.Environment;
 
 import core.backend.Config;
 
@@ -62,19 +63,25 @@ public class LagPrevention implements Listener, Runnable {
 
 	// Remove old skulls
 	public static int removeOldSkulls() {
-		ArrayList<String> worldTypes = new ArrayList<>();
-		worldTypes.add("world");
-		worldTypes.add("world_nether");
-		worldTypes.add("world_the_end");
+		
+		ArrayList<String> environments = new ArrayList<>();
+		
+		Bukkit.getWorlds().forEach(world -> {
+			environments.add(world.getName().toString());
+		});
+		
 		final int[] toRet = {0};
 		int skullLimit = Integer.parseInt(Config.getValue("wither.skull.max_age"));
 
 		final List<Entity> entities = new ArrayList<>();
-		worldTypes.forEach(worldType -> {
+		environments.forEach(worldType -> {
 			entities.clear();
-			entities.addAll(Bukkit.getWorld(worldType).getEntities().stream().filter(e -> (e instanceof WitherSkull))
+			
+			entities.addAll(Bukkit.getWorld(worldType)
+					.getEntities().stream().filter(e -> (e instanceof WitherSkull))
 					.collect(Collectors.toList()));
-			toRet[0]=0;
+			toRet[0] = 0;
+			
 			entities.stream().filter(e -> e.getTicksLived() >= skullLimit && e.getCustomName() == null).forEach(e -> {
 				toRet[0]++;
 				Bukkit.getWorld(worldType).getEntities().remove(e);
