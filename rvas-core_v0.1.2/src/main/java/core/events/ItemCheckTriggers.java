@@ -81,8 +81,7 @@ public class ItemCheckTriggers implements Listener {
 
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
-		if (Config.getValue("item.illegal.agro").equals("true")) {
-			ItemCheck.IllegalCheck(e.getCurrentItem(), "INVENTORY_CLICK", (Player)e.getWhoClicked());
-		}
+		
+		ItemCheck.IllegalCheck(e.getCurrentItem(), "INVENTORY_CLICK", (Player)e.getWhoClicked());
 	}
 }

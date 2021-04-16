@@ -98,7 +98,7 @@ public class ChatPrint {
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
 				
 				a.setColor(ChatColor.GOLD);
-				b.setColor(ChatColor.GRAY);
+				b.setColor(ChatColor.GOLD);
 				b.setItalic(true);
 				
 				c.setHoverEvent(hoverStats);

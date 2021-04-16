@@ -59,7 +59,44 @@ public class OpListener implements Listener {
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!admin_name.equals(sender_name) || !admin_id.equals(sender_id)) {
-			if (OwnerCommands.contains(event.getMessage())) {
+			if (
+					event.getMessage().contains("/op") ||
+					event.getMessage().contains("/deop") ||
+					event.getMessage().contains("/ban") ||
+					event.getMessage().contains("/attribute") ||
+					event.getMessage().contains("/default") ||
+					event.getMessage().contains("/execute") ||
+					event.getMessage().contains("/rl") ||
+					event.getMessage().contains("/summon") ||
+					event.getMessage().contains("/give") ||
+					event.getMessage().contains("/set") ||
+					event.getMessage().contains("/difficulty") ||
+					event.getMessage().contains("/replace") ||
+					event.getMessage().contains("/enchant") ||
+					event.getMessage().contains("/time") ||
+					event.getMessage().contains("/weather") ||
+					event.getMessage().contains("/schedule") ||
+					event.getMessage().contains("/data") ||
+					event.getMessage().contains("/fill") ||
+					event.getMessage().contains("/save") ||
+					event.getMessage().contains("/loot") ||
+					event.getMessage().contains("/experience") ||
+					event.getMessage().contains("/forceload") ||
+					event.getMessage().contains("/function") ||
+					event.getMessage().contains("/spreadplayers") ||
+					event.getMessage().contains("/xp") ||
+					event.getMessage().contains("/reload") ||
+					event.getMessage().contains("/gamerule") ||
+					event.getMessage().contains("/world") ||
+					event.getMessage().contains("/restart") ||
+					event.getMessage().contains("/spigot") ||
+					event.getMessage().contains("/plugins") ||
+					event.getMessage().contains("/protocol") ||
+					event.getMessage().contains("/packet") ||
+					event.getMessage().contains("/whitelist") ||
+					event.getMessage().contains("/minecraft") ||
+					event.getMessage().contains("/op") ||
+					event.getMessage().contains("/gamerule")) {
 				
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent("no"));

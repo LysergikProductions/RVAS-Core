@@ -5,6 +5,7 @@ import java.util.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.Bukkit;
 
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -36,7 +37,9 @@ public class SpawnController implements Listener {
 	    return (int) ((Math.random() * (max - min)) + min);
 	}
 	
+	// takes a location object and gives it a random location within spawn range
 	public Location getRandomSpawn(World thisWorld, Location newSpawnLocation) {
+		
 		boolean valid_spawn_location = false;
 		
 		// if a configured value can't be parsed to Double, set to default
@@ -71,15 +74,16 @@ public class SpawnController implements Listener {
 					
 				} else if (!floorBlock.getType().equals(Material.AIR)) {
 					
-					// potential valid spawn, check for unwanted spawn floors	
+					// potential valid spawn, check for unwanted spawn surfaces	
 					if (!BannedSpawnFloors.contains(floorBlock.getType())) {
 						
-						System.out.println("found valid respawn location!");
+						if (Config.getValue("debug").equals("true")) System.out.println("Found valid respawn location!");
+						
 						valid_spawn_location = true;
 						
 						newSpawnLocation.setWorld(thisWorld);
 						newSpawnLocation.setX((double)tryLocation_x);
-						newSpawnLocation.setY((double)y-1);
+						newSpawnLocation.setY((double)y);
 						newSpawnLocation.setZ((double)tryLocation_z);
 						
 					} else continue;
@@ -104,13 +108,13 @@ public class SpawnController implements Listener {
 		}
 		
 		// find then set a random spawn location if the player doesn't have a set spawn
-		if (Config.getValue("spawn.random").equals("true")) {
-			
+		if (Config.getValue("spawn.random").equals("true")) {			
 			if (!event.isBedSpawn() && !event.isAnchorSpawn()) {
 				
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
 				
 				if (thisLocation != null) {
+					
 					event.setRespawnLocation(thisLocation);
 					return;
 				}
@@ -120,11 +124,20 @@ public class SpawnController implements Listener {
 		System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core");
 	}
 	
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onJoin(PlayerJoinEvent event) {
 		System.out.println("PlayerJoinEvent triggered.");
 		
-		Player joiner = event.getPlayer();
-		UUID joiner_id = joiner.getUniqueId();
-		
+		if (Config.getValue("spawn.random.join").equals("true")) {
+			
+			Player joiner = event.getPlayer();
+			String joiner_name = joiner.getName();
+			UUID joiner_id = joiner.getUniqueId();
+			
+			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(joiner_id);
+			boolean playedBefore = offPlayer.hasPlayedBefore();
+			
+			if (!playedBefore) System.out.println(joiner_name + "is playing for the first time!");
+		}
 	}
 }

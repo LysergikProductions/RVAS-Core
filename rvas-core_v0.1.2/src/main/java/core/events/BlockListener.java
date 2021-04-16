@@ -169,9 +169,12 @@ public class BlockListener implements Listener {
 		}
 		
 		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
-		if (block.getType().toString().contains("SHULKER_BOX") && !placer.getGameMode().equals(GameMode.SURVIVAL)) {
+		if (block.getType().toString().contains("SHULKER_BOX")) {
 			if (!admin_name.equals(placer_name) || !admin_id.equals(placer_id)) {
-				event.setCancelled(true);
+				if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
+					event.setCancelled(true);
+				}
+				
 			}
 		}
 		
