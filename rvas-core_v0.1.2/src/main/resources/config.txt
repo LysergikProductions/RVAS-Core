@@ -9,52 +9,68 @@ config.version = 22
 // --- IMPORTANT  --- //
 // ------------------ //
 
-// uuid for the full-access in-game owner's account
+// - uuid for the full-access in-game owner's account
 adminid = 
 
-// ign for the full-access in-game owner's account
+// - ign for the full-access in-game owner's account
 admin = sinse420
 
-// Verbose console output (may globally broadcast some events info in chat)
+// - Verbose console output
+// may globally broadcast some events info in chat
 debug = false
-
-// Remove less technical but otherwise useful console output (may globally broadcast some events info in chat)
 devesp = false
+
+// ---------------------- //
+// --- RANDOM SPAWNS  --- //
+// ---------------------- //
+
+// - Enable random spawning
+spawn.random = true
+
+// - Define a rectangular area for spawn
+spawn.max.X = 420
+spawn.max.Z = 420
+spawn.min.X = -420
+spawn.min.Z = -420
+
+// - Prevent players spawning in liquids
+spawn.ignore.water = false
+spawn.ignore.lava = true
 
 // ----------------------- //
 // --- MOVEMENT CHECKS --- //
 // ----------------------- //
 
-// Instantly kill players above y=127 in the nether
+// - Instantly kill players above y=127 in the nether
 movement.kill.roof = false
 
-// Instantly kill players under the bedrock floor
+// - Instantly kill players under the bedrock floor
 movement.kill.floor = false
 
-// Use players' movement events to delete existing illegal items from the world
+// - Use players' movement events to delete existing illegal items from the world
 movement.illegals.check = false
 
 // ----------------- //
 // --- GAME MODE --- //
 // ----------------- //
 
-// Check for and enforce survival mode when non-op players place blocks
+// - Check for and enforce survival mode when non-op players place blocks
 protect.gamemode.onplace = true
 
-// Check for and enforce survival mode when non-op players break blocks
+// - Check for and enforce survival mode when non-op players break blocks
 protect.gamemode.onbreak = true
 
 // ------------------------- //
 // --- PLACEMENT PATCHES --- //
 // ------------------------- //
 
-// Prevent creative mode players from duplicating items
+// - Prevent creative mode players from duplicating items
 protect.lock.creative = true
 
-// Prevent anyone from placing blocks on the nether roof
+// - Prevent anyone from placing blocks on the nether roof
 protect.roof.noplacement = false
 
-// Whether to cancel placement of all blocks that are unobtainable in no-commands survival-mode
+// - Whether to cancel placement of all blocks that are unobtainable in no-commands survival-mode
 // (true = cancel placements)
 
 protect.banned.place = true
@@ -64,7 +80,7 @@ protect.banned.place.ops = true
 // --- BLOCK BREAK PATCHES --- //
 // --------------------------- //
 
-// Protect bedrock floor (in all dimensions) / roof (in the nether)
+// - Protect bedrock floor (in all dimensions) / roof (in the nether)
 //** DOES NOT PREVENT VANILLA BLOCK BREAK EXPLOITS**//
 // You can enable and disable those exploits in the paper.yml config-file on your server ("allow-permanent-block-break-exploits")
 
@@ -75,42 +91,42 @@ protect.bedrock.floor = true
 // --- ILLEGAL ITEM PATCHES --- //
 // ---------------------------- //
 
-// Skip illegal checks for ops?
+// - Skip illegal checks for ops?
 skip.ops = true
 
-// Check for illegal items? (false will disable most illegal item checks)
+// - Check for illegal items? (false will disable most illegal item checks)
 item.illegal = true
 
-// Can items be over-stacked?
+// - Can items be over-stacked?
 item.illegal.stacked = true
 
-// Are player heads illegal?
+// - Are player heads illegal?
 item.illegal.heads = true
 
-// Enable or disable unbreakable items. false = disabled [default] || true = enabled
+// - Enable or disable unbreakable items. false = disabled [default] || true = enabled
 item.illegal.unbreakable = false
 
-// Enable or disable exclusive enchants. false = disabled [default] || true = enabled
+// - Enable or disable exclusive enchants. false = disabled [default] || true = enabled
 item.illegal.exclusive = false
 
-// Enable or disable invalid enchants. false = disabled [default] || true = enabled
+// - Enable or disable invalid enchants. false = disabled [default] || true = enabled
 item.illegal.invalid = false
 
-// Remove these items from player inventories when they join
+// - Remove these items from player inventories when they join
 item.illegal.onjoin = true
 
-// Enable or disable aggressive checks. false = disabled || true = enabled [default]
+// - Enable or disable aggressive checks. false = disabled || true = enabled [default]
 // Can cause some lag on lower-end servers
 item.illegal.agro = false
 
-// Number of players to cache chunks for in agro check mode
+// - Number of players to cache chunks for in agro check mode
 // Set this to a number a little larger than the typical player pop
 item.illegal.agro.player_count = 10
 
-// Number of chunks per player to cache
+// - Number of chunks per player to cache
 item.illegal.agro.chunk_count = 1024
 
-// How frequently to flush the cache
+// - How frequently to flush the cache
 // Set to -1 to disable
 item.illegal.agro.flush_period = 3600
 
@@ -118,121 +134,121 @@ item.illegal.agro.flush_period = 3600
 // --- VOTING --- //
 // -------------- //
 
-// Enable or disable vote reward. false = disabled || true = enabled [default]
+// - Enable or disable vote reward. false = disabled || true = enabled [default]
 vote.enable = true
 
-// Enable or disable manual execution of vote reward. Use for debug only. false = disabled [default] || true = enabled
+// - Enable or disable manual execution of vote reward. Use for debug only. false = disabled [default] || true = enabled
 vote.debug = true
 
-// Vote reward multiplier. default = 1
+// - Vote reward multiplier. default = 1
 vote.multiplier = 1
 
-// Vote reward also heals player to max health. false = disabled || true = enabled [default]
+// - Vote reward also heals player to max health. false = disabled || true = enabled [default]
 vote.heal = false
 
 // -------------- //
 // --- MUTING --- //
 // -------------- //
 
-// Enable vote muting. false = disabled || true = enabled [default]
+// - Enable vote muting. false = disabled || true = enabled [default]
 mute.enabled = true
 
-// Percent of population that needs to vote before a mute is ordered. Default: 40
+// - Percent of population that needs to vote before a mute is ordered. Default: 40
 mute.pop = 51
 
-// Enable voting by already-muted persons. false = disabled || true = enabled [default]
+// - Enable voting by already-muted persons. false = disabled || true = enabled [default]
 mute.hypocrisy = true
 
 // ----------- //
 // --- LAG --- //
 // ----------- //
 
-// Global wither limit. default = 710
+// - Global wither limit. default = 710
 wither.limit = 710
 
-// Global wither skull age limit. default = 1200 (1 minute in ticks if server is running at 20TPS)
+// - Global wither skull age limit. default = 1200 (1 minute in ticks if server is running at 20TPS)
 wither.skull.max_age = 1200
 
-// Global speed limit when TPS is between 17 and 20. default = 76
+// - Global speed limit when TPS is between 17 and 20. default = 76
 speedlimit.tier_one = 76
 
-// Global speed limit when TPS is between 14 and 17. default = 48
+// - Global speed limit when TPS is between 14 and 17. default = 48
 speedlimit.tier_two = 48
 
-// Global speed limit when TPS is between 10 and 14. default = 32
+// - Global speed limit when TPS is between 10 and 14. default = 32
 speedlimit.tier_three = 32
 
-// Global speed limit when TPS is between 7 and 10. default = 26
+// - Global speed limit when TPS is between 7 and 10. default = 26
 speedlimit.tier_four = 26
 
-// Global speed limit when TPS is 7 or less. default = 20
+// - Global speed limit when TPS is 7 or less. default = 20
 speedlimit.tier_five = 20
 
-// Medium kick speed limit (grace period is 2 seconds)
+// - Medium kick speed limit (grace period is 2 seconds)
 speedlimit.medium_kick = 80
 
-// Hard kick speed limit (insta-kick if exceeded)
+// - Hard kick speed limit (insta-kick if exceeded)
 speedlimit.hard_kick = 96
 
-// Reconnect delay when kicked by exceeding the speed limit, in ms. default = 10000 (10s)
+// - Reconnect delay when kicked by exceeding the speed limit, in ms. default = 10000 (10s)
 speedlimit.rc_delay = 10000
 
-// Reconnect delay when reconnecting normally, in ms. default = 5000 (5s). Set to 0 to disable.
+// - Reconnect delay when reconnecting normally, in ms. default = 5000 (5s). Set to 0 to disable.
 speedlimit.rc_delay_safe = 5000
 
-// Disables speed limit warnings and only kicks 
+// - Disables speed limit warnings and only kicks 
 speedlimit.agro = false
 
-// The tps under which the auto-restart timer ticks
+// - The tps under which the auto-restart timer ticks
 restart.threshold = 7.10
 
 // ------------ //
 // --- SPAM --- //
 // ------------ //
 
-// Enable the anti-spam system
+// - Enable the anti-spam system
 spam.enable = true
 
-// Minimum similarity to prevent a message being re-sent. default = 95 (percent)
+// - Minimum similarity to prevent a message being re-sent. default = 95 (percent)
 spam.min_similarity = 95
 
-// Time required to wait between messages, in ms. default = 1000 (ms)
+// - Time required to wait between messages, in ms. default = 1000 (ms)
 spam.wait_time = 1000
 
-// Required number of violations to punish. default = 20 (vl)
+// - Required number of violations to punish. default = 20 (vl)
 spam.minimum_vl = 20
 
-// Reconnect delay after being kicked for spam. default = 5000 (ms)
+// - Reconnect delay after being kicked for spam. default = 5000 (ms)
 spam.rc_delay = 5000
 
-// Allow ops to bypass anti-spam. default = true
+// - Allow ops to bypass anti-spam. default = true
 spam.ops = true
 
 // ------------------ //
 // --- AESTHETICS --- //
 // ------------------ //
 
-// Force the server IP. true/false. default = false
+// - Force the server IP. true/false. default = false
 motd.force = false
 
-// Server IP to force. string value. default = RVAS
+// - Server IP to force. string value. default = RVAS
 motd.force.name = RVAS
 
-// Discord link. string value. default = tbd
+// - Discord link. string value. default = tbd
 discord.link = tbd
 
 // ------------ //
 // --- MISC --- //
 // ------------ //
 
-// Enable Discord analytics notifications. false = disabled [default] true = enabled
+// - Enable Discord analytics notifications. false = disabled [default] true = enabled
 analytics.enabled = false
 
-// Discord Bot ID for analytics notifications. Default: empty. 
+// - Discord Bot ID for analytics notifications. Default: empty. 
 analytics.bot_id = 
 
-// Force survival mode on relog except OPs false = disabled true = enabled [default]
+// - Force survival mode on relog except OPs false = disabled true = enabled [default]
 misc.survival = true
 
-// Enable or disable the prank /kit command. false = disabled true = enabled [default]
+// - Enable or disable the prank /kit command. false = disabled true = enabled [default]
 funny.kit = false
