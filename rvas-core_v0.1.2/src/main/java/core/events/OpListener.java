@@ -95,7 +95,7 @@ public class OpListener implements Listener {
 					event.getMessage().contains("/packet") ||
 					event.getMessage().contains("/whitelist") ||
 					event.getMessage().contains("/minecraft") ||
-					event.getMessage().contains("/op") ||
+					event.getMessage().contains("/dupe") ||
 					event.getMessage().contains("/gamerule")) {
 				
 				event.setCancelled(true);

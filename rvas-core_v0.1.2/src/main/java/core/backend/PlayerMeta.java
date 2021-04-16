@@ -163,8 +163,8 @@ public class PlayerMeta {
 	}
 
 	public static boolean isLagfag(Player p) {
-		return _lagfagList.containsKey(p.getUniqueId())
-				|| _lagfagList.containsValue(p.getAddress().toString().split(":")[0]);
+		return false;//_lagfagList.containsKey(p.getUniqueId())
+				//|| _lagfagList.containsValue(p.getAddress().toString().split(":")[0]);
 	}
 
 	public static void saveLagfags() throws IOException {

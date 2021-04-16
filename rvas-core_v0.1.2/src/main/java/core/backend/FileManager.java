@@ -27,7 +27,7 @@ public class FileManager {
 		File muted_user_database = new File(plugin_work_path + "muted.db");
 		File server_statistics_list = new File(plugin_work_path + "analytics.csv");
 		File core_server_config = new File(plugin_work_path + "config.txt");
-		File lagfag_user_database = new File(plugin_work_path + "lagfag.db");
+		//File lagfag_user_database = new File(plugin_work_path + "lagfag.db");
 		File playtime_user_database = new File(plugin_work_path + "playtime.db");
 		File motd_message_list = new File(plugin_work_path + "motds.txt");
 		File pvpstats_user_database = new File(plugin_work_path + "pvpstats.txt");
@@ -59,7 +59,7 @@ public class FileManager {
 			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "config.txt"));
 		}
 		
-		if (!lagfag_user_database.exists()) lagfag_user_database.createNewFile();
+		//if (!lagfag_user_database.exists()) lagfag_user_database.createNewFile();
 		if (!playtime_user_database.exists()) playtime_user_database.createNewFile();
 		if (!pvpstats_user_database.exists()) pvpstats_user_database.createNewFile();
 

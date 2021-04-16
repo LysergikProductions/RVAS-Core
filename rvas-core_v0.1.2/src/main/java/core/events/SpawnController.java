@@ -21,24 +21,24 @@ import core.backend.Config;
 
 public class SpawnController implements Listener {
 	
-	double max_x; double max_z;
-	double min_x; double min_z;
+	static double max_x; static double max_z;
+	static double min_x; static double min_z;
 	
-	Double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
-	Double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
-	Double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
-	Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+	static Double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
+	static Double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
+	static Double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
+	static Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
 	
 	public static ArrayList<Material> BannedSpawnFloors = new ArrayList<>(); {
 		BannedSpawnFloors.addAll(Arrays.asList(Material.AIR));
 	}
 	
-	public int getRandomNumber(int min, int max) {
+	public static int getRandomNumber(int min, int max) {
 	    return (int) ((Math.random() * (max - min)) + min);
 	}
 	
 	// takes a location object and gives it a random location within spawn range
-	public Location getRandomSpawn(World thisWorld, Location newSpawnLocation) {
+	public static Location getRandomSpawn(World thisWorld, Location newSpawnLocation) {
 		
 		boolean valid_spawn_location = false;
 		

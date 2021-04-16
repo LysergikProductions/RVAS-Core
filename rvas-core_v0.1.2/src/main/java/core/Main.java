@@ -59,7 +59,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("admin").setExecutor(new Admin());
 		this.getCommand("stats").setExecutor(new Stats());
 		this.getCommand("redeem").setExecutor(new Redeem());
-		this.getCommand("lagfag").setExecutor(new Lagfag());
+		//this.getCommand("lagfag").setExecutor(new Lagfag());
 		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
 		this.getCommand("server").setExecutor(new Server());
 		this.getCommand("help").setExecutor(new Help());

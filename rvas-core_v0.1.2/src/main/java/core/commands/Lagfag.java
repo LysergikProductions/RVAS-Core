@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +15,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
+
 import core.backend.PlayerMeta;
+import core.events.SpawnController;
 
 // Make game unplayable for laggers
 
@@ -110,10 +113,11 @@ public class Lagfag implements CommandExecutor {
 					+ Math.round(lagfag.getLocation().getZ())).forEach(s -> Bukkit.getServer().spigot().broadcast(new TextComponent(s)));
 
 			lagfag.getEnderChest().clear();
-			lagfag.setBedSpawnLocation(Bukkit.getWorld("world").getSpawnLocation(), true);
+			
+			Location currentSpawn = lagfag.getBedSpawnLocation();
+			lagfag.setBedSpawnLocation(SpawnController.getRandomSpawn(lagfag.getWorld(), currentSpawn));
 			lagfag.setHealth(0);
 		}
 		return true;
 	}
-
 }
