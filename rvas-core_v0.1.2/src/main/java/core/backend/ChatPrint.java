@@ -175,7 +175,14 @@ public class ChatPrint {
 		
 		TextComponent tkills = new TextComponent(tkills_a, tkills_b);
 		TextComponent tdeaths = new TextComponent(tdeaths_a, tdeaths_b);
-		TextComponent kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(PlayerMeta.getStats(target).kd));
+		final TextComponent kd;
+		
+		if (PlayerMeta.getStats(target).kd.contains("!")) {
+			kd = new TextComponent("K/D: " + PlayerMeta.getStats(target).kd);
+		} else {
+			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(PlayerMeta.getStats(target).kd)));
+		}
+		
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
 		kd.setColor(ChatColor.GRAY);

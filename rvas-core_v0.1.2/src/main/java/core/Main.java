@@ -63,7 +63,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
 		this.getCommand("server").setExecutor(new Server());
 		this.getCommand("help").setExecutor(new Help());
-		this.getCommand("world").setExecutor(new World());
+		//this.getCommand("world").setExecutor(new World());
 
 		System.out.println("[core.main] Loading files..");
 		try {

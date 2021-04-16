@@ -27,7 +27,7 @@ public class DupeHand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		Player player = (Player) sender;
+		/*Player player = (Player) sender;
 		String player_name = player.getName();
 		UUID player_id = player.getUniqueId();
 		
@@ -71,6 +71,6 @@ public class DupeHand implements CommandExecutor {
 					}
 				});
 			}
-		} return true;
+		}*/return true;
 	}
 }
