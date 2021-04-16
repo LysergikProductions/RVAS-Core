@@ -32,7 +32,7 @@ public class OpListener implements Listener {
 				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
 				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
 				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
-				"/restart", "/world", "/gamerule"));
+				"/restart", "/worldb", "/gamerule"));
 	};
 	
 	// this happens *before* the OP Lock plugin will see the command
@@ -87,7 +87,7 @@ public class OpListener implements Listener {
 					event.getMessage().contains("/xp") ||
 					event.getMessage().contains("/reload") ||
 					event.getMessage().contains("/gamerule") ||
-					event.getMessage().contains("/world") ||
+					event.getMessage().contains("/worldb") ||
 					event.getMessage().contains("/restart") ||
 					event.getMessage().contains("/spigot") ||
 					event.getMessage().contains("/plugins") ||

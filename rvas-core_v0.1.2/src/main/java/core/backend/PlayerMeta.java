@@ -275,13 +275,11 @@ public class PlayerMeta {
 			
 			PVPstats stats = sPVPStats.get(p.getUniqueId());
 			stats.killTotal += inc;
-			System.out.println(sPVPStats);
 			
 		} else {
 			
 			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "null");
 			sPVPStats.put(p.getUniqueId(), stats);
-			System.out.println(sPVPStats);
 		}
 	}
 	
