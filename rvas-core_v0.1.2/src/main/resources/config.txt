@@ -27,13 +27,16 @@ devesp = false
 // - Enable random spawning
 spawn.random = true
 
+// - Override world-spawn on first join
+spawn.random.join = true
+
 // - Define a rectangular area for spawn
 spawn.max.X = 420.0
 spawn.max.Z = 420.0
 spawn.min.X = -420.0
 spawn.min.Z = -420.0
 
-// - Prevent players spawning in liquids
+// - Prevent players spawning in liquids (true = prevent spawning)
 spawn.ignore.water = false
 spawn.ignore.lava = true
 
