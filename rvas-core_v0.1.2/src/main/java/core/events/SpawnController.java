@@ -35,7 +35,7 @@ public class SpawnController implements Listener {
 	}
 	
 	@EventHandler
-	public void onRespawn (PlayerRespawnEvent event) {
+	public void onRespawn(PlayerRespawnEvent event) {
 		
 		final World thisWorld = event.getRespawnLocation().getWorld();
 		Location newSpawnLocation = null;
@@ -85,10 +85,14 @@ public class SpawnController implements Listener {
 								newSpawnLocation.setX(tryLocation_x);
 								newSpawnLocation.setY((double)y);
 								newSpawnLocation.setZ(tryLocation_z);
-							}	
-						} else newSpawnLocation = null;
+								
+								break;
+								
+							} else continue;
+						}
 					}
 				}
+				
 				System.out.println(newSpawnLocation.toString());
 				
 				if (newSpawnLocation != null) {
@@ -97,8 +101,7 @@ public class SpawnController implements Listener {
 			}
 		}
 		
-		if (Config.getValue("debug").equals("true")) {
-			
+		if (Config.getValue("debug").equals("true")) {			
 			System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core.");
 		}
 	}
