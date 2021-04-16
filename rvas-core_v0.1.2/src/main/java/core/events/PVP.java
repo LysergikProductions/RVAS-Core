@@ -43,17 +43,17 @@ public class PVP implements Listener {
 			
 			System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
 			
-			// increment appropriate stats
-			PlayerMeta.incKillTotal(killer, 1);
-			PlayerMeta.incDeathTotal(killed, 1);
-			
 		} else if (Config.getValue("debug").equals("true")){
 			
 			System.out.println("[core.events.pvp] killer = null");
 		}
 		
+		// increment appropriate stats
+		PlayerMeta.incKillTotal(killer, 1);
+		PlayerMeta.incDeathTotal(killed, 1);
+		
 		// check if victim was in the spawn region on death
-		int victim_playtime = Integer.parseInt(Utilities.calculateTime(PlayerMeta.getPlaytime(killed)));
+		Double victim_playtime = Double.parseDouble(Utilities.calculateTime(PlayerMeta.getPlaytime(killed)));
 		
 		Double cX = killed.getLocation().getX();
 		Double cZ = killed.getLocation().getZ();

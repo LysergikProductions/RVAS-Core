@@ -3,6 +3,7 @@ package core.events;
 import java.util.*;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -34,11 +35,13 @@ public class SpawnController implements Listener {
 	    return (int) ((Math.random() * (max - min)) + min);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onRespawn(PlayerRespawnEvent event) {
 		
+		System.out.println("!PlayerRespawnEvent was caught!");
+		
 		final World thisWorld = event.getRespawnLocation().getWorld();
-		Location newSpawnLocation = null;
+		Location newSpawnLocation = event.getRespawnLocation();
 		
 		// if a configured value can't be parsed to Double, set to default
 		if (config_max_x.isNaN()) max_x = 420.0; else max_x = config_max_x.doubleValue();
@@ -46,23 +49,29 @@ public class SpawnController implements Listener {
 		if (config_min_x.isNaN()) min_x = -420.0; else min_x = config_min_x.doubleValue();
 		if (config_min_z.isNaN()) min_z = -420.0; else min_z = config_min_z.doubleValue();
 		
+		// find then set a random spawn location if the player doesn't have a set spawn
 		if (Config.getValue("spawn.random").equals("true")) {
 			
+			System.out.println("spawn.random = true");
 			if (!event.isBedSpawn() && !event.isAnchorSpawn()) {
 				
+				System.out.println("game-intended spawn is world spawn");
 				boolean valid_spawn_location = false;
 				
 				// get random x, z coords and check them top-down from y256 for validity
-				while (valid_spawn_location = false) {
+				while (!valid_spawn_location) {
 					
 					double tryLocation_x = getRandomNumber((int)min_x, (int)max_x);
 					double tryLocation_z = getRandomNumber((int)min_z, (int)max_z);
 					
 					int y = 257;
 					while (y > 1) {
+						
 						Location headLoc = new Location(thisWorld, tryLocation_x, (double)y, tryLocation_z);
 						Location legsLoc = new Location(thisWorld, tryLocation_x, (double)y-1, tryLocation_z);
 						Location floorLoc = new Location(thisWorld, tryLocation_x, (double)y-2, tryLocation_z);
+
+						System.out.println(tryLocation_x + ", " + y + ", " + tryLocation_z);
 						
 						Block headBlock = headLoc.getBlock();
 						Block legsBlock = legsLoc.getBlock();
@@ -71,20 +80,29 @@ public class SpawnController implements Listener {
 						y--;
 						
 						if (!headBlock.getType().equals(Material.AIR) || !legsBlock.getType().equals(Material.AIR)) {	
+							System.out.println("^ location is blocked ^");
 							continue;
 							
 						} else if (!floorBlock.getType().equals(Material.AIR)) {
 							
-							// potential valid spawn, check for unwanted spawn floors
-							
+							// potential valid spawn, check for unwanted spawn floors	
 							if (!BannedSpawnFloors.contains(floorBlock.getType())) {
 								
+								System.out.println("found valid respawn location!");
 								valid_spawn_location = true;
+								System.out.println(newSpawnLocation);
 								
 								newSpawnLocation.setWorld(thisWorld);
-								newSpawnLocation.setX(tryLocation_x);
-								newSpawnLocation.setY((double)y);
-								newSpawnLocation.setZ(tryLocation_z);
+								System.out.println(newSpawnLocation);
+								
+								newSpawnLocation.setX((double)tryLocation_x);
+								System.out.println(newSpawnLocation);
+								
+								newSpawnLocation.setY((double)y-1);
+								System.out.println(newSpawnLocation);
+								
+								newSpawnLocation.setZ((double)tryLocation_z);
+								System.out.println(newSpawnLocation);
 								
 								break;
 								
@@ -93,16 +111,12 @@ public class SpawnController implements Listener {
 					}
 				}
 				
-				System.out.println(newSpawnLocation.toString());
-				
 				if (newSpawnLocation != null) {
 					event.setRespawnLocation(newSpawnLocation);
 				}
 			}
+			System.out.println("player has a bed or anchor spawn");
 		}
-		
-		if (Config.getValue("debug").equals("true")) {			
-			System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core.");
-		}
+		System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core.");
 	}
 }

@@ -28,10 +28,10 @@ devesp = false
 spawn.random = true
 
 // - Define a rectangular area for spawn
-spawn.max.X = 420
-spawn.max.Z = 420
-spawn.min.X = -420
-spawn.min.Z = -420
+spawn.max.X = 420.0
+spawn.max.Z = 420.0
+spawn.min.X = -420.0
+spawn.min.Z = -420.0
 
 // - Prevent players spawning in liquids
 spawn.ignore.water = false
