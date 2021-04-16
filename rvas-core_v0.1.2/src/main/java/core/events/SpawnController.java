@@ -18,7 +18,6 @@ import core.backend.Config;
 
 public class SpawnController implements Listener {
 	
-	// add LAVA / WATER to this array list based on configs
 	public static ArrayList<Material> BannedSpawnFloors = new ArrayList<>(); {
 		BannedSpawnFloors.addAll(Arrays.asList(Material.AIR));
 	}
@@ -43,6 +42,14 @@ public class SpawnController implements Listener {
 		final World thisWorld = event.getRespawnLocation().getWorld();
 		Location newSpawnLocation = event.getRespawnLocation();
 		
+		if (Config.getValue("spawn.ignore.lava").equals("true")) {
+			BannedSpawnFloors.add(Material.LAVA);
+		}
+		
+		if (Config.getValue("spawn.ignore.water").equals("true")) {
+			BannedSpawnFloors.add(Material.WATER);
+		}
+		
 		// if a configured value can't be parsed to Double, set to default
 		if (config_max_x.isNaN()) max_x = 420.0; else max_x = config_max_x.doubleValue();
 		if (config_max_z.isNaN()) max_z = 420.0; else max_z = config_max_z.doubleValue();	
@@ -64,14 +71,14 @@ public class SpawnController implements Listener {
 					double tryLocation_x = getRandomNumber((int)min_x, (int)max_x);
 					double tryLocation_z = getRandomNumber((int)min_z, (int)max_z);
 					
+					System.out.println("RVAS: Checking coords for respawn: " + tryLocation_x + ", " + tryLocation_z);
+					
 					int y = 257;
 					while (y > 1) {
 						
 						Location headLoc = new Location(thisWorld, tryLocation_x, (double)y, tryLocation_z);
 						Location legsLoc = new Location(thisWorld, tryLocation_x, (double)y-1, tryLocation_z);
 						Location floorLoc = new Location(thisWorld, tryLocation_x, (double)y-2, tryLocation_z);
-
-						System.out.println(tryLocation_x + ", " + y + ", " + tryLocation_z);
 						
 						Block headBlock = headLoc.getBlock();
 						Block legsBlock = legsLoc.getBlock();
@@ -79,8 +86,7 @@ public class SpawnController implements Listener {
 						
 						y--;
 						
-						if (!headBlock.getType().equals(Material.AIR) || !legsBlock.getType().equals(Material.AIR)) {	
-							System.out.println("^ location is blocked ^");
+						if (!headBlock.getType().equals(Material.AIR) || !legsBlock.getType().equals(Material.AIR)) {
 							continue;
 							
 						} else if (!floorBlock.getType().equals(Material.AIR)) {
@@ -90,19 +96,11 @@ public class SpawnController implements Listener {
 								
 								System.out.println("found valid respawn location!");
 								valid_spawn_location = true;
-								System.out.println(newSpawnLocation);
 								
 								newSpawnLocation.setWorld(thisWorld);
-								System.out.println(newSpawnLocation);
-								
 								newSpawnLocation.setX((double)tryLocation_x);
-								System.out.println(newSpawnLocation);
-								
 								newSpawnLocation.setY((double)y-1);
-								System.out.println(newSpawnLocation);
-								
 								newSpawnLocation.setZ((double)tryLocation_z);
-								System.out.println(newSpawnLocation);
 								
 								break;
 								
@@ -113,6 +111,7 @@ public class SpawnController implements Listener {
 				
 				if (newSpawnLocation != null) {
 					event.setRespawnLocation(newSpawnLocation);
+					return;
 				}
 			}
 			System.out.println("player has a bed or anchor spawn");
