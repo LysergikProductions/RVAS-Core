@@ -52,7 +52,7 @@ public class PVP implements Listener {
 		PlayerMeta.incKillTotal(killer, 1);
 		PlayerMeta.incDeathTotal(killed, 1);
 		
-		// check if victim was in the spawn region on death
+		/*// check if victim was in the spawn region on death
 		Double victim_playtime = Double.parseDouble(Utilities.calculateTime(PlayerMeta.getPlaytime(killed)));
 		
 		Double cX = killed.getLocation().getX();
@@ -72,6 +72,6 @@ public class PVP implements Listener {
 				System.out.println(killedName + " was also a new player!");
 				PlayerMeta.incSpawnKill(killer, 1);
 			}
-		}
+		}*/
 	}
 }

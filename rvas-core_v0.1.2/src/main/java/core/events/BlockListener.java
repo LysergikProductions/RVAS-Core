@@ -49,7 +49,7 @@ public class BlockListener implements Listener {
 				Material.DISPENSER, Material.GRAVEL, Material.ARMOR_STAND, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event) {
 		
 		// get configs
@@ -117,7 +117,7 @@ public class BlockListener implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlace(BlockPlaceEvent event) {
 		
 		// get configs

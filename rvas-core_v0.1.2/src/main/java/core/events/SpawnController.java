@@ -124,9 +124,12 @@ public class SpawnController implements Listener {
 		System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core");
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		System.out.println("PlayerJoinEvent triggered.");
+		
+		final World thisWorld = event.getPlayer().getWorld();
+		Location thisLocation = thisWorld.getSpawnLocation();
 		
 		if (Config.getValue("spawn.random.join").equals("true")) {
 			
@@ -137,7 +140,17 @@ public class SpawnController implements Listener {
 			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(joiner_id);
 			boolean playedBefore = offPlayer.hasPlayedBefore();
 			
-			if (!playedBefore) System.out.println(joiner_name + "is playing for the first time!");
+			if (!playedBefore) {
+				System.out.println(joiner_name + "is playing for the first time!");
+				
+				thisLocation = getRandomSpawn(thisWorld, thisLocation);
+				
+				if (thisLocation != null) {
+					
+					thisWorld.setSpawnLocation(thisLocation);
+					return;
+				}
+			}
 		}
 	}
 }

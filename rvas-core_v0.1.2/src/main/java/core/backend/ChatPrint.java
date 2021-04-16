@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -167,12 +168,14 @@ public class ChatPrint {
 		TextComponent title = new TextComponent(title_pre, title_name, title_suf);
 		TextComponent joined = new TextComponent(joined_a, joined_b);
 		TextComponent lastSeen = new TextComponent(lastSeen_a, lastSeen_b);
+		
 		TextComponent rank = new TextComponent(rank_a, rank_b);
 		TextComponent playtime = new TextComponent(playtime_a, playtime_b);
 		TextComponent toptime = new TextComponent(playtime_a, toptime_b);
+		
 		TextComponent tkills = new TextComponent(tkills_a, tkills_b);
 		TextComponent tdeaths = new TextComponent(tdeaths_a, tdeaths_b);
-		TextComponent kd = new TextComponent("K/D: " + PlayerMeta.getStats(target).kd);
+		TextComponent kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(PlayerMeta.getStats(target).kd));
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
 		kd.setColor(ChatColor.GRAY);

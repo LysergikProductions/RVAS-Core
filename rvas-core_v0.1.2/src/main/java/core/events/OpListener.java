@@ -36,7 +36,7 @@ public class OpListener implements Listener {
 	};
 	
 	// this happens *before* the OP Lock plugin will see the command
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
 		
 		Player sender = event.getPlayer();
@@ -114,7 +114,7 @@ public class OpListener implements Listener {
 		}
 	}
 	
-	@EventHandler // non-op players cannot be set to a mode besides survival mode
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // non-op players cannot be set to a mode besides survival mode
 	public void onModeChange(PlayerGameModeChangeEvent event) {
 		
 		if (!event.getNewGameMode().equals(GameMode.SURVIVAL) && !event.getPlayer().isOp()) {
@@ -122,7 +122,7 @@ public class OpListener implements Listener {
 		}
 	}
 	
-	@EventHandler // only allow owner account to duplicate/get items from creative mode
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // only allow owner account to duplicate/get items from creative mode
 	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
 		if (!Config.getValue("protect.lock.creative").equals("false")) {
