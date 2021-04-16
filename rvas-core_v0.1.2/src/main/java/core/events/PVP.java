@@ -43,14 +43,14 @@ public class PVP implements Listener {
 			
 			System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
 			
+			// increment appropriate stats
+			PlayerMeta.incKillTotal(killer, 1);
+			PlayerMeta.incDeathTotal(killed, 1);
+			
 		} else if (Config.getValue("debug").equals("true")){
 			
 			System.out.println("[core.events.pvp] killer = null");
 		}
-		
-		// increment appropriate stats
-		PlayerMeta.incKillTotal(killer, 1);
-		PlayerMeta.incDeathTotal(killed, 1);
 		
 		// check if victim was in the spawn region on death
 		int victim_playtime = Integer.parseInt(Utilities.calculateTime(PlayerMeta.getPlaytime(killed)));
@@ -63,10 +63,13 @@ public class PVP implements Listener {
 			System.out.println("[core.events.PVP] failed to retrieve location for victim: " + killedName);
 			return;
 			
-		} else if (cX < 710 && cZ < 710 && cX > -710 && cZ > -710) {
+		} else if (cX < 710 && cZ < 710 && cX > -710 && cZ > -710) { // spawn region will eventually be config defined
 			
-			// victim was killed in the spawn region; check if new player
-			if (victim_playtime < 3600) {
+			System.out.println(killedName + " was killed in the spawn region!");
+			// check if victim is a new player
+			if (victim_playtime < 3600 && killer != null) {
+				
+				System.out.println(killedName + " was also a new player!");
 				PlayerMeta.incSpawnKill(killer, 1);
 			}
 		}

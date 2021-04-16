@@ -50,10 +50,11 @@ public class OpListener implements Listener {
 		if (
 				event.getMessage().startsWith("/execute in the_end run tp") ||
 				event.getMessage().startsWith("/execute in the_nether run tp") ||
-				event.getMessage().startsWith("/execute in overworld run tp") &&
-				!event.getMessage().contains("@a") && !event.getMessage().contains(admin_name) &&
-				sender.isOp()) {
-			return;
+				event.getMessage().startsWith("/execute in overworld run tp")) {
+			
+			if (!event.getMessage().contains("@a") && !event.getMessage().contains(admin_name) && sender.isOp()) {
+				return;
+			}
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
