@@ -1,12 +1,13 @@
 package core.events;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
+
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
@@ -21,15 +22,18 @@ public class LagPrevention implements Listener, Runnable {
 
 	@EventHandler
 	public void onEntitySpawn(EntitySpawnEvent e) {
-		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
 
 		if (e.getEntity() instanceof Wither) {
+			
+			int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
+			currentWithers = getWithers();
+			
 			if (e.getEntity().getTicksLived() > 200) return;
+			
 			if (currentWithers + 1 > witherLimit) {
 				e.setCancelled(true);
 				return;
 			}
-			currentWithers = getWithers();
 		}
 	}
 
@@ -60,39 +64,18 @@ public class LagPrevention implements Listener, Runnable {
 		return 0;
 		//return toRet[0];
 	}
-
-	// Remove old skulls
-	public static int removeOldSkulls() {
-		
-		ArrayList<String> environments = new ArrayList<>();
-		
-		Bukkit.getWorlds().forEach(world -> {
-			environments.add(world.getName().toString());
-		});
-		
-		final int[] toRet = {0};
-		int skullLimit = Integer.parseInt(Config.getValue("wither.skull.max_age"));
-
-		final List<Entity> entities = new ArrayList<>();
-		environments.forEach(worldType -> {
-			entities.clear();
-			
-			entities.addAll(Bukkit.getWorld(worldType)
-					.getEntities().stream().filter(e -> (e instanceof WitherSkull))
-					.collect(Collectors.toList()));
-			toRet[0] = 0;
-			
-			entities.stream().filter(e -> e.getTicksLived() >= skullLimit && e.getCustomName() == null).forEach(e -> {
-				toRet[0]++;
-				Bukkit.getWorld(worldType).getEntities().remove(e);
-			});
-		});
-
-		return toRet[0];
-	}
-	// clear skulls every 20 ticks (~1 sec)
+	
+	// clear skulls every 72,000 server-ticks (~ 1 to 2 hours)
 	@Override
 	public void run() {
-		removeOldSkulls();
+		
+		Bukkit.getServer().broadcastMessage("Clearing wither skulls because lag sucks");
+		
+		for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
+			if (onlinePlayer.isOp()) {
+				onlinePlayer.chat("/kill @e[type=minecraft:wither_skull]");
+				return;
+			}
+		}
 	}
 }

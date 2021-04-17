@@ -81,6 +81,17 @@ public class OpListener implements Listener {
 			}
 		}
 		
+		// take-over handling of /lr when receiving /lr skulls (lr normally for 'LaggRemover')
+		if (event.getMessage().startsWith("/lr skulls")) {
+			
+			event.setCancelled(true);
+			
+			if (sender.isOp()) {
+				Bukkit.getServer().broadcastMessage("Clearing wither skulls because lag sucks");
+				sender.chat("/kill @e[type=minecraft:wither_skull]");
+			}
+		}
+		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!admin_name.equals(sender_name) || !admin_id.equals(sender_id)) {
 			if (

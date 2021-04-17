@@ -6,11 +6,14 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import core.backend.*;
 import core.commands.*;
 import core.events.*;
@@ -84,7 +87,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagPrevention(), 20L, 20L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagPrevention(), 72000L, 72000L);
 
 		System.out.println("[core.main] Loading event listeners..");
 		
