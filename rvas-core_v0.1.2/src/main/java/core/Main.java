@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class Main extends JavaPlugin implements Listener {
+	
 	public static Plugin instance;
 	public static OfflinePlayer Top = null;
 
@@ -83,11 +84,10 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] Loading synced tasks..");
 		
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
-		// TODO: cleaner solution?
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagPrevention(), 72000L, 72000L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagPrevention(), 1200L, 1200L);
 
 		System.out.println("[core.main] Loading event listeners..");
 		

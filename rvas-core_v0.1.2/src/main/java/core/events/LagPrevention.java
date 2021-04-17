@@ -3,6 +3,7 @@ package core.events;
 import java.util.*;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -65,16 +66,29 @@ public class LagPrevention implements Listener, Runnable {
 		//return toRet[0];
 	}
 	
-	// clear skulls every 72,000 server-ticks (~ 1 to 2 hours)
+	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
 	@Override
 	public void run() {
 		
-		Bukkit.getServer().broadcastMessage("Clearing wither skulls because lag sucks");
-		
+		System.out.println("Clearing wither skulls!");
 		for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
 			if (onlinePlayer.isOp()) {
+				
 				onlinePlayer.chat("/kill @e[type=minecraft:wither_skull]");
 				return;
+			}
+		}
+		
+		System.out.println("No ops online. Using bukkit to clear skulls..");
+		
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
+			
+			for (Entity e: thisWorld.getEntities()) {
+				if (e instanceof WitherSkull) {
+					
+					if (e.getTicksLived() > 600) e.remove();
+				}
 			}
 		}
 	}

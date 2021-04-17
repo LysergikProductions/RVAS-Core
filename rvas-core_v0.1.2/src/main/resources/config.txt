@@ -162,15 +162,15 @@ mute.pop = 51
 // - Enable voting by already-muted persons. false = disabled || true = enabled [default]
 mute.hypocrisy = true
 
-// ----------- //
-// --- LAG --- //
-// ----------- //
+// ------------------ //
+// --- LAG RELIEF --- //
+// ------------------ //
 
 // - Global wither limit. default = 710
 wither.limit = 710
 
-// - Global wither skull age limit. default = 1200 (1 minute in ticks if server is running at 20TPS)
-wither.skull.max_age = 1200
+// - Global wither skull age limit. default = 1200 (1 minute if server is running at 20TPS)
+wither.skull.max_ticks = 1200
 
 // - Global speed limit when TPS is between 17 and 20. default = 76
 speedlimit.tier_one = 76
@@ -254,4 +254,4 @@ analytics.bot_id =
 misc.survival = true
 
 // - Enable or disable the prank /kit command. false = disabled true = enabled [default]
-funny.kit = false
+funny.kit = true
