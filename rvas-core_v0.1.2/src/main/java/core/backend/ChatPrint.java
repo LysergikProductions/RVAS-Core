@@ -1,5 +1,28 @@
 package core.backend;
 
+/* *
+ * 
+ *  About: Store void methods that print information
+ *  	from RVAS-Core to a given user's chat
+ * 
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * */
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -175,14 +198,19 @@ public class ChatPrint {
 		
 		TextComponent tkills = new TextComponent(tkills_a, tkills_b);
 		TextComponent tdeaths = new TextComponent(tdeaths_a, tdeaths_b);
-		final TextComponent kd;
+		TextComponent kd;
 		
-		if (PlayerMeta.getStats(target).kd.contains("!")) {
+		try {
+			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(PlayerMeta.getStats(target).kd)));
+		} catch (NumberFormatException e) {
+			kd = new TextComponent("K/D: " + PlayerMeta.getStats(target).kd);
+		}
+		
+		/*if (PlayerMeta.getStats(target).kd.contains("!") || PlayerMeta.getStats(target).kd.contains("null")) {
 			kd = new TextComponent("K/D: " + PlayerMeta.getStats(target).kd);
 		} else {
 			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(PlayerMeta.getStats(target).kd)));
-		}
-		
+		}*/
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
 		kd.setColor(ChatColor.GRAY);

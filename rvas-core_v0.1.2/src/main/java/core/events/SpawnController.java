@@ -1,5 +1,28 @@
 package core.events;
 
+/* *
+ * 
+ *  About: Listen for spawn related events from bukkit servers and,
+ *  	if configured to, set players' respawn locations randomly
+ * 
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * */
+
 import java.util.*;
 
 import org.bukkit.event.EventHandler;
@@ -53,6 +76,8 @@ public class SpawnController implements Listener {
 			
 			double tryLocation_x = getRandomNumber((int)min_x, (int)max_x);
 			double tryLocation_z = getRandomNumber((int)min_z, (int)max_z);
+			
+			// potential issue here not forcing double's to be whole numbers
 			
 			System.out.println("RVAS: Checking coords for respawn: " + tryLocation_x + ", " + tryLocation_z);
 			
@@ -130,6 +155,14 @@ public class SpawnController implements Listener {
 		
 		final World thisWorld = event.getPlayer().getWorld();
 		Location thisLocation = thisWorld.getSpawnLocation();
+		
+		if (Config.getValue("spawn.ignore.lava").equals("true")) {
+			BannedSpawnFloors.add(Material.LAVA);
+		}
+		
+		if (Config.getValue("spawn.ignore.water").equals("true")) {
+			BannedSpawnFloors.add(Material.WATER);
+		}
 		
 		if (Config.getValue("spawn.random.join").equals("true")) {
 			
