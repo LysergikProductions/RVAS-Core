@@ -23,13 +23,13 @@ package core.backend;
  * 
  * */
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
@@ -99,12 +99,14 @@ public class ChatPrint {
 		for (UUID pid : realLeaders.keySet()) {
 			x++;
 			
-			TextComponent a = new TextComponent("#" + x + ": "); a.setBold(true);
+			TextComponent a1 = new TextComponent("#" + x + ": "); a1.setBold(true);
+			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(pid);
+			String target_name = offPlayer.getName();
 			
-			if (Bukkit.getOfflinePlayer(pid).getName() == null) {
+			if (target_name == null) {
 				
 				TextComponent b = new TextComponent("[unknown], " + Utilities.calculateTime(realLeaders.get(pid)));
-				TextComponent c = new TextComponent(a, b);
+				TextComponent c = new TextComponent(a1, b);
 				
 				c.setColor(ChatColor.GOLD);
 				
@@ -112,20 +114,23 @@ public class ChatPrint {
 				
 			} else {// this leader name != null
 				
-				int kills = PlayerMeta.getStats(Bukkit.getOfflinePlayer(pid)).killTotal;
-				int deaths = PlayerMeta.getStats(Bukkit.getOfflinePlayer(pid)).deathTotal;
-				String kd = PlayerMeta.getStats(Bukkit.getOfflinePlayer(pid)).kd;
+				int kills = PlayerMeta.getStats(offPlayer).killTotal;
+				int deaths = PlayerMeta.getStats(offPlayer).deathTotal;
+				String kd = PlayerMeta.getStats(offPlayer).kd;
 				
-				TextComponent b = new TextComponent(Bukkit.getOfflinePlayer(pid).getName() + ", " + Utilities.calculateTime(realLeaders.get(pid)));
-				TextComponent c = new TextComponent(a, b);
+				TextComponent a2 = new TextComponent(target_name + " - ");
+				TextComponent b = new TextComponent(Utilities.calculateTime(realLeaders.get(pid)));
 				
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
+				ClickEvent shortcut = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/stats " + target_name);
 				
-				a.setColor(ChatColor.GOLD);
-				b.setColor(ChatColor.GOLD);
+				a2.setColor(ChatColor.GOLD);
 				b.setItalic(true);
+				b.setHoverEvent(hoverStats);
 				
-				c.setHoverEvent(hoverStats);
+				TextComponent c = new TextComponent(a1, a2, b);
+				
+				c.setClickEvent(shortcut);
 				list.add(c);
 			}
 		}
@@ -205,12 +210,6 @@ public class ChatPrint {
 		} catch (NumberFormatException e) {
 			kd = new TextComponent("K/D: " + PlayerMeta.getStats(target).kd);
 		}
-		
-		/*if (PlayerMeta.getStats(target).kd.contains("!") || PlayerMeta.getStats(target).kd.contains("null")) {
-			kd = new TextComponent("K/D: " + PlayerMeta.getStats(target).kd);
-		} else {
-			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(PlayerMeta.getStats(target).kd)));
-		}*/
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
 		kd.setColor(ChatColor.GRAY);

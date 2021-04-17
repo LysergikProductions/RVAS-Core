@@ -54,7 +54,13 @@ public class PVP implements Listener {
 		Player killed = event.getEntity();
 		UUID killedID = killed.getUniqueId();
 		Player killer = killed.getKiller();
-		UUID killerID = killer.getUniqueId();
+		
+		try {
+			UUID killerID = killer.getUniqueId();
+		} catch (NullPointerException e) {
+			System.out.println("killerID in PVP.java is null.");
+			return;
+		}
 		
 		String killedName = killed.getName();
 		String killerName = "";

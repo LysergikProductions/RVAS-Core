@@ -33,14 +33,26 @@ public class Main extends JavaPlugin implements Listener {
 		instance = this;
 
 		System.out.println("[core.main] Initializing RVAS-core");
-		System.out.println("[core.main] Creating required files if they do not exist...");
+		System.out.println("[core.main] Loading files..");
 		
 		try {
 			FileManager.setup();
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured creating the necessary files.");
 		}
-		// Load commands
+		
+		System.out.println("[core.main] Loading more files..");
+		try {
+			PlayerMeta.loadDonators();
+			// PlayerMeta.loadMuted(); // throws IOException: 
+			PlayerMeta.loadLagfags();
+			
+		} catch (IOException e) {			
+			System.out.println("[core.main] An error occured loading files..");
+			System.out.println("[core.main] " + e);
+		}
+		
+		System.out.println("[core.main] Loading commands..");
 		this.getCommand("kit").setExecutor(new Kit());
 		this.getCommand("mute").setExecutor(new Mute());
 		this.getCommand("dupehand").setExecutor(new DupeHand());
@@ -65,18 +77,8 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("help").setExecutor(new Help());
 		//this.getCommand("world").setExecutor(new World());
 
-		System.out.println("[core.main] Loading files..");
-		try {
-			PlayerMeta.loadDonators();
-			// PlayerMeta.loadMuted(); // throws IOException: 
-			PlayerMeta.loadLagfags();
-			
-		} catch (IOException e) {			
-			System.out.println("[core.main] An error occured loading files..");
-			System.out.println("[core.main] " + e);
-		}
-
-		// Load timers
+		System.out.println("[core.main] Loading synced tasks..");
+		
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
 		// TODO: cleaner solution?
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
@@ -84,7 +86,8 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagPrevention(), 20L, 20L);
 
-		// Load listeners
+		System.out.println("[core.main] Loading event listeners..");
+		
 		getServer().getPluginManager().registerEvents(new Chat(), this);
 		getServer().getPluginManager().registerEvents(new Connection(), this);
 		getServer().getPluginManager().registerEvents(new Move(), this);
@@ -111,6 +114,8 @@ public class Main extends JavaPlugin implements Listener {
 		//			}
 		//		});
 
+		System.out.println("[core.main] ..finishing up..");
+		
 		// Define banned & special blocks
 		// Banned materials.
 		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
