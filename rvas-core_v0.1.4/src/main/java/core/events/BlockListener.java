@@ -46,8 +46,13 @@ import core.backend.PlayerMeta;
 
 public class BlockListener implements Listener {
 	
-	static Random r = new Random();
+	// get configs
+	static String roofProt = Config.getValue("protect.bedrock.roof");
+	static String floorProt = Config.getValue("protect.bedrock.floor");
+	static String debug = Config.getValue("debug");
+	static String devesp = Config.getValue("devesp");
 	
+	static Random r = new Random();
 	public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
 	
 	public static ArrayList<Material> BreakBanned = new ArrayList<>();
@@ -76,12 +81,6 @@ public class BlockListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event) {
-		
-		// get configs
-		String roofProt = Config.getValue("protect.bedrock.roof");
-		String floorProt = Config.getValue("protect.bedrock.floor");
-		String debug = Config.getValue("debug");
-		String devesp = Config.getValue("devesp");
 		
 		// get commonly referenced data
 		Block block = event.getBlock();
@@ -140,21 +139,18 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlace(BlockPlaceEvent event) {
 		
-		// get configs
-		String debug = Config.getValue("debug");
-		String devesp = Config.getValue("devesp");
-		
 		if (debug.equals("true") && devesp.equals("false")) {
 			Bukkit.spigot().broadcast(new TextComponent("BlockPlaceEvent triggered."));
 		}
 		
-		// get commonly referenced data
 		Block block = event.getBlockPlaced();
 		Player placer = event.getPlayer();
 		GameMode mode = placer.getGameMode();		
 		String placer_name = placer.getName();
 		
 		// Make game unplayable for laggers
+		// the method currently always returns
+		// false in this build, so block doesn't run
 		if (PlayerMeta.isLagfag(placer)) {
 			
 			if (LagMats.contains(block.getType())) {

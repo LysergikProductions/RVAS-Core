@@ -345,7 +345,6 @@ public class PlayerMeta {
 		
 		for (PVPstats object: sPVPStats.values()) {
 			try {
-				
 				w.write(object.toString() + "\n");
 				w.flush();
 				
