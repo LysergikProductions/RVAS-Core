@@ -1,8 +1,6 @@
 package core.backend;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -39,11 +37,21 @@ public class ItemCheck {
 	}
 
 	public static void IllegalCheck(ItemStack item, String trigger, Player player) {
+		
+		String player_name = player.getName();
+		UUID player_id = player.getUniqueId();
+		String admin_name = Config.getValue("admin");
+		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
+		
 		// Dont check null items or air
 		if (item == null || item.getType().equals(Material.AIR)) return;
 		
 		// Check for more reasons to cancel IllegalCheck()
-		if (Config.getValue("item.illegal").equals("false") ||
+		if (player_name.equals(admin_name) && player_id.equals(admin_id)) return;
+		
+		if (
+				Config.getValue("item.illegal").equals("false") ||
+				
 				player.isOp() && Config.getValue("skip.ops").equals("true") &&
 				!Banned.contains(item.getType())) {
 			return;
@@ -60,9 +68,12 @@ public class ItemCheck {
 		
 		// Delete any shulker boxes inside of other shulker boxes
 		if (item.getItemMeta() instanceof BlockStateMeta) {
+			
 			BlockStateMeta itemstack_metadata = (BlockStateMeta) item.getItemMeta();
+			
 			if (itemstack_metadata.getBlockState() instanceof ShulkerBox) {
 				((ShulkerBox) itemstack_metadata.getBlockState()).getInventory().forEach(itemStack -> {
+					
 					if (isShulker(itemStack)){
 						itemStack.setAmount(0);
 						return;
@@ -129,7 +140,7 @@ public class ItemCheck {
 						// If this item does not support this enchantment
 						if (!e.canEnchantItem(item) && Config.getValue("item.illegal.invalid").equals("false")) continue;
 
-						if (Config.getValue("item.illegal.invalid").equals("false")) {
+						if (Config.getValue("item.illegal.invalid").equals("true")) {
 							// If this item has a conflict with another enchantment on the same item
 							boolean hasConflict = false;
 

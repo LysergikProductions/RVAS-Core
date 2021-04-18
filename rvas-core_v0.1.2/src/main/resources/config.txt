@@ -95,7 +95,7 @@ protect.bedrock.floor = true
 // ---------------------------- //
 
 // - Skip illegal checks for ops?
-skip.ops = true
+skip.ops = false
 
 // - Check for illegal items? (false will disable most illegal item checks)
 item.illegal = true
@@ -107,13 +107,13 @@ item.illegal.stacked = true
 item.illegal.heads = true
 
 // - Enable or disable unbreakable items. false = disabled [default] || true = enabled
-item.illegal.unbreakable = false
+item.illegal.unbreakable = true
 
 // - Enable or disable exclusive enchants. false = disabled [default] || true = enabled
-item.illegal.exclusive = false
+item.illegal.exclusive = true
 
 // - Enable or disable invalid enchants. false = disabled [default] || true = enabled
-item.illegal.invalid = false
+item.illegal.invalid = true
 
 // - Remove these items from player inventories when they join
 item.illegal.onjoin = true

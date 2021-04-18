@@ -9,6 +9,9 @@ import com.comphenix.protocol.events.PacketEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.WitherSkull;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -159,6 +162,16 @@ public class Main extends JavaPlugin implements Listener {
 		} catch (IOException ex) {
 			System.out.println("[core.main] Failed to save one or more files.");
 			System.out.println("[core.main] " + ex);
+		}
+		
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
+			
+			for (Entity e: thisWorld.getEntities()) {
+				if (e instanceof WitherSkull) {
+					e.remove();
+				}
+			}
 		}
 	}
 }

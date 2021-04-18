@@ -28,11 +28,13 @@ public class Kit implements CommandExecutor {
 			kickedFromKit.add(player.getUniqueId());
 			player.kickPlayer("§6imagine kits in vanilla survival lol [pog]");
 			
-			if (!PlayerMeta.isMuted(player)) {
+			/*if (!PlayerMeta.isMuted(player)) {
 				
-				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"§a" + player.getName() + " got their complimentary starter kit! Get yours by typing /kit."));
-			}
+				
+			}*/
+			
+			Bukkit.getServer().spigot().broadcast(new TextComponent(
+					"§a" + player.getName() + " got their complimentary starter kit! Get yours by typing /kit."));
 			
 			return true;
 			

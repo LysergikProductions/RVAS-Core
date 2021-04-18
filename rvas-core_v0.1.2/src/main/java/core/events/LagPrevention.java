@@ -1,5 +1,28 @@
 package core.events;
 
+/* *
+ * 
+ *  About: Manages potentially lag-inducing situations in various ways
+ *  	by clearing entities and checking entity counts
+ * 
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * */
+
 import java.util.*;
 
 import org.bukkit.Bukkit;
@@ -29,8 +52,6 @@ public class LagPrevention implements Listener, Runnable {
 			int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
 			currentWithers = getWithers();
 			
-			if (e.getEntity().getTicksLived() > 200) return;
-			
 			if (currentWithers + 1 > witherLimit) {
 				e.setCancelled(true);
 				return;
@@ -39,38 +60,26 @@ public class LagPrevention implements Listener, Runnable {
 	}
 
 	public static int getWithers() { // disabled for performance reasons; to reimplement later
-		/*
-		ArrayList<String> worldTypes = new ArrayList<>();
-		worldTypes.add("world");// check compatibility for world names other than "world"
-		worldTypes.add("world_nether");// check compatibility for world names other than "world"
-		worldTypes.add("world_the_end");// check compatibility for world names other than "world"
-		final int[] toRet = {0};
+		
+		int counter = 0;		
 		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
-
-		final List<Entity> entities = new ArrayList<>();
-		worldTypes.forEach(worldType -> {
-				entities.clear();
-				entities.addAll(Bukkit.getWorld(worldType).getEntities().stream().filter(e -> (e instanceof Wither))
-						.collect(Collectors.toList()));
-				toRet[0]=0;
-				entities.stream().filter(e -> e.getType().equals(EntityType.WITHER) && e.getCustomName() == null).forEach(e -> {
-					toRet[0]++;
-					if (toRet[0] > witherLimit) {
-						toRet[0]--;
-						Wither w = (Wither) e;
-						w.setHealth(0);
-					}
-				});
-		});*/
-		return 0;
-		//return toRet[0];
+		
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			System.out.println("Counting withers in: " + thisWorld.getName());
+			
+			for (Entity e: thisWorld.getEntities()) {
+				if (e instanceof Wither) {
+					counter++;
+				}
+			}
+		}
+		return counter;
 	}
 	
 	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
 	@Override
 	public void run() {
 		
-		System.out.println("Clearing wither skulls!");
 		for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
 			if (onlinePlayer.isOp()) {
 				

@@ -33,7 +33,8 @@ public class AutoAnnouncer extends TimerTask {
 				break;
 			case 2:
 				Bukkit.spigot().broadcast(
-						new TextComponent("§6You can sign items to show them as uniquely yours by doing §l/sign."));
+						//new TextComponent("§6You can sign items to show them as uniquely yours by doing §l/sign."));
+						new TextComponent("§6Use /kit anarchy to get some basic starter items, including steak!"));
 				break;
 			case 3:
 				Bukkit.spigot().broadcast(
