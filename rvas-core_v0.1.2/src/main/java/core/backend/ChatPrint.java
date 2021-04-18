@@ -184,6 +184,9 @@ public class ChatPrint {
 		TextComponent tdeaths_a = new TextComponent("PVP Deaths: ");
 		TextComponent tdeaths_b = new TextComponent("" + PlayerMeta.getStats(target).deathTotal);
 		
+		String spawnKills = String.valueOf(PlayerMeta.getStats(target).spawnKills);
+		HoverEvent hover_killDetail = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Spawn Kills: " + spawnKills));
+		
 		// style individual components
 		joined_a.setColor(ChatColor.BLUE); joined_a.setBold(true);
 		
@@ -194,6 +197,7 @@ public class ChatPrint {
 		playtime_a.setColor(ChatColor.BLUE); playtime_a.setBold(true);
 		
 		tkills_a.setColor(ChatColor.BLUE); tkills_a.setBold(true);
+		tkills_b.setHoverEvent(hover_killDetail);
 		
 		tdeaths_a.setColor(ChatColor.BLUE); tdeaths_a.setBold(true);
 		

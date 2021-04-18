@@ -26,44 +26,31 @@ public class ItemCheck {
 		Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
+		
 		// Items that need to be specially rebuilt.
 		Special.addAll(Arrays.asList(Material.ENCHANTED_BOOK, Material.POTION, Material.LINGERING_POTION,
 			Material.TIPPED_ARROW, Material.SPLASH_POTION, Material.WRITTEN_BOOK, Material.FILLED_MAP,
 			Material.PLAYER_WALL_HEAD, Material.PLAYER_HEAD, Material.WRITABLE_BOOK, Material.BEEHIVE,
 			Material.BEE_NEST, Material.RESPAWN_ANCHOR, Material.FIREWORK_ROCKET, Material.FIREWORK_STAR,
 			Material.SHIELD));
+		
 		LegalHeads.addAll(Arrays.asList(Material.CREEPER_HEAD, Material.ZOMBIE_HEAD, Material.SKELETON_SKULL,
 				Material.WITHER_SKELETON_SKULL, Material.DRAGON_HEAD));
 	}
 
 	public static void IllegalCheck(ItemStack item, String trigger, Player player) {
 		
-		String player_name = player.getName();
-		UUID player_id = player.getUniqueId();
-		String admin_name = Config.getValue("admin");
-		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
-		
 		// Dont check null items or air
 		if (item == null || item.getType().equals(Material.AIR)) return;
-		
-		// Check for more reasons to cancel IllegalCheck()
-		if (player_name.equals(admin_name) && player_id.equals(admin_id)) return;
+		if (player != null && PlayerMeta.isAdmin(player)) return;
 		
 		if (
 				Config.getValue("item.illegal").equals("false") ||
 				
-				player.isOp() && Config.getValue("skip.ops").equals("true") &&
+				player != null && player.isOp() &&
+				Config.getValue("skip.ops").equals("true") &&
 				!Banned.contains(item.getType())) {
 			return;
-		}
-		
-		if(Config.getValue("debug").equals("true")) {
-			if(player != null) {
-				System.out.println("[core.backend.itemcheck] CHECK: "+trigger+", "+item.getType().toString()+", "+player.getName()+", ("+player.getLocation().getX()+", "+player.getLocation().getY()+", "+player.getLocation().getZ()+")");
-			}
-			else {
-				System.out.println("[core.backend] CHECK: "+trigger+", "+item.getType().toString()+", NON-PLAYER");
-			}
 		}
 		
 		// Delete any shulker boxes inside of other shulker boxes
@@ -81,7 +68,11 @@ public class ItemCheck {
 					IllegalCheck(itemStack, "RECURSION_SHULKER", player);
 				});
 
-				if (item.getAmount() > 1) item.setAmount(1);
+				if (item.getAmount() > 1) {
+					System.out.println("[core.backend.itemcheck] ILLEGAL: "+trigger+", "+item.getType().toString()+", "+player.getName()+","
+							+ "("+player.getLocation().getX()+", "+player.getLocation().getY()+", "+player.getLocation().getZ()+")");
+					item.setAmount(1);
+				}
 				return;
 			}
 		}
@@ -111,8 +102,10 @@ public class ItemCheck {
 			
 			// https://github.com/gcurtiss/protocol3/issues/6
 			if(item.getType().equals(Material.ENCHANTED_BOOK)) {
+				
 				EnchantmentStorageMeta esm = (EnchantmentStorageMeta)item.getItemMeta();
 				Set<Enchantment> enchantments = esm.getStoredEnchants().keySet();
+				
 				if(enchantments.contains(Enchantment.VANISHING_CURSE) || enchantments.contains(Enchantment.BINDING_CURSE) && enchantments.size() == 1) {
 					skipUnstack = true;
 				}
@@ -181,10 +174,12 @@ public class ItemCheck {
 
 			// Rebuild Item Durability
 			if (newMeta instanceof Damageable) {
+				
 				Damageable dmg = (Damageable) newMeta;
 				Damageable oldDmg = (Damageable) item.getItemMeta();
 				dmg.setDamage(oldDmg.getDamage());
 				newMeta = (ItemMeta) dmg;
+				
 				if (Config.getValue("item.illegal.unbreakable").equals("false")) {
 					newMeta.setUnbreakable(item.getItemMeta().isUnbreakable());
 				} else {
@@ -212,6 +207,7 @@ public class ItemCheck {
 			// Rebuild stored enchants
 			for (Enchantment e : meta.getStoredEnchants().keySet()) {
 				if (meta.getStoredEnchantLevel(e) > e.getMaxLevel()) {
+					
 					newMeta.addStoredEnchant(e, e.getMaxLevel(), false);
 					continue;
 				}

@@ -33,23 +33,23 @@ import org.bukkit.Bukkit;
 public class PVPstats implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public UUID playerid;
-	public int killTotal;
-	public int deathTotal;
-	public String kd;
+	public UUID playerid; public int killTotal;
+	public int deathTotal; public String kd;
+	public int spawnKills;
 	
 	//int killWcrystal;
-	//int spawnKills;
 	//int logEscape;
 	
-	public PVPstats(UUID playerid, int killTotal, int deathTotal, String kd) {
-		this.playerid = playerid; this.killTotal = killTotal; this.deathTotal = deathTotal; this.kd = kd;
+	public PVPstats(UUID playerid, int killTotal, int deathTotal, String kd, int spawnKills) {
+		this.playerid = playerid; this.killTotal = killTotal; this.deathTotal = deathTotal;
+		this.kd = kd; this.spawnKills = spawnKills;
 	}
 	
 	@Override
     public String toString() {
 		// ** try remove the "UUID=" at the beginning of the strings
-		return playerid + "=" + playerid + ":" + killTotal + ":" + deathTotal + ":" + kd;
+		String out = playerid + "=" + playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;		
+		return out;
     }
 	
 	public static PVPstats fromString(String line) {
@@ -68,16 +68,43 @@ public class PVPstats implements Serializable {
 		System.out.println("Parsed ign: " + player_name);
 		System.out.println("Parsed id: " + playerid);
 		
-		int killTotal = Integer.parseInt(stats[1]);
+		int killTotal;
+		try {
+			killTotal = Integer.parseInt(stats[1]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			killTotal = 0;
+		}
+		
 		System.out.println("Parsed kills: " + killTotal);
 		
-		int deathTotal = Integer.parseInt(stats[2]);
+		int deathTotal;
+		try {
+			deathTotal = Integer.parseInt(stats[2]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			deathTotal = 0;
+		}
+		
 		System.out.println("Parsed deaths: " + deathTotal);
 		
-		String kd = stats[3];
+		String kd;
+		try {
+			kd = stats[3];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			kd = "";
+		}
+		
 		System.out.println("Parsed k/d: " + kd);
 		
-		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd);
+		int spawnKills;
+		try {
+			spawnKills = Integer.parseInt(stats[4]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			spawnKills = 0;
+		}
+		
+		System.out.println("Parsed spawn kills: " + spawnKills);
+		
+		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd, spawnKills);
 		
 		return out;
 	}

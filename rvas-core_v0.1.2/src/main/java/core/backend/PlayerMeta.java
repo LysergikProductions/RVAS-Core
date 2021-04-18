@@ -278,7 +278,7 @@ public class PlayerMeta {
 			
 		} else {
 			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "null");
+			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "null", 0);
 			sPVPStats.put(p.getUniqueId(), stats);
 		}
 	}
@@ -291,13 +291,13 @@ public class PlayerMeta {
 			
 		} else {
 			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 0, 1, "0.00");
+			PVPstats stats = new PVPstats(p.getUniqueId(), 0, 1, "0.00", 0);
 			sPVPStats.put(p.getUniqueId(), stats);
 		}
 	}
 	
 	public static void incSpawnKill (Player p, int inc) {
-		/*if (sPVPStats.containsKey(p.getUniqueId())) {
+		if (sPVPStats.containsKey(p.getUniqueId())) {
 			
 			PVPstats stats = sPVPStats.get(p.getUniqueId());
 			stats.spawnKills += inc;
@@ -306,12 +306,12 @@ public class PlayerMeta {
 			
 			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "0.00", 0);
 			sPVPStats.put(p.getUniqueId(), stats);
-		}*/
+		}
 		return;
 	}
 	
 	public static PVPstats getNewStats(OfflinePlayer p) {
-		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0, "null");
+		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0, "null", 0);
 		return out;
 	}
 	
@@ -367,17 +367,14 @@ public class PlayerMeta {
 	}
 	
 	public static boolean isAdmin(Player target) {
-		boolean out = false;
-		
 		String target_name = target.getName();
 		UUID target_id = target.getUniqueId();
 		String admin_name = Config.getValue("admin");
 		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
 		if (admin_name.equals(target_name) && admin_id.equals(target_id)) {
-			out = true;
-		}
-		return out;
+			return true;
+		} else return false;
 	}
 	
 	public static String getIp(Player p) {

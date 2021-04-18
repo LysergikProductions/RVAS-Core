@@ -82,26 +82,40 @@ public class PVP implements Listener {
 		PlayerMeta.incKillTotal(killer, 1);
 		PlayerMeta.incDeathTotal(killed, 1);
 		
-		/*// check if victim was in the spawn region on death
-		Double victim_playtime = Double.parseDouble(Utilities.calculateTime(PlayerMeta.getPlaytime(killed)));
+		// check if victim was in the spawn region on death
+		OfflinePlayer victim = Bukkit.getOfflinePlayer(killedID);
+		double victim_playtime = PlayerMeta.getPlaytime(victim);
 		
 		Double cX = killed.getLocation().getX();
 		Double cZ = killed.getLocation().getZ();
+		
+		double max_x; double max_z;
+		double min_x; double min_z;
+		
+		Double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
+		Double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
+		Double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
+		Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+		
+		if (config_max_x.isNaN()) max_x = 420.0; else max_x = config_max_x.doubleValue();
+		if (config_max_z.isNaN()) max_z = 420.0; else max_z = config_max_z.doubleValue();	
+		if (config_min_x.isNaN()) min_x = -420.0; else min_x = config_min_x.doubleValue();
+		if (config_min_z.isNaN()) min_z = -420.0; else min_z = config_min_z.doubleValue();
 		
 		if (cX == null || cZ == null) {
 			
 			System.out.println("[core.events.PVP] failed to retrieve location for victim: " + killedName);
 			return;
 			
-		} else if (cX < 710 && cZ < 710 && cX > -710 && cZ > -710) { // spawn region will eventually be config defined
+		} else if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {
 			
 			System.out.println(killedName + " was killed in the spawn region!");
 			// check if victim is a new player
-			if (victim_playtime < 3600 && killer != null) {
+			if (victim_playtime < 3600.0 && killer != null) {
 				
 				System.out.println(killedName + " was also a new player!");
 				PlayerMeta.incSpawnKill(killer, 1);
 			}
-		}*/
+		}
 	}
 }
