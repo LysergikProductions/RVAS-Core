@@ -38,6 +38,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.Material;
+import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 
 import core.backend.Config;
@@ -139,8 +140,11 @@ public class SpawnController implements Listener {
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
 				
 				if (thisLocation != null) {
+					Chunk spawnChunk = thisLocation.getChunk();
 					
 					event.setRespawnLocation(thisLocation);
+					while (!spawnChunk.isLoaded()) spawnChunk.load();
+					
 					return;
 				}
 			}
