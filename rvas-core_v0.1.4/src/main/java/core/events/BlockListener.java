@@ -100,13 +100,13 @@ public class BlockListener implements Listener {
 				
 				event.setCancelled(true);
 				
-				if (debug.equals("true") && devesp.equals("true")) {
+				if (debug.equals("true") && devesp.equals("false")) {
 					Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
 				}
 				
 			// do things if block == bedrock
 			} else if (block.getType().equals(Material.BEDROCK)) {
-				if (debug.equals("true") && devesp.equals("true")) {
+				if (debug.equals("true") && devesp.equals("false")) {
 					Bukkit.spigot().broadcast(new TextComponent(breaker_name + " just broke a bedrock block!"));
 				}
 				
@@ -115,7 +115,7 @@ public class BlockListener implements Listener {
 					
 					event.setCancelled(true);
 
-					if (debug.equals("true") && devesp.equals("true")) {
+					if (debug.equals("true") && devesp.equals("false")) {
 						Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
 					}
 					
@@ -124,7 +124,7 @@ public class BlockListener implements Listener {
 					
 					event.setCancelled(true);
 
-					if (debug.equals("true") && devesp.equals("true")) {
+					if (debug.equals("true") && devesp.equals("false")) {
 						Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
 					}
 				} else if (block.getWorld().getEnvironment().equals(Environment.THE_END) && block.getLocation().getY() == 64) {
@@ -144,7 +144,7 @@ public class BlockListener implements Listener {
 		String debug = Config.getValue("debug");
 		String devesp = Config.getValue("devesp");
 		
-		if (debug.equals("true") && devesp.equals("true")) {
+		if (debug.equals("true") && devesp.equals("false")) {
 			Bukkit.spigot().broadcast(new TextComponent("BlockPlaceEvent triggered."));
 		}
 		

@@ -65,7 +65,7 @@ public class LagManager implements Listener, Runnable {
 			
 			currentWithers = getWithers();
 			
-			if (currentWithers > witherLimit) {
+			if (currentWithers > witherLimit-1) {
 				e.setCancelled(true);
 				return;
 			}

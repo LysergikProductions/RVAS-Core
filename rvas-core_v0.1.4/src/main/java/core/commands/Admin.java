@@ -1,11 +1,16 @@
 package core.commands;
 
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
 import core.backend.Config;
 import core.backend.Pair;
 import core.backend.PlayerMeta;
@@ -25,12 +30,16 @@ public class Admin implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		
 		Player player = (Player) sender;
+		
 		if (args.length == 1) {
 			if (!PlayerMeta.isOp(sender)) {
+				
 				sender.sendMessage(new TextComponent("§cYou can't use this."));
 				return true;
 			}
+			
 			switch (args[0].toUpperCase()) {
 				case "COLOR":
 					if (UseRedName.contains(player.getUniqueId())) {
@@ -41,6 +50,7 @@ public class Admin implements CommandExecutor {
 						UseRedName.add(player.getUniqueId());
 					}
 					return true;
+					
 				case "SPY":
 					if (Spies.contains(player.getUniqueId())) {
 						player.spigot().sendMessage(new TextComponent("§6Disabled spying on player messages."));
@@ -50,6 +60,7 @@ public class Admin implements CommandExecutor {
 						Spies.add(player.getUniqueId());
 					}
 					return true;
+					
 				case "MSGTOGGLE":
 					if (MsgToggle.contains(player.getUniqueId())) {
 						player.spigot().sendMessage(new TextComponent("§6Enabled recieving player messages."));
@@ -59,6 +70,7 @@ public class Admin implements CommandExecutor {
 						MsgToggle.add(player.getUniqueId());
 					}
 					return true;
+					
 				case "RELOAD":
 					try {
 						Config.load();
@@ -69,9 +81,11 @@ public class Admin implements CommandExecutor {
 						Utilities.restart();
 					}
 					return true;
+					
 				case "SPEED":
 					player.spigot().sendMessage(new TextComponent("§6Player speeds:"));
 					List< Pair<Double, String> > speeds = SpeedLimit.getSpeeds();
+					
 					for (Pair<Double, String> speedEntry : speeds) {
 						double speed = speedEntry.getLeft();
 						if(speed == 0) continue;
@@ -88,6 +102,7 @@ public class Admin implements CommandExecutor {
 					}
 					player.spigot().sendMessage(new TextComponent("§6End of speed list."));
 					return true;
+					
 				case "AGRO":
 					disableWarnings = !disableWarnings;
 					if(disableWarnings) {
@@ -101,17 +116,27 @@ public class Admin implements CommandExecutor {
 			}
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("spot")) {
-				Location l = LogOutSpots.get(args[1]);
-				if (l == null) {
+				
+				Location loc = LogOutSpots.get(args[1]);
+				
+				if (loc == null) {
 					sender.sendMessage(new TextComponent("§6No logout spot logged for " + args[1]));
 				} else {
-					sender.sendMessage(new TextComponent("§6"+args[1] + " logged out at " + l.getX() + " " + l.getY() + " " + l.getZ()));
+					sender.sendMessage(new TextComponent("§6"+args[1] + " logged out at " + loc.getX() + " " + loc.getY() + " " + loc.getZ()));
 				}
 				return true;
 			}
 		}
+		
+		TextComponent ops_a = new TextComponent("OP Accounts: ");
+		TextComponent ops_b = new TextComponent("" + Bukkit.getOperators().size());
+		
+		ops_a.setColor(ChatColor.RED);
+		TextComponent ops = new TextComponent(ops_a, ops_b);
+		
 		player.spigot().sendMessage(new TextComponent(""));
-		player.spigot().sendMessage(new TextComponent("§csinse420: §7Systems Administrator, Developer, Founder"));
+		player.spigot().sendMessage(new TextComponent("§csinse420: §7Server Admin, Developer, Founder"));
+		player.spigot().sendMessage(ops);
 		return true;
 	}
 }
