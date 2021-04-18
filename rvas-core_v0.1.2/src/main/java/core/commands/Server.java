@@ -18,7 +18,7 @@ import core.backend.PlayerMeta;
 import core.backend.ServerMeta;
 import core.backend.Utilities;
 import core.backend.Config;
-import core.events.LagPrevention;
+import core.tasks.LagManager;
 import core.events.SpeedLimit;
 import core.tasks.ProcessPlaytime;
 
@@ -93,7 +93,7 @@ public class Server implements CommandExecutor {
 		TextComponent rtrig_b = new TextComponent("" + ProcessPlaytime.lowTpsCounter);
 		TextComponent rtrig_c = new TextComponent("ms (600000ms required to restart)");
 		TextComponent withers_a = new TextComponent("Wither Count: ");
-		TextComponent withers_b = new TextComponent("" + LagPrevention.currentWithers);
+		TextComponent withers_b = new TextComponent("" + LagManager.currentWithers);
 		
 		// style individual components //
 		title_sep.setColor(ChatColor.GRAY);

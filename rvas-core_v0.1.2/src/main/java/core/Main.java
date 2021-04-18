@@ -20,9 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import core.backend.*;
 import core.commands.*;
 import core.events.*;
-import core.tasks.AutoAnnouncer;
-import core.tasks.OnTick;
-import core.tasks.ProcessPlaytime;
+import core.tasks.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -90,7 +88,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagPrevention(), 1200L, 1200L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
 
 		System.out.println("[core.main] Loading event listeners..");
 		
@@ -98,27 +96,31 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new Connection(), this);
 		getServer().getPluginManager().registerEvents(new Move(), this);
 		getServer().getPluginManager().registerEvents(new ItemCheckTriggers(), this);
-		getServer().getPluginManager().registerEvents(new LagPrevention(), this);
+		getServer().getPluginManager().registerEvents(new LagManager(), this);
 		getServer().getPluginManager().registerEvents(new SpeedLimit(), this);
 		getServer().getPluginManager().registerEvents(new PVP(), this);
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
 		getServer().getPluginManager().registerEvents(new OpListener(), this);
 		getServer().getPluginManager().registerEvents(new SpawnController(), this);
-
+		
+		if (Config.getValue("global.sound.no_wither").equals("true")) {
+			ProtocolLibrary.getProtocolManager()
+				.addPacketListener(new PacketAdapter(this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
+					
+					@Override
+					public void onPacketSending(PacketEvent event) {
+						
+						PacketContainer packetContainer = event.getPacket();
+						
+						if (packetContainer.getIntegers().read(0) == 1023) {
+							packetContainer.getBooleans().write(0, false);
+						}
+					}
+				});
+		}
+		
 		// Disable Wither spawn sound
-		//ProtocolLibrary.getProtocolManager()
-		//		.addPacketListener(new PacketAdapter(this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT)
-		//		{
-		//			@Override
-		//			public void onPacketSending(PacketEvent event)
-		//			{
-		//				PacketContainer packetContainer = event.getPacket();
-		//				if (packetContainer.getIntegers().read(0) == 1023)
-		//				{
-		//					packetContainer.getBooleans().write(0, false);
-		//				}
-		//			}
-		//		});
+		
 
 		System.out.println("[core.main] ..finishing up..");
 		

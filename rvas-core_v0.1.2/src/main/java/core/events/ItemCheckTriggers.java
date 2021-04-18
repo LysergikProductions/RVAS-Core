@@ -28,23 +28,6 @@ public class ItemCheckTriggers implements Listener {
 
 	static Random r = new Random();
 
-	// --- stuff to redo in BlockListener
-	/*@EventHandler
-	public void onPlace(BlockPlaceEvent e) {
-
-		if (PlayerMeta.isLagfag(e.getPlayer())) {
-			Arrays.stream(lagItems).filter(m -> e.getBlock().getType().equals(m)).forEach(m -> e.setCancelled(true));
-
-			int randomNumber = r.nextInt(9);
-
-			if (randomNumber == 5 || randomNumber == 6) {
-				e.getPlayer().spigot().sendMessage(new TextComponent("§cThis is what you get for being a lagfag!"));
-				e.setCancelled(true);
-				return;
-			}
-		}
-	}*/
-
 	@EventHandler
 	public void onDispense(BlockDispenseArmorEvent e) {
 		ItemCheck.IllegalCheck(e.getItem(), "DISPENSED_ARMOR", null);

@@ -1,4 +1,4 @@
-package core.events;
+package core.tasks;
 
 /* *
  * 
@@ -41,7 +41,7 @@ import org.bukkit.World.Environment;
 
 import core.backend.Config;
 
-public class LagPrevention implements Listener, Runnable {
+public class LagManager implements Listener, Runnable {
 	public static int currentWithers = 0;
 
 	@EventHandler
@@ -59,13 +59,16 @@ public class LagPrevention implements Listener, Runnable {
 		}
 	}
 
-	public static int getWithers() { // disabled for performance reasons; to reimplement later
+	public static int getWithers() {
 		
 		int counter = 0;		
 		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
 		
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
-			System.out.println("Counting withers in: " + thisWorld.getName());
+			
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("Counting withers in: " + thisWorld.getName());
+			}
 			
 			for (Entity e: thisWorld.getEntities()) {
 				if (e instanceof Wither) {
@@ -79,6 +82,9 @@ public class LagPrevention implements Listener, Runnable {
 	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
 	@Override
 	public void run() {
+		
+		// change to just checking a list of known operators for lower
+		// performance impact with very high online player counts
 		
 		for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
 			if (onlinePlayer.isOp()) {
