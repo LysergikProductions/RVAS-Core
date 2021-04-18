@@ -5,7 +5,7 @@ The main goal is to give server operators everything they need to get started wi
 
 #### Features:
 - 5-tier speed limiter (configurable)
-- Built-in, simple, and configurable random respawning
+- Built-in, simple, and configurable **random respawning**
 - Operator accounts *cannot* introduce illegal items / disrupt the economy (configurable)
 - Doesn't prevent any vanilla exploits by default
 - Bedrock floor / roof protection (configurable)
@@ -16,8 +16,8 @@ The main goal is to give server operators everything they need to get started wi
 ##### Commands:
 - /vm - 1-hour long, democratic temporary global-chat mute
 - /mute temp | permanent - (for ops only)
-- /world - various op-only fun-things for events (i.e. summon lightning around every player)
-- and more!
+- /admin speeds - show list of how fast the fastest moving players are going
+- /tps, and many more!
 
 ##### @ Server Operators
 For full admin functionality, in `core\config.txt`, please enter your uuid and current ign for the intended in-game master account
@@ -26,7 +26,7 @@ This account will be **exempt** from all command / ability restrictions issued b
 
 ##### Dependencies
 
-At this time, only ProtocolLib and ArmorEquipEvent is required for the plugin to run correctly. Use Paper 1.16.5 Build #446 or newer.
+At this time, only ProtocolLib and ArmorEquipEvent are required for the plugin to run correctly. Use Paper 1.16.5 Build #446 or newer.
 
 #### Building from Source
 
