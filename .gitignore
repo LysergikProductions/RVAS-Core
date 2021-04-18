@@ -10,7 +10,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-rvas-core_v0.1.2/target/*
+rvas-core_v0.1.3/target/*
 
 # External tool builders
 .externalToolBuilders/
@@ -68,9 +68,9 @@ rvas-core_v0.1.2/dependency-reduced-pom.xml
 *.iml
 
 #p3 specific
-rvas-core_v0.1.2/.settings/*
-rvas-core_v0.1.2/.settings
-rvas-core_v0.1.2/target
+rvas-core_v0.1.3/.settings/*
+rvas-core_v0.1.3/.settings
+rvas-core_v0.1.3/target
 
 *.class
 
