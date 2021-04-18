@@ -76,6 +76,11 @@ public class ChatPrint {
 		
 		receiver.spigot().sendMessage(head);
 		
+		HoverEvent hover_leaders = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+				new Text("Click on a player in the leaderboard to see their stats quickly"));
+		
+		leaders.setHoverEvent(hover_leaders);
+		
 		ArrayList<TextComponent> list = new ArrayList<>();
 		list.add(self); list.add(leaders); list.add(players);
 		

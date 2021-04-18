@@ -90,7 +90,7 @@ public class BlockListener implements Listener {
 		String breaker_name = breaker.getName();
 		
 		// prevent creative players from breaking certain blocks but completely ignore admin account
-		if (PlayerMeta.isAdmin(breaker)) {
+		if (!PlayerMeta.isAdmin(breaker)) {
 			if (!breaker.isOp()) {
 				
 				breaker.setGameMode(GameMode.SURVIVAL);
@@ -186,7 +186,7 @@ public class BlockListener implements Listener {
 		
 		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
 		if (block.getType().toString().contains("SHULKER_BOX")) {
-			if (PlayerMeta.isAdmin(placer)) {
+			if (!PlayerMeta.isAdmin(placer)) {
 				if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
 					
 					event.setCancelled(true);
@@ -208,7 +208,7 @@ public class BlockListener implements Listener {
 		} else if (Config.getValue("protect.banned.place").equals("true")) {
 			
 			// prevent all players from placing blocks totally unobtainable in survival mode, but ignore admin account
-			if (PlayerMeta.isAdmin(placer)) {
+			if (!PlayerMeta.isAdmin(placer)) {
 				if (PlacementBanned.contains(block.getType())) {
 					
 					if (Config.getValue("protect.banned.place.ops").equals("false") && placer.isOp()) {
@@ -217,12 +217,12 @@ public class BlockListener implements Listener {
 					
 					event.setCancelled(true);
 					
-					if (debug.equals("true") && devesp.equals("true")) {
+					if (debug.equals("true") && devesp.equals("false")) {
 						Bukkit.spigot().broadcast(new TextComponent(placer_name + "'s BlockPlaceEvent was cancelled."));
 					}
 				}
 			} else {
-				if (debug.equals("true") && devesp.equals("true")) {
+				if (debug.equals("true") && devesp.equals("false")) {
 					Bukkit.spigot().broadcast(new TextComponent(placer_name + " did this. (admin)"));
 				}
 			}

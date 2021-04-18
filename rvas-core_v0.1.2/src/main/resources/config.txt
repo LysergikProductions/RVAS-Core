@@ -17,6 +17,7 @@ admin = sinse420
 
 // - Verbose console output
 // may globally broadcast some events info in chat
+
 debug = false
 devesp = false
 
@@ -40,6 +41,12 @@ spawn.min.Z = -420.0
 spawn.ignore.water = false
 spawn.ignore.lava = true
 
+// ------------------------ //
+// --- SOUND CONTROLLER --- //
+// ------------------------ //
+
+global.sound.no_wither = false
+
 // ----------------------- //
 // --- MOVEMENT CHECKS --- //
 // ----------------------- //
@@ -51,6 +58,7 @@ movement.kill.roof = false
 movement.kill.floor = false
 
 // - Use players' movement events to delete existing illegal items from the world
+// can impact performance
 movement.illegals.check = false
 
 // ----------------- //
@@ -58,10 +66,10 @@ movement.illegals.check = false
 // ----------------- //
 
 // - Check for and enforce survival mode when non-op players place blocks
-protect.gamemode.onplace = true
+protect.gamemode.onplace = false
 
 // - Check for and enforce survival mode when non-op players break blocks
-protect.gamemode.onbreak = true
+protect.gamemode.onbreak = false
 
 // ------------------------- //
 // --- PLACEMENT PATCHES --- //

@@ -42,8 +42,30 @@ import org.bukkit.World.Environment;
 import core.backend.Config;
 
 public class LagManager implements Listener, Runnable {
-	public static int currentWithers = 0;
-
+	
+	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
+	@Override
+	public void run() {
+		
+		// change to just checking a list of known operators for lower
+		// performance impact with very high online player counts
+		
+		/*for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
+			if (onlinePlayer.isOp()) {
+				
+				onlinePlayer.chat("/kill @e[type=minecraft:wither_skull]");
+				return;
+			}
+		}
+		
+		System.out.println("No ops online. Using bukkit to clear skulls..");*/
+		
+		int removed_skulls = removeSkulls(600);
+		if (Config.getValue("debug").equals("true")) {
+			System.out.println(removed_skulls);
+		}
+	}
+	
 	@EventHandler
 	public void onEntitySpawn(EntitySpawnEvent e) {
 
@@ -57,26 +79,6 @@ public class LagManager implements Listener, Runnable {
 				return;
 			}
 		}
-	}
-
-	public static int getWithers() {
-		
-		int counter = 0;		
-		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
-		
-		for (World thisWorld: Bukkit.getServer().getWorlds()) {
-			
-			if (Config.getValue("debug").equals("true")) {
-				System.out.println("Counting withers in: " + thisWorld.getName());
-			}
-			
-			for (Entity e: thisWorld.getEntities()) {
-				if (e instanceof Wither) {
-					counter++;
-				}
-			}
-		}
-		return counter;
 	}
 	
 	public static int removeSkulls(int age_limit) {
@@ -103,26 +105,25 @@ public class LagManager implements Listener, Runnable {
 		return skulls_all;
 	}
 	
-	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
-	@Override
-	public void run() {
+	public static int currentWithers = 0;
+	
+	public static int getWithers() {
 		
-		// change to just checking a list of known operators for lower
-		// performance impact with very high online player counts
+		int counter = 0;		
+		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
 		
-		for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
-			if (onlinePlayer.isOp()) {
-				
-				onlinePlayer.chat("/kill @e[type=minecraft:wither_skull]");
-				return;
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("Counting withers in: " + thisWorld.getName());
+			}
+			
+			for (Entity e: thisWorld.getEntities()) {
+				if (e instanceof Wither) {
+					counter++;
+				}
 			}
 		}
-		
-		System.out.println("No ops online. Using bukkit to clear skulls..");
-		
-		int removed_skulls = removeSkulls(600);
-		if (Config.getValue("debug").equals("true")) {
-			System.out.println(removed_skulls);
-		}
+		return counter;
 	}
 }

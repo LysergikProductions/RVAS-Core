@@ -4,7 +4,7 @@ package core.events;
  * 
  *  About: Ensure only configured 'admin' account has overpowered
  *  	abilities, allowing ops to only do things that cannot permanently
- *  	and/or negatively affect the world or gameplay, for RVAS-core
+ *  	and/or negatively affect the world or gameplay; for RVAS-core
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -64,11 +64,7 @@ public class OpListener implements Listener {
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
 		
 		Player sender = event.getPlayer();
-		String sender_name = sender.getName();
-		UUID sender_id = sender.getUniqueId();
-		
 		String admin_name = Config.getValue("admin");
-		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
 		// allow ops to use /execute, but only for teleporting between dimensions
 		if (
@@ -93,7 +89,7 @@ public class OpListener implements Listener {
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
-		if (!admin_name.equals(sender_name) || !admin_id.equals(sender_id)) {
+		if (!PlayerMeta.isAdmin(sender)) {
 			if (
 					event.getMessage().contains("/op") ||
 					event.getMessage().contains("/deop") ||
@@ -122,7 +118,7 @@ public class OpListener implements Listener {
 					event.getMessage().contains("/xp") ||
 					event.getMessage().contains("/reload") ||
 					event.getMessage().contains("/gamerule") ||
-					event.getMessage().contains("/worldb") ||
+					event.getMessage().contains("/world") ||
 					event.getMessage().contains("/restart") ||
 					event.getMessage().contains("/spigot") ||
 					event.getMessage().contains("/plugins") ||
@@ -162,15 +158,10 @@ public class OpListener implements Listener {
 		
 		if (!Config.getValue("protect.lock.creative").equals("false")) {
 			
-			HumanEntity player = event.getWhoClicked();
-			String player_name = player.getName();
-			UUID player_id = player.getUniqueId();
+			HumanEntity ePlayer = event.getWhoClicked();
+			Player player = Bukkit.getPlayer(ePlayer.getUniqueId());
 			
-			String admin_name = Config.getValue("admin");
-			UUID admin_id = UUID.fromString(Config.getValue("adminid"));
-			
-			if (!admin_name.equals(player_name) || !admin_id.equals(player_id)) {
-				
+			if (!PlayerMeta.isAdmin(player)) {
 				event.setCancelled(true);
 				
 				if (!player.isOp()) {
