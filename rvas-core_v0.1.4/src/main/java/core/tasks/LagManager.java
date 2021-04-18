@@ -46,24 +46,26 @@ public class LagManager implements Listener, Runnable {
 	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
 	@Override
 	public void run() {
-		int max_age = Integer.parseInt(Config.getValue("wither.skull.max_ticks"));		
 		
+		int max_age = Integer.parseInt(Config.getValue("wither.skull.max_ticks"));				
 		int removed_skulls = removeSkulls(max_age);
-		
-		if (Config.getValue("debug").equals("true")) {
-			System.out.println(removed_skulls);
-		}
 	}
 	
 	@EventHandler
 	public void onEntitySpawn(EntitySpawnEvent e) {
-
+		
+		int currentWithers = 0;
+		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
+		
 		if (e.getEntity() instanceof Wither) {
 			
-			int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("Wither Limit: " + witherLimit);
+			}
+			
 			currentWithers = getWithers();
 			
-			if (currentWithers + 1 > witherLimit) {
+			if (currentWithers > witherLimit) {
 				e.setCancelled(true);
 				return;
 			}
@@ -94,8 +96,6 @@ public class LagManager implements Listener, Runnable {
 		return skulls_all;
 	}
 	
-	public static int currentWithers = 0;
-	
 	public static int getWithers() {
 		
 		int counter = 0;		
@@ -113,6 +113,11 @@ public class LagManager implements Listener, Runnable {
 				}
 			}
 		}
+		
+		if (Config.getValue("debug").equals("true")) {
+			System.out.println("Total withers found: " + counter);
+		}
+		
 		return counter;
 	}
 }

@@ -93,7 +93,7 @@ public class Server implements CommandExecutor {
 		TextComponent rtrig_b = new TextComponent("" + ProcessPlaytime.lowTpsCounter);
 		TextComponent rtrig_c = new TextComponent("ms (600000ms required to restart)");
 		TextComponent withers_a = new TextComponent("Wither Count: ");
-		TextComponent withers_b = new TextComponent("" + LagManager.currentWithers);
+		TextComponent withers_b = new TextComponent("" + LagManager.getWithers());
 		
 		// style individual components //
 		title_sep.setColor(ChatColor.GRAY);
@@ -151,7 +151,7 @@ public class Server implements CommandExecutor {
 		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Trying to lag the server will result in severe consequences.")));
 		
 		// create output structure and send to chat (acr & withers currently removed from output)
-		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, player_head, players, ujoins, donos, laggers, pmutes, ops, debug_head, restart, rtrig)
+		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, withers, player_head, players, donos, laggers, pmutes, ops, debug_head, restart, rtrig)
 		.forEach(ln -> sender.spigot().sendMessage(ln));
 		return true;
 	}

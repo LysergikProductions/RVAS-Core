@@ -21,6 +21,9 @@ admin = sinse420
 debug = false
 devesp = false
 
+// - The tps under which the auto-restart timer ticks
+restart.threshold = 7.10
+
 // ---------------------- //
 // --- RANDOM SPAWNS  --- //
 // ---------------------- //
@@ -45,6 +48,7 @@ spawn.ignore.lava = true
 // --- SOUND CONTROLLER --- //
 // ------------------------ //
 
+// Disable global wither sounds
 global.sound.no_wither = false
 
 // ----------------------- //
@@ -251,9 +255,6 @@ discord.link = tbd
 // ------------ //
 // --- MISC --- //
 // ------------ //
-
-// - The tps under which the auto-restart timer ticks
-restart.threshold = 7.10
 
 // - Enable Discord analytics notifications. false = disabled [default] true = enabled
 analytics.enabled = false
