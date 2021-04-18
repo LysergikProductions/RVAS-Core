@@ -79,6 +79,30 @@ public class LagManager implements Listener, Runnable {
 		return counter;
 	}
 	
+	public static int removeSkulls(int age_limit) {
+		
+		int skulls_world = 0;
+		int skulls_all = 0;
+		
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			
+			skulls_world = 0;
+			
+			for (Entity e: thisWorld.getEntities()) {
+				if (e instanceof WitherSkull) {
+					if (e.getTicksLived() > age_limit) skulls_world++; e.remove();
+				}
+			}
+			
+			if (Config.getValue("debug").equals("true")) {
+				System.out.println("Removed " + skulls_world + " wither skulls from " + thisWorld.getName());
+			}
+			
+			skulls_all += skulls_world;
+		}
+		return skulls_all;
+	}
+	
 	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
 	@Override
 	public void run() {
@@ -96,15 +120,9 @@ public class LagManager implements Listener, Runnable {
 		
 		System.out.println("No ops online. Using bukkit to clear skulls..");
 		
-		for (World thisWorld: Bukkit.getServer().getWorlds()) {
-			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
-			
-			for (Entity e: thisWorld.getEntities()) {
-				if (e instanceof WitherSkull) {
-					
-					if (e.getTicksLived() > 600) e.remove();
-				}
-			}
+		int removed_skulls = removeSkulls(600);
+		if (Config.getValue("debug").equals("true")) {
+			System.out.println(removed_skulls);
 		}
 	}
 }

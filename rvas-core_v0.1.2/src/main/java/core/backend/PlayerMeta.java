@@ -366,6 +366,20 @@ public class PlayerMeta {
 		return (sender instanceof Player) ? sender.isOp() : sender instanceof ConsoleCommandSender;
 	}
 	
+	public static boolean isAdmin(Player target) {
+		boolean out = false;
+		
+		String target_name = target.getName();
+		UUID target_id = target.getUniqueId();
+		String admin_name = Config.getValue("admin");
+		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
+		
+		if (admin_name.equals(target_name) && admin_id.equals(target_id)) {
+			out = true;
+		}
+		return out;
+	}
+	
 	public static String getIp(Player p) {
 		return p.getAddress().toString().split(":")[0].replace("/", "");
 	}

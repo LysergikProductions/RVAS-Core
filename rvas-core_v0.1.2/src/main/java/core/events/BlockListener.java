@@ -48,6 +48,8 @@ public class BlockListener implements Listener {
 	
 	static Random r = new Random();
 	
+	public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
+	
 	public static ArrayList<Material> BreakBanned = new ArrayList<>();
 	{
 		BreakBanned.addAll(Arrays.asList(Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK,
@@ -84,17 +86,13 @@ public class BlockListener implements Listener {
 		// get commonly referenced data
 		Block block = event.getBlock();
 		Player breaker = event.getPlayer();
-		GameMode mode = breaker.getGameMode();
-		
+		GameMode mode = breaker.getGameMode();		
 		String breaker_name = breaker.getName();
-		UUID breaker_id = breaker.getUniqueId();
-		String admin_name = Config.getValue("admin");
-		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
 		// prevent creative players from breaking certain blocks but completely ignore admin account
-		if (!admin_name.equals(breaker_name) || !admin_id.equals(breaker_id)) {
-			
+		if (PlayerMeta.isAdmin(breaker)) {
 			if (!breaker.isOp()) {
+				
 				breaker.setGameMode(GameMode.SURVIVAL);
 			}
 			
@@ -129,14 +127,13 @@ public class BlockListener implements Listener {
 					if (debug.equals("true") && devesp.equals("true")) {
 						Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
 					}
-				}/* else if (block.getWorld().getEnvironment().equals(Environment.END) &&
-						block.getLocation().getY() == 64 &&
-						) {
+				} else if (block.getWorld().getEnvironment().equals(Environment.THE_END) && block.getLocation().getY() == 64) {
 					
-				}*/
-			}//else if (block.getType().equals(Material.END_PORTAL_FRAME)) {
-				//code
-			//}
+					if (block.getLocation().getX() == 64) {
+						
+					}
+				}
+			}
 		}
 	}
 	
@@ -154,12 +151,8 @@ public class BlockListener implements Listener {
 		// get commonly referenced data
 		Block block = event.getBlockPlaced();
 		Player placer = event.getPlayer();
-		GameMode mode = placer.getGameMode();
-		
+		GameMode mode = placer.getGameMode();		
 		String placer_name = placer.getName();
-		UUID placer_id = placer.getUniqueId();
-		String admin_name = Config.getValue("admin");
-		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
 		
 		// Make game unplayable for laggers
 		if (PlayerMeta.isLagfag(placer)) {
@@ -193,11 +186,11 @@ public class BlockListener implements Listener {
 		
 		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
 		if (block.getType().toString().contains("SHULKER_BOX")) {
-			if (!admin_name.equals(placer_name) || !admin_id.equals(placer_id)) {
+			if (PlayerMeta.isAdmin(placer)) {
 				if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
+					
 					event.setCancelled(true);
-				}
-				
+				}				
 			}
 		}
 		
@@ -211,10 +204,11 @@ public class BlockListener implements Listener {
 		// do nothing if user is placing an ender eye into an end portal frame
 		if (event.getItemInHand().getType().equals(Material.ENDER_EYE)) {
 			return;
+			
 		} else if (Config.getValue("protect.banned.place").equals("true")) {
 			
 			// prevent all players from placing blocks totally unobtainable in survival mode, but ignore admin account
-			if (!admin_name.equals(placer_name) || !admin_id.equals(placer_id)) {
+			if (PlayerMeta.isAdmin(placer)) {
 				if (PlacementBanned.contains(block.getType())) {
 					
 					if (Config.getValue("protect.banned.place.ops").equals("false") && placer.isOp()) {
