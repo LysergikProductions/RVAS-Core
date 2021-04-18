@@ -31,7 +31,7 @@ spawn.random = true
 // - Override world-spawn on first join
 spawn.random.join = true
 
-// - Define a rectangular area for spawn
+// - Define a rectangular area for spawn (must use #.0)
 spawn.max.X = 420.0
 spawn.max.Z = 420.0
 spawn.min.X = -420.0
@@ -127,17 +127,16 @@ item.illegal.invalid = true
 item.illegal.onjoin = true
 
 // - Enable or disable aggressive checks. false = disabled || true = enabled [default]
-// Can cause some lag on lower-end servers
-item.illegal.agro = false
+item.illegal.agro = true
 
 // - Number of players to cache chunks for in agro check mode
 // Set this to a number a little larger than the typical player pop
 item.illegal.agro.player_count = 10
 
-// - Number of chunks per player to cache
+// - Number of chunks per player to cache (currently not used)
 item.illegal.agro.chunk_count = 1024
 
-// - How frequently to flush the cache
+// - How frequently to flush the cache (currently not used)
 // Set to -1 to disable
 item.illegal.agro.flush_period = 3600
 
@@ -171,14 +170,18 @@ mute.pop = 51
 mute.hypocrisy = true
 
 // ------------------ //
-// --- LAG RELIEF --- //
+// --- WITHER LAG --- //
 // ------------------ //
 
 // - Global wither limit. default = 710
 wither.limit = 710
 
-// - Global wither skull age limit. default = 1200 (1 minute if server is running at 20TPS)
-wither.skull.max_ticks = 1200
+// - How many ticks old a wither skull needs to be to get removed when removal triggers
+wither.skull.max_ticks = 600
+
+// ------------------- //
+// --- SPEED LIMIT --- //
+// ------------------- //
 
 // - Global speed limit when TPS is between 17 and 20. default = 76
 speedlimit.tier_one = 76
@@ -209,9 +212,6 @@ speedlimit.rc_delay_safe = 5000
 
 // - Disables speed limit warnings and only kicks 
 speedlimit.agro = false
-
-// - The tps under which the auto-restart timer ticks
-restart.threshold = 7.10
 
 // ------------ //
 // --- SPAM --- //
@@ -251,6 +251,9 @@ discord.link = tbd
 // ------------ //
 // --- MISC --- //
 // ------------ //
+
+// - The tps under which the auto-restart timer ticks
+restart.threshold = 7.10
 
 // - Enable Discord analytics notifications. false = disabled [default] true = enabled
 analytics.enabled = false
