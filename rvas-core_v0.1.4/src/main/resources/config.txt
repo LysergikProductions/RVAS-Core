@@ -181,7 +181,7 @@ mute.hypocrisy = true
 wither.limit = 710
 
 // - How many ticks old a wither skull needs to be to get removed when removal triggers
-wither.skull.max_ticks = 600
+wither.skull.max_ticks = 710
 
 // ------------------- //
 // --- SPEED LIMIT --- //
@@ -250,7 +250,7 @@ motd.force = false
 motd.force.name = RVAS
 
 // - Discord link. string value. default = tbd
-discord.link = tbd
+discord.link = https://discord.gg/RcTJTsMt8p
 
 // ------------ //
 // --- MISC --- //

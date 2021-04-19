@@ -8,7 +8,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class Vote implements CommandExecutor {
+public class VoteCmd implements CommandExecutor {
 
 	// This method is called, when somebody uses our command
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

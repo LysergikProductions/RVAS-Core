@@ -21,6 +21,7 @@ import core.backend.*;
 import core.commands.*;
 import core.events.*;
 import core.tasks.*;
+import votifier.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -70,7 +71,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("kill").setExecutor(new Kill());
 		this.getCommand("setdonator").setExecutor(new SetDonator());
 		this.getCommand("about").setExecutor(new About());
-		this.getCommand("vote").setExecutor(new Vote());
+		this.getCommand("vote").setExecutor(new VoteCmd());
 		this.getCommand("restart").setExecutor(new Restart());
 		this.getCommand("sign").setExecutor(new Sign());
 		this.getCommand("admin").setExecutor(new Admin());
@@ -102,6 +103,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);
 		getServer().getPluginManager().registerEvents(new OpListener(), this);
 		getServer().getPluginManager().registerEvents(new SpawnController(), this);
+		getServer().getPluginManager().registerEvents(new Voted(), this);
 		
 		if (Config.getValue("global.sound.no_wither").equals("true")) {
 			ProtocolLibrary.getProtocolManager()

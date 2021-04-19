@@ -24,6 +24,7 @@ package core.events;
  * */
 
 import java.util.*;
+import java.text.DecimalFormat;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -81,7 +82,7 @@ public class BlockListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event) {
-		
+		long startTime = System.nanoTime();
 		// get commonly referenced data
 		Block block = event.getBlock();
 		Player breaker = event.getPlayer();
@@ -134,14 +135,16 @@ public class BlockListener implements Listener {
 				}
 			}
 		}
+		long endTime = System.nanoTime();
+		long duration = (endTime - startTime);
+		System.out.println("BreakTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlace(BlockPlaceEvent event) {
+		long startTime = System.nanoTime();
 		
-		if (debug.equals("true") && devesp.equals("false")) {
-			Bukkit.spigot().broadcast(new TextComponent("BlockPlaceEvent triggered."));
-		}
+		System.out.println("onPlace triggered..");
 		
 		Block block = event.getBlockPlaced();
 		Player placer = event.getPlayer();
@@ -164,6 +167,7 @@ public class BlockListener implements Listener {
 					block.getType().toString().contains("DOOR")
 					) {
 				event.setCancelled(true);
+				return;
 			}
 			
 			int randomNumber = r.nextInt(9);
@@ -186,6 +190,7 @@ public class BlockListener implements Listener {
 				if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
 					
 					event.setCancelled(true);
+					return;
 				}				
 			}
 		}
@@ -194,6 +199,7 @@ public class BlockListener implements Listener {
 		if (Config.getValue("protect.roof.noplacement").equals("true")) {
 			if(block.getLocation().getY() > 127 && block.getLocation().getWorld().getName().endsWith("the_nether")) {
 				event.setCancelled(true);
+				return;
 			}
 		}
 		
@@ -216,6 +222,8 @@ public class BlockListener implements Listener {
 					if (debug.equals("true") && devesp.equals("false")) {
 						Bukkit.spigot().broadcast(new TextComponent(placer_name + "'s BlockPlaceEvent was cancelled."));
 					}
+					
+					return;
 				}
 			} else {
 				if (debug.equals("true") && devesp.equals("false")) {
@@ -223,5 +231,8 @@ public class BlockListener implements Listener {
 				}
 			}
 		}
+		long endTime = System.nanoTime();
+		long duration = (endTime - startTime);
+		System.out.println("PlaceTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 	}
 }
