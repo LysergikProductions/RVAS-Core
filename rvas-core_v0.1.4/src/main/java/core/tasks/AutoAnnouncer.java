@@ -20,7 +20,7 @@ public class AutoAnnouncer extends TimerTask {
 
 	@Override
 	public void run() {
-		int rnd = r.nextInt(10);
+		int rnd = r.nextInt(11);
 
 		switch (rnd) {
 			case 0:
@@ -33,12 +33,11 @@ public class AutoAnnouncer extends TimerTask {
 				break;
 			case 2:
 				Bukkit.spigot().broadcast(
-						//new TextComponent("§6You can sign items to show them as uniquely yours by doing §l/sign."));
 						new TextComponent("§6Use /kit anarchy to get some basic starter items, including steak!"));
 				break;
 			case 3:
 				Bukkit.spigot().broadcast(
-						new TextComponent("§6You can toggle death messages with /tdm, and join messages with /tjm."));
+						new TextComponent("§6You can toggle join messages with /tjm."));
 				break;
 			case 4:
 				Bukkit.spigot().broadcast(new TextComponent("§6Lagging the server will result in §lsevere consequences."));
@@ -51,6 +50,14 @@ public class AutoAnnouncer extends TimerTask {
 				break;
 			case 7:
 				Bukkit.spigot().broadcast(new TextComponent("§6You can dupe the item/s in your main hand by supporting the server with /vote"));
+				break;
+			case 8:
+				Bukkit.spigot().broadcast(
+						new TextComponent("§6You can sign items to show them as uniquely yours by doing §l/sign."));
+				break;
+			case 9:
+				Bukkit.spigot().broadcast(
+						new TextComponent("§6Join the Discord by using §l/discord."));
 				break;
 			default:
 				TextComponent source = new TextComponent("RVAS-core is open-source! Click this message to access the repository.");
