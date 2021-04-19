@@ -83,13 +83,13 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("help").setExecutor(new Help());
 		//this.getCommand("global").setExecutor(new Global());
 
-		System.out.println("[core.main] Loading synced tasks..");
+		System.out.println("[core.main] Scheduling synced tasks..");
 		
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 
 		System.out.println("[core.main] Loading event listeners..");
 		
@@ -105,6 +105,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getPluginManager().registerEvents(new SpawnController(), this);
 		getServer().getPluginManager().registerEvents(new Voted(), this);
 		
+		// Disable global wither-spawn sound
 		if (Config.getValue("global.sound.no_wither").equals("true")) {
 			ProtocolLibrary.getProtocolManager()
 				.addPacketListener(new PacketAdapter(this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
@@ -119,10 +120,7 @@ public class Main extends JavaPlugin implements Listener {
 						}
 					}
 				});
-		}
-		
-		// Disable Wither spawn sound
-		
+		}	
 
 		System.out.println("[core.main] ..finishing up..");
 		
