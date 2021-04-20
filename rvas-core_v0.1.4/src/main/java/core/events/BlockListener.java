@@ -23,30 +23,31 @@ package core.events;
  * 
  * */
 
+import core.backend.Config;
+import core.backend.PlayerMeta;
+
 import java.util.*;
 import java.text.DecimalFormat;
-
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.material.MaterialData;
-import org.bukkit.World.Environment;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
-import core.backend.Config;
-import core.backend.PlayerMeta;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.Material;
+//import org.bukkit.material.MaterialData;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.GameMode;
+import org.bukkit.World.Environment;
+import org.bukkit.entity.Player;
 
 public class BlockListener implements Listener {
 	

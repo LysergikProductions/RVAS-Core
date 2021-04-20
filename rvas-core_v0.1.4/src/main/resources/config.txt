@@ -24,9 +24,9 @@ devesp = false
 // - The tps under which the auto-restart timer ticks
 restart.threshold = 7.10
 
-// ---------------------- //
-// --- RANDOM SPAWNS  --- //
-// ---------------------- //
+// ----------------------- //
+// --- SPAWN SETTINGS  --- //
+// ----------------------- //
 
 // - Enable random spawning
 spawn.random = true
@@ -43,6 +43,10 @@ spawn.min.Z = -420.0
 // - Prevent players spawning in liquids (true = prevent spawning)
 spawn.ignore.water = false
 spawn.ignore.lava = true
+
+// - Repair important bedrock on spawn/join
+spawn.repair.roof = false
+spawn.repair.floor = true
 
 // ------------------------ //
 // --- SOUND CONTROLLER --- //
@@ -95,12 +99,16 @@ protect.banned.place.ops = true
 // --- BLOCK BREAK PATCHES --- //
 // --------------------------- //
 
-// - Protect bedrock floor (in all dimensions) / roof (in the nether)
+// - Protect bedrock floor (overworld/nether) / roof (nether)
 //** DOES NOT PREVENT VANILLA BLOCK BREAK EXPLOITS**//
 // You can enable and disable those exploits in the paper.yml config-file on your server ("allow-permanent-block-break-exploits")
 
 protect.bedrock.roof = true
 protect.bedrock.floor = true
+
+// - Repair (/setblock) bedrock floor (overworld/nether) / roof (nether)
+chunk.load.repair_roof = false
+chunk.load.repair_floor = false
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //

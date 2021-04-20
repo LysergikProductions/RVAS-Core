@@ -23,25 +23,25 @@ package core.events;
  * 
  * */
 
+import core.backend.Config;
+import core.events.ChunkListener;
+
 import java.util.*;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.Bukkit;
-
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import org.bukkit.entity.Player;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
-
-import core.backend.Config;
 
 public class SpawnController implements Listener {
 	
@@ -143,7 +143,10 @@ public class SpawnController implements Listener {
 					Chunk spawnChunk = thisLocation.getChunk();
 					
 					event.setRespawnLocation(thisLocation);
-					while (!spawnChunk.isLoaded()) spawnChunk.load();
+					while (!spawnChunk.isLoaded()) spawnChunk.load(true);
+					
+					if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk);
+					if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk);
 					
 					return;
 				}
@@ -159,6 +162,12 @@ public class SpawnController implements Listener {
 		
 		final World thisWorld = event.getPlayer().getWorld();
 		Location thisLocation = thisWorld.getSpawnLocation();
+		Chunk spawnChunk = thisLocation.getChunk();
+		
+		ChunkListener.fixEndExit(spawnChunk);
+		
+		if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk);
+		if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk);
 		
 		if (Config.getValue("spawn.ignore.lava").equals("true")) {
 			BannedSpawnFloors.add(Material.LAVA);

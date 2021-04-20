@@ -105,6 +105,7 @@ public class Main extends JavaPlugin implements Listener {
 		core_pm.registerEvents(new SpeedLimit(), this);
 		core_pm.registerEvents(new PVP(), this);
 		core_pm.registerEvents(new BlockListener(), this);
+		core_pm.registerEvents(new ChunkListener(), this);
 		core_pm.registerEvents(new OpListener(), this);
 		core_pm.registerEvents(new SpawnController(), this);
 		core_pm.registerEvents(new Voted(), this);

@@ -64,24 +64,38 @@ public class FileManager {
 		if (!pvpstats_user_database.exists()) pvpstats_user_database.createNewFile();
 
 		Config.load();
-
-		Files.readAllLines(all_donor_codes.toPath()).forEach( val ->
-				PlayerMeta.DonorCodes.add(val.replace("\"", "").trim())
-		);
-
-		Files.readAllLines(used_donor_codes.toPath()).forEach( val ->
-				PlayerMeta.UsedDonorCodes.add(val)
-		);
 		
-		Files.readAllLines(playtime_user_database.toPath()).forEach(val ->
-				PlayerMeta.Playtimes.put(UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1]))
-		);
+		try {
+			Files.readAllLines(all_donor_codes.toPath()).forEach(val ->
+				PlayerMeta.DonorCodes.add(val.replace("\"", "").trim()));
+		} catch (Exception e) {
+			System.out.println("Exception while reading all.db : " + e);
+		}
+
+		try {
+			Files.readAllLines(used_donor_codes.toPath()).forEach(val ->
+				PlayerMeta.UsedDonorCodes.add(val));
+		} catch (Exception e) {
+			System.out.println("Exception while reading used.db : " + e);
+		}	
 		
-		Files.readAllLines(pvpstats_user_database.toPath()).forEach(line -> {
+		try {
+			Files.readAllLines(playtime_user_database.toPath()).forEach(val ->
+				PlayerMeta.Playtimes.put(
+						UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1])));
+		} catch (Exception e) {
+			System.out.println("Exception while reading playtimes.db : " + e);
+		}		
+		
+		try {
+			Files.readAllLines(pvpstats_user_database.toPath()).forEach(line -> {
 				System.out.println("Reading pvpstats.txt, line = " + line);
 				
 				PVPstats stats = PVPstats.fromString(line);
 				PlayerMeta.sPVPStats.put(stats.playerid, stats);
-		});
+			});
+		} catch (Exception e) {
+			System.out.println("Exception while reading pvpstats.txt : " + e);
+		}
 	}
 }

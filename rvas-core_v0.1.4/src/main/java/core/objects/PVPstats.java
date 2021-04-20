@@ -48,17 +48,18 @@ public class PVPstats implements Serializable {
 	@Override
     public String toString() {
 		// ** try remove the "UUID=" at the beginning of the strings
-		String out = playerid + "=" + playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;		
+		//String out = playerid + "=" + playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;
+		String out = playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;
 		return out;
     }
 	
 	public static PVPstats fromString(String line) {
-		// String line looks like: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7=f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:7:null!
+		// Example line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7=f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:0:Unkillable!:2
+		// NEW Example line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:0:Unkillable!:2
 		
-		// ** try remove the "UUID=" at the beginning of the strings
-		
-		String[] sep = line.split("=");
-		String[] stats = sep[1].split(":");
+		//String[] sep = line.split("=");
+		//String[] stats = sep[1].split(":");
+		String[] stats = line.split(":");
 		
 		UUID playerid = UUID.fromString(stats[0]);
 		
@@ -69,43 +70,42 @@ public class PVPstats implements Serializable {
 		System.out.println("Parsed id: " + playerid);
 		
 		int killTotal;
+		
 		try {
 			killTotal = Integer.parseInt(stats[1]);
-		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
 			killTotal = 0;
-		}
-		
+		}		
 		System.out.println("Parsed kills: " + killTotal);
 		
 		int deathTotal;
+		
 		try {
 			deathTotal = Integer.parseInt(stats[2]);
-		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
 			deathTotal = 0;
-		}
-		
+		}		
 		System.out.println("Parsed deaths: " + deathTotal);
 		
 		String kd;
+		
 		try {
 			kd = stats[3];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			kd = "";
-		}
-		
+		} catch (Exception e) {
+			kd = "null";
+		}		
 		System.out.println("Parsed k/d: " + kd);
 		
 		int spawnKills;
+		
 		try {
 			spawnKills = Integer.parseInt(stats[4]);
-		} catch (ArrayIndexOutOfBoundsException e) {
+		} catch (Exception e) {
 			spawnKills = 0;
-		}
-		
+		}		
 		System.out.println("Parsed spawn kills: " + spawnKills);
 		
-		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd, spawnKills);
-		
+		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd, spawnKills);		
 		return out;
 	}
 }
