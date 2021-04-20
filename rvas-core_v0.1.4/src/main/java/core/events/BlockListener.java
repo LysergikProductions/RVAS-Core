@@ -85,21 +85,27 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event) {
 		
-		//long startTime = System.nanoTime();
-		
+		//long startTime = System.nanoTime();		
 		Player breaker = event.getPlayer();
-		GameMode mode = breaker.getGameMode();		
-		String breaker_name = breaker.getName();
-		
-		Block block = event.getBlock();
-		Material blockType = block.getType();
-		Location block_loc = block.getLocation();
 		
 		// prevent creative players from breaking certain blocks but completely ignore admin account
 		if (!PlayerMeta.isAdmin(breaker)) {
 			
-			TextComponent cancelBanned = new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled because it was an illegal block.");
-			TextComponent cancelPos = new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled because it was a protected block.");
+			Block block = event.getBlock();
+			Location block_loc = block.getLocation();
+			
+			int y = (int)block_loc.getY();
+			int x = (int)block_loc.getX();
+			int z = (int)block_loc.getZ();
+			
+			Material blockType = block.getType();
+			Environment dimension = block.getWorld().getEnvironment();
+			
+			GameMode mode = breaker.getGameMode();		
+			String breaker_name = breaker.getName();
+			
+			TextComponent cancelPos = new TextComponent(
+					breaker_name + "'s BlockBreakEvent was cancelled because it was a protected block.");
 			
 			if (!breaker.isOp()) breaker.setGameMode(GameMode.SURVIVAL);			
 			
@@ -107,15 +113,12 @@ public class BlockListener implements Listener {
 				
 				event.setCancelled(true);
 				
-				if (debug && !devesp) {
-					Bukkit.spigot().broadcast(cancelBanned);
-				}
+				if (debug && !devesp) Bukkit.spigot().broadcast(
+						new TextComponent(breaker_name +
+								"'s BlockBreakEvent was cancelled because it was an illegal block."));
 				
 			// do things if block == bedrock
 			} else if (blockType.equals(Material.BEDROCK)) {
-				
-				int y = (int)block_loc.getY();
-				Environment dimension = block.getWorld().getEnvironment();
 				
 				if (debug && !devesp) Bukkit.spigot().broadcast(
 						new TextComponent(breaker_name + " just broke a bedrock block!"));
@@ -132,12 +135,24 @@ public class BlockListener implements Listener {
 					
 					event.setCancelled(true);
 					if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
-					
+				
+				// protect exit portal in the end
 				} else if (dimension.equals(Environment.THE_END) &&
 						y == 63 || y == 64) {
+					
+					if (x < 4 && x > -4) {
+						if (z < 4 && z > -4) {
+							
+							event.setCancelled(true);
+							if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
+						}
+					}
+				}
 				
-					int x = (int)block_loc.getX();
-					int z = (int)block_loc.getZ();
+			// protect natural The_End entry and exit portals
+			} else if (blockType.equals(Material.END_PORTAL)) {
+				
+				if (dimension.equals(Environment.THE_END) && y ==64) {
 					
 					if (x < 4 && x > -4) {
 						if (z < 4 && z > -4) {
@@ -256,8 +271,8 @@ public class BlockListener implements Listener {
 		Block blockToPlace = event.getBlockPlaced();
 		//Material blockType = blockToPlace.getType();
 		Material blockType = event.getPlayer().getItemInHand().getType();
-		Location block_loc = blockToPlace.getLocation();
 		
+		Location block_loc = blockToPlace.getLocation();		
 		Block blockInGame = block_loc.getBlock();
 		
 		if (debug) {
