@@ -15,6 +15,7 @@ import org.bukkit.entity.WitherSkull;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import core.backend.*;
@@ -59,6 +60,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		System.out.println("[core.main] Loading commands..");
+		
 		this.getCommand("kit").setExecutor(new Kit());
 		this.getCommand("mute").setExecutor(new Mute());
 		this.getCommand("dupehand").setExecutor(new DupeHand());
@@ -93,17 +95,19 @@ public class Main extends JavaPlugin implements Listener {
 
 		System.out.println("[core.main] Loading event listeners..");
 		
-		getServer().getPluginManager().registerEvents(new Chat(), this);
-		getServer().getPluginManager().registerEvents(new Connection(), this);
-		getServer().getPluginManager().registerEvents(new Move(), this);
-		getServer().getPluginManager().registerEvents(new ItemCheckTriggers(), this);
-		getServer().getPluginManager().registerEvents(new LagManager(), this);
-		getServer().getPluginManager().registerEvents(new SpeedLimit(), this);
-		getServer().getPluginManager().registerEvents(new PVP(), this);
-		getServer().getPluginManager().registerEvents(new BlockListener(), this);
-		getServer().getPluginManager().registerEvents(new OpListener(), this);
-		getServer().getPluginManager().registerEvents(new SpawnController(), this);
-		getServer().getPluginManager().registerEvents(new Voted(), this);
+		PluginManager core_pm = getServer().getPluginManager();
+		
+		core_pm.registerEvents(new Chat(), this);
+		core_pm.registerEvents(new Connection(), this);
+		core_pm.registerEvents(new Move(), this);
+		core_pm.registerEvents(new ItemCheckTriggers(), this);
+		core_pm.registerEvents(new LagManager(), this);
+		core_pm.registerEvents(new SpeedLimit(), this);
+		core_pm.registerEvents(new PVP(), this);
+		core_pm.registerEvents(new BlockListener(), this);
+		core_pm.registerEvents(new OpListener(), this);
+		core_pm.registerEvents(new SpawnController(), this);
+		core_pm.registerEvents(new Voted(), this);
 		
 		// Disable global wither-spawn sound
 		if (Config.getValue("global.sound.no_wither").equals("true")) {
@@ -125,7 +129,6 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] ..finishing up..");
 		
 		// Define banned & special blocks
-		// Banned materials.
 		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK));

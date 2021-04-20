@@ -29,13 +29,6 @@ import java.text.DecimalFormat;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -57,13 +50,11 @@ import core.backend.PlayerMeta;
 
 public class BlockListener implements Listener {
 	
-	// get configs
 	static String roofProt = Config.getValue("protect.bedrock.roof");
 	static String floorProt = Config.getValue("protect.bedrock.floor");
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	static boolean devesp = Boolean.parseBoolean(Config.getValue("devesp"));
 	
-	static Random r = new Random();
 	public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
 	
 	public static ArrayList<Material> BreakBanned = new ArrayList<>();
@@ -80,7 +71,6 @@ public class BlockListener implements Listener {
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 	}
 	
-	// also check for containing keyword "BUTTON" or "MINECART" or "PRESSURE_PLATE" or "FAN" or "DOOR" or "POWDER" or endsWith "SAND"
 	public static ArrayList<Material> LagMats = new ArrayList<>();
 	{
 		LagMats.addAll(Arrays.asList(Material.REDSTONE, Material.REDSTONE_WIRE, Material.REDSTONE_BLOCK,
@@ -90,12 +80,13 @@ public class BlockListener implements Listener {
 				Material.DISPENSER, Material.GRAVEL, Material.ARMOR_STAND, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
 	}
 	
+	static Random r = new Random();
+	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event) {
 		
 		//long startTime = System.nanoTime();
 		
-		// get commonly referenced data
 		Player breaker = event.getPlayer();
 		GameMode mode = breaker.getGameMode();		
 		String breaker_name = breaker.getName();
@@ -107,63 +98,69 @@ public class BlockListener implements Listener {
 		// prevent creative players from breaking certain blocks but completely ignore admin account
 		if (!PlayerMeta.isAdmin(breaker)) {
 			
-			if (!breaker.isOp()) breaker.setGameMode(GameMode.SURVIVAL);
+			TextComponent cancelBanned = new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled because it was an illegal block.");
+			TextComponent cancelPos = new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled because it was a protected block.");
+			
+			if (!breaker.isOp()) breaker.setGameMode(GameMode.SURVIVAL);			
 			
 			if (BreakBanned.contains(blockType)) {
 				
 				event.setCancelled(true);
 				
 				if (debug && !devesp) {
-					Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
+					Bukkit.spigot().broadcast(cancelBanned);
 				}
 				
 			// do things if block == bedrock
 			} else if (blockType.equals(Material.BEDROCK)) {
 				
+				int y = (int)block_loc.getY();
 				Environment dimension = block.getWorld().getEnvironment();
 				
 				if (debug && !devesp) Bukkit.spigot().broadcast(
 						new TextComponent(breaker_name + " just broke a bedrock block!"));
 				
 				// protect bedrock floor
-				if (block_loc.getY() < 1 && floorProt.equals("true")) {
+				if (y < 1 && floorProt.equals("true")) {
 					
-					event.setCancelled(true);
-					
-					if (debug && !devesp) Bukkit.spigot().broadcast(
-							new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
+					event.setCancelled(true);					
+					if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
 					
 				// protect nether roof	
-				} else if (dimension.equals(Environment.NETHER) && block_loc.getY() == 127 && roofProt.equals("true")) {
+				} else if (y == 127 && roofProt.equals("true") &&
+						dimension.equals(Environment.NETHER)) {
 					
 					event.setCancelled(true);
-
-					if (debug && !devesp) {
-						Bukkit.spigot().broadcast(new TextComponent(breaker_name + "'s BlockBreakEvent was cancelled."));
-					}
-				} else if (dimension.equals(Environment.THE_END) && block_loc.getY() == 64) {
+					if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
 					
-					if (block_loc.getX() == 64) {
-						
+				} else if (dimension.equals(Environment.THE_END) &&
+						y == 63 || y == 64) {
+				
+					int x = (int)block_loc.getX();
+					int z = (int)block_loc.getZ();
+					
+					if (x < 4 && x > -4) {
+						if (z < 4 && z > -4) {
+							
+							event.setCancelled(true);
+							if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
+						}
 					}
 				}
 			}
+			//long endTime = System.nanoTime();
+			//long duration = (endTime - startTime);
+			//System.out.println("BreakTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 		}
-		//long endTime = System.nanoTime();
-		//long duration = (endTime - startTime);
-		//System.out.println("BreakTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlace(BlockPlaceEvent event) {
 		
-		//long startTime = System.nanoTime();		
-		//System.out.println("onPlace triggered..");
+		long startTime = System.nanoTime();		
+		System.out.println("onPlace triggered..");
 		
 		Player placer = event.getPlayer();
-		
-		// ignore event if placer is the owner
-		boolean admin_clearance = false;
 		if (PlayerMeta.isAdmin(placer)) return;
 		
 		Block block = event.getBlockPlaced();
@@ -174,15 +171,46 @@ public class BlockListener implements Listener {
 		Material blockType = block.getType();
 		String mat = blockType.toString();
 		
-		// Make game unplayable for laggers
-		// this method currently always returns false
-		// in this build, so this block doesn't run
+		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
+		if (mat.contains("SHULKER_BOX")) {
+			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
+					
+				event.setCancelled(true); return;
+			}
+		}
+		
+		// anti roof-placement
+		if (Config.getValue("protect.roof.noplacement").equals("true")) {
+			if(block_loc.getY() > 127 && block_loc.getWorld().getName().endsWith("the_nether")) {
+				
+				event.setCancelled(true); return;
+			}
+		}
+		
+		// do nothing if user is placing an ender eye into an end portal frame
+		if (event.getItemInHand().getType().equals(Material.ENDER_EYE)) {return;
+		
+		} else if (Config.getValue("protect.banned.place").equals("true")) {
+			
+			// prevent all players from placing blocks totally unobtainable in survival mode, but ignore admin account
+					
+			if (Config.getValue("protect.banned.place.ops").equals("false") && placer.isOp()) {
+				return;
+			}
+			
+			if (PlacementBanned.contains(blockType)) {
+				event.setCancelled(true);
+				
+				if (debug && !devesp) Bukkit.spigot().broadcast(
+						new TextComponent(placer_name + "'s BlockPlaceEvent was cancelled."));
+			}
+			return;
+		}
+		
 		if (PlayerMeta.isLagfag(placer)) {
 			
-			if (LagMats.contains(blockType)) {
-				event.setCancelled(true);
+			if (LagMats.contains(blockType)) {event.setCancelled(true);
 				return;
-				
 			} else if (
 					mat.endsWith("SAND") ||
 					mat.contains("POWDER") ||
@@ -207,70 +235,35 @@ public class BlockListener implements Listener {
 			randomNumber = r.nextInt(250);
 			if (randomNumber == 21) {
 				
-				placer.kickPlayer("§6lmao -tries to build stuff-");
+				placer.kickPlayer("§6lmao -tries to place stuff-");
 				return;
 			}
 		}
 		
-		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
-		if (mat.contains("SHULKER_BOX")) {
-			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
-					
-				event.setCancelled(true);
-				return;		
-			}
+		if (debug & !devesp) {
+			
+			long endTime = System.nanoTime();
+			long duration = (endTime - startTime);
+			
+			System.out.println("PlaceTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 		}
-		
-		// anti roof-placement
-		if (Config.getValue("protect.roof.noplacement").equals("true")) {
-			if(block_loc.getY() > 127 && block_loc.getWorld().getName().endsWith("the_nether")) {
-				
-				event.setCancelled(true);
-				return;
-			}
-		}
-		
-		// do nothing if user is placing an ender eye into an end portal frame
-		if (event.getItemInHand().getType().equals(Material.ENDER_EYE)) {
-			return;
-			
-		} else if (Config.getValue("protect.banned.place").equals("true")) {
-			
-			// prevent all players from placing blocks totally unobtainable in survival mode, but ignore admin account
-					
-			if (Config.getValue("protect.banned.place.ops").equals("false") && placer.isOp()) {
-				return;
-			}
-			
-			if (PlacementBanned.contains(blockType)) {
-				event.setCancelled(true);
-				
-				if (debug && !devesp) Bukkit.spigot().broadcast(
-						new TextComponent(placer_name + "'s BlockPlaceEvent was cancelled."));
-			}
-			
-			return;
-		}
-		
-		//long endTime = System.nanoTime();
-		//long duration = (endTime - startTime);
-		//System.out.println("PlaceTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 	}
 	
-	// try to prevent ghost blocks
-	// this should only trigger if the player place event wasn't cancelled
-	@EventHandler(priority = EventPriority.LOW)
+	// this should occur after onPlace because of EventPriority
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void noGhost(BlockPlaceEvent event) {
 		
-		System.out.println("Checking for ghost placement..");
-		
 		Block blockToPlace = event.getBlockPlaced();
-		Material blockType = blockToPlace.getType();
+		//Material blockType = blockToPlace.getType();
+		Material blockType = event.getPlayer().getItemInHand().getType();
 		Location block_loc = blockToPlace.getLocation();
 		
 		Block blockInGame = block_loc.getBlock();
-		blockInGame.setType(blockType);
 		
-		System.out.println("blockToPlace: " + blockType + " blockToSet: " + blockInGame.getType());
+		if (debug) {
+			System.out.println("blockToPlace: " + blockType + " blockToSet: " + blockInGame.getType());
+		}
+		
+		blockInGame.setType(blockType);
 	}
 }
