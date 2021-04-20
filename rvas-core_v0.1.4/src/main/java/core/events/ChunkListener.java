@@ -53,17 +53,17 @@ public class ChunkListener implements Listener {
 	static Material br = Material.BEDROCK;
 	static Material portal = Material.END_PORTAL;
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onLoad(ChunkLoadEvent event) {
 		
 		Chunk chunk = event.getChunk();
 		
 		if (!event.isNewChunk()) {
 			
-			fixEndExit(chunk);
+			fixEndExit(chunk);//REMOVE THIS CONFIG CHECK****
 			
-			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk);
-			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk);
+			//if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk);
+			//if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk);
 			
 		} else if (debug && !devesp) System.out.println("Generating brand new chunk..");
 	}
@@ -187,15 +187,17 @@ public class ChunkListener implements Listener {
 	
 	public static void repairBedrockROOF(Chunk chunk) {
 		
+		// cannot do this
 		int i_x = 0;
 		int i_z = 0;
 		
-		while (i_x > 17 ) { i_x++;
-			while (i_z > 17) { i_z++;
-				int x_corner = chunk.getX()*16;
-				int z_corner = chunk.getZ()*16;
-				
-				Block thisBlock = chunk.getBlock(i_x + x_corner, 127, i_z + z_corner);
+		while (i_x < 17 ) { i_x++;
+			if (debug) System.out.println(i_x);
+			
+			while (i_z < 17) { i_z++;
+			if (debug) System.out.println(i_z);
+
+				Block thisBlock = chunk.getBlock(i_x, 127, i_z);
 				thisBlock.setType(br);
 			}
 		}

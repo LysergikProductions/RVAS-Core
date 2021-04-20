@@ -106,7 +106,8 @@ public class BlockListener implements Listener {
 			String breaker_name = breaker.getName();
 			
 			TextComponent cancelPos = new TextComponent(
-					breaker_name + "'s BlockBreakEvent was cancelled because it was a protected block.");
+					breaker_name + "'s BlockBreakEvent was cancelled: "
+					+ blockType.toString());
 			
 			if (!breaker.isOp()) breaker.setGameMode(GameMode.SURVIVAL);			
 			
@@ -116,19 +117,19 @@ public class BlockListener implements Listener {
 				
 				if (debug && !devesp) Bukkit.spigot().broadcast(
 						new TextComponent(breaker_name +
-								"'s BlockBreakEvent was cancelled because it was an illegal block."));
+								"'s BlockBreakEvent was cancelled: "
+								+ blockType.toString()));
+				return;
 				
 			// do things if block == bedrock
 			} else if (blockType.equals(Material.BEDROCK)) {
-				
-				if (debug && !devesp) Bukkit.spigot().broadcast(
-						new TextComponent(breaker_name + " just broke a bedrock block!"));
 				
 				// protect bedrock floor
 				if (y < 1 && floorProt.equals("true")) {
 					
 					event.setCancelled(true);					
 					if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
+					return;
 					
 				// protect nether roof	
 				} else if (y == 127 && roofProt.equals("true") &&
@@ -136,6 +137,7 @@ public class BlockListener implements Listener {
 					
 					event.setCancelled(true);
 					if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
+					return;
 				
 				// protect exit portal in the end
 				} else if (dimension.equals(Environment.THE_END) &&
@@ -146,9 +148,13 @@ public class BlockListener implements Listener {
 							
 							event.setCancelled(true);
 							if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
+							return;
 						}
 					}
 				}
+				
+				if (debug && !devesp) Bukkit.spigot().broadcast(
+						new TextComponent(breaker_name + " just broke BEDROCK!"));
 				
 			// protect natural The_End entry and exit portals
 			} else if (blockType.equals(Material.END_PORTAL)) {
@@ -160,21 +166,23 @@ public class BlockListener implements Listener {
 							
 							event.setCancelled(true);
 							if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
+							return;
 						}
 					}
 				}
 			}
+			
 			//long endTime = System.nanoTime();
 			//long duration = (endTime - startTime);
 			//System.out.println("BreakTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
 	public void onPlace(BlockPlaceEvent event) {
 		
 		long startTime = System.nanoTime();		
-		System.out.println("onPlace triggered..");
+		if (debug) System.out.println("onPlace triggered.." + startTime);
 		
 		Player placer = event.getPlayer();
 		if (PlayerMeta.isAdmin(placer)) return;
@@ -191,7 +199,7 @@ public class BlockListener implements Listener {
 		if (mat.contains("SHULKER_BOX")) {
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
 					
-				event.setCancelled(true); return;
+				event.setCancelled(true);
 			}
 		}
 		
@@ -199,17 +207,15 @@ public class BlockListener implements Listener {
 		if (Config.getValue("protect.roof.noplacement").equals("true")) {
 			if(block_loc.getY() > 127 && block_loc.getWorld().getName().endsWith("the_nether")) {
 				
-				event.setCancelled(true); return;
+				event.setCancelled(true);
 			}
 		}
 		
 		// do nothing if user is placing an ender eye into an end portal frame
-		if (event.getItemInHand().getType().equals(Material.ENDER_EYE)) {return;
-		
-		} else if (Config.getValue("protect.banned.place").equals("true")) {
+		if (!event.getItemInHand().getType().equals(Material.ENDER_EYE)
+				&& Config.getValue("protect.banned.place").equals("true")) {
 			
-			// prevent all players from placing blocks totally unobtainable in survival mode, but ignore admin account
-					
+			// prevent all players from placing blocks totally unobtainable in survival mode, but ignore admin account					
 			if (Config.getValue("protect.banned.place.ops").equals("false") && placer.isOp()) {
 				return;
 			}
@@ -219,11 +225,11 @@ public class BlockListener implements Listener {
 				
 				if (debug && !devesp) Bukkit.spigot().broadcast(
 						new TextComponent(placer_name + "'s BlockPlaceEvent was cancelled."));
+				return;
 			}
-			return;
 		}
 		
-		if (PlayerMeta.isLagfag(placer)) {
+		/*if (PlayerMeta.isLagfag(placer)) {
 			
 			if (LagMats.contains(blockType)) {event.setCancelled(true);
 				return;
@@ -244,8 +250,7 @@ public class BlockListener implements Listener {
 			if (randomNumber == 5 || randomNumber == 6) {
 				
 				placer.spigot().sendMessage(new TextComponent("§cYou were warned!"));
-				event.setCancelled(true);
-				return;
+				event.setCancelled(true); return;
 			}
 
 			randomNumber = r.nextInt(250);
@@ -254,14 +259,15 @@ public class BlockListener implements Listener {
 				placer.kickPlayer("§6lmao -tries to place stuff-");
 				return;
 			}
-		}
+		}*/
 		
-		if (debug & !devesp) {
-			
+		if (debug && !devesp) {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
 			
 			System.out.println("PlaceTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
+			placer.spigot().sendMessage(new TextComponent(
+					"PlaceTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms"));
 		}
 	}
 	
@@ -277,7 +283,7 @@ public class BlockListener implements Listener {
 		Block blockInGame = block_loc.getBlock();
 		
 		if (debug) {
-			System.out.println("blockToPlace: " + blockType + " blockToSet: " + blockInGame.getType());
+			System.out.println("intendedBlock: " + blockType + " currentBlock: " + blockInGame.getType());
 		}
 		
 		blockInGame.setType(blockType);
