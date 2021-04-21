@@ -228,4 +228,8 @@ public class ChatPrint {
 		Arrays.asList(title, joined, lastSeen, rank, playtime, tkills, tdeaths, kd)
 		.forEach(ln -> receiver.spigot().sendMessage(ln));
 	}
+	
+	public static void serverInfo(Player receiver, int page) {
+		//
+	}
 }

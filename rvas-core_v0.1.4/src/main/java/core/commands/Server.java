@@ -56,9 +56,6 @@ public class Server implements CommandExecutor {
 			speed_limit = tier1;
 		}
 		
-		String antiCheat = LagProcessor.getTPS() <= 10 ? "True" : "False";
-		
-		// get all uniquley stylable components starting with headers //
 		TextComponent title_sep = new TextComponent("===========");
 		TextComponent title_name = new TextComponent(" SERVER HEALTH ");
 		TextComponent player_head_name = new TextComponent(" PLAYERS ");
@@ -74,7 +71,6 @@ public class Server implements CommandExecutor {
 		TextComponent skicks_a = new TextComponent("Speed Limit Kicks: ");
 		TextComponent skicks_b = new TextComponent("" + SpeedLimit.totalKicks);
 		TextComponent acr_a = new TextComponent("Anti-Cheat Enabled: ");
-		TextComponent acr_b = new TextComponent(antiCheat);
 		
 		// PLAYERS
 		TextComponent ujoins_a = new TextComponent("Unique Joins: ");
@@ -135,12 +131,12 @@ public class Server implements CommandExecutor {
 		TextComponent title = new TextComponent(title_sep, title_name, title_sep);
 		TextComponent player_head = new TextComponent(title_sep, player_head_name, title_sep);
 		TextComponent debug_head = new TextComponent(title_sep, debug_head_name, title_sep);
+		TextComponent more_info_head = new TextComponent(title_sep + " MORE INFO " + title_sep);
 		
 		TextComponent players = new TextComponent(players_a, players_b);
 		TextComponent tpsText = new TextComponent(tps_a, tps_b);
 		TextComponent slimit = new TextComponent(slimit_a, slimit_b);
 		TextComponent skicks = new TextComponent(skicks_a, skicks_b);
-		TextComponent acr = new TextComponent(acr_a, acr_b);
 		// players
 		TextComponent ujoins = new TextComponent(ujoins_a, ujoins_b);
 		TextComponent donos = new TextComponent(donos_a, donos_b);
@@ -163,17 +159,17 @@ public class Server implements CommandExecutor {
 			switch (args[0]) {
 				case "2":
 			
-					Arrays.asList(new TextComponent(""), new TextComponent("=========== MORE INFO ==========="), ujoins, ops, debug_head, restart, rtrig)
+					Arrays.asList(new TextComponent(""), more_info_head, ujoins, ops, debug_head, restart, rtrig)
 					.forEach(ln -> sender.spigot().sendMessage(ln));
 			
 					return true;
 					
 				default:
-						return true;
+					return true;
 			}
 		}
 		
-		// create output structure and send to chat (acr & withers currently removed from output)
+		// create output structure and send to chat
 		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, withers, player_head, players, donos, laggers, pmutes, moreInfo)
 		.forEach(ln -> sender.spigot().sendMessage(ln));
 		

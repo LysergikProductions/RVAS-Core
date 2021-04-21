@@ -108,7 +108,7 @@ protect.bedrock.floor = true
 
 // - Repair (/setblock) bedrock floor (overworld/nether) / roof (nether)
 chunk.load.repair_roof = false
-chunk.load.repair_floor = false
+chunk.load.repair_floor = true
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //
@@ -156,10 +156,10 @@ item.illegal.agro.flush_period = 3600
 // --- VOTING --- //
 // -------------- //
 
-// - Enable or disable vote reward. false = disabled || true = enabled [default]
+// - Enable vote reward (duplicate item stack in player's main hand)
 vote.enable = true
 
-// - Enable or disable manual execution of vote reward. Use for debug only. false = disabled [default] || true = enabled
+// - Enable or disable manual execution of vote reward
 vote.debug = true
 
 // - Vote reward multiplier. default = 1
@@ -188,7 +188,7 @@ mute.hypocrisy = true
 // - Global wither limit. default = 710
 wither.limit = 710
 
-// - How many ticks old a wither skull needs to be to get removed when removal triggers
+// - How many ticks old a wither skull needs to be to get removed *when removal triggers*
 wither.skull.max_ticks = 710
 
 // ------------------- //
