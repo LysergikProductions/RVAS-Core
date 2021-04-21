@@ -60,7 +60,6 @@ public class ChunkListener implements Listener {
 	public void onLoad(ChunkLoadEvent event) {
 		
 		Chunk chunk = event.getChunk();
-		int newCount = 0;
 		
 		if (!event.isNewChunk()) {
 			
@@ -70,7 +69,7 @@ public class ChunkListener implements Listener {
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk);
 			
-		} else newCount++;
+		} else ChunkListener.newCount++;
 	}
 	
 	public static void fixEndExit(Chunk chunk) {
