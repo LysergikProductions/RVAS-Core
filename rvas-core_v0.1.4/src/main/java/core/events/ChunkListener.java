@@ -72,7 +72,7 @@ public class ChunkListener implements Listener {
 		} else ChunkListener.newCount++;
 	}
 	
-	public static void fixEndExit(Chunk chunk) {
+	public static void fixEndExit(Chunk chunk) { // <- intentionally ignores central pillar
 		
 		DragonBattle dragon = chunk.getWorld().getEnderDragonBattle();
 		

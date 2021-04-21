@@ -47,8 +47,31 @@ public class Repair implements CommandExecutor {
 		if (args.length != 0) {
 			
 			switch (args[0]) {
-				case "portals":		
+			
+				case "portals":// - Fix all End-related portals in the sender's current *chunk*
+					
 					ChunkListener.fixEndExit(chunk);
+					return true;
+					
+				case "exit":// - Fix entire end exit portal when sender is in The End
+					
+					Chunk pos_pos = player.getWorld().getChunkAt(0, 0);
+					Chunk pos_neg = player.getWorld().getChunkAt(0, -1);
+					Chunk ned_pos = player.getWorld().getChunkAt(-1, 0);
+					Chunk neg_neg = player.getWorld().getChunkAt(-1, -1);
+					
+					pos_pos.load(false); // <- load (but don't generate) end chunk's
+					ChunkListener.fixEndExit(pos_pos);
+					
+					pos_neg.load(false);
+					ChunkListener.fixEndExit(pos_neg);
+					
+					ned_pos.load(false);
+					ChunkListener.fixEndExit(ned_pos);
+					
+					neg_neg.load(false);
+					ChunkListener.fixEndExit(neg_neg);
+					
 					return true;
 					
 				case "roof":
