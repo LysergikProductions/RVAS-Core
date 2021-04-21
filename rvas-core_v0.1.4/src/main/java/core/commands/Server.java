@@ -60,7 +60,7 @@ public class Server implements CommandExecutor {
 		TextComponent title_name = new TextComponent(" SERVER HEALTH ");
 		TextComponent player_head_name = new TextComponent(" PLAYERS ");
 		TextComponent debug_head_name = new TextComponent(" DEBUG ");
-		TextComponent moreinfo_head_name = new TextComponent(" DEBUG ");
+		TextComponent moreinfo_head_name = new TextComponent(" MORE INFO ");
 		
 		//GENERAL
 		TextComponent players_a = new TextComponent("Connected Players: ");
