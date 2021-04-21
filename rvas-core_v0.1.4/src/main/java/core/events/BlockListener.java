@@ -95,8 +95,8 @@ public class BlockListener implements Listener {
 			Block block = event.getBlock();
 			Location block_loc = block.getLocation();
 			
-			int y = (int)block_loc.getY();
 			int x = (int)block_loc.getX();
+			int y = (int)block_loc.getY();
 			int z = (int)block_loc.getZ();
 			
 			Material blockType = block.getType();
@@ -265,14 +265,13 @@ public class BlockListener implements Listener {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
 			
-			System.out.println("PlaceTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 			placer.spigot().sendMessage(new TextComponent(
 					"PlaceTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms"));
 		}
 	}
 	
-	// this should occur after onPlace because of EventPriority
-	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	// this occurs after onPlace because of EventPriority
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void noGhost(BlockPlaceEvent event) {
 		
 		Block blockToPlace = event.getBlockPlaced();
@@ -282,9 +281,9 @@ public class BlockListener implements Listener {
 		Location block_loc = blockToPlace.getLocation();		
 		Block blockInGame = block_loc.getBlock();
 		
-		if (debug) {
+		/*if (debug) {
 			System.out.println("intendedBlock: " + blockType + " currentBlock: " + blockInGame.getType());
-		}
+		}*/
 		
 		blockInGame.setType(blockType);
 	}

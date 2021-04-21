@@ -48,6 +48,7 @@ import core.backend.Config;
 
 public class OpListener implements Listener {
 	
+	// currently not in use
 	public static ArrayList<String> OwnerCommands = new ArrayList<>(); {
 		OwnerCommands.addAll(Arrays.asList(
 				"/op", "/deop", "/ban", "/attribute", "/default", "/execute", "/rl",
@@ -81,11 +82,7 @@ public class OpListener implements Listener {
 		if (event.getMessage().startsWith("/lr skulls")) {
 			
 			event.setCancelled(true);
-			
-			if (sender.isOp()) {
-				Bukkit.getServer().broadcastMessage("Clearing wither skulls because lag sucks");
-				sender.chat("/kill @e[type=minecraft:wither_skull]");
-			}
+			if (sender.isOp()) sender.chat("/kill @e[type=minecraft:wither_skull]");
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)

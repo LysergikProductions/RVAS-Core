@@ -45,6 +45,8 @@ import org.bukkit.block.Block;
 
 public class SpawnController implements Listener {
 	
+	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
+	
 	static double max_x; static double max_z;
 	static double min_x; static double min_z;
 	
@@ -54,7 +56,7 @@ public class SpawnController implements Listener {
 	static Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
 	
 	public static ArrayList<Material> BannedSpawnFloors = new ArrayList<>(); {
-		BannedSpawnFloors.addAll(Arrays.asList(Material.AIR));
+		BannedSpawnFloors.addAll(Arrays.asList(Material.AIR, Material.CACTUS, Material.FIRE));
 	}
 	
 	public static int getRandomNumber(int min, int max) {
@@ -103,7 +105,9 @@ public class SpawnController implements Listener {
 					// potential valid spawn, check for unwanted spawn surfaces	
 					if (!BannedSpawnFloors.contains(floorBlock.getType())) {
 						
-						if (Config.getValue("debug").equals("true")) System.out.println("Found valid respawn location!");
+						if (debug)
+							System.out.println("Found valid respawn location on "
+									+ floorBlock.getType().toString() + "!");
 						
 						valid_spawn_location = true;
 						

@@ -49,3 +49,5 @@ commands:
    description: server
   help:
    desription: help
+  repair:
+   desription: repair structures

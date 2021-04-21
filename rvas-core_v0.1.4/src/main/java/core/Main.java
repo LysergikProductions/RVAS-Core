@@ -83,7 +83,7 @@ public class Main extends JavaPlugin implements Listener {
 		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
 		this.getCommand("server").setExecutor(new Server());
 		this.getCommand("help").setExecutor(new Help());
-		//this.getCommand("global").setExecutor(new Global());
+		this.getCommand("repair").setExecutor(new Repair());
 
 		System.out.println("[core.main] Scheduling synced tasks..");
 		
