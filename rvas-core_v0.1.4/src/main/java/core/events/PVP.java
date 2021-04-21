@@ -26,6 +26,7 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
+import core.backend.PVPdata;
 import core.backend.Utilities;
 
 import java.util.UUID;
@@ -42,13 +43,14 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
 
 public class PVP implements Listener {
-
+	
+	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
+	static boolean devesp = Boolean.parseBoolean(Config.getValue("devesp"));
+	
 	@EventHandler
 	public void onKill(PlayerDeathEvent event) {
 		
-		if (Config.getValue("debug").equals("true") && Config.getValue("devesp").equals("false")) {
-			System.out.println("[core.events.pvp] onKill has been called");
-		}
+		if (debug && !devesp) System.out.println("[core.events.pvp] onKill has been called");
 		
 		Player killed = event.getEntity();
 		UUID killedID = killed.getUniqueId();
@@ -65,21 +67,18 @@ public class PVP implements Listener {
 		String killerName = "";
 		String killerLoc = "";
 		
-		if (killer != null && Config.getValue("debug").equals("true")) {
+		if (killer != null && debug) {
 			
 			killerName = killer.getName();
 			killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
 			
 			System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
 			
-		} else if (Config.getValue("debug").equals("true")){
-			
-			System.out.println("[core.events.pvp] killer = null");
-		}
+		} else if (debug) System.out.println("[core.events.pvp] killer = null");
 		
 		// increment appropriate stats
-		PlayerMeta.incKillTotal(killer, 1);
-		PlayerMeta.incDeathTotal(killed, 1);
+		PVPdata.incKillTotal(killer, 1);
+		PVPdata.incDeathTotal(killed, 1);
 		
 		// check if victim was in the spawn region on death
 		OfflinePlayer victim = Bukkit.getOfflinePlayer(killedID);
@@ -103,17 +102,16 @@ public class PVP implements Listener {
 		
 		if (cX == null || cZ == null) {
 			
-			System.out.println("[core.events.PVP] failed to retrieve location for victim: " + killedName);
+			if (debug) System.out.println("[core.events.PVP] failed to retrieve location for victim: " + killedName);
 			return;
 			
-		} else if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {
-			
-			System.out.println(killedName + " was killed in the spawn region!");
-			// check if victim is a new player
+		} else if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {			
+			if (debug) System.out.println(killedName + " was killed in the spawn region!");
+
 			if (victim_playtime < 3600.0 && killer != null) {
 				
 				System.out.println(killedName + " was also a new player!");
-				PlayerMeta.incSpawnKill(killer, 1);
+				PVPdata.incSpawnKill(killer, 1);
 			}
 		}
 	}

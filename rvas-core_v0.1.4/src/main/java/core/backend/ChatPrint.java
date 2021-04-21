@@ -23,6 +23,12 @@ package core.backend;
  * 
  * */
 
+import core.events.Chat;
+import core.backend.Config;
+import core.backend.PlayerMeta;
+import core.backend.PVPdata;
+import core.backend.Utilities;
+
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
@@ -36,11 +42,6 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
-
-import core.events.Chat;
-import core.backend.Config;
-import core.backend.PlayerMeta;
-import core.backend.Utilities;
 
 public class ChatPrint {
 	
@@ -119,9 +120,9 @@ public class ChatPrint {
 				
 			} else {// this leader name != null
 				
-				int kills = PlayerMeta.getStats(offPlayer).killTotal;
-				int deaths = PlayerMeta.getStats(offPlayer).deathTotal;
-				String kd = PlayerMeta.getStats(offPlayer).kd;
+				int kills = PVPdata.getStats(offPlayer).killTotal;
+				int deaths = PVPdata.getStats(offPlayer).deathTotal;
+				String kd = PVPdata.getStats(offPlayer).kd;
 				
 				TextComponent a2 = new TextComponent(target_name + ", ");
 				TextComponent b = new TextComponent(Utilities.calculateTime(realLeaders.get(pid)));
@@ -180,11 +181,11 @@ public class ChatPrint {
 		TextComponent toptime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)));
 		
 		TextComponent tkills_a = new TextComponent("PVP Kills: ");
-		TextComponent tkills_b = new TextComponent("" + PlayerMeta.getStats(target).killTotal);
+		TextComponent tkills_b = new TextComponent("" + PVPdata.getStats(target).killTotal);
 		TextComponent tdeaths_a = new TextComponent("PVP Deaths: ");
-		TextComponent tdeaths_b = new TextComponent("" + PlayerMeta.getStats(target).deathTotal);
+		TextComponent tdeaths_b = new TextComponent("" + PVPdata.getStats(target).deathTotal);
 		
-		String spawnKills = String.valueOf(PlayerMeta.getStats(target).spawnKills);
+		String spawnKills = String.valueOf(PVPdata.getStats(target).spawnKills);
 		HoverEvent hover_killDetail = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Spawn Kills: " + spawnKills));
 		
 		// style individual components
@@ -215,9 +216,9 @@ public class ChatPrint {
 		TextComponent kd;
 		
 		try {
-			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(PlayerMeta.getStats(target).kd)));
+			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(PVPdata.getStats(target).kd)));
 		} catch (NumberFormatException e) {
-			kd = new TextComponent("K/D: " + PlayerMeta.getStats(target).kd);
+			kd = new TextComponent("K/D: " + PVPdata.getStats(target).kd);
 		}
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);

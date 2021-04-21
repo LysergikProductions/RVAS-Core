@@ -26,13 +26,11 @@ public class PlayerMeta {
 	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<UUID, Double>();
 	
 	public static List<UUID> _donatorList = new ArrayList<UUID>();
-	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
-	
 	public static List<String> DonorCodes = new ArrayList<String>();
 	public static List<String> UsedDonorCodes = new ArrayList<String>();
-
+	
+	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
 	public static HashMap<UUID, Double> Playtimes = new HashMap<UUID, Double>();
-	public static Map <UUID, PVPstats> sPVPStats = new HashMap<UUID, PVPstats>();
 
 	public static boolean MuteAll = false;
 
@@ -267,93 +265,6 @@ public class PlayerMeta {
 
 		Files.write(Paths.get("plugins/core/playtime.db"), String.join("\n", list).getBytes());
 	}
-
-	// --- PVP -- //
-	
-	public static void incKillTotal(Player p, int inc) {
-		if (sPVPStats.containsKey(p.getUniqueId())) {
-			
-			PVPstats stats = sPVPStats.get(p.getUniqueId());
-			stats.killTotal += inc;
-			
-		} else {
-			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "null", 0);
-			sPVPStats.put(p.getUniqueId(), stats);
-		}
-	}
-	
-	public static void incDeathTotal(Player p, int inc) {
-		if (sPVPStats.containsKey(p.getUniqueId())) {
-			
-			PVPstats stats = sPVPStats.get(p.getUniqueId());
-			stats.deathTotal += inc;
-			
-		} else {
-			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 0, 1, "0.00", 0);
-			sPVPStats.put(p.getUniqueId(), stats);
-		}
-	}
-	
-	public static void incSpawnKill (Player p, int inc) {
-		if (sPVPStats.containsKey(p.getUniqueId())) {
-			
-			PVPstats stats = sPVPStats.get(p.getUniqueId());
-			stats.spawnKills += inc;
-			
-		} else {
-			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "0.00", 0);
-			sPVPStats.put(p.getUniqueId(), stats);
-		}
-		return;
-	}
-	
-	public static PVPstats getNewStats(OfflinePlayer p) {
-		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0, "null", 0);
-		return out;
-	}
-	
-	public static PVPstats getStats(OfflinePlayer p) {
-		PVPstats stats = sPVPStats.get(p.getUniqueId());
-		
-		if (stats != null && sPVPStats.containsKey(p.getUniqueId())) {
-			
-			Double kills = new Double(stats.killTotal);
-			Double deaths = new Double(stats.deathTotal);
-			
-			if (deaths < 0.710) {
-				stats.kd = "Unkillable!";
-			} else {
-				stats.kd = Double.toString(kills / deaths);
-			}
-			
-			return stats;
-			
-		} else {
-			System.out.println("[core.backend.playermeta] killTotal for "+p+" is null. Constructing new PVPstats object.");
-			
-			PVPstats new_stats = getNewStats(p);
-			return new_stats;
-		}
-	}
-
-	public static void writePVPStats() throws IOException {
-		
-		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/pvpstats.txt"));
-		
-		for (PVPstats object: sPVPStats.values()) {
-			try {
-				w.write(object.toString() + "\n");
-				w.flush();
-				
-			  } catch (IOException e) {
-				  throw new UncheckedIOException(e);
-			  }
-		};
-		w.close();
-	}
 	
 	// --- OTHER -- //
 
@@ -362,10 +273,12 @@ public class PlayerMeta {
 	}
 
 	public static boolean isOp(CommandSender sender) {
+		
 		return (sender instanceof Player) ? sender.isOp() : sender instanceof ConsoleCommandSender;
 	}
 	
 	public static boolean isAdmin(Player target) {
+		
 		String target_name = target.getName();
 		UUID target_id = target.getUniqueId();
 		String admin_name = Config.getValue("admin");

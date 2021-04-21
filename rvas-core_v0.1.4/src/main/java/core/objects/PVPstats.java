@@ -35,8 +35,8 @@ public class PVPstats implements Serializable {
 	
 	public UUID playerid; public int killTotal;
 	public int deathTotal; public String kd;
-	public int spawnKills;
 	
+	public int spawnKills;
 	//int killWcrystal;
 	//int logEscape;
 	
@@ -47,18 +47,14 @@ public class PVPstats implements Serializable {
 	
 	@Override
     public String toString() {
-		// ** try remove the "UUID=" at the beginning of the strings
-		//String out = playerid + "=" + playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;
+
 		String out = playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;
 		return out;
     }
 	
 	public static PVPstats fromString(String line) {
-		// Example line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7=f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:0:Unkillable!:2
-		// NEW Example line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:0:Unkillable!:2
+		// Example of intended given line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:0:Unkillable!:2
 		
-		//String[] sep = line.split("=");
-		//String[] stats = sep[1].split(":");
 		String[] stats = line.split(":");
 		
 		UUID playerid = UUID.fromString(stats[0]);

@@ -229,38 +229,6 @@ public class BlockListener implements Listener {
 			}
 		}
 		
-		/*if (PlayerMeta.isLagfag(placer)) {
-			
-			if (LagMats.contains(blockType)) {event.setCancelled(true);
-				return;
-			} else if (
-					mat.endsWith("SAND") ||
-					mat.contains("POWDER") ||
-					mat.contains("BUTTON") ||
-					mat.contains("PRESSURE_PLATE") ||
-					mat.contains("MINECART") ||
-					mat.contains("DOOR")
-					) {
-				
-				event.setCancelled(true);
-				return;
-			}
-			
-			int randomNumber = r.nextInt(9);
-			if (randomNumber == 5 || randomNumber == 6) {
-				
-				placer.spigot().sendMessage(new TextComponent("§cYou were warned!"));
-				event.setCancelled(true); return;
-			}
-
-			randomNumber = r.nextInt(250);
-			if (randomNumber == 21) {
-				
-				placer.kickPlayer("§6lmao -tries to place stuff-");
-				return;
-			}
-		}*/
-		
 		if (debug && !devesp) {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
@@ -275,7 +243,6 @@ public class BlockListener implements Listener {
 	public void noGhost(BlockPlaceEvent event) {
 		
 		Block blockToPlace = event.getBlockPlaced();
-		//Material blockType = blockToPlace.getType();
 		Material blockType = event.getPlayer().getItemInHand().getType();
 		
 		Location block_loc = blockToPlace.getLocation();		
@@ -288,3 +255,38 @@ public class BlockListener implements Listener {
 		blockInGame.setType(blockType);
 	}
 }
+
+
+// --- ** FOR REIMPLEMENTATION OF LAG PRISONER META ** --- \\
+
+/*if (PlayerMeta.isLagfag(placer)) {
+
+if (LagMats.contains(blockType)) {event.setCancelled(true);
+	return;
+} else if (
+		mat.endsWith("SAND") ||
+		mat.contains("POWDER") ||
+		mat.contains("BUTTON") ||
+		mat.contains("PRESSURE_PLATE") ||
+		mat.contains("MINECART") ||
+		mat.contains("DOOR")
+		) {
+	
+	event.setCancelled(true);
+	return;
+}
+
+int randomNumber = r.nextInt(9);
+if (randomNumber == 5 || randomNumber == 6) {
+	
+	placer.spigot().sendMessage(new TextComponent("§cYou were warned!"));
+	event.setCancelled(true); return;
+}
+
+randomNumber = r.nextInt(250);
+if (randomNumber == 21) {
+	
+	placer.kickPlayer("§6lmao -tries to place stuff-");
+	return;
+}
+}*/

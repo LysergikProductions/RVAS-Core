@@ -92,7 +92,7 @@ public class FileManager {
 				System.out.println("Reading pvpstats.txt, line = " + line);
 				
 				PVPstats stats = PVPstats.fromString(line);
-				PlayerMeta.sPVPStats.put(stats.playerid, stats);
+				PVPdata.sPVPStats.put(stats.playerid, stats);
 			});
 		} catch (Exception e) {
 			System.out.println("Exception while reading pvpstats.txt : " + e);
