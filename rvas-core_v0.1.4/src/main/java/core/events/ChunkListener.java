@@ -54,19 +54,23 @@ public class ChunkListener implements Listener {
 	static Material br = Material.BEDROCK;
 	static Material portal = Material.END_PORTAL;
 	
+	public static int newCount = 0;
+	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onLoad(ChunkLoadEvent event) {
 		
 		Chunk chunk = event.getChunk();
+		int newCount = 0;
 		
 		if (!event.isNewChunk()) {
 			
-			fixEndExit(chunk);
+			fixEndExit(chunk);			
+			chunk.setForceLoaded(false); // WARNING: this line will interfere with force-loaded spawn chunks
 			
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk);
 			
-		} else if (debug && !devesp) System.out.println("Generating brand new chunk..");
+		} else newCount++;
 	}
 	
 	public static void fixEndExit(Chunk chunk) {
@@ -206,7 +210,7 @@ public class ChunkListener implements Listener {
 				i_x++;
 			}
 			
-			if (debug) {
+			if (debug && counter != 0) {
 				System.out.println(counter + " bedrock blocks replaced!");
 				
 				if (receiver != null) {

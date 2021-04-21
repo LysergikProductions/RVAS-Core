@@ -157,7 +157,10 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public void onDisable()
 	{
-		System.out.println("[core.main] Saving files...");
+		System.out.println("[core.main] --- RVAS-Core ---\n");
+		System.out.println("[core.main]" + ChunkListener.newCount + " brand new chunks were generated since previous restart");
+		System.out.println("\n[core.main] Saving files...\n");
+		
 		try {
 			PlayerMeta.saveDonators();
 			PlayerMeta.saveMuted();
