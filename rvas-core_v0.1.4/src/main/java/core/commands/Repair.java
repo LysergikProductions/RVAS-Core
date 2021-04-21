@@ -44,6 +44,8 @@ public class Repair implements CommandExecutor {
 		Player player = (Player) sender;
 		Chunk chunk = player.getLocation().getChunk();
 		
+		if (!player.isOp()) return false;
+		
 		if (args.length != 0) {
 			
 			switch (args[0]) {

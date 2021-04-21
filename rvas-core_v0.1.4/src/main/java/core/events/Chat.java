@@ -34,6 +34,7 @@ public class Chat implements Listener {
 	private HashMap<UUID, String> lastChatMessages = new HashMap<UUID, String>();
 	
 	public static HashMap<UUID, Integer> violationLevels = new HashMap<UUID, Integer>();
+	public static boolean slowChatEnabled = false;
 
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {

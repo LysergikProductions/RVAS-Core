@@ -157,7 +157,7 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public void onDisable()
 	{
-		System.out.println("[core.main] --- RVAS-Core ---");
+		System.out.println("[core.main] --- RVAS-Core : Disabling.. ---");
 		System.out.println(ChunkListener.newCount + " brand new chunks were generated since previous restart");
 		System.out.println("[core.main] Saving files...");
 		
@@ -182,5 +182,6 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
+		System.out.println("[core.main] --- RVAS-Core : Disabled ---");
 	}
 }

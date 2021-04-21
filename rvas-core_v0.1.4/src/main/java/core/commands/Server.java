@@ -1,5 +1,15 @@
 package core.commands;
 
+import core.backend.LagProcessor;
+import core.backend.PlayerMeta;
+import core.backend.ServerMeta;
+import core.backend.Utilities;
+import core.backend.Config;
+import core.tasks.LagManager;
+import core.tasks.ProcessPlaytime;
+import core.events.SpeedLimit;
+import core.events.Chat;
+
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
@@ -8,19 +18,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-
-import core.backend.LagProcessor;
-import core.backend.PlayerMeta;
-import core.backend.ServerMeta;
-import core.backend.Utilities;
-import core.backend.Config;
-import core.tasks.LagManager;
-import core.events.SpeedLimit;
-import core.tasks.ProcessPlaytime;
 
 public class Server implements CommandExecutor {
 	
@@ -94,6 +96,8 @@ public class Server implements CommandExecutor {
 		TextComponent rtrig_c = new TextComponent("ms (600000ms required to restart)");
 		TextComponent withers_a = new TextComponent("Loaded Withers: ");
 		TextComponent withers_b = new TextComponent("" + LagManager.getWithers());
+		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
+		TextComponent slowMode_b = new TextComponent(Boolean.toString(Chat.slowChatEnabled));
 		
 		// style individual components //
 		title_sep.setColor(ChatColor.GRAY);
@@ -125,6 +129,7 @@ public class Server implements CommandExecutor {
 		rtrig_b.setColor(ChatColor.GRAY); rtrig_c.setColor(ChatColor.GRAY);
 		
 		withers_a.setColor(ChatColor.RED); withers_a.setBold(true);
+		slowMode_a.setColor(ChatColor.RED); slowMode_a.setBold(true);
 		
 		// parse components into 1-line components
 		TextComponent title = new TextComponent(title_sep, title_name, title_sep);
@@ -146,13 +151,32 @@ public class Server implements CommandExecutor {
 		TextComponent restart = new TextComponent(restart_a, restart_b);
 		TextComponent rtrig = new TextComponent(rtrig_a, rtrig_b, rtrig_c);
 		TextComponent withers = new TextComponent(withers_a, withers_b);
+		// more info
+		TextComponent moreInfo = new TextComponent("Click here to see more info..");
+		moreInfo.setColor(ChatColor.BLUE); moreInfo.setItalic(true);
 		
 		// add functionality to components
 		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Trying to lag the server will result in severe consequences.")));
+		moreInfo.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server 2 "));
+		
+		if (args.length != 0) {
+			switch (args[0]) {
+				case "2":
+			
+					Arrays.asList(new TextComponent(""), new TextComponent("=========== MORE INFO ==========="), ujoins, ops, debug_head, restart, rtrig)
+					.forEach(ln -> sender.spigot().sendMessage(ln));
+			
+					return true;
+					
+				default:
+						return true;
+			}
+		}
 		
 		// create output structure and send to chat (acr & withers currently removed from output)
-		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, withers, player_head, players, donos, laggers, pmutes, debug_head, restart, rtrig)
+		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, withers, player_head, players, donos, laggers, pmutes, moreInfo)
 		.forEach(ln -> sender.spigot().sendMessage(ln));
+		
 		return true;
 	}
 }

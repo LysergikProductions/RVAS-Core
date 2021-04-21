@@ -210,7 +210,10 @@ public class ChunkListener implements Listener {
 			}
 			
 			if (debug && counter != 0) {
-				System.out.println(counter + " bedrock blocks replaced!");
+				System.out.println(counter + " bedrock blocks replaced:");
+				System.out.println("Dimension: " + chunk.getWorld().getEnvironment().toString()
+						+ " | Chunk section coords: " + chunk.getX() + ", " + chunk.getZ());
+				System.out.println("");
 				
 				if (receiver != null) {
 					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
@@ -241,7 +244,10 @@ public static void repairBedrockFLOOR(Chunk chunk, Player receiver) {
 			}
 			
 			if (debug && counter != 0) {
-				System.out.println(counter + " bedrock blocks replaced!");
+				System.out.println(counter + " bedrock blocks replaced:");
+				System.out.println("Dimension: " + chunk.getWorld().getEnvironment().toString()
+						+ " | Chunk section coords: " + chunk.getX() + ", " + chunk.getZ());
+				System.out.println("");
 				
 				if (receiver != null) {
 					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
