@@ -31,6 +31,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static Plugin instance;
 	public static OfflinePlayer Top = null;
+	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 
 	public Notifications NotificationHandler;
 
@@ -39,13 +40,13 @@ public class Main extends JavaPlugin implements Listener {
 
 		instance = this;
 
-		System.out.println("[core.main] Initializing RVAS-core");
+		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] Loading files..");
 		
 		try {
 			FileManager.setup();
 		} catch (IOException e) {
-			System.out.println("[core.main] An error occured creating the necessary files.");
+			System.out.println("[core.main] An error occured in FileManager.setup()");
 		}
 		
 		System.out.println("[core.main] Loading more files..");
@@ -59,31 +60,75 @@ public class Main extends JavaPlugin implements Listener {
 			System.out.println("[core.main] " + e);
 		}
 		
-		System.out.println("[core.main] Loading commands..");
+		System.out.println("[core.main] Enabling commands..");
 		
+		if (debug) System.out.println(".. /kit ..");
 		this.getCommand("kit").setExecutor(new Kit());
+		
+		if (debug) System.out.println(".. /mute ..");
 		this.getCommand("mute").setExecutor(new Mute());
+		
+		if (debug) System.out.println(".. /dupehand ..");
 		this.getCommand("dupehand").setExecutor(new DupeHand());
+		
+		if (debug) System.out.println(".. /vm ..");
 		this.getCommand("vm").setExecutor(new VoteMute());
+		
+		if (debug) System.out.println(".. /msg ..");
 		this.getCommand("msg").setExecutor(new Message());
+		
+		if (debug) System.out.println(".. /r ..");
 		this.getCommand("r").setExecutor(new Reply());
+		
+		if (debug) System.out.println(".. /say ..");
 		this.getCommand("say").setExecutor(new Say());
+		
+		if (debug) System.out.println(".. /discord ..");
 		this.getCommand("discord").setExecutor(new Discord());
+		
+		if (debug) System.out.println(".. /tps ..");
 		this.getCommand("tps").setExecutor(new Tps());
+		
+		if (debug) System.out.println(".. /kill ..");
 		this.getCommand("kill").setExecutor(new Kill());
+		
+		if (debug) System.out.println(".. /setdonator ..");
 		this.getCommand("setdonator").setExecutor(new SetDonator());
+		
+		if (debug) System.out.println(".. /about ..");
 		this.getCommand("about").setExecutor(new About());
+		
+		if (debug) System.out.println(".. /vote ..");
 		this.getCommand("vote").setExecutor(new VoteCmd());
+		
+		if (debug) System.out.println(".. /restart ..");
 		this.getCommand("restart").setExecutor(new Restart());
+		
+		if (debug) System.out.println(".. /sign ..");
 		this.getCommand("sign").setExecutor(new Sign());
+		
+		if (debug) System.out.println(".. /admin ..");
 		this.getCommand("admin").setExecutor(new Admin());
+		
+		if (debug) System.out.println(".. /stats ..");
 		this.getCommand("stats").setExecutor(new Stats());
+		
+		if (debug) System.out.println(".. /redeem ..");
 		this.getCommand("redeem").setExecutor(new Redeem());
-		//this.getCommand("lagfag").setExecutor(new Lagfag());
+		
+		if (debug) System.out.println(".. /tjm ..");
 		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
+		
+		if (debug) System.out.println(".. /server ..");
 		this.getCommand("server").setExecutor(new Server());
+		
+		if (debug) System.out.println(".. /help ..");
 		this.getCommand("help").setExecutor(new Help());
+		
+		if (debug) System.out.println(".. /repair ..");
 		this.getCommand("repair").setExecutor(new Repair());
+		
+		//this.getCommand("lagfag").setExecutor(new Lagfag());
 
 		System.out.println("[core.main] Scheduling synced tasks..");
 		
@@ -151,7 +196,7 @@ public class Main extends JavaPlugin implements Listener {
 		NotificationHandler = new Notifications();
 		getServer().getPluginManager().registerEvents(NotificationHandler, this);
 
-		System.out.println("[core.main] Finished loading.");
+		System.out.println("[core.main] -- Finished loading. --");
 	}
 
 	@Override

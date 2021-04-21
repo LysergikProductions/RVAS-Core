@@ -60,6 +60,7 @@ public class Server implements CommandExecutor {
 		TextComponent title_name = new TextComponent(" SERVER HEALTH ");
 		TextComponent player_head_name = new TextComponent(" PLAYERS ");
 		TextComponent debug_head_name = new TextComponent(" DEBUG ");
+		TextComponent moreinfo_head_name = new TextComponent(" DEBUG ");
 		
 		//GENERAL
 		TextComponent players_a = new TextComponent("Connected Players: ");
@@ -131,7 +132,7 @@ public class Server implements CommandExecutor {
 		TextComponent title = new TextComponent(title_sep, title_name, title_sep);
 		TextComponent player_head = new TextComponent(title_sep, player_head_name, title_sep);
 		TextComponent debug_head = new TextComponent(title_sep, debug_head_name, title_sep);
-		TextComponent more_info_head = new TextComponent(title_sep + " MORE INFO " + title_sep);
+		TextComponent more_info_head = new TextComponent(title_sep, moreinfo_head_name, title_sep);
 		
 		TextComponent players = new TextComponent(players_a, players_b);
 		TextComponent tpsText = new TextComponent(tps_a, tps_b);
