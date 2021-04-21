@@ -44,6 +44,7 @@ import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.Material;
 import org.bukkit.boss.DragonBattle;
+import org.bukkit.entity.Player;
 
 public class ChunkListener implements Listener {
 	
@@ -62,8 +63,8 @@ public class ChunkListener implements Listener {
 			
 			fixEndExit(chunk);
 			
-			//if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk);
-			//if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk);
+			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
+			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk);
 			
 		} else if (debug && !devesp) System.out.println("Generating brand new chunk..");
 	}
@@ -184,25 +185,34 @@ public class ChunkListener implements Listener {
 		}
 	}
 	
-	public static void repairBedrockROOF(Chunk chunk) {
+	public static void repairBedrockROOF(Chunk chunk, Player receiver) {
 		
-		// cannot do this; possibly fixed by moving iterator
-		// to end of blocks.. needs testing **
-		int i_x = 0;
-		int i_z = 0;
-		
-		while (i_x <= 15 ) {
-			if (debug) System.out.println(i_x);
+		if (chunk.getWorld().getEnvironment().equals(Environment.NETHER)) {
 			
-			while (i_z <= 15) {
-				if (debug) System.out.println(i_z);
+			int counter = 0;
+			int i_x = 0;
+			int i_z = 0;
+			
+			while (i_x <= 15 ) {
 
-				Block thisBlock = chunk.getBlock(i_x, 127, i_z);
-				thisBlock.setType(br);
-				
-				i_z++;
+				i_z = 0;				
+				while (i_z <= 15) {
+					
+					if (chunk.getBlock(i_x, 127, i_z).getType() != br) counter++;
+					chunk.getBlock(i_x, 127, i_z).setType(br);
+										
+					i_z++;
+				}
+				i_x++;
 			}
-			i_x++;
+			
+			if (debug) {
+				System.out.println(counter + " bedrock blocks replaced!");
+				
+				if (receiver != null) {
+					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
+				}
+			}
 		}
 	}
 	

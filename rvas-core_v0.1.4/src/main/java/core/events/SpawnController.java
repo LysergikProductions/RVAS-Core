@@ -149,7 +149,7 @@ public class SpawnController implements Listener {
 					event.setRespawnLocation(thisLocation);
 					while (!spawnChunk.isLoaded()) spawnChunk.load(true);
 					
-					if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk);
+					if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
 					if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk);
 					
 					return;
@@ -170,7 +170,7 @@ public class SpawnController implements Listener {
 		
 		ChunkListener.fixEndExit(spawnChunk);
 		
-		if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk);
+		if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
 		if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk);
 		
 		if (Config.getValue("spawn.ignore.lava").equals("true")) {

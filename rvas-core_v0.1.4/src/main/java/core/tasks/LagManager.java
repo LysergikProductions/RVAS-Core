@@ -43,6 +43,8 @@ import core.backend.Config;
 
 public class LagManager implements Listener, Runnable {
 	
+	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
+	
 	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
 	@Override
 	public void run() {
@@ -59,9 +61,7 @@ public class LagManager implements Listener, Runnable {
 		
 		if (e.getEntity() instanceof Wither) {
 			
-			if (Config.getValue("debug").equals("true")) {
-				System.out.println("Wither Limit: " + witherLimit);
-			}
+			if (debug) System.out.println("Wither Limit: " + witherLimit);
 			
 			currentWithers = getWithers();
 			
@@ -87,7 +87,7 @@ public class LagManager implements Listener, Runnable {
 				}
 			}
 			
-			if (Config.getValue("debug").equals("true")) {
+			if (debug && skulls_world != 0) {
 				System.out.println("Removed " + skulls_world + " wither skulls from " + thisWorld.getName());
 			}
 			
@@ -103,7 +103,7 @@ public class LagManager implements Listener, Runnable {
 		
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			
-			if (Config.getValue("debug").equals("true")) {
+			if (debug) {
 				System.out.println("Counting withers in: " + thisWorld.getName());
 			}
 			
@@ -114,10 +114,7 @@ public class LagManager implements Listener, Runnable {
 			}
 		}
 		
-		if (Config.getValue("debug").equals("true")) {
-			System.out.println("Total withers found: " + counter);
-		}
-		
+		if (debug) System.out.println("Total withers found: " + counter);		
 		return counter;
 	}
 }

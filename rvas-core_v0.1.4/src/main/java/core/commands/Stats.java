@@ -1,6 +1,13 @@
 package core.commands;
 
+import core.Main;
+import core.backend.PlayerMeta;
+import core.backend.Utilities;
+import core.backend.ChatPrint;
+
 import java.util.*;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -8,14 +15,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
-
-import core.Main;
-import core.backend.PlayerMeta;
-import core.backend.Utilities;
-import core.backend.ChatPrint;
 
 public class Stats implements CommandExecutor {
 	
