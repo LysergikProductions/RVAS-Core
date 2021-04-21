@@ -61,7 +61,7 @@ public class Repair implements CommandExecutor {
 					Chunk neg_neg = player.getWorld().getChunkAt(-1, -1);
 					
 					pos_pos.load(false); // <- load (but don't generate) end chunk's
-					ChunkListener.fixEndExit(pos_pos);
+					ChunkListener.fixEndExit(pos_pos); // try using onLoad() only, to trigger fixEndExit()
 					
 					pos_neg.load(false);
 					ChunkListener.fixEndExit(pos_neg);
@@ -79,7 +79,7 @@ public class Repair implements CommandExecutor {
 					return true;
 					
 				case "floor":
-					ChunkListener.repairBedrockFLOOR(chunk);
+					ChunkListener.repairBedrockFLOOR(chunk, player);
 					return true;
 			}
 

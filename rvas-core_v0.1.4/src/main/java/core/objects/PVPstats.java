@@ -23,6 +23,8 @@ package core.objects;
  * 
  * */
 
+import core.backend.Config;
+
 import java.util.UUID;
 import java.io.Serializable;
 
@@ -39,6 +41,8 @@ public class PVPstats implements Serializable {
 	public int spawnKills;
 	//int killWcrystal;
 	//int logEscape;
+	
+	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	
 	public PVPstats(UUID playerid, int killTotal, int deathTotal, String kd, int spawnKills) {
 		this.playerid = playerid; this.killTotal = killTotal; this.deathTotal = deathTotal;
@@ -62,46 +66,31 @@ public class PVPstats implements Serializable {
 		OfflinePlayer player = Bukkit.getOfflinePlayer(playerid);
 		String player_name = player.getName();
 		
-		System.out.println("Parsed ign: " + player_name);
-		System.out.println("Parsed id: " + playerid);
+		if (debug) {
+			System.out.println("Parsed ign: " + player_name);
+			System.out.println("Parsed id: " + playerid);
+		}
 		
 		int killTotal;
 		
-		try {
-			killTotal = Integer.parseInt(stats[1]);
-		} catch (Exception e) {
-			killTotal = 0;
-		}		
-		System.out.println("Parsed kills: " + killTotal);
+		try {killTotal = Integer.parseInt(stats[1]);} catch (Exception e) {killTotal = 0;}
+		if (debug) System.out.println("Parsed kills: " + killTotal);
 		
 		int deathTotal;
 		
-		try {
-			deathTotal = Integer.parseInt(stats[2]);
-		} catch (Exception e) {
-			deathTotal = 0;
-		}		
-		System.out.println("Parsed deaths: " + deathTotal);
+		try {deathTotal = Integer.parseInt(stats[2]);} catch (Exception e) {deathTotal = 0;}
+		if (debug) System.out.println("Parsed deaths: " + deathTotal);
 		
 		String kd;
 		
-		try {
-			kd = stats[3];
-		} catch (Exception e) {
-			kd = "null";
-		}		
-		System.out.println("Parsed k/d: " + kd);
+		try {kd = stats[3];} catch (Exception e) {kd = "null";}
+		if (debug) System.out.println("Parsed k/d: " + kd);
 		
-		int spawnKills;
+		int spawnKills;		
+		try {spawnKills = Integer.parseInt(stats[4]);} catch (Exception e) {spawnKills = 0;}
+		if (debug) System.out.println("Parsed spawn kills: " + spawnKills);
 		
-		try {
-			spawnKills = Integer.parseInt(stats[4]);
-		} catch (Exception e) {
-			spawnKills = 0;
-		}		
-		System.out.println("Parsed spawn kills: " + spawnKills);
-		
-		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd, spawnKills);		
+		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd, spawnKills);
 		return out;
 	}
 }

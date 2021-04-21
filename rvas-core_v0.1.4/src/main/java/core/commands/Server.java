@@ -92,7 +92,7 @@ public class Server implements CommandExecutor {
 		TextComponent rtrig_a = new TextComponent("Time below threshold: ");
 		TextComponent rtrig_b = new TextComponent("" + ProcessPlaytime.lowTpsCounter);
 		TextComponent rtrig_c = new TextComponent("ms (600000ms required to restart)");
-		TextComponent withers_a = new TextComponent("Withers (loaded): ");
+		TextComponent withers_a = new TextComponent("Loaded Withers: ");
 		TextComponent withers_b = new TextComponent("" + LagManager.getWithers());
 		
 		// style individual components //

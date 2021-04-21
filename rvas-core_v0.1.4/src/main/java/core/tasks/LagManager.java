@@ -77,6 +77,8 @@ public class LagManager implements Listener, Runnable {
 		int skulls_world = 0;
 		int skulls_all = 0;
 		
+		String skullMsg;
+		
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			
 			skulls_world = 0;
@@ -88,7 +90,9 @@ public class LagManager implements Listener, Runnable {
 			}
 			
 			if (debug && skulls_world != 0) {
-				System.out.println("Removed " + skulls_world + " wither skulls from " + thisWorld.getName());
+				
+				if (skulls_world == 1) skullMsg = "skull"; else skullMsg = "skulls";
+				System.out.println("Removed " + skulls_world + " wither " + skullMsg + " from " + thisWorld.getName());
 			}
 			
 			skulls_all += skulls_world;

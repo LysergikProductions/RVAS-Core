@@ -67,7 +67,7 @@ public class ChunkListener implements Listener {
 			chunk.setForceLoaded(false); // WARNING: this line will interfere with force-loaded spawn chunks
 			
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
-			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk);
+			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
 			
 		} else ChunkListener.newCount++;
 	}
@@ -219,7 +219,34 @@ public class ChunkListener implements Listener {
 		}
 	}
 	
-	public static void repairBedrockFLOOR(Chunk chunk) {
-		// set all blocks at y==0 in overworld and the_nether to bedrock
+public static void repairBedrockFLOOR(Chunk chunk, Player receiver) {
+		
+		if (!chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
+			
+			int counter = 0;
+			int i_x = 0;
+			int i_z = 0;
+			
+			while (i_x <= 15 ) {
+
+				i_z = 0;				
+				while (i_z <= 15) {
+					
+					if (chunk.getBlock(i_x, 0, i_z).getType() != br) counter++;
+					chunk.getBlock(i_x, 0, i_z).setType(br);
+										
+					i_z++;
+				}
+				i_x++;
+			}
+			
+			if (debug && counter != 0) {
+				System.out.println(counter + " bedrock blocks replaced!");
+				
+				if (receiver != null) {
+					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
+				}
+			}
+		}
 	}
 }
