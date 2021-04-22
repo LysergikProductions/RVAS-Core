@@ -3,24 +3,31 @@ The core plugin behind RVAS (Real Vanilla Anarchy Survival)
 
 The main goal is to give server operators everything they need to get started with their own *anarchy-style* minecraft server
 
-**Doesn't prevent any *vanilla* exploits** by default
+**Doesn't prevent any vanilla exploits** by default
 
 #### Features:
-- 5-tier **speed limiter** and other lag preventing features (configurable)
-- Built-in, simple, and configurable **random respawning**
-- Economy-saving peace-of-mind **creative-mode dupe protection**
+- **5-tier speed limiter** and other lag preventing features (configurable)
+
+- **Integrated random respawning** that comes ready to use and is easy to configure
+
+- **Creative-mode dupe/illegals limiter** to protect the economy from sneaky ops
+
 - Bedrock **floor / roof protection** (configurable)
-- **Tracks various player statistics** (playtime, pvp-kills, etc)
-- Configure various ways to **deal with illegal stacks / items**
-- Operator accounts *cannot* introduce illegal items / disrupt the economy (configurable)
+
+- **Player statistics tracking** (playtime, pvp-kills, etc)
+
+- **Slow chat** mode that ops can toggle
+
+- **Illegal items and blocks management**
+
 - **Customizable MOTDs**
 
 ##### Commands:
-- /vm - 1-hour long, democratic temporary global-chat mute
-- /mute temp | permanent - (for ops only)
-- /admin speeds - show list of how fast the fastest moving players are going
-- /repair exit/portals/roof/floor - precisely repair vital game structures
-- /tps, /stats, and many more!
+- `/vm` - 1-hour long, democratic temporary global-chat mute
+- `/mute temp | permanent` - (for ops only)
+- `/admin speeds` - show list of how fast the fastest moving players are going
+- `/repair exit | portals | roof | floor` - precisely repair vital game structures
+- `/tps`, `/stats`, and many more!
 
 ##### @ Server Operators
 For full admin functionality, in `core\config.txt`, please enter your uuid and current ign for the intended in-game master account
