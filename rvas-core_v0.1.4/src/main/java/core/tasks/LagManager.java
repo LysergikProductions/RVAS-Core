@@ -23,23 +23,24 @@ package core.tasks;
  * 
  * */
 
+import core.backend.Config;
 import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.Chunk;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
-
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkull;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.World.Environment;
-
-import core.backend.Config;
 
 public class LagManager implements Listener, Runnable {
 	
@@ -119,6 +120,37 @@ public class LagManager implements Listener, Runnable {
 		}
 		
 		if (debug) System.out.println("Total withers found: " + counter);		
+		return counter;
+	}
+	
+	public static int clearChunkItems(Chunk chunk) {
+		
+		World world = chunk.getWorld();
+		
+		Map<String, Chunk> chunks = new HashMap<String, Chunk>();{
+			chunks.put("C", chunk);
+			chunks.put("N", world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
+			chunks.put("NE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() - 1));
+			chunks.put("E", world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
+			chunks.put("SE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() + 1));
+			chunks.put("S", world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
+			chunks.put("SW", world.getChunkAt(chunk.getX() - 1, chunk.getZ() + 1));
+			chunks.put("W", world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
+			chunks.put("NW", world.getChunkAt(chunk.getX() - 1, chunk.getZ() - 1));
+		}
+		
+		int counter = 0;
+		for (Chunk thisChunk: chunks.values()) {
+			for (Entity entity: thisChunk.getEntities()) {
+				
+				boolean isItem = false;	
+				if (entity.getType().equals(EntityType.DROPPED_ITEM)) {
+					
+					entity.remove();				
+					counter++;
+				}
+			}
+		}
 		return counter;
 	}
 }

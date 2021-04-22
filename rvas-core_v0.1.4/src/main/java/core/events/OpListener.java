@@ -24,27 +24,29 @@ package core.events;
  * 
  * */
 
+import core.backend.PlayerMeta;
+import core.backend.Config;
+import core.tasks.LagManager;
+
 import java.util.*;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
 import org.bukkit.Bukkit;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.GameMode;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.event.inventory.*;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-
-import core.backend.PlayerMeta;
-import core.backend.Config;
 
 public class OpListener implements Listener {
 	
@@ -83,6 +85,15 @@ public class OpListener implements Listener {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) sender.chat("/kill @e[type=minecraft:wither_skull]");
+		}
+		
+		if (event.getMessage().startsWith("/lr items")) {
+			
+			event.setCancelled(true);
+			if (sender.isOp()) {
+				int removed_items = LagManager.clearChunkItems(sender.getLocation().getChunk());
+				sender.spigot().sendMessage(new TextComponent("Removed " + removed_items + " items"));
+			}
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)

@@ -222,7 +222,7 @@ public class ChunkListener implements Listener {
 		}
 	}
 	
-public static void repairBedrockFLOOR(Chunk chunk, Player receiver) {
+	public static void repairBedrockFLOOR(Chunk chunk, Player receiver) {
 		
 		if (!chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
 			
