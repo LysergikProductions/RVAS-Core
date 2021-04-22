@@ -20,6 +20,8 @@ The main goal is to give server operators everything they need to get started wi
 
 - **Illegal items and blocks management**
 
+- **Anti Furnace-Chunk-Ban** 
+
 - **Customizable MOTDs**
 
 ##### Commands:
@@ -27,7 +29,7 @@ The main goal is to give server operators everything they need to get started wi
 - `/mute temp | permanent` - (for ops only)
 - `/admin speeds` - show list of how fast the fastest moving players are going
 - `/repair exit | portals | roof | floor` - precisely repair vital game structures
-- `/tps`, `/stats`, and many more!
+- `/tps`, `/stats`, `/backup `and many more!
 
 ##### @ Server Operators
 For full admin functionality, in `core\config.txt`, please enter your uuid and current ign for the intended in-game master account
