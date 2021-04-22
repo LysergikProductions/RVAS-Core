@@ -5,13 +5,17 @@ import java.nio.charset.Charset;
 import java.io.*;
 
 import java.util.concurrent.TimeUnit;
-
-import org.bukkit.Bukkit;
-
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.block.Block;
+import org.bukkit.Material;
+
 public class Utilities {
+	
 	public static String calculateTime(double seconds) {
+		
 		long hours = (long) (seconds / 3600);
 		long hoursRem = (long) (seconds % 3600);
 		long minutes = hoursRem / 60;
@@ -49,6 +53,7 @@ public class Utilities {
 	}
 
 	public static void restart(boolean slow) {
+		
 		if (restarting) {
 			return;
 		} else {
@@ -120,5 +125,39 @@ public class Utilities {
 	    } catch (NumberFormatException nfe) {
 	        return false;
 	    }
+	}
+	
+	public static int blockCounter(Chunk chunk, Material block) {
+		
+	    int counter = 0;
+	    for(int y = 0; y <= 255; y++) {
+	        for(int x = 0; x <= 15; x++) {
+	            for(int z = 0; z <= 15; z++) {
+	            	
+	                if(chunk.getBlock(x, y, z).getType() == block) counter++;
+	            }
+	        }
+	    }
+	    return counter;
+	}
+	
+	public static int blockRemover(Chunk chunk, Material blockType, int limiter) {
+		
+	    int counter = 0;
+	    for (int y = 0; y <= 255; y++) {
+	        for (int x = 0; x <= 15; x++) {
+	            for (int z = 0; z <= 15; z++) {
+	            	
+	            	Block thisBlock = chunk.getBlock(x, y, z);
+	            	
+	                if (thisBlock.getType() == blockType) {
+	                	counter++;
+	                	thisBlock.setType(Material.AIR);
+	                }
+	                if (counter >= limiter) return counter;
+	            }
+	        }
+	    }
+	    return counter;
 	}
 }

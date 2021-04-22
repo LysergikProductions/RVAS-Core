@@ -26,6 +26,7 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
+import core.backend.Utilities;
 
 import java.util.*;
 import java.text.DecimalFormat;
@@ -42,6 +43,7 @@ import org.bukkit.Location;
 import org.bukkit.World.Environment;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.Material;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
@@ -69,7 +71,21 @@ public class ChunkListener implements Listener {
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
 			
+			antiFurnaceBan(chunk);
+			
 		} else ChunkListener.newCount++;
+	}
+	
+	public static void antiFurnaceBan(Chunk chunk) {
+		
+		int furnace_count = Utilities.blockCounter(chunk, Material.FURNACE);
+		
+		// limit furnace count to 2 sub-chunks worth of furnaces per chunk
+		if (furnace_count > 8192) {
+			
+			System.out.println("TOO MANY FURNACES. Removing 90% of them..");
+			Utilities.blockRemover(chunk, Material.FURNACE, (int)Math.rint((double)furnace_count * 0.9));
+		}
 	}
 	
 	public static void fixEndExit(Chunk chunk) { // <- intentionally ignores central pillar
