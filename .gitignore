@@ -10,7 +10,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-rvas-core_v0.1.3/target/*
+
+rvas-core_v0.1.4/target/*
 
 # External tool builders
 .externalToolBuilders/
@@ -61,16 +62,16 @@ rvas-core_v0.1.3/target/*
 # Typically, this file would be tracked if it contains build/dependency configurations:
 .project
 
-rvas-core_v0.1.3/dependency-reduced-pom.xml
+rvas-core_v0.1.4/dependency-reduced-pom.xml
 
 #intellij stuff
 .idea
 *.iml
 
 #p3 specific
-rvas-core_v0.1.3/.settings/*
-rvas-core_v0.1.3/.settings
-rvas-core_v0.1.3/target
+rvas-core_v0.1.4/.settings/*
+rvas-core_v0.1.4/.settings
+rvas-core_v0.1.4/target
 
 *.class
 
