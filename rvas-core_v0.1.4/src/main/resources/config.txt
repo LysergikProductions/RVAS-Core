@@ -40,9 +40,14 @@ spawn.max.Z = 420.0
 spawn.min.X = -420.0
 spawn.min.Z = -420.0
 
-// - Prevent players spawning in liquids (true = prevent spawning)
-spawn.ignore.water = false
-spawn.ignore.lava = true
+// - Prevent players spawning in water
+spawn.prevent.drown = false
+
+// - Prevent players spawning where they would catch on fire
+spawn.prevent.burn = true
+
+// - Prevent players spawning on cacti, wither roses, and magma blocks
+spawn.prevent.pain = false
 
 // - Repair important bedrock on spawn/join
 spawn.repair.roof = false

@@ -27,6 +27,7 @@ import core.backend.Config;
 import core.events.ChunkListener;
 
 import java.util.*;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,7 +57,8 @@ public class SpawnController implements Listener {
 	static Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
 	
 	public static ArrayList<Material> BannedSpawnFloors = new ArrayList<>(); {
-		BannedSpawnFloors.addAll(Arrays.asList(Material.AIR, Material.CACTUS, Material.FIRE));
+		BannedSpawnFloors.addAll(Arrays.asList(
+				Material.CAVE_AIR, Material.VOID_AIR, Material.WALL_TORCH));
 	}
 	
 	public static int getRandomNumber(int min, int max) {
@@ -77,10 +79,9 @@ public class SpawnController implements Listener {
 		// get random x, z coords and check them top-down from y256 for validity
 		while (!valid_spawn_location) {
 			
-			double tryLocation_x = getRandomNumber((int)min_x, (int)max_x);
-			double tryLocation_z = getRandomNumber((int)min_z, (int)max_z);
-			
-			// potential issue here not forcing double's to be whole numbers
+			// get random x, z coords within range and refer to the *center* of blocks
+			double tryLocation_x = Math.rint(getRandomNumber((int)min_x, (int)max_x)) + 0.5;
+			double tryLocation_z = Math.rint(getRandomNumber((int)min_z, (int)max_z)) + 0.5;
 			
 			System.out.println("RVAS: Checking coords for respawn: " + tryLocation_x + ", " + tryLocation_z);
 			
@@ -116,6 +117,8 @@ public class SpawnController implements Listener {
 						newSpawnLocation.setY((double)y);
 						newSpawnLocation.setZ((double)tryLocation_z);
 						
+						break;
+						
 					} else continue;
 				}
 			}
@@ -129,12 +132,20 @@ public class SpawnController implements Listener {
 		final World thisWorld = event.getRespawnLocation().getWorld();
 		Location thisLocation = event.getRespawnLocation();
 		
-		if (Config.getValue("spawn.ignore.lava").equals("true")) {
-			BannedSpawnFloors.add(Material.LAVA);
+		if (Config.getValue("spawn.prevent.burn").equals("true")) {
+			if (!BannedSpawnFloors.contains(Material.LAVA)) BannedSpawnFloors.add(Material.LAVA);
+			if (!BannedSpawnFloors.contains(Material.FIRE)) BannedSpawnFloors.add(Material.FIRE);
+			if (!BannedSpawnFloors.contains(Material.SOUL_FIRE)) BannedSpawnFloors.add(Material.SOUL_FIRE);
 		}
 		
-		if (Config.getValue("spawn.ignore.water").equals("true")) {
-			BannedSpawnFloors.add(Material.WATER);
+		if (Config.getValue("spawn.prevent.drown").equals("true")) {
+			if (!BannedSpawnFloors.contains(Material.WATER)) BannedSpawnFloors.add(Material.WATER);
+		}
+		
+		if (Config.getValue("spawn.prevent.pain").equals("true")) {
+			if (!BannedSpawnFloors.contains(Material.CACTUS)) BannedSpawnFloors.add(Material.CACTUS);
+			if (!BannedSpawnFloors.contains(Material.WITHER_ROSE)) BannedSpawnFloors.add(Material.WITHER_ROSE);
+			if (!BannedSpawnFloors.contains(Material.MAGMA_BLOCK)) BannedSpawnFloors.add(Material.MAGMA_BLOCK);
 		}
 		
 		// find then set a random spawn location if the player doesn't have a set spawn
@@ -145,6 +156,9 @@ public class SpawnController implements Listener {
 				
 				if (thisLocation != null) {
 					Chunk spawnChunk = thisLocation.getChunk();
+					
+					if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
+					if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
 					
 					event.setRespawnLocation(thisLocation);
 					while (!spawnChunk.isLoaded()) spawnChunk.load(true);
@@ -173,12 +187,20 @@ public class SpawnController implements Listener {
 		if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
 		if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
 		
-		if (Config.getValue("spawn.ignore.lava").equals("true")) {
-			BannedSpawnFloors.add(Material.LAVA);
+		if (Config.getValue("spawn.prevent.burn").equals("true")) {
+			if (!BannedSpawnFloors.contains(Material.LAVA)) BannedSpawnFloors.add(Material.LAVA);
+			if (!BannedSpawnFloors.contains(Material.FIRE)) BannedSpawnFloors.add(Material.FIRE);
+			if (!BannedSpawnFloors.contains(Material.SOUL_FIRE)) BannedSpawnFloors.add(Material.SOUL_FIRE);
 		}
 		
-		if (Config.getValue("spawn.ignore.water").equals("true")) {
-			BannedSpawnFloors.add(Material.WATER);
+		if (Config.getValue("spawn.prevent.drown").equals("true")) {
+			if (!BannedSpawnFloors.contains(Material.WATER)) BannedSpawnFloors.add(Material.WATER);
+		}
+		
+		if (Config.getValue("spawn.prevent.pain").equals("true")) {
+			if (!BannedSpawnFloors.contains(Material.CACTUS)) BannedSpawnFloors.add(Material.CACTUS);
+			if (!BannedSpawnFloors.contains(Material.WITHER_ROSE)) BannedSpawnFloors.add(Material.WITHER_ROSE);
+			if (!BannedSpawnFloors.contains(Material.MAGMA_BLOCK)) BannedSpawnFloors.add(Material.MAGMA_BLOCK);
 		}
 		
 		if (Config.getValue("spawn.random.join").equals("true")) {
@@ -192,6 +214,12 @@ public class SpawnController implements Listener {
 			
 			if (!playedBefore) {
 				System.out.println(joiner_name + "is playing for the first time!");
+				
+				for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
+					if (onlinePlayer.isOp()) {
+						onlinePlayer.spigot().sendMessage(new TextComponent(joiner_name + " is a brand new uuid!"));
+					}
+				}
 				
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
 				
