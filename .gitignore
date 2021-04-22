@@ -10,6 +10,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+
 rvas-core_v0.1.4/target/*
 
 # External tool builders
