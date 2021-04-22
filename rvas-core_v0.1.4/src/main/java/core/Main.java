@@ -31,7 +31,6 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static Plugin instance;
 	public static OfflinePlayer Top = null;
-
 	public Notifications NotificationHandler;
 
 	@Override
@@ -62,74 +61,77 @@ public class Main extends JavaPlugin implements Listener {
 		
 		System.out.println("[core.main] Enabling commands..");
 		
-		if (debug) System.out.println(".. /kit ..");
+		if (debug) {System.out.println(".. /kit ..");}
 		this.getCommand("kit").setExecutor(new Kit());
 		
-		if (debug) System.out.println(".. /mute ..");
+		if (debug) {System.out.println(".. /mute ..");}
 		this.getCommand("mute").setExecutor(new Mute());
 		
-		if (debug) System.out.println(".. /dupehand ..");
+		if (debug) {System.out.println(".. /dupehand ..");}
 		this.getCommand("dupehand").setExecutor(new DupeHand());
 		
-		if (debug) System.out.println(".. /vm ..");
+		if (debug) {System.out.println(".. /vm ..");}
 		this.getCommand("vm").setExecutor(new VoteMute());
 		
-		if (debug) System.out.println(".. /msg ..");
+		if (debug) {System.out.println(".. /msg ..");}
 		this.getCommand("msg").setExecutor(new Message());
 		
-		if (debug) System.out.println(".. /r ..");
+		if (debug) {System.out.println(".. /r ..");}
 		this.getCommand("r").setExecutor(new Reply());
 		
-		if (debug) System.out.println(".. /say ..");
+		if (debug) {System.out.println(".. /say ..");}
 		this.getCommand("say").setExecutor(new Say());
 		
-		if (debug) System.out.println(".. /discord ..");
+		if (debug) {System.out.println(".. /discord ..");}
 		this.getCommand("discord").setExecutor(new Discord());
 		
-		if (debug) System.out.println(".. /tps ..");
+		if (debug) {System.out.println(".. /tps ..");}
 		this.getCommand("tps").setExecutor(new Tps());
 		
-		if (debug) System.out.println(".. /kill ..");
+		if (debug) {System.out.println(".. /kill ..");}
 		this.getCommand("kill").setExecutor(new Kill());
 		
-		if (debug) System.out.println(".. /setdonator ..");
+		if (debug) {System.out.println(".. /setdonator ..");}
 		this.getCommand("setdonator").setExecutor(new SetDonator());
 		
-		if (debug) System.out.println(".. /about ..");
+		if (debug) {System.out.println(".. /about ..");}
 		this.getCommand("about").setExecutor(new About());
 		
-		if (debug) System.out.println(".. /vote ..");
+		if (debug) {System.out.println(".. /vote ..");}
 		this.getCommand("vote").setExecutor(new VoteCmd());
 		
-		if (debug) System.out.println(".. /restart ..");
+		if (debug) {System.out.println(".. /restart ..");}
 		this.getCommand("restart").setExecutor(new Restart());
 		
-		if (debug) System.out.println(".. /sign ..");
+		if (debug) {System.out.println(".. /sign ..");}
 		this.getCommand("sign").setExecutor(new Sign());
 		
-		if (debug) System.out.println(".. /admin ..");
+		if (debug) {System.out.println(".. /admin ..");}
 		this.getCommand("admin").setExecutor(new Admin());
 		
-		if (debug) System.out.println(".. /stats ..");
+		if (debug) {System.out.println(".. /stats ..");}
 		this.getCommand("stats").setExecutor(new Stats());
 		
-		if (debug) System.out.println(".. /redeem ..");
+		if (debug) {System.out.println(".. /redeem ..");}
 		this.getCommand("redeem").setExecutor(new Redeem());
 		
-		if (debug) System.out.println(".. /tjm ..");
+		if (debug) {System.out.println(".. /tjm ..");}
 		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
 		
-		if (debug) System.out.println(".. /server ..");
+		if (debug) {System.out.println(".. /server ..");}
 		this.getCommand("server").setExecutor(new Server());
 		
-		if (debug) System.out.println(".. /help ..");
+		if (debug) {System.out.println(".. /help ..");}
 		this.getCommand("help").setExecutor(new Help());
 		
-		if (debug) System.out.println(".. /repair ..");
+		if (debug) {System.out.println(".. /repair ..");}
 		this.getCommand("repair").setExecutor(new Repair());
 		
-		if (debug) System.out.println(".. /slowchat ..");
+		if (debug) {System.out.println(".. /slowchat ..");}
 		this.getCommand("slowchat").setExecutor(new SlowChat());
+		
+		if (debug) {System.out.println(".. /backup ..");}
+		this.getCommand("backup").setExecutor(new Backup());
 		
 		//this.getCommand("lagfag").setExecutor(new Lagfag());
 
@@ -218,6 +220,15 @@ public class Main extends JavaPlugin implements Listener {
 			
 		} catch (IOException ex) {
 			System.out.println("[core.main] Failed to save one or more files.");
+			System.out.println("[core.main] " + ex);
+		}
+		
+		try {
+			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-onStop", ".txt");
+			FileManager.backupData(FileManager.playtime_user_database, "playtimes-backup-onStop", ".db");
+			
+		} catch (IOException ex) {
+			System.out.println("[core.main] Failed to save one or more backup files.");
 			System.out.println("[core.main] " + ex);
 		}
 		

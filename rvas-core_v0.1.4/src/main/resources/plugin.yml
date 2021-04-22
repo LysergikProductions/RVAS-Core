@@ -53,3 +53,5 @@ commands:
    desription: repair structures
   slowchat:
    desription: toggle slow chat
+  backup:
+   desription: create a backup of RVAS-core managed data
