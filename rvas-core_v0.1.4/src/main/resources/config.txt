@@ -247,6 +247,9 @@ spam.rc_delay = 5000
 // - Allow ops to bypass anti-spam. default = true
 spam.ops = true
 
+// - SLOW CHAT wait time in milliseconds
+chat.slow.time = 10000
+
 // ------------------ //
 // --- AESTHETICS --- //
 // ------------------ //

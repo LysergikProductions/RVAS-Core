@@ -31,7 +31,6 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static Plugin instance;
 	public static OfflinePlayer Top = null;
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 
 	public Notifications NotificationHandler;
 
@@ -39,6 +38,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 
 		instance = this;
+		boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] Loading files..");
@@ -127,6 +127,9 @@ public class Main extends JavaPlugin implements Listener {
 		
 		if (debug) System.out.println(".. /repair ..");
 		this.getCommand("repair").setExecutor(new Repair());
+		
+		if (debug) System.out.println(".. /slowchat ..");
+		this.getCommand("slowchat").setExecutor(new SlowChat());
 		
 		//this.getCommand("lagfag").setExecutor(new Lagfag());
 

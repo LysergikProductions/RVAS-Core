@@ -148,6 +148,7 @@ public class Server implements CommandExecutor {
 		TextComponent restart = new TextComponent(restart_a, restart_b);
 		TextComponent rtrig = new TextComponent(rtrig_a, rtrig_b, rtrig_c);
 		TextComponent withers = new TextComponent(withers_a, withers_b);
+		TextComponent slowMode = new TextComponent(slowMode_a, slowMode_b);
 		// more info
 		TextComponent moreInfo = new TextComponent("Click here to see more info..");
 		moreInfo.setColor(ChatColor.BLUE); moreInfo.setItalic(true);
@@ -160,7 +161,7 @@ public class Server implements CommandExecutor {
 			switch (args[0]) {
 				case "2":
 			
-					Arrays.asList(new TextComponent(""), more_info_head, ujoins, ops, debug_head, restart, rtrig)
+					Arrays.asList(new TextComponent(""), more_info_head, ujoins, ops, debug_head, slowMode, restart, rtrig)
 					.forEach(ln -> sender.spigot().sendMessage(ln));
 			
 					return true;

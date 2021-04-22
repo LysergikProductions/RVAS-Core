@@ -51,3 +51,5 @@ commands:
    desription: help
   repair:
    desription: repair structures
+  slowchat:
+   desription: toggle slow chat

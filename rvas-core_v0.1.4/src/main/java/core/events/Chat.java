@@ -1,30 +1,27 @@
 package core.events;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerCommandSendEvent;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.backend.ServerMeta;
 import core.backend.PlayerMeta.MuteType;
 import core.commands.Admin;
 
+import java.util.*;
+import java.util.logging.Level;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 public class Chat implements Listener {
-	// yes dupehand belongs below, it sends a rude message to non-admins if they try to use it
+
 	private static Set<String> allUserCommands = new HashSet<>(Arrays.asList(
 		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "r",
 		"redeem", "server", "sign", "stats", "suicide", "tdm", "tjm", "tps", "vm", "vote", "w"
@@ -40,12 +37,14 @@ public class Chat implements Listener {
 	public void onChat(AsyncPlayerChatEvent e) {
 		// Cancel this event so we can override vanilla chat
 		e.setCancelled(true);
+		
+		Player player = e.getPlayer();
 
 		// Don't execute if the player is muted
-		if (PlayerMeta.isMuted(e.getPlayer()) || (PlayerMeta.MuteAll && !e.getPlayer().isOp()))
+		if (PlayerMeta.isMuted(player) || (PlayerMeta.MuteAll && !player.isOp()))
 			return;
 
-		// -- CREATE PROPERTIES --
+		// -- CREATE PROPERTIES -- \\
 		
 		boolean doSend = true;
 		String finalMessage = e.getMessage();
@@ -59,7 +58,7 @@ public class Chat implements Listener {
 				color = "§a"; // Greentext
 				break;
 			case '$':
-				if (PlayerMeta.isDonator(e.getPlayer())) {
+				if (PlayerMeta.isDonator(player)) {
 					color = "§6"; // Donator text
 					break;
 				}
@@ -68,9 +67,9 @@ public class Chat implements Listener {
 				break;
 		}
 
-		if (PlayerMeta.isDonator(e.getPlayer()) && !Admin.UseRedName.contains(e.getPlayer().getUniqueId())) {
+		if (PlayerMeta.isDonator(player) && !Admin.UseRedName.contains(player.getUniqueId())) {
 			usernameColor = "§6";
-		} else if (Admin.UseRedName.contains(e.getPlayer().getUniqueId())) {
+		} else if (Admin.UseRedName.contains(player.getUniqueId())) {
 			usernameColor = "§c";
 		} else {
 			usernameColor = "§f";
@@ -83,16 +82,33 @@ public class Chat implements Listener {
 
 		// -- CHECKS -- //
 
-		if (isBlank(finalMessage)) {
-			doSend = false;
-		} else if (PlayerMeta.isLagfag(e.getPlayer())) {
-			finalMessage = ":'(";
+		if (isBlank(finalMessage)) doSend = false;
+		else if (PlayerMeta.isLagfag(player)) finalMessage = ":'(";
+		
+		// Don't send any message if slow-chat configs dictate it
+		if (slowChatEnabled && !player.isOp()) {
+			
+			try {
+				TextComponent msg = new TextComponent(
+						"Slow chat is currently enabled. You can chat once every " +
+						Integer.parseInt(Config.getValue("chat.slow.time")) / 1000 + " seconds");
+				
+				msg.setColor(ChatColor.RED);
+				
+				if(lastChatTimes.get(player.getUniqueId()) + Integer.parseInt(Config.getValue("chat.slow.time")) > System.currentTimeMillis()) {
+					
+					doSend = false;
+					player.spigot().sendMessage(msg);
+					
+				} else doSend = true;
+				
+			} catch (Exception ex) {
+				
+				System.out.println(ex);
+				lastChatTimes.put(player.getUniqueId(), System.currentTimeMillis());
+			}
 		}
 		
-		if (finalMessage.contains("/deop") || finalMessage.contains("/op")) {
-			
-		}
-
 		// -- SEND FINAL MESSAGE -- //
 
 		if (doSend) {
@@ -104,6 +120,7 @@ public class Chat implements Listener {
 				boolean censored = false;
 				
 				if(lastChatTimes.containsKey(e.getPlayer().getUniqueId())) {
+					
 					if(lastChatTimes.get(e.getPlayer().getUniqueId()) + Integer.parseInt(Config.getValue("spam.wait_time")) > System.currentTimeMillis()) {
 						
 						censored = true;
@@ -118,7 +135,8 @@ public class Chat implements Listener {
 				}
 				
 				if(lastChatMessages.containsKey(e.getPlayer().getUniqueId())) {
-					// player sent two messages in a row, but now how similar are they?
+					
+					// slow chat is off, but how similar are the messages?
 					if(similarity(lastChatMessages.get(e.getPlayer().getUniqueId()), finalMessage) * 100 > Integer.parseInt(Config.getValue("spam.min_similarity"))) {
 						
 						censored = true;

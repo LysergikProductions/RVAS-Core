@@ -282,7 +282,11 @@ public class PlayerMeta {
 		String target_name = target.getName();
 		UUID target_id = target.getUniqueId();
 		String admin_name = Config.getValue("admin");
-		UUID admin_id = UUID.fromString(Config.getValue("adminid"));
+		UUID admin_id;
+		
+		try {
+			admin_id = UUID.fromString(Config.getValue("adminid"));
+		} catch (Exception e) {return false;}
 		
 		if (admin_name.equals(target_name) && admin_id.equals(target_id)) {
 			return true;
