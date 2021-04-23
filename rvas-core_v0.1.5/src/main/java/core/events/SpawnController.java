@@ -69,6 +69,7 @@ public class SpawnController implements Listener {
 	public static Location getRandomSpawn(World thisWorld, Location newSpawnLocation) {
 		
 		boolean valid_spawn_location = false;
+		boolean open_air = Boolean.parseBoolean(Config.getValue("spawn.prevent.inside"));
 		
 		// if a configured value can't be parsed to Double, set to default
 		if (config_max_x.isNaN()) max_x = 420.0; else max_x = config_max_x.doubleValue();
@@ -119,6 +120,7 @@ public class SpawnController implements Listener {
 						
 						break;
 						
+					} else if (open_air) {break;
 					} else continue;
 				}
 			}

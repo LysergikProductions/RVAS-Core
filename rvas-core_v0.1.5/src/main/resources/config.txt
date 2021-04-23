@@ -49,6 +49,9 @@ spawn.prevent.burn = true
 // - Prevent players spawning on cacti, wither roses, and magma blocks
 spawn.prevent.pain = false
 
+// - Prevent players spawning in caves / buildings
+spawn.prevent.inside = true
+
 // - Repair important bedrock on spawn/join
 spawn.repair.roof = false
 spawn.repair.floor = true
