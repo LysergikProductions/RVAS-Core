@@ -28,6 +28,7 @@ import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.backend.PVPdata;
 import core.backend.Utilities;
+import core.objects.*;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -157,6 +158,15 @@ public class ChatPrint {
 	public static void printStats(Player receiver, OfflinePlayer target) {
 		
 		Player player = target.getPlayer();
+		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
+		
+		if (targetSettings == null) {			
+			
+			PlayerSettings newSettings = PlayerMeta.getNewSettings(target);
+			PlayerMeta.sPlayerSettings.put(target.getUniqueId(), newSettings);
+			
+			targetSettings = newSettings;		
+		}
 		
 		Date date = new Date(target.getFirstPlayed());
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -224,9 +234,18 @@ public class ChatPrint {
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
 		kd.setColor(ChatColor.GRAY);
 		
+		ArrayList<TextComponent> statsLines = new ArrayList<>(); {
+			statsLines.addAll(Arrays.asList(title, joined, lastSeen, rank, playtime));
+		}
+		
+		if (targetSettings.show_PVPstats) {
+			if (targetSettings.show_kills) statsLines.add(tkills);
+			if (targetSettings.show_deaths) statsLines.add(tdeaths);
+			if (targetSettings.show_kd) statsLines.add(kd);
+		}
+		
 		// send final message to receiver
-		Arrays.asList(title, joined, lastSeen, rank, playtime, tkills, tdeaths, kd)
-		.forEach(ln -> receiver.spigot().sendMessage(ln));
+		statsLines.forEach(ln -> receiver.spigot().sendMessage(ln));
 	}
 	
 	public static void serverInfo(Player receiver, int page) {

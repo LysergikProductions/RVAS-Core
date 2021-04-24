@@ -4,6 +4,7 @@ import core.Main;
 import core.backend.PlayerMeta;
 import core.backend.Utilities;
 import core.backend.ChatPrint;
+import core.objects.*;
 
 import java.util.*;
 import net.md_5.bungee.api.ChatColor;
@@ -21,6 +22,15 @@ public class Stats implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
+		UUID playerid = player.getUniqueId();
+		
+		PlayerSettings targetSettings = PlayerMeta.sPlayerSettings.get(playerid);
+		
+		if (targetSettings == null) {
+			
+			PlayerSettings newSettings = PlayerMeta.getNewSettings(Bukkit.getOfflinePlayer(playerid));
+			PlayerMeta.sPlayerSettings.put(playerid, newSettings);
+		}
 
 		if (Main.Top == null) {
 			double largest = 0;
@@ -52,6 +62,51 @@ public class Stats implements CommandExecutor {
 					
 				case "help":
 					ChatPrint.helpStats(player);
+					return true;
+					
+				case "showkills":	
+					
+					targetSettings.show_kills = !targetSettings.show_kills;
+					
+					if (targetSettings.show_kills) {
+						
+						player.spigot().sendMessage(new TextComponent("Your kills are now public."));
+						
+					} else if (!targetSettings.show_kills) {
+						
+						player.spigot().sendMessage(new TextComponent("Your kills are now hidden."));
+					}
+					
+					return true;
+					
+				case "showdeaths":
+					
+					targetSettings.show_deaths = !targetSettings.show_deaths;
+					
+					if (targetSettings.show_deaths) {
+						
+						player.spigot().sendMessage(new TextComponent("Your deaths are now public."));
+						
+					} else if (!targetSettings.show_deaths) {
+						
+						player.spigot().sendMessage(new TextComponent("Your deaths are now hidden."));
+					}
+					
+					return true;
+					
+				case "showkd":
+					
+					targetSettings.show_kd = !targetSettings.show_kd;
+					
+					if (targetSettings.show_kd) {
+						
+						player.spigot().sendMessage(new TextComponent("Your k/d ratio is now public."));
+						
+					} else if (!targetSettings.show_kd) {
+						
+						player.spigot().sendMessage(new TextComponent("Your k/d ratio is now hidden."));
+					}
+					
 					return true;
 			}
 
