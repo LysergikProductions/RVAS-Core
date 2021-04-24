@@ -215,7 +215,9 @@ public class Main extends JavaPlugin implements Listener {
 			PlayerMeta.saveDonators();
 			PlayerMeta.saveMuted();
 			PlayerMeta.saveLagfags();
+			
 			PlayerMeta.writePlaytime();
+			PlayerMeta.writePlayerSettings();
 			PVPdata.writePVPStats();
 			
 		} catch (IOException ex) {

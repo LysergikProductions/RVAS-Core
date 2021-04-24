@@ -1,9 +1,17 @@
 package core.events;
 
+import core.backend.*;
+import core.commands.Admin;
+import core.commands.Kit;
+import core.commands.ToggleJoinMessages;
+import core.objects.PlayerSettings;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -11,10 +19,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-import core.backend.*;
-import core.commands.Admin;
-import core.commands.Kit;
-import core.commands.ToggleJoinMessages;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,9 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-// Connection Events
-// core. ~~DO NOT REDISTRIBUTE!~~ n/a 3/6/2021
 
 public class Connection implements Listener {
 	
@@ -102,8 +103,17 @@ public class Connection implements Listener {
 		
 		String messageOut = "§7" + player.getName()
 				+ ((msg.equals(MessageType.JOIN)) ? " joined the game." : " left the game.");
+		
 		Bukkit.getOnlinePlayers().forEach(player1 ->{
-				if (!ToggleJoinMessages.disabledJoinMessages.contains(player1.getUniqueId())) player1.sendMessage(messageOut);});
+			
+			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(player1.getUniqueId());
+			
+			if (PlayerMeta.getSettings(offPlayer).show_player_join_messages) {player1.sendMessage(messageOut);}
+			else {
+				PlayerSettings newSettings = PlayerMeta.getNewSettings(offPlayer);
+				PlayerMeta.sPlayerSettings.put(newSettings.playerid, newSettings);
+			}
+		});
 	}
 
 	@EventHandler
@@ -121,8 +131,9 @@ public class Connection implements Listener {
 	}
 
 	private String[] motds = {
-			"i'm not high, we're high" , "RIP boiling water, you will be mist" , "vanilla exploits rejoice!" , "needs more carpet"
-			};
+		"i'm not high, we're high" , "RIP boiling water, you will be mist" , "vanilla exploits rejoice!" , "needs more carpet" ,
+		"imagine imagining.."
+	};
 
 	private Random r = new Random();
 

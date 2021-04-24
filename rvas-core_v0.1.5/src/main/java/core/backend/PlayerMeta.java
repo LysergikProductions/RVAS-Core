@@ -1,15 +1,13 @@
 package core.backend;
 
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.ChatColor;
 import core.events.Chat;
 import core.backend.Config;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.Bukkit;
+import core.objects.PVPstats;
+import core.objects.PlayerSettings;
+
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -17,7 +15,11 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import core.objects.PVPstats;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 
 public class PlayerMeta {
 
@@ -31,6 +33,7 @@ public class PlayerMeta {
 	
 	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
 	public static HashMap<UUID, Double> Playtimes = new HashMap<UUID, Double>();
+	public static Map <UUID, PlayerSettings> sPlayerSettings = new HashMap<UUID, PlayerSettings>();
 
 	public static boolean MuteAll = false;
 
@@ -264,6 +267,41 @@ public class PlayerMeta {
 		Playtimes.keySet().forEach(user -> list.add(user.toString() + ":" + Math.rint(Playtimes.get(user))));
 
 		Files.write(Paths.get("plugins/core/playtime.db"), String.join("\n", list).getBytes());
+	}
+	
+	public static PlayerSettings getNewSettings(OfflinePlayer p) {
+		PlayerSettings out = new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true);
+		return out;
+	}
+	
+	public static PlayerSettings getSettings(OfflinePlayer p) {
+		PlayerSettings settings = sPlayerSettings.get(p.getUniqueId());
+		
+		if (settings != null && sPlayerSettings.containsKey(p.getUniqueId())) {
+			
+			return settings;
+			
+		} else {
+			
+			PlayerSettings new_settings = getNewSettings(p);
+			return new_settings;
+		}
+	}
+	
+	public static void writePlayerSettings() throws IOException {
+		
+		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/player_settings.txt"));
+		
+		for (PlayerSettings object: sPlayerSettings.values()) {
+			try {
+				w.write(object.toString() + "\n");
+				w.flush();
+				
+			  } catch (IOException e) {
+				  throw new UncheckedIOException(e);
+			  }
+		};
+		w.close();
 	}
 	
 	// --- OTHER -- //

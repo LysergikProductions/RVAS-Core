@@ -49,6 +49,17 @@ public class Backup implements CommandExecutor {
 			
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
 			FileManager.backupData(FileManager.playtime_user_database, "playtimes-backup-", ".db");
+			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
+			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");
+			
+			FileManager.backupData(FileManager.donor_list, "donator-backup-", ".db");
+			FileManager.backupData(FileManager.all_donor_codes, "codes/all-backup-", ".db");
+			FileManager.backupData(FileManager.used_donor_codes, "codes/used-backup-", ".db");
+			
+			FileManager.backupData(FileManager.server_statistics_list, "analytics-backup-", ".csv");
+			FileManager.backupData(FileManager.core_server_config, "config-backup-", ".txt");
+			FileManager.backupData(FileManager.motd_message_list, "motds-backup-", ".txt");
+			//FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
 			
 		} catch (IOException e) {
 			
