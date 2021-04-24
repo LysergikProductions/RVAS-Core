@@ -1,27 +1,27 @@
 package core.commands;
 
+import core.backend.PlayerMeta;
+import core.events.SpawnController;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
-import net.md_5.bungee.api.chat.TextComponent;
-
-import core.backend.PlayerMeta;
-import core.events.SpawnController;
 
 // Make game unplayable for laggers
 
-public class Lagfag implements CommandExecutor {
+public class Prison implements CommandExecutor {
 
 	HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
 	HashMap<UUID, Boolean> threadProgression = new HashMap<UUID, Boolean>();
@@ -33,7 +33,7 @@ public class Lagfag implements CommandExecutor {
 			return true;
 		}
 		if (args.length != 1) {
-			sender.spigot().sendMessage(new TextComponent("§cInvalid syntax. Syntax: /lagfag [name]"));
+			sender.spigot().sendMessage(new TextComponent("§cInvalid syntax. Syntax: /prison [name]"));
 			return true;
 		}
 
@@ -100,23 +100,26 @@ public class Lagfag implements CommandExecutor {
 			}
 		}
 
-		Player lagfag = Bukkit.getPlayer(args[0]);
-		if (lagfag == null) {
+		Player thisPlayer = Bukkit.getPlayer(args[0]);
+		
+		if (thisPlayer == null) {
 			sender.spigot().sendMessage(new TextComponent("§cPlayer is not online."));
 			return true;
-		}
-		PlayerMeta.setLagfag(lagfag, !PlayerMeta.isLagfag(lagfag));
-		if (PlayerMeta.isLagfag(lagfag)) {
-			Arrays.asList("§6" + lagfag.getName() + " is a lagfag!", "§6IP: " + lagfag.getAddress().toString().split(":")[0].replace("/", ""),
-					"§6COORDS: " + Math.round(lagfag.getLocation().getX()) + ", "
-					+ Math.round(lagfag.getLocation().getY()) + ", "
-					+ Math.round(lagfag.getLocation().getZ())).forEach(s -> Bukkit.getServer().spigot().broadcast(new TextComponent(s)));
-
-			lagfag.getEnderChest().clear();
 			
-			Location currentSpawn = lagfag.getBedSpawnLocation();
-			lagfag.setBedSpawnLocation(SpawnController.getRandomSpawn(lagfag.getWorld(), currentSpawn));
-			lagfag.setHealth(0);
+		} else if (PlayerMeta.isAdmin(thisPlayer)) return false;
+		
+		PlayerMeta.setLagfag(thisPlayer, !PlayerMeta.isLagfag(thisPlayer));
+		if (PlayerMeta.isLagfag(thisPlayer)) {
+			Arrays.asList("§6" + thisPlayer.getName() + " was caught lagging the server!", "§6IP: " + thisPlayer.getAddress().toString().split(":")[0].replace("/", ""),
+					"§6COORDS: " + Math.round(thisPlayer.getLocation().getX()) + ", "
+					+ Math.round(thisPlayer.getLocation().getY()) + ", "
+					+ Math.round(thisPlayer.getLocation().getZ())).forEach(s -> Bukkit.getServer().spigot().broadcast(new TextComponent(s)));
+
+			thisPlayer.getEnderChest().clear();
+			
+			Location currentSpawn = thisPlayer.getBedSpawnLocation();
+			thisPlayer.setBedSpawnLocation(SpawnController.getRandomSpawn(thisPlayer.getWorld(), currentSpawn));
+			thisPlayer.setHealth(0);
 		}
 		return true;
 	}

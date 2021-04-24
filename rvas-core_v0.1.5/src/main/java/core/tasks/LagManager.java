@@ -90,7 +90,7 @@ public class LagManager implements Listener, Runnable {
 				}
 			}
 			
-			if (debug && skulls_world != 0) {
+			if (skulls_world != 0) {
 				
 				if (skulls_world == 1) skullMsg = "skull"; else skullMsg = "skulls";
 				System.out.println("Removed " + skulls_world + " wither " + skullMsg + " from " + thisWorld.getName());

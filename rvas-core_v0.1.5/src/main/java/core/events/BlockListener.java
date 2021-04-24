@@ -195,6 +195,25 @@ public class BlockListener implements Listener {
 		Material blockType = block.getType();
 		String mat = blockType.toString();
 		
+		// prevent lag-prisoners from placing things that can cause lag
+		if (PlayerMeta.isLagfag(placer)) {
+
+			if (LagMats.contains(blockType)) {event.setCancelled(true);
+				return;
+			} else if (
+					mat.endsWith("SAND") ||
+					mat.contains("POWDER") ||
+					mat.contains("BUTTON") ||
+					mat.contains("PRESSURE_PLATE") ||
+					mat.contains("MINECART") ||
+					mat.contains("DOOR")
+					) {
+				
+				event.setCancelled(true);
+				return;
+			}
+		}
+		
 		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
 		if (mat.contains("SHULKER_BOX")) {
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -259,22 +278,7 @@ public class BlockListener implements Listener {
 
 // --- ** FOR REIMPLEMENTATION OF LAG PRISONER META ** --- \\
 
-/*if (PlayerMeta.isLagfag(placer)) {
-
-if (LagMats.contains(blockType)) {event.setCancelled(true);
-	return;
-} else if (
-		mat.endsWith("SAND") ||
-		mat.contains("POWDER") ||
-		mat.contains("BUTTON") ||
-		mat.contains("PRESSURE_PLATE") ||
-		mat.contains("MINECART") ||
-		mat.contains("DOOR")
-		) {
-	
-	event.setCancelled(true);
-	return;
-}
+/*
 
 int randomNumber = r.nextInt(9);
 if (randomNumber == 5 || randomNumber == 6) {

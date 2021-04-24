@@ -56,6 +56,8 @@ public class SpawnController implements Listener {
 	static Double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
 	static Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
 	
+	public static int sessionTotalRespawns = 0;
+	
 	public static ArrayList<Material> BannedSpawnFloors = new ArrayList<>(); {
 		BannedSpawnFloors.addAll(Arrays.asList(
 				Material.CAVE_AIR, Material.VOID_AIR, Material.WALL_TORCH));
@@ -133,6 +135,8 @@ public class SpawnController implements Listener {
 		
 		final World thisWorld = event.getRespawnLocation().getWorld();
 		Location thisLocation = event.getRespawnLocation();
+		
+		sessionTotalRespawns++;
 		
 		if (Config.getValue("spawn.prevent.burn").equals("true")) {
 			if (!BannedSpawnFloors.contains(Material.LAVA)) BannedSpawnFloors.add(Material.LAVA);

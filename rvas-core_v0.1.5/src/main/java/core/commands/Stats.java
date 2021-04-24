@@ -64,7 +64,7 @@ public class Stats implements CommandExecutor {
 					ChatPrint.helpStats(player);
 					return true;
 					
-				case "showkills":	
+				case "kills":	
 					
 					targetSettings.show_kills = !targetSettings.show_kills;
 					
@@ -79,7 +79,7 @@ public class Stats implements CommandExecutor {
 					
 					return true;
 					
-				case "showdeaths":
+				case "deaths":
 					
 					targetSettings.show_deaths = !targetSettings.show_deaths;
 					
@@ -94,7 +94,7 @@ public class Stats implements CommandExecutor {
 					
 					return true;
 					
-				case "showkd":
+				case "kd":
 					
 					targetSettings.show_kd = !targetSettings.show_kd;
 					

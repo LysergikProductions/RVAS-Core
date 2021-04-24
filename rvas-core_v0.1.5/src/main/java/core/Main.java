@@ -40,6 +40,7 @@ public class Main extends JavaPlugin implements Listener {
 		boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
+		System.out.println("[core.main] _______________");
 		System.out.println("[core.main] Loading files..");
 		
 		try {
@@ -48,6 +49,7 @@ public class Main extends JavaPlugin implements Listener {
 			System.out.println("[core.main] An error occured in FileManager.setup()");
 		}
 		
+		System.out.println("[core.main] ____________________");
 		System.out.println("[core.main] Loading more files..");
 		try {
 			PlayerMeta.loadDonators();
@@ -59,82 +61,85 @@ public class Main extends JavaPlugin implements Listener {
 			System.out.println("[core.main] " + e);
 		}
 		
+		System.out.println("[core.main] ___________________");
 		System.out.println("[core.main] Enabling commands..");
 		
-		if (debug) {System.out.println(".. /kit ..");}
+		System.out.println(".. /kit ..");
 		this.getCommand("kit").setExecutor(new Kit());
 		
-		if (debug) {System.out.println(".. /mute ..");}
+		System.out.println(".. /mute ..");
 		this.getCommand("mute").setExecutor(new Mute());
 		
-		if (debug) {System.out.println(".. /dupehand ..");}
+		System.out.println(".. /dupehand ..");
 		this.getCommand("dupehand").setExecutor(new DupeHand());
 		
-		if (debug) {System.out.println(".. /vm ..");}
+		System.out.println(".. /vm ..");
 		this.getCommand("vm").setExecutor(new VoteMute());
 		
-		if (debug) {System.out.println(".. /msg ..");}
+		System.out.println(".. /msg ..");
 		this.getCommand("msg").setExecutor(new Message());
 		
-		if (debug) {System.out.println(".. /r ..");}
+		System.out.println(".. /r ..");
 		this.getCommand("r").setExecutor(new Reply());
 		
-		if (debug) {System.out.println(".. /say ..");}
+		System.out.println(".. /say ..");
 		this.getCommand("say").setExecutor(new Say());
 		
-		if (debug) {System.out.println(".. /discord ..");}
+		System.out.println(".. /discord ..");
 		this.getCommand("discord").setExecutor(new Discord());
 		
-		if (debug) {System.out.println(".. /tps ..");}
+		System.out.println(".. /tps ..");
 		this.getCommand("tps").setExecutor(new Tps());
 		
-		if (debug) {System.out.println(".. /kill ..");}
+		System.out.println(".. /kill ..");
 		this.getCommand("kill").setExecutor(new Kill());
 		
-		if (debug) {System.out.println(".. /setdonator ..");}
+		System.out.println(".. /setdonator ..");
 		this.getCommand("setdonator").setExecutor(new SetDonator());
 		
-		if (debug) {System.out.println(".. /about ..");}
+		System.out.println(".. /about ..");
 		this.getCommand("about").setExecutor(new About());
 		
-		if (debug) {System.out.println(".. /vote ..");}
+		System.out.println(".. /vote ..");
 		this.getCommand("vote").setExecutor(new VoteCmd());
 		
-		if (debug) {System.out.println(".. /restart ..");}
+		System.out.println(".. /restart ..");
 		this.getCommand("restart").setExecutor(new Restart());
 		
-		if (debug) {System.out.println(".. /sign ..");}
+		System.out.println(".. /sign ..");
 		this.getCommand("sign").setExecutor(new Sign());
 		
-		if (debug) {System.out.println(".. /admin ..");}
+		System.out.println(".. /admin ..");
 		this.getCommand("admin").setExecutor(new Admin());
 		
-		if (debug) {System.out.println(".. /stats ..");}
+		System.out.println(".. /stats ..");
 		this.getCommand("stats").setExecutor(new Stats());
 		
-		if (debug) {System.out.println(".. /redeem ..");}
+		System.out.println(".. /redeem ..");
 		this.getCommand("redeem").setExecutor(new Redeem());
 		
-		if (debug) {System.out.println(".. /tjm ..");}
+		System.out.println(".. /tjm ..");
 		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
 		
-		if (debug) {System.out.println(".. /server ..");}
+		System.out.println(".. /server ..");
 		this.getCommand("server").setExecutor(new Server());
 		
-		if (debug) {System.out.println(".. /help ..");}
+		System.out.println(".. /help ..");
 		this.getCommand("help").setExecutor(new Help());
 		
-		if (debug) {System.out.println(".. /repair ..");}
+		System.out.println(".. /repair ..");
 		this.getCommand("repair").setExecutor(new Repair());
 		
-		if (debug) {System.out.println(".. /slowchat ..");}
+		System.out.println(".. /slowchat ..");
 		this.getCommand("slowchat").setExecutor(new SlowChat());
 		
-		if (debug) {System.out.println(".. /backup ..");}
+		System.out.println(".. /backup ..");
 		this.getCommand("backup").setExecutor(new Backup());
 		
-		//this.getCommand("lagfag").setExecutor(new Lagfag());
-
+		System.out.println(".. /prison ..");
+		this.getCommand("prison").setExecutor(new Prison());
+		
+		System.out.println("[core.main] _________________________");
 		System.out.println("[core.main] Scheduling synced tasks..");
 		
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
@@ -142,7 +147,8 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
-
+		
+		System.out.println("[core.main] _________________________");
 		System.out.println("[core.main] Loading event listeners..");
 		
 		PluginManager core_pm = getServer().getPluginManager();
@@ -208,7 +214,26 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDisable()
 	{
 		System.out.println("[core.main] --- RVAS-Core : Disabling.. ---");
-		System.out.println(ChunkListener.newCount + " brand new chunks were generated since previous restart");
+		
+		System.out.println("[core.main] ____________________");
+		System.out.println("[core.main] Collecting garbage..");
+		
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
+			
+			for (Entity e: thisWorld.getEntities()) {
+				if (e instanceof WitherSkull) {
+					e.remove();
+				}
+			}
+		}
+		
+		System.out.println("[core.main] ________________________");
+		System.out.println("[core.main] Printing session stats..");
+		System.out.println("New Chunks Generated: " + ChunkListener.newCount);
+		System.out.println("Total Respawns: " + SpawnController.sessionTotalRespawns);
+		
+		System.out.println("[core.main] _______________");
 		System.out.println("[core.main] Saving files...");
 		
 		try {
@@ -221,7 +246,7 @@ public class Main extends JavaPlugin implements Listener {
 			PVPdata.writePVPStats();
 			
 		} catch (IOException ex) {
-			System.out.println("[core.main] Failed to save one or more files.");
+			System.out.println("[core.main] WARNING - Failed to save one or more files.");
 			System.out.println("[core.main] " + ex);
 		}
 		
@@ -230,19 +255,10 @@ public class Main extends JavaPlugin implements Listener {
 			FileManager.backupData(FileManager.playtime_user_database, "playtimes-backup-onStop", ".db");
 			
 		} catch (IOException ex) {
-			System.out.println("[core.main] Failed to save one or more backup files.");
+			System.out.println("[core.main] WARNING - Failed to save one or more backup files.");
 			System.out.println("[core.main] " + ex);
 		}
 		
-		for (World thisWorld: Bukkit.getServer().getWorlds()) {
-			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
-			
-			for (Entity e: thisWorld.getEntities()) {
-				if (e instanceof WitherSkull) {
-					e.remove();
-				}
-			}
-		}
 		System.out.println("[core.main] --- RVAS-Core : Disabled ---");
 	}
 }

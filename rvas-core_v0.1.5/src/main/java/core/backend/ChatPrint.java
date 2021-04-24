@@ -64,6 +64,11 @@ public class ChatPrint {
 		TextComponent players_b = new TextComponent(" : Shows the stats for that player");
 		TextComponent leaders_b = new TextComponent(" : Shows the top 5 players (by play-time)");
 		
+		TextComponent toggle_info = new TextComponent(
+				"Use /stats kills | deaths | kd, to toggle hiding them from public view!");
+		
+		toggle_info.setColor(ChatColor.GOLD); toggle_info.setItalic(true);
+		
 		self_b.setColor(ChatColor.GRAY);
 		players_b.setColor(ChatColor.GRAY);
 		leaders_b.setColor(ChatColor.GRAY);
@@ -84,7 +89,7 @@ public class ChatPrint {
 		leaders.setHoverEvent(hover_leaders);
 		
 		ArrayList<TextComponent> list = new ArrayList<>();
-		list.add(self); list.add(leaders); list.add(players);
+		list.add(self); list.add(leaders); list.add(players); list.add(toggle_info);
 		
 		list.forEach(ln -> receiver.spigot().sendMessage(ln));
 	}

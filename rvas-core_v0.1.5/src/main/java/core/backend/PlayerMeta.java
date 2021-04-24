@@ -164,17 +164,22 @@ public class PlayerMeta {
 	}
 
 	public static boolean isLagfag(Player p) {
-		return false;//_lagfagList.containsKey(p.getUniqueId())
-				//|| _lagfagList.containsValue(p.getAddress().toString().split(":")[0]);
+		
+		if (_lagfagList.containsKey(p.getUniqueId())
+		|| _lagfagList.containsValue(p.getAddress().toString().split(":")[0])) {
+			
+			return true;
+			
+		} else return false;
 	}
 
 	public static void saveLagfags() throws IOException {
 		List<String> list = _lagfagList.keySet().stream().map(u -> u.toString() + ":" + _lagfagList.get(u)).collect(Collectors.toList());
-		Files.write(Paths.get("plugins/core/lagfag.db"), String.join("\n", list).getBytes());
+		Files.write(Paths.get("plugins/core/prisoners.db"), String.join("\n", list).getBytes());
 	}
 
 	public static void loadLagfags() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("plugins/core/lagfag.db"));
+		List<String> lines = Files.readAllLines(Paths.get("plugins/core/prisoners.db"));
 		lines.forEach(val -> _lagfagList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
 	}
 

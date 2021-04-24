@@ -41,8 +41,8 @@ commands:
    description: stats
   redeem:
    description: redeem
-  lagfag:
-   description: lagfag
+  prison:
+   description: RVAS lag-prisoners
   tjm:
    description: tjm
   server:
@@ -54,4 +54,4 @@ commands:
   slowchat:
    desription: toggle slow chat
   backup:
-   desription: create a backup of RVAS-core managed data
+   desription: backup RVAS-core managed data
