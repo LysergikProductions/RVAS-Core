@@ -119,33 +119,4 @@ public class LagManager implements Listener, Runnable {
 		}
 		return counter;
 	}
-	
-	public static int clearChunkItems(Chunk chunk) {
-		
-		World world = chunk.getWorld();
-		
-		Map<String, Chunk> chunks = new HashMap<String, Chunk>();{
-			chunks.put("C", chunk);
-			chunks.put("N", world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
-			chunks.put("NE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() - 1));
-			chunks.put("E", world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
-			chunks.put("SE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() + 1));
-			chunks.put("S", world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
-			chunks.put("SW", world.getChunkAt(chunk.getX() - 1, chunk.getZ() + 1));
-			chunks.put("W", world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
-			chunks.put("NW", world.getChunkAt(chunk.getX() - 1, chunk.getZ() - 1));
-		}
-		
-		int counter = 0;
-		for (Chunk thisChunk: chunks.values()) {
-			for (Entity entity: thisChunk.getEntities()) {				
-				if (entity.getType().equals(EntityType.DROPPED_ITEM)) {
-					
-					entity.remove();				
-					counter++;
-				}
-			}
-		}
-		return counter;
-	}
 }

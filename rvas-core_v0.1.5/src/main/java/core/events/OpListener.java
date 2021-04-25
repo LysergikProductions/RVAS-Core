@@ -26,6 +26,7 @@ package core.events;
 
 import core.backend.PlayerMeta;
 import core.backend.Config;
+import core.backend.Utilities;
 import core.tasks.LagManager;
 
 import java.util.*;
@@ -59,7 +60,7 @@ public class OpListener implements Listener {
 				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
 				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
 				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
-				"/restart", "/worldb", "/gamerule"));
+				"/restart", "/worldb", "/gamerule", "/score"));
 	};
 	
 	// this happens *before* the OP Lock plugin will see the command
@@ -91,8 +92,8 @@ public class OpListener implements Listener {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) {
-				int removed_items = LagManager.clearChunkItems(sender.getLocation().getChunk());
-				sender.spigot().sendMessage(new TextComponent("Removed " + removed_items + " items"));
+				int removed_items = Utilities.clearChunkItems(sender.getLocation().getChunk());
+				sender.spigot().sendMessage(new TextComponent("Removed " + removed_items + " item stacks."));
 			}
 		}
 		
@@ -135,6 +136,7 @@ public class OpListener implements Listener {
 					event.getMessage().contains("/whitelist") ||
 					event.getMessage().contains("/minecraft") ||
 					event.getMessage().contains("/dupe") ||
+					event.getMessage().contains("/score") ||
 					event.getMessage().contains("/gamerule")) {
 				
 				event.setCancelled(true);

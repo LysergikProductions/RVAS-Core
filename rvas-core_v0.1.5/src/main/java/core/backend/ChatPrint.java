@@ -56,8 +56,8 @@ public class ChatPrint {
 		
 		int gaps_eaten = (int)target.getStatistic(Statistic.USE_ITEM, Material.ENCHANTED_GOLDEN_APPLE);
 		int mined_obi = (int)target.getStatistic(Statistic.MINE_BLOCK, Material.OBSIDIAN);
-		int placed_obi = (int)target.getStatistic(Statistic.USE_ITEM, Material.OBSIDIAN);		
 		int mined_ancientDebris = (int)target.getStatistic(Statistic.MINE_BLOCK, Material.ANCIENT_DEBRIS);
+		int placed_obi = (int)target.getStatistic(Statistic.USE_ITEM, Material.OBSIDIAN);
 		
 		TextComponent sep = new TextComponent("---");
 		TextComponent title = new TextComponent(" " + target.getName() + "'s MC-Stats ");

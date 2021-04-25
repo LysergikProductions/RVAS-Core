@@ -43,8 +43,10 @@ public class Info implements CommandExecutor {
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;
 		
+		double upHours = (double)ServerMeta.getUptime() / 3600.00;
+		
 		player.spigot().sendMessage(new TextComponent("--- SESSION STATS ---"));
-		player.spigot().sendMessage(new TextComponent("Uptime: " + ServerMeta.getUptime()));
+		player.spigot().sendMessage(new TextComponent("Uptime: " + upHours + " hours"));
 		player.spigot().sendMessage(new TextComponent("New Chunks: " + ChunkListener.newCount));
 		player.spigot().sendMessage(new TextComponent("New Players: " + SpawnController.sessionNewPlayers));
 		player.spigot().sendMessage(new TextComponent("Total Respawns: " + SpawnController.sessionTotalRespawns));

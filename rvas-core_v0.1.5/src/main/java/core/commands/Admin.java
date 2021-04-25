@@ -1,5 +1,16 @@
 package core.commands;
 
+import core.backend.Config;
+import core.backend.Pair;
+import core.backend.PlayerMeta;
+import core.backend.Utilities;
+
+import core.events.SpeedLimit;
+import core.events.BlockListener;
+
+import java.io.IOException;
+import java.util.*;
+
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.ChatColor;
 
@@ -10,15 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import core.backend.Config;
-import core.backend.Pair;
-import core.backend.PlayerMeta;
-import core.backend.Utilities;
-import core.events.SpeedLimit;
-
-import java.io.IOException;
-import java.util.*;
 
 public class Admin implements CommandExecutor {
 
@@ -74,6 +76,7 @@ public class Admin implements CommandExecutor {
 				case "RELOAD":
 					try {
 						Config.load();
+						BlockListener.updateConfigs();
 						sender.spigot().sendMessage(new TextComponent("§aSuccessfully reloaded."));
 
 					} catch (IOException e) {

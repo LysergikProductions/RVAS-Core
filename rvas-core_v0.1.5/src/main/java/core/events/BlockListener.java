@@ -270,4 +270,20 @@ public class BlockListener implements Listener {
 		Block blockToPlace = event.getBlockPlaced();		
 		blockToPlace.getState().update(false, true);
 	}
+	
+	public static boolean updateConfigs() {
+		
+		try {
+			roofProt = Config.getValue("protect.bedrock.roof");
+			floorProt = Config.getValue("protect.bedrock.floor");
+			debug = Boolean.parseBoolean(Config.getValue("debug"));
+			devesp = Boolean.parseBoolean(Config.getValue("devesp"));
+			
+			return true;
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
+	}
 }
