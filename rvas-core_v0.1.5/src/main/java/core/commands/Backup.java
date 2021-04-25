@@ -56,19 +56,19 @@ public class Backup implements CommandExecutor {
 		}
 		
 		try {
-			player.spigot().sendMessage(new TextComponent("pvpstats.."));
+			player.spigot().sendMessage(new TextComponent("saving pvpstats.."));
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
 			
-			player.spigot().sendMessage(new TextComponent("playtimes.."));
+			player.spigot().sendMessage(new TextComponent("saving playtimes.."));
 			FileManager.backupData(FileManager.playtime_user_database, "playtimes-backup-", ".db");
 			
-			player.spigot().sendMessage(new TextComponent("player_settings.."));
+			player.spigot().sendMessage(new TextComponent("saving player-settings.."));
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
 			
-			player.spigot().sendMessage(new TextComponent("muted.."));
+			player.spigot().sendMessage(new TextComponent("saving muted players.."));
 			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");
 			
-			player.spigot().sendMessage(new TextComponent("donators.."));
+			player.spigot().sendMessage(new TextComponent("saving donators.."));
 			FileManager.backupData(FileManager.donor_list, "donator-backup-", ".db");
 			
 			//player.spigot().sendMessage(new TextComponent("codes.."));
@@ -77,16 +77,16 @@ public class Backup implements CommandExecutor {
 			//player.spigot().sendMessage(new TextComponent("used codes.."));
 			//FileManager.backupData(FileManager.used_donor_codes, "codes/used-backup-", ".db");
 			
-			player.spigot().sendMessage(new TextComponent("analytics.."));
+			player.spigot().sendMessage(new TextComponent("saving analytics.."));
 			FileManager.backupData(FileManager.server_statistics_list, "analytics-backup-", ".csv");
 			
-			player.spigot().sendMessage(new TextComponent("config.."));
+			player.spigot().sendMessage(new TextComponent("saving configs.."));
 			FileManager.backupData(FileManager.core_server_config, "config-backup-", ".txt");
 			
-			player.spigot().sendMessage(new TextComponent("motds.."));
+			player.spigot().sendMessage(new TextComponent("saving motds.."));
 			FileManager.backupData(FileManager.motd_message_list, "motds-backup-", ".txt");
 			
-			player.spigot().sendMessage(new TextComponent("prisoners.."));
+			player.spigot().sendMessage(new TextComponent("saving prisoners.."));
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
 			
 		} catch (IOException e) {

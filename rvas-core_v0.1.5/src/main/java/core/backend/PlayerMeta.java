@@ -210,7 +210,9 @@ public class PlayerMeta {
 
 	// --- SAVE/LOAD MUTED --- \\
 	public static void loadMuted() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("plugins/protocol3/muted.db"));
+		
+		List<String> lines = Files.readAllLines(Paths.get("plugins/core/muted.db"));
+		
 		for(String line : lines) {
 			try {
 				_permanentMutes.add(UUID.fromString(line));
@@ -222,19 +224,22 @@ public class PlayerMeta {
 	}
 
 	public static void saveMuted() {
+		
 		try {
-		List<String> lines = new ArrayList<String>();
-		for(UUID key : _permanentMutes) {
-			lines.add(key.toString());
+			List<String> lines = new ArrayList<String>();
+			
+			for(UUID key : _permanentMutes) {
+				lines.add(key.toString());
+			}
+			
+			for(String ip : _ipMutes) {
+				lines.add(ip);
+			}
+			
+			Files.write(Paths.get("plugins/core/muted.db"), String.join("\n", lines).getBytes());
 		}
-		for(String ip : _ipMutes) {
-			lines.add(ip);
-		}
-		Files.write(Paths.get("plugins/protocol3/muted.db"), String.join("\n", lines).getBytes());
-		}
-		catch (IOException e)
-		{
-			System.out.println("[protocol3] Failed to save mutes.");
+		catch (IOException e) {
+			System.out.println("[core.backend.playermeta] Failed to save mutes.");
 		}
 	}
 
