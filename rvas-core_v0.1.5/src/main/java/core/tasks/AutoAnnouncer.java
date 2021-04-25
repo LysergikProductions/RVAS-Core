@@ -39,18 +39,18 @@ public class AutoAnnouncer extends TimerTask {
 				Bukkit.spigot().broadcast(
 						new TextComponent("§6You can toggle join messages with /tjm."));
 				break;
-			case 4:
-				Bukkit.spigot().broadcast(new TextComponent("§6Lagging the server will result in §lsevere consequences."));
-				break;
+			//case 4:
+				//Bukkit.spigot().broadcast(new TextComponent("§6Lagging the server will result in §lsevere consequences."));
+				//break;
 			case 5:
 				Bukkit.spigot().broadcast(new TextComponent("§6Do /help to see the commands available to you."));
 				break;
 			case 6:
 				Bukkit.spigot().broadcast(new TextComponent("§6Use /server to see the current speed limit and other information."));
 				break;
-			case 7:
-				Bukkit.spigot().broadcast(new TextComponent("§6You can dupe the item/s in your main hand by supporting the server with /vote"));
-				break;
+			//case 7:
+				//Bukkit.spigot().broadcast(new TextComponent("§6You can dupe the item/s in your main hand by supporting the server with /vote"));
+				//break;
 			case 8:
 				Bukkit.spigot().broadcast(
 						new TextComponent("§6You can sign items to show them as uniquely yours by doing §l/sign."));

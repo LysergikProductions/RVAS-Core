@@ -94,8 +94,7 @@ public class LagManager implements Listener, Runnable {
 				
 				if (skulls_world == 1) skullMsg = "skull"; else skullMsg = "skulls";
 				System.out.println("Removed " + skulls_world + " wither " + skullMsg + " from " + thisWorld.getName());
-			}
-			
+			}			
 			skulls_all += skulls_world;
 		}
 		return skulls_all;
@@ -103,9 +102,9 @@ public class LagManager implements Listener, Runnable {
 	
 	public static int getWithers() {
 		
-		int counter = 0;		
 		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
 		
+		int counter = 0;
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			
 			if (debug) {
@@ -118,8 +117,6 @@ public class LagManager implements Listener, Runnable {
 				}
 			}
 		}
-		
-		if (debug) System.out.println("Total withers found: " + counter);		
 		return counter;
 	}
 	
@@ -141,9 +138,7 @@ public class LagManager implements Listener, Runnable {
 		
 		int counter = 0;
 		for (Chunk thisChunk: chunks.values()) {
-			for (Entity entity: thisChunk.getEntities()) {
-				
-				boolean isItem = false;	
+			for (Entity entity: thisChunk.getEntities()) {				
 				if (entity.getType().equals(EntityType.DROPPED_ITEM)) {
 					
 					entity.remove();				

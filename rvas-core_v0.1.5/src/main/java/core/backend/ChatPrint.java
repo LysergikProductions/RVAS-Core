@@ -243,10 +243,16 @@ public class ChatPrint {
 			statsLines.addAll(Arrays.asList(title, joined, lastSeen, rank, playtime));
 		}
 		
+		// send receiver specific pvp stats based on target's settings,
+		// but always show receiver everything if they are also target
 		if (targetSettings.show_PVPstats) {
-			if (targetSettings.show_kills) statsLines.add(tkills);
-			if (targetSettings.show_deaths) statsLines.add(tdeaths);
-			if (targetSettings.show_kd) statsLines.add(kd);
+			
+			if (targetSettings.show_kills ||
+					receiver.getUniqueId().equals(target.getUniqueId())) statsLines.add(tkills);
+			if (targetSettings.show_deaths ||
+					receiver.getUniqueId().equals(target.getUniqueId())) statsLines.add(tdeaths);
+			if (targetSettings.show_kd ||
+					receiver.getUniqueId().equals(target.getUniqueId())) statsLines.add(kd);
 		}
 		
 		// send final message to receiver

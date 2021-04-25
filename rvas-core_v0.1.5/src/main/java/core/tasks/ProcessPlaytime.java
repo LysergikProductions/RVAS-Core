@@ -1,11 +1,7 @@
 package core.tasks;
 
-import java.util.TimerTask;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
-import net.md_5.bungee.api.chat.TextComponent;
+import core.events.Chat;
+import core.events.ChunkListener;
 
 import core.backend.Config;
 import core.backend.LagProcessor;
@@ -14,20 +10,36 @@ import core.backend.Scheduler;
 import core.backend.ServerMeta;
 import core.backend.Utilities;
 import core.commands.VoteMute;
-import core.events.Chat;
 
-// Playtime processor
+import java.util.TimerTask;
+import net.md_5.bungee.api.chat.TextComponent;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+// Playtime processor (every 20 ticks)
 public class ProcessPlaytime extends TimerTask {
 	private static long lastTime = 0;
 	private static long lastHour = 0;
 
 	public static long lowTpsCounter = 0;
 	private static long timeTillReset = 3600000;
-
-	private static boolean withersLoaded = false;
+	
+	public static int currentNewChunks = 0;
+	public static int lastNewChunks = 0;
 
 	@Override
 	public void run() {
+		
+		currentNewChunks = ChunkListener.newCount;
+		
+		if (currentNewChunks - lastNewChunks > 320) {
+			System.out.println(
+					"!!!WARNING: more than 16 chunks per tick on average are being generated every second!!!");
+		}
+		
+		lastNewChunks = currentNewChunks;
+		
 		if (lastTime == 0) {
 			lastTime = System.currentTimeMillis();
 			lastHour = System.currentTimeMillis();
@@ -36,21 +48,12 @@ public class ProcessPlaytime extends TimerTask {
 
 		long sinceLast = System.currentTimeMillis() - lastTime;
 
-		// Tick playtime
+		// Tick playtime and temporary mutes
 		Bukkit.getOnlinePlayers().forEach(p -> PlayerMeta.tickPlaytime(p, sinceLast));
-
-		if (!withersLoaded) {
-			// Check current withers
-			// LagPrevention.currentWithers = LagPrevention.getWithers();
-			withersLoaded = true;
-		}
-
-		// Tick temporary mutes
 		PlayerMeta.tickTempMutes(sinceLast);
 
-		// Tick server uptime
+		// Tick server uptime and reconnect delays
 		ServerMeta.tickUptime(sinceLast);
-		// Tick reconnect delays
 		ServerMeta.tickRcDelays(sinceLast);
 
 		if (System.currentTimeMillis() - lastHour >= 3600000) {
@@ -60,8 +63,7 @@ public class ProcessPlaytime extends TimerTask {
 			VoteMute.clear();
 		}
 
-		// Check if we need a restart
-		
+		// Check if we need a restart		
 		Double rThreshold = Double.parseDouble(Config.getValue("restart.threshold"));
 		if (LagProcessor.getTPS() < rThreshold) {
 			lowTpsCounter += sinceLast;
@@ -75,7 +77,6 @@ public class ProcessPlaytime extends TimerTask {
 		if (timeTillReset <= 0) {
 			lowTpsCounter = 0;
 			timeTillReset = 3600000;
-			withersLoaded = false;
 		}
 
 		lastTime = System.currentTimeMillis();

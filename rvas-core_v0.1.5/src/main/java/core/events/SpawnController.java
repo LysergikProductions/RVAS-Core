@@ -180,9 +180,9 @@ public class SpawnController implements Listener {
 		System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core");
 	}
 	
-	@EventHandler
+	@EventHandler // Brand-new players spawn randomly, according to configs
 	public void onJoin(PlayerJoinEvent event) {
-		System.out.println("PlayerJoinEvent triggered.");
+		if (debug) System.out.println("PlayerJoinEvent triggered.");
 		
 		final World thisWorld = event.getPlayer().getWorld();
 		Location thisLocation = thisWorld.getSpawnLocation();

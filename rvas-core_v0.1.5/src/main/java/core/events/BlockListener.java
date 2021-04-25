@@ -258,21 +258,12 @@ public class BlockListener implements Listener {
 	}
 	
 	// this occurs after onPlace because of EventPriority
-	/*@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void noGhost(BlockPlaceEvent event) {
 		
-		Block blockToPlace = event.getBlockPlaced();
-		Material blockType = event.getPlayer().getItemInHand().getType();
-		
-		Location block_loc = blockToPlace.getLocation();		
-		Block blockInGame = block_loc.getBlock();
-		
-		if (debug) {
-			System.out.println("intendedBlock: " + blockType + " currentBlock: " + blockInGame.getType());
-		}
-		
-		blockInGame.setType(blockType);
-	}*/
+		Block blockToPlace = event.getBlockPlaced();		
+		blockToPlace.getState().update(false, true);
+	}
 }
 
 

@@ -20,14 +20,15 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 // Make game unplayable for laggers
-
 public class Prison implements CommandExecutor {
 
-	HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
-	HashMap<UUID, Boolean> threadProgression = new HashMap<UUID, Boolean>();
+	//HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
+	//HashMap<UUID, Boolean> threadProgression = new HashMap<UUID, Boolean>();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		Player player = (Player) sender;
+		
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
 			sender.spigot().sendMessage(new TextComponent("§cYou can't run this."));
 			return true;
@@ -37,7 +38,7 @@ public class Prison implements CommandExecutor {
 			return true;
 		}
 
-		if (sender.isOp()) {
+		/*if (sender.isOp()) {
 			Player op = (Player) sender;
 			switch (args[0]) {
 				case "cam":
@@ -98,7 +99,7 @@ public class Prison implements CommandExecutor {
 					}
 					return true;
 			}
-		}
+		}*/
 
 		Player thisPlayer = Bukkit.getPlayer(args[0]);
 		
@@ -106,19 +107,17 @@ public class Prison implements CommandExecutor {
 			sender.spigot().sendMessage(new TextComponent("§cPlayer is not online."));
 			return true;
 			
-		} else if (PlayerMeta.isAdmin(thisPlayer)) return false;
+		} else if (PlayerMeta.isAdmin(thisPlayer) || thisPlayer.isOp()) return false;
 		
 		PlayerMeta.setLagfag(thisPlayer, !PlayerMeta.isLagfag(thisPlayer));
 		if (PlayerMeta.isLagfag(thisPlayer)) {
+			
 			Arrays.asList("§6" + thisPlayer.getName() + " was caught lagging the server!", "§6IP: " + thisPlayer.getAddress().toString().split(":")[0].replace("/", ""),
 					"§6COORDS: " + Math.round(thisPlayer.getLocation().getX()) + ", "
 					+ Math.round(thisPlayer.getLocation().getY()) + ", "
 					+ Math.round(thisPlayer.getLocation().getZ())).forEach(s -> Bukkit.getServer().spigot().broadcast(new TextComponent(s)));
 
 			thisPlayer.getEnderChest().clear();
-			
-			Location currentSpawn = thisPlayer.getBedSpawnLocation();
-			thisPlayer.setBedSpawnLocation(SpawnController.getRandomSpawn(thisPlayer.getWorld(), currentSpawn));
 			thisPlayer.setHealth(0);
 		}
 		return true;
