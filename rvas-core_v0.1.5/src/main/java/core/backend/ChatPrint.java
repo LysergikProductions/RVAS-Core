@@ -156,10 +156,10 @@ public class ChatPrint {
 		}
 		
 		Date date = new Date(target.getFirstPlayed());
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");		
 		String firstPlayed = sdf.format(date);
 		String lastPlayed = sdf.format(new Date(target.getLastPlayed()));
+		
 		OfflinePlayer largestPlayer = target;
 		
 		// get all uniquley stylable components
@@ -241,7 +241,64 @@ public class ChatPrint {
 		return true;
 	}
 	
-	public static boolean serverInfo(Player receiver, int page) {
+	public static boolean printPlayerSettings(Player receiver) {
+		
+		OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(receiver.getUniqueId());
+		
+		PlayerSettings theseSettings = PlayerMeta.getSettings(offPlayer);
+		ArrayList<TextComponent> list = new ArrayList<>();
+		
+		TextComponent sep = new TextComponent("---");
+		TextComponent title = new TextComponent(" Your Stats Settings ");
+		
+		sep.setColor(ChatColor.GRAY);
+		title.setColor(ChatColor.GOLD); title.setBold(true);
+		
+		TextComponent head = new TextComponent(sep, title, sep);
+		list.add(new TextComponent("")); list.add(head);
+		
+		TextComponent showPVP_a = new TextComponent("PVP-Stats Display: ");
+		TextComponent showKills_a = new TextComponent("Kills: ");
+		TextComponent showDeaths_a = new TextComponent("Deaths: ");
+		TextComponent showKD_a = new TextComponent("K/D: ");
+		TextComponent showJoinMsgs_a = new TextComponent("All join messages: ");
+		TextComponent showDeathMsgs_a = new TextComponent("All death messages: ");
+		
+		showPVP_a.setColor(ChatColor.GOLD);
+		showKills_a.setColor(ChatColor.GOLD);
+		showDeaths_a.setColor(ChatColor.GOLD);
+		showKD_a.setColor(ChatColor.GOLD);
+		showJoinMsgs_a.setColor(ChatColor.GOLD);
+		showDeathMsgs_a.setColor(ChatColor.GOLD);
+		
+		String spvp = ""; String kill = ""; String die = "";
+		String kdr = ""; String jMsgs = ""; String dMsgs = "";
+		
+		if (theseSettings.show_PVPstats == true) spvp = "Enabled"; else spvp = "Disabled";
+		if (theseSettings.show_kills == true) kill = "Enabled"; else kill = "Disabled";
+		if (theseSettings.show_deaths == true) die = "Enabled"; else die = "Disabled";
+		if (theseSettings.show_kd == true) kdr = "Enabled"; else kdr = "Disabled";
+		if (theseSettings.show_player_join_messages == true) jMsgs = "Enabled"; else jMsgs = "Disabled";
+		if (theseSettings.show_player_death_messages == true) dMsgs = "Enabled"; else dMsgs = "Disabled";
+		
+		TextComponent showPVP_b = new TextComponent("" + spvp);
+		TextComponent showKills_b = new TextComponent("" + kill);
+		TextComponent showDeaths_b = new TextComponent("" + die);
+		TextComponent showKD_b = new TextComponent("" + kdr);
+		TextComponent showJoinMsgs_b = new TextComponent("" + jMsgs);
+		TextComponent showDeathMsgs_b = new TextComponent("" + dMsgs);
+		
+		TextComponent showPVP = new TextComponent(showPVP_a, showPVP_b);
+		TextComponent showKills = new TextComponent(showKills_a, showKills_b);
+		TextComponent showDeaths = new TextComponent(showDeaths_a, showDeaths_b);
+		TextComponent showKD = new TextComponent(showKD_a, showKD_b);
+		TextComponent showJoinMsgs = new TextComponent(showJoinMsgs_a, showJoinMsgs_b);
+		TextComponent showDeathMsgs = new TextComponent(showDeathMsgs_a, showDeathMsgs_b);
+		
+		list.add(showPVP); list.add(showKills); list.add(showDeaths);
+		list.add(showKD); list.add(showJoinMsgs); list.add(showDeathMsgs);
+		
+		list.forEach(ln -> receiver.spigot().sendMessage(ln));
 		return true;
 	}
 }

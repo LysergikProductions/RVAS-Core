@@ -23,6 +23,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Listener;
+import org.bukkit.GameMode;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -43,9 +44,13 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] ______________________________");
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] ______________________________");
-		System.out.println("[core.main] _______________");
-		System.out.println("[core.main] Loading files..");
-		System.out.println("[core.main] _______________");
+		
+		System.out.println("forcing default gamemode..");
+		getServer().setDefaultGameMode​(GameMode.SURVIVAL);
+		
+		System.out.println("[core.main] _____________");
+		System.out.println("[core.main] Loading files");
+		System.out.println("[core.main] _____________");
 		
 		try {
 			FileManager.setup();
@@ -53,9 +58,9 @@ public class Main extends JavaPlugin implements Listener {
 			System.out.println("[core.main] An error occured in FileManager.setup()");
 		}
 		
-		System.out.println("[core.main] ____________________");
-		System.out.println("[core.main] Loading more files..");
-		System.out.println("[core.main] ____________________");
+		System.out.println("[core.main] __________________");
+		System.out.println("[core.main] Loading more files");
+		System.out.println("[core.main] __________________");
 		try {
 			PlayerMeta.loadDonators();
 			// PlayerMeta.loadMuted(); // throws IOException: 
@@ -66,9 +71,9 @@ public class Main extends JavaPlugin implements Listener {
 			System.out.println("[core.main] " + e);
 		}
 		
-		System.out.println("[core.main] ___________________");
-		System.out.println("[core.main] Enabling commands..");
-		System.out.println("[core.main] ___________________");
+		System.out.println("[core.main] _________________");
+		System.out.println("[core.main] Enabling commands");
+		System.out.println("[core.main] _________________");
 		
 		System.out.println("/kit");
 		this.getCommand("kit").setExecutor(new Kit());
@@ -148,19 +153,20 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("/info");
 		this.getCommand("info").setExecutor(new Info());
 		
-		System.out.println("[core.main] _________________________");
-		System.out.println("[core.main] Scheduling synced tasks..");
-		System.out.println("[core.main] _________________________");
+		System.out.println("[core.main] _______________________");
+		System.out.println("[core.main] Scheduling synced tasks");
+		System.out.println("[core.main] _______________________");
 		
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 2400L, 2400L); // TODO: final is 36000L each
 		
-		System.out.println("[core.main] _________________________");
-		System.out.println("[core.main] Loading event listeners..");
-		System.out.println("[core.main] _________________________");
+		System.out.println("[core.main] _______________________");
+		System.out.println("[core.main] Loading event listeners");
+		System.out.println("[core.main] _______________________");
 		
 		PluginManager core_pm = getServer().getPluginManager();
 		
@@ -226,13 +232,13 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public void onDisable()
 	{
-		System.out.println("[core.main] _______________________________");
-		System.out.println("[core.main] --- RVAS-Core : Disabling.. ---");
-		System.out.println("[core.main] _______________________________");
+		System.out.println("[core.main] _____________________________");
+		System.out.println("[core.main] --- RVAS-Core : Disabling ---");
+		System.out.println("[core.main] _____________________________");
 		
-		System.out.println("[core.main] ____________________");
-		System.out.println("[core.main] Collecting garbage..");
-		System.out.println("[core.main] ____________________");
+		System.out.println("[core.main] __________________");
+		System.out.println("[core.main] Collecting garbage");
+		System.out.println("[core.main] __________________");
 		
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
@@ -244,9 +250,9 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 		
-		System.out.println("[core.main] ________________________");
-		System.out.println("[core.main] Printing session stats..");
-		System.out.println("[core.main] ________________________");
+		System.out.println("[core.main] ______________________");
+		System.out.println("[core.main] Printing session stats");
+		System.out.println("[core.main] ______________________");
 		
 		System.out.println("New Chunks Generated: " + ChunkListener.newCount);
 		System.out.println("New Unique Players: " + SpawnController.sessionNewPlayers);
@@ -254,9 +260,9 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("Bedrock Placed: " + BlockListener.placedBedrockCounter);
 		System.out.println("Bedrock Broken: " + BlockListener.brokenBedrockCounter);
 		
-		System.out.println("[core.main] __________________");
-		System.out.println("[core.main] Creating backups..");
-		System.out.println("[core.main] __________________");
+		System.out.println("[core.main] ________________");
+		System.out.println("[core.main] Creating backups");
+		System.out.println("[core.main] ________________");
 		
 		try {
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
@@ -278,9 +284,9 @@ public class Main extends JavaPlugin implements Listener {
 			System.out.println("[core.main] " + ex);
 		}
 		
-		System.out.println("[core.main] ________________________");
-		System.out.println("[core.main] Overwriting save files..");
-		System.out.println("[core.main] ________________________");
+		System.out.println("[core.main] ______________________");
+		System.out.println("[core.main] Overwriting save files");
+		System.out.println("[core.main] ______________________");
 		
 		try {
 			PlayerMeta.saveDonators();

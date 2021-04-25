@@ -62,6 +62,7 @@ public class FileManager {
 		
 		File plugin_work_directory = new File(plugin_work_path);
 		File backup_directory = new File(plugin_work_path + "backup");
+		File analytics_directory = new File(plugin_work_path + "analytics");
 		File donor_code_directory = new File(plugin_work_path + "codes");
 		
 		donor_list = new File(plugin_work_path + "donator.db");
@@ -80,6 +81,7 @@ public class FileManager {
 
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!backup_directory.exists()) backup_directory.mkdir();
+		if (!analytics_directory.exists()) analytics_directory.mkdir();
 		if (!donor_code_directory.exists()) donor_code_directory.mkdir();
 		
 		if (!donor_list.exists()) donor_list.createNewFile();

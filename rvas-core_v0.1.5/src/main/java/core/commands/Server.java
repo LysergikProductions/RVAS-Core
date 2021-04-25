@@ -29,6 +29,9 @@ public class Server implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
+		int witherCount = LagManager.getWithers();
+		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
+		
 		double tier1 = Double.parseDouble(Config.getValue("speedlimit.tier_one"));
 		double tier2 = Double.parseDouble(Config.getValue("speedlimit.tier_two"));
 		double tier3 = Double.parseDouble(Config.getValue("speedlimit.tier_three"));
@@ -92,7 +95,7 @@ public class Server implements CommandExecutor {
 		TextComponent rtrig_b = new TextComponent("" + ProcessPlaytime.lowTpsCounter);
 		TextComponent rtrig_c = new TextComponent("ms (600000ms required to restart)");
 		TextComponent withers_a = new TextComponent("Loaded Withers: ");
-		TextComponent withers_b = new TextComponent("" + LagManager.getWithers());
+		TextComponent withers_b = new TextComponent("" + witherCount);
 		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
 		TextComponent slowMode_b = new TextComponent(Boolean.toString(Chat.slowChatEnabled));
 		
@@ -125,7 +128,19 @@ public class Server implements CommandExecutor {
 		rtrig_a.setColor(ChatColor.RED); rtrig_a.setBold(true);
 		rtrig_b.setColor(ChatColor.GRAY); rtrig_c.setColor(ChatColor.GRAY);
 		
-		withers_a.setColor(ChatColor.RED); withers_a.setBold(true);
+		if ((double)witherCount > ((double)witherLimit * 0.8)) {			
+			withers_b.setColor(ChatColor.RED);
+			
+		} else if ((double)witherCount > ((double)witherLimit * 0.5)
+				&& witherCount <= ((double)witherLimit * 0.8)) {
+			
+			withers_b.setColor(ChatColor.GOLD);
+			
+		} else if (witherCount <= ((double)witherLimit * 0.5)) {
+			withers_b.setColor(ChatColor.GREEN);
+		}
+		
+		withers_a.setBold(true);
 		slowMode_a.setColor(ChatColor.RED); slowMode_a.setBold(true);
 		
 		// parse components into 1-line components

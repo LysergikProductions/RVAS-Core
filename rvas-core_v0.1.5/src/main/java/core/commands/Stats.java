@@ -8,17 +8,22 @@ import java.util.*;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 
 public class Stats implements CommandExecutor {
 	
+	public static int cmdCount = 0;
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		cmdCount++;
+		
 		Player player = (Player) sender;
 		UUID playerid = player.getUniqueId();
 		
@@ -110,6 +115,11 @@ public class Stats implements CommandExecutor {
 				case "mc":
 					
 					ChatPrint.printMcStats(player, Bukkit.getOfflinePlayer(player.getUniqueId()));					
+					return true;
+				
+				case "info":
+					
+					ChatPrint.printPlayerSettings(player);					
 					return true;
 			}
 
