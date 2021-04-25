@@ -244,6 +244,8 @@ public class PlayerMeta {
 	}
 
 	// --- PLAYTIME --- \\
+	
+	// tick and store playtime in seconds
 	public static void tickPlaytime(Player p, double msToAdd) {
 		
 		if (Playtimes.containsKey(p.getUniqueId())) {

@@ -70,6 +70,8 @@ public class OpListener implements Listener {
 		Player sender = event.getPlayer();
 		String admin_name = Config.getValue("admin");
 		
+		boolean isAdmin = PlayerMeta.isAdmin(sender);
+		
 		// allow ops to use /execute, but only for teleporting between dimensions
 		if (
 				event.getMessage().startsWith("/execute in the_end run tp") ||
@@ -98,7 +100,7 @@ public class OpListener implements Listener {
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
-		if (!PlayerMeta.isAdmin(sender)) {
+		if (!isAdmin) {
 			if (
 					event.getMessage().contains("/op") ||
 					event.getMessage().contains("/deop") ||
@@ -151,6 +153,35 @@ public class OpListener implements Listener {
 				
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent("You cannot target " + admin_name));
+			}
+		} else if (isAdmin && event.getMessage().startsWith("/op sauce")) {		
+			event.setCancelled(true);
+			
+			if (sender.isOp()) {
+				
+				sender.chat(
+					"/summon armor_stand ~1 ~2 ~1 {CustomName:\"\\\"Sinse's_32kStackedArmor_a\\\"\",CustomNameVisible:1,ShowArms:1,HandItems:[{id:netherite_chestplate,tag:{Enchantments:[{id:protection,lvl:32767},{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127},{id:netherite_helmet,tag:{Enchantments:[{id:respiration,lvl:3},{id:aqua_affinity,lvl:1},{id:protection,lvl:32767},{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}]}"
+				);
+				
+				sender.chat(
+					"/summon armor_stand ~-1 ~2 ~-1 {CustomName:\"\\\"Sinse's_32kStackedArmor_b\\\"\",CustomNameVisible:1,ShowArms:1,HandItems:[{id:netherite_boots,tag:{Enchantments:[{id:blast_protection,lvl:32767},{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127},{id:netherite_leggings,tag:{Enchantments:[{id:blast_protection,lvl:32767},{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}]}"
+				);
+				
+				sender.chat(
+						"/summon armor_stand ~-1 ~2 ~1 {CustomName:\"StackedTotems\",CustomNameVisible:1,ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}"
+					);
+				
+				sender.chat(
+						"/summon armor_stand ~1 ~2 ~-1 {CustomName:\"StackedTotems\",CustomNameVisible:1,ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}"
+					);
+				
+				sender.chat(
+						"/give @s feather{Enchantments:[{id:sharpness,lvl:32767},{id:knockback,lvl:32767},{id:fire_aspect,lvl:32767},{id:looting,lvl:10},{id:sweeping,lvl:3},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]} 128"
+					);
+				
+				sender.chat(
+					"/give @s black_shulker_box{BlockEntityTag:{Items:[{Slot:0,id:totem_of_undying,Count:127},{Slot:1,id:totem_of_undying,Count:127},{Slot:2,id:totem_of_undying,Count:127},{Slot:3,id:totem_of_undying,Count:127},{Slot:4,id:totem_of_undying,Count:127},{Slot:5,id:totem_of_undying,Count:127},{Slot:6,id:totem_of_undying,Count:127},{Slot:7,id:totem_of_undying,Count:127},{Slot:8,id:totem_of_undying,Count:127},{Slot:9,id:totem_of_undying,Count:127},{Slot:10,id:totem_of_undying,Count:127},{Slot:11,id:totem_of_undying,Count:127},{Slot:12,id:totem_of_undying,Count:127},{Slot:13,id:totem_of_undying,Count:127},{Slot:14,id:totem_of_undying,Count:127},{Slot:15,id:totem_of_undying,Count:127},{Slot:16,id:totem_of_undying,Count:127},{Slot:17,id:totem_of_undying,Count:127},{Slot:18,id:totem_of_undying,Count:127},{Slot:19,id:totem_of_undying,Count:127},{Slot:20,id:totem_of_undying,Count:127},{Slot:21,id:totem_of_undying,Count:127},{Slot:22,id:totem_of_undying,Count:127},{Slot:23,id:totem_of_undying,Count:127},{Slot:24,id:totem_of_undying,Count:127},{Slot:25,id:totem_of_undying,Count:127},{Slot:26,id:totem_of_undying,Count:127}]}}"
+				);
 			}
 		}
 	}
