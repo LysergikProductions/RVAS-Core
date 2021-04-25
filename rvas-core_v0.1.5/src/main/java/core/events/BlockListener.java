@@ -41,7 +41,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.Material;
-//import org.bukkit.material.MaterialData;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -51,10 +50,14 @@ import org.bukkit.entity.Player;
 
 public class BlockListener implements Listener {
 	
+	// do these 4 need to be static? do they update with `Config.load()` from `/admin reload` ?
 	static String roofProt = Config.getValue("protect.bedrock.roof");
 	static String floorProt = Config.getValue("protect.bedrock.floor");
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	static boolean devesp = Boolean.parseBoolean(Config.getValue("devesp"));
+	
+	public static int brokenBedrockCounter = 0;
+	public static int placedBedrockCounter = 0;
 	
 	public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
 	
@@ -155,6 +158,7 @@ public class BlockListener implements Listener {
 				
 				if (debug && !devesp) Bukkit.spigot().broadcast(
 						new TextComponent(breaker_name + " just broke BEDROCK!"));
+				brokenBedrockCounter++;
 				
 			// protect natural The_End entry and exit portals
 			} else if (blockType.equals(Material.END_PORTAL)) {
@@ -248,6 +252,8 @@ public class BlockListener implements Listener {
 			}
 		}
 		
+		placedBedrockCounter++;
+		
 		if (debug && !devesp) {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
@@ -265,23 +271,3 @@ public class BlockListener implements Listener {
 		blockToPlace.getState().update(false, true);
 	}
 }
-
-
-// --- ** FOR REIMPLEMENTATION OF LAG PRISONER META ** --- \\
-
-/*
-
-int randomNumber = r.nextInt(9);
-if (randomNumber == 5 || randomNumber == 6) {
-	
-	placer.spigot().sendMessage(new TextComponent("§cYou were warned!"));
-	event.setCancelled(true); return;
-}
-
-randomNumber = r.nextInt(250);
-if (randomNumber == 21) {
-	
-	placer.kickPlayer("§6lmao -tries to place stuff-");
-	return;
-}
-}*/

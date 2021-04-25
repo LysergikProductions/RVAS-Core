@@ -43,60 +43,38 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Statistic;
 
 public class ChatPrint {
 	
-	// - HELP PAGES - //
+	// - PLAYER STATS PAGES - \\
 	
-	public static boolean helpGeneral(Player receiver, int page) {
-		return true;
-	}
-	
-	public static boolean helpStats(Player receiver) {
+	public static boolean printMcStats(Player receiver, OfflinePlayer target) {
 		
-		TextComponent head = new TextComponent("--- /stats help ---");
+		receiver.spigot().sendMessage(new TextComponent(""));
 		
-		TextComponent self_a = new TextComponent("/stats");
-		TextComponent players_a = new TextComponent("/stats [player name]");
-		TextComponent leaders_a = new TextComponent("/stats 5");
+		int gaps_eaten = (int)target.getStatistic(Statistic.USE_ITEM, Material.ENCHANTED_GOLDEN_APPLE);
+		int mined_obi = (int)target.getStatistic(Statistic.MINE_BLOCK, Material.OBSIDIAN);
+		int placed_obi = (int)target.getStatistic(Statistic.USE_ITEM, Material.OBSIDIAN);		
+		int mined_ancientDebris = (int)target.getStatistic(Statistic.MINE_BLOCK, Material.ANCIENT_DEBRIS);
 		
-		TextComponent self_b = new TextComponent(" : Shows you your stats");
-		TextComponent players_b = new TextComponent(" : Shows the stats for that player");
-		TextComponent leaders_b = new TextComponent(" : Shows the top 5 players (by play-time)");
+		TextComponent sep = new TextComponent("---");
+		TextComponent title = new TextComponent(" " + target.getName() + "'s MC-Stats ");
 		
-		TextComponent toggle_info = new TextComponent(
-				"Use /stats kills | deaths | kd, to toggle hiding them from public view!");
+		sep.setColor(ChatColor.GRAY);
+		title.setColor(ChatColor.GOLD); title.setBold(true);
 		
-		toggle_info.setColor(ChatColor.GOLD); toggle_info.setItalic(true);
-		
-		self_b.setColor(ChatColor.GRAY);
-		players_b.setColor(ChatColor.GRAY);
-		leaders_b.setColor(ChatColor.GRAY);
-		
-		self_a.setItalic(true);
-		players_a.setItalic(true);
-		leaders_a.setItalic(true);
-		
-		TextComponent self = new TextComponent(self_a, self_b);
-		TextComponent players = new TextComponent(players_a, players_b);
-		TextComponent leaders = new TextComponent(leaders_a, leaders_b);
-		
+		TextComponent head = new TextComponent(sep, title, sep);
 		receiver.spigot().sendMessage(head);
 		
-		HoverEvent hover_leaders = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-				new Text("Click on a player in the leaderboard to see their stats quickly"));
-		
-		leaders.setHoverEvent(hover_leaders);
-		
-		ArrayList<TextComponent> list = new ArrayList<>();
-		list.add(self); list.add(leaders); list.add(players); list.add(toggle_info);
-		
-		list.forEach(ln -> receiver.spigot().sendMessage(ln));		
+		receiver.spigot().sendMessage(new TextComponent("Gaps Eaten: " + gaps_eaten));
+		receiver.spigot().sendMessage(new TextComponent("Mined Obsidian: " + mined_obi));
+		receiver.spigot().sendMessage(new TextComponent("Placed Obsidian: " + placed_obi));
+		receiver.spigot().sendMessage(new TextComponent("Mined Ancient Debris: " + mined_ancientDebris));
 		
 		return true;
 	}
-	
-	// - STATS PAGES - //
 	
 	public static boolean printLeaders(Player receiver) {
 		
@@ -247,8 +225,6 @@ public class ChatPrint {
 			statsLines.addAll(Arrays.asList(title, joined, lastSeen, rank, playtime));
 		}
 		
-		// send receiver specific pvp stats based on target's settings,
-		// but always show receiver everything if they are also target
 		if (targetSettings.show_PVPstats) {
 			
 			if (targetSettings.show_kills ||

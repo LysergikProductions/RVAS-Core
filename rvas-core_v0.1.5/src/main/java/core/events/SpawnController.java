@@ -57,6 +57,7 @@ public class SpawnController implements Listener {
 	static Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
 	
 	public static int sessionTotalRespawns = 0;
+	public static int sessionNewPlayers = 0;
 	
 	public static ArrayList<Material> BannedSpawnFloors = new ArrayList<>(); {
 		BannedSpawnFloors.addAll(Arrays.asList(
@@ -220,6 +221,7 @@ public class SpawnController implements Listener {
 			
 			if (!playedBefore) {
 				System.out.println(joiner_name + "is playing for the first time!");
+				sessionNewPlayers++;
 				
 				for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
 					if (onlinePlayer.isOp()) {

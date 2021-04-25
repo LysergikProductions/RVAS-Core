@@ -1,9 +1,7 @@
 package core.commands;
 
 import core.Main;
-import core.backend.PlayerMeta;
-import core.backend.Utilities;
-import core.backend.ChatPrint;
+import core.backend.*;
 import core.objects.*;
 
 import java.util.*;
@@ -61,7 +59,7 @@ public class Stats implements CommandExecutor {
 					return true;
 					
 				case "help":
-					ChatPrint.helpStats(player);
+					HelpPages.helpStats(player);
 					return true;
 					
 				case "kills":	
@@ -107,6 +105,11 @@ public class Stats implements CommandExecutor {
 						player.spigot().sendMessage(new TextComponent("Your k/d ratio is now hidden."));
 					}
 					
+					return true;
+					
+				case "mc":
+					
+					ChatPrint.printMcStats(player, Bukkit.getOfflinePlayer(player.getUniqueId()));					
 					return true;
 			}
 

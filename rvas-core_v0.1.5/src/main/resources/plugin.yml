@@ -55,3 +55,5 @@ commands:
    desription: toggle slow chat
   backup:
    desription: backup RVAS-core managed data
+  info:
+   desription: get useful information for ops

@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>core</groupId>
-    <artifactId>rvas</artifactId>
-    <version>0</version>
+    <artifactId>rvas-core</artifactId>
+    <version>0.1.5</version>
     <name>rvas</name>
-    <description>RVAS-core</description>
+    <description>paper-plugin</description>
 
     <repositories>
 
@@ -17,6 +17,11 @@
         <repository>
     		<id>papermc</id>
     		<url>https://papermc.io/repo/repository/maven-public/</url>
+		</repository>
+		
+		<repository>
+    		<id>votifier</id>
+    		<url>http://repo.howaner.de/com/vexsoftware/votifier/1.9/</url>
 		</repository>
 		
     </repositories>
@@ -69,7 +74,7 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.1.5-191</finalName>
+        <finalName>rvas-core-0.1.5-192</finalName>
         <plugins>
             <!-- download source code in Eclipse, best practice-->
             <plugin>
