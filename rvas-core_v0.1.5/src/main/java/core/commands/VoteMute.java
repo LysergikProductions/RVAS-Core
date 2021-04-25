@@ -63,7 +63,7 @@ public class VoteMute implements CommandExecutor {
 		}
 
 		// Muted people can't vote.
-		if ((PlayerMeta.isMuted(voter) && Config.getValue("mute.hypocrisy").equals("1")) || PlayerMeta.isLagfag(voter)) {
+		if ((PlayerMeta.isMuted(voter) && Config.getValue("mute.hypocrisy").equals("1")) || PlayerMeta.isPrisoner(voter)) {
 			voter.spigot().sendMessage(new TextComponent("§cYou can't vote."));
 			return true;
 		}

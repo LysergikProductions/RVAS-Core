@@ -196,7 +196,7 @@ public class BlockListener implements Listener {
 		String mat = blockType.toString();
 		
 		// prevent lag-prisoners from placing things that can cause lag
-		if (PlayerMeta.isLagfag(placer)) {
+		if (PlayerMeta.isPrisoner(placer)) {
 
 			if (LagMats.contains(blockType)) {event.setCancelled(true);
 				return;

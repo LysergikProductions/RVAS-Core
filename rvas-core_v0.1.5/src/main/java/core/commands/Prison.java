@@ -19,7 +19,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-// Make game unplayable for laggers
+// Toggle players being prisoners
 public class Prison implements CommandExecutor {
 
 	//HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
@@ -109,8 +109,9 @@ public class Prison implements CommandExecutor {
 			
 		} else if (PlayerMeta.isAdmin(thisPlayer) || thisPlayer.isOp()) return false;
 		
-		PlayerMeta.setLagfag(thisPlayer, !PlayerMeta.isLagfag(thisPlayer));
-		if (PlayerMeta.isLagfag(thisPlayer)) {
+		PlayerMeta.togglePrisoner(thisPlayer);
+		
+		if (PlayerMeta.isPrisoner(thisPlayer)) {
 			
 			Arrays.asList("§6" + thisPlayer.getName() + " was caught lagging the server!", "§6IP: " + thisPlayer.getAddress().toString().split(":")[0].replace("/", ""),
 					"§6COORDS: " + Math.round(thisPlayer.getLocation().getX()) + ", "

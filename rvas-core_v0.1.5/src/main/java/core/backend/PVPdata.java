@@ -98,6 +98,8 @@ public class PVPdata {
 		} else {
 			
 			PVPstats new_stats = getNewStats(p);
+			sPVPStats.put(p.getUniqueId(), new_stats);
+			
 			return new_stats;
 		}
 	}

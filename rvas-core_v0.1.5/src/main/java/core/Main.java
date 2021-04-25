@@ -172,6 +172,8 @@ public class Main extends JavaPlugin implements Listener {
 		core_pm.registerEvents(new SpawnController(), this);
 		core_pm.registerEvents(new Voted(), this);
 		
+		System.out.println("[core.main] ..finishing up..");
+		
 		// Disable global wither-spawn sound
 		if (Config.getValue("global.sound.no_wither").equals("true")) {
 			ProtocolLibrary.getProtocolManager()
@@ -187,9 +189,7 @@ public class Main extends JavaPlugin implements Listener {
 						}
 					}
 				});
-		}	
-		
-		System.out.println("[core.main] ..finishing up..");
+		}
 		
 		// Define banned & special blocks
 		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,

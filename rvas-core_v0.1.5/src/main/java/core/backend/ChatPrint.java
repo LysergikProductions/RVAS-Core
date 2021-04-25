@@ -2,7 +2,7 @@ package core.backend;
 
 /* *
  * 
- *  About: Store void methods that print information
+ *  About: Store methods that print information
  *  	from RVAS-Core to a given user's chat
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -48,11 +48,11 @@ public class ChatPrint {
 	
 	// - HELP PAGES - //
 	
-	public static void helpGeneral(Player receiver, int page) {
-		return;
+	public static boolean helpGeneral(Player receiver, int page) {
+		return true;
 	}
 	
-	public static void helpStats(Player receiver) {
+	public static boolean helpStats(Player receiver) {
 		
 		TextComponent head = new TextComponent("--- /stats help ---");
 		
@@ -91,12 +91,14 @@ public class ChatPrint {
 		ArrayList<TextComponent> list = new ArrayList<>();
 		list.add(self); list.add(leaders); list.add(players); list.add(toggle_info);
 		
-		list.forEach(ln -> receiver.spigot().sendMessage(ln));
+		list.forEach(ln -> receiver.spigot().sendMessage(ln));		
+		
+		return true;
 	}
 	
 	// - STATS PAGES - //
 	
-	public static void printLeaders(Player receiver) {
+	public static boolean printLeaders(Player receiver) {
 		
 		HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
 		HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
@@ -158,9 +160,11 @@ public class ChatPrint {
 		receiver.spigot().sendMessage(top5_head);
 		list.forEach(ln -> receiver.spigot().sendMessage(ln));
 		receiver.spigot().sendMessage(msg);
+		
+		return true;
 	}
 	
-	public static void printStats(Player receiver, OfflinePlayer target) {
+	public static boolean printStats(Player receiver, OfflinePlayer target) {
 		
 		Player player = target.getPlayer();
 		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
@@ -257,9 +261,11 @@ public class ChatPrint {
 		
 		// send final message to receiver
 		statsLines.forEach(ln -> receiver.spigot().sendMessage(ln));
+		
+		return true;
 	}
 	
-	public static void serverInfo(Player receiver, int page) {
-		//
+	public static boolean serverInfo(Player receiver, int page) {
+		return true;
 	}
 }

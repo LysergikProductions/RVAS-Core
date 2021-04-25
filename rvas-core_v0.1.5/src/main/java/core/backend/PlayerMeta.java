@@ -37,8 +37,7 @@ public class PlayerMeta {
 
 	public static boolean MuteAll = false;
 
-	// GET/SET DONATOR STATUS //
-
+	// GET/SET DONATOR STATUS \\
 	public static boolean isDonator(Player p)
 	{
 		return _donatorList.contains(p.getUniqueId());
@@ -62,12 +61,10 @@ public class PlayerMeta {
 		}
 	}
 
-	// --- MUTES --- //
-
+	// --- MUTES --- \\
 	public static boolean isMuted(Player p) {
 		
-		if(_temporaryMutes.containsKey(p.getUniqueId())) { return true; }
-		
+		if(_temporaryMutes.containsKey(p.getUniqueId())) { return true; }		
 		if(_permanentMutes.contains(p.getUniqueId())) { return true; }
 		
 		if(_ipMutes.contains(getIp(p))) {
@@ -102,30 +99,37 @@ public class PlayerMeta {
 	{
 		UUID uuid = p.getUniqueId();
 		String muteType = "";
-		if (type.equals(MuteType.NONE))
-		{
+		
+		if (type.equals(MuteType.NONE)) {
+			
 			muteType = "un";
-			if (_temporaryMutes.containsKey(uuid))
+			if (_temporaryMutes.containsKey(uuid)) {
 				_temporaryMutes.remove(uuid);
-			if (_permanentMutes.contains(uuid))
-			{
+			}
+			
+			if (_permanentMutes.contains(uuid)) {
 				_permanentMutes.remove(uuid);
 				saveMuted();
 			}
+			
 			if(_ipMutes.contains(getIp(p))) {
 				_ipMutes.remove(getIp(p));
 				saveMuted();
 			}
 			Chat.violationLevels.remove(uuid);
+			
 		} else if (type.equals(MuteType.TEMPORARY)) {
 			
 			muteType = "temporarily ";
 			_permanentMutes.remove(uuid);
+			
 			if (!_temporaryMutes.containsKey(uuid))
 				_temporaryMutes.put(uuid, 0.0);
+			
 		} else if (type.equals(MuteType.PERMANENT)) {
 			
 			muteType = "permanently ";
+			
 			if (!_permanentMutes.contains(uuid)) _permanentMutes.add(uuid);
 			if (_temporaryMutes.containsKey(uuid)) _temporaryMutes.remove(uuid);
 			saveMuted();
@@ -133,6 +137,7 @@ public class PlayerMeta {
 		} else if (type.equals(MuteType.IP)) {
 			
 			muteType = "permanently ";
+			
 			setMuteType(p, MuteType.PERMANENT);
 			_ipMutes.add(getIp(p));
 		}
@@ -140,6 +145,7 @@ public class PlayerMeta {
 	}
 
 	public static void tickTempMutes(double msToAdd) {
+		
 		_temporaryMutes.keySet().forEach(u -> {
 			double oldValue = _temporaryMutes.get(u);
 			_temporaryMutes.put(u, oldValue + (msToAdd / 1000));
@@ -147,15 +153,21 @@ public class PlayerMeta {
 		});
 	}
 
-	// -- LAG PRISONERS -- //
-	public static void setLagfag(Player p, boolean status) {
-		if (status) {
-			if (!_lagfagList.containsKey(p.getUniqueId())) {
-				_lagfagList.put(p.getUniqueId(), p.getAddress().toString().split(":")[0]);
-			}
+	// -- LAG PRISONERS -- \\
+	public static void togglePrisoner(Player p) {
+
+		if (!_lagfagList.containsKey(p.getUniqueId())) {
+			_lagfagList.put(p.getUniqueId(), p.getAddress().toString().split(":")[0]);
 		} else {
-			_lagfagList.remove(p.getUniqueId());
-		}
+			try {
+				_lagfagList.remove(p.getUniqueId());
+			} catch (Exception e) {
+				System.out.println(
+						"[core.backend.playermeta] WARNING: Tried and failed to remove this uuid from prisoner list..");
+				System.out.println(e);
+			}
+		}	
+		
 		try {
 			saveLagfags();
 		} catch (IOException e) {
@@ -163,11 +175,12 @@ public class PlayerMeta {
 		}
 	}
 
-	public static boolean isLagfag(Player p) {
+	public static boolean isPrisoner(Player p) {
 		
-		if (_lagfagList.containsKey(p.getUniqueId())
-		|| _lagfagList.containsValue(p.getAddress().toString().split(":")[0])) {
-			
+		if (
+			_lagfagList.containsKey(p.getUniqueId()) ||
+			_lagfagList.containsValue(p.getAddress().toString().split(":")[0])
+		){			
 			return true;
 			
 		} else return false;
@@ -183,8 +196,7 @@ public class PlayerMeta {
 		lines.forEach(val -> _lagfagList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
 	}
 
-	// --- SAVE/LOAD DONATORS --- //
-
+	// --- SAVE/LOAD DONATORS --- \\
 	public static void loadDonators() throws IOException {
 		List<String> lines = Files.readAllLines(Paths.get("plugins/core/donator.db"));
 		lines.forEach(val -> _donatorList.add(UUID.fromString(val)));
@@ -196,8 +208,7 @@ public class PlayerMeta {
 		Files.write(Paths.get("plugins/core/codes/used.db"), String.join("\n", UsedDonorCodes).getBytes());
 	}
 
-	// --- SAVE/LOAD MUTED --- //
-
+	// --- SAVE/LOAD MUTED --- \\
 	public static void loadMuted() throws IOException {
 		List<String> lines = Files.readAllLines(Paths.get("plugins/protocol3/muted.db"));
 		for(String line : lines) {
@@ -227,8 +238,9 @@ public class PlayerMeta {
 		}
 	}
 
-	// --- PLAYTIME --- //
+	// --- PLAYTIME --- \\
 	public static void tickPlaytime(Player p, double msToAdd) {
+		
 		if (Playtimes.containsKey(p.getUniqueId())) {
 			double value = Playtimes.get(p.getUniqueId());
 			value += msToAdd / 1000;
@@ -280,6 +292,7 @@ public class PlayerMeta {
 	}
 	
 	public static PlayerSettings getSettings(OfflinePlayer p) {
+		
 		PlayerSettings settings = sPlayerSettings.get(p.getUniqueId());
 		
 		if (settings != null && sPlayerSettings.containsKey(p.getUniqueId())) {
@@ -309,8 +322,7 @@ public class PlayerMeta {
 		w.close();
 	}
 	
-	// --- OTHER -- //
-
+	// --- OTHER -- \\
 	public enum MuteType {
 		TEMPORARY, PERMANENT, IP, NONE
 	}

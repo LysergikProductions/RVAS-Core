@@ -66,7 +66,7 @@ public class Move implements Listener {
 			player.setHealth(0);
 		
 		// Make game unplayable for laggers
-		if (PlayerMeta.isLagfag(player)) {
+		if (PlayerMeta.isPrisoner(player)) {
 			int randomNumber = r.nextInt(9);
 			
 			if (randomNumber == 5 || randomNumber == 6) {

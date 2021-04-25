@@ -35,6 +35,7 @@ public class Chat implements Listener {
 
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
+		
 		// Cancel this event so we can override vanilla chat
 		e.setCancelled(true);
 		
@@ -83,7 +84,7 @@ public class Chat implements Listener {
 		// -- CHECKS -- //
 
 		if (isBlank(finalMessage)) doSend = false;
-		else if (PlayerMeta.isLagfag(player)) finalMessage = ":'(";
+		else if (PlayerMeta.isPrisoner(player)) finalMessage = ":'(";
 		
 		// Don't send any message if slow-chat configs dictate it
 		if (slowChatEnabled && !player.isOp()) {
@@ -161,8 +162,9 @@ public class Chat implements Listener {
 				}
 				
 				// op bypass
-				if(e.getPlayer().isOp() && Config.getValue("spam.ops").equals("true")) {
+				if(e.getPlayer().isOp() && Config.getValue("spam.ops").equals("true")) {					
 					if(censored) {
+						
 						e.getPlayer().sendMessage(new TextComponent("§cYour message was flagged as spam, but since you are an OP, it was not filtered."));
 						censored = false;
 					}
@@ -181,20 +183,22 @@ public class Chat implements Listener {
 	}
 	
 	public double similarity(String s1, String s2) {
+		
 		    String longer = s1, shorter = s2;
 		    if (s1.length() < s2.length()) { // longer should always have greater length
 		      longer = s2; shorter = s1;
 		    }
+		    
 		    int longerLength = longer.length();
 		    if (longerLength == 0) { return 1.0; /* both strings are zero length */ }
 		    /* // If you have Apache Commons Text, you can use it to calculate the edit distance:
 		    LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
 		    return (longerLength - levenshteinDistance.apply(longer, shorter)) / (double) longerLength; */
 		    return (longerLength - editDistance(longer, shorter)) / (double) longerLength;
-
 	}
 	
 	public int editDistance(String s1, String s2) {
+		
 	    s1 = s1.toLowerCase();
 	    s2 = s2.toLowerCase();
 
@@ -223,9 +227,11 @@ public class Chat implements Listener {
 
 	@EventHandler
 	public boolean onCommand(PlayerCommandPreprocessEvent e) {
+		
 		if (e.getMessage().split(" ")[0].contains(":") && !e.getPlayer().isOp()) {
 			e.setCancelled(true);
 			e.getPlayer().spigot().sendMessage(new TextComponent("§cUnknown command."));
+			
 		} else if (e.getMessage().split("")[1].contains(Config.getValue("admin")) && !e.getPlayer().isOp()) {
 			e.setCancelled(true);
 			e.getPlayer().spigot().sendMessage(new TextComponent("§cCannot target admin account."));
@@ -235,6 +241,7 @@ public class Chat implements Listener {
 
 	@EventHandler
 	public void onPlayerTab(PlayerCommandSendEvent e) {
+		
 		if (!e.getPlayer().isOp()) {
 			e.getCommands().clear();
 			e.getCommands().addAll(allUserCommands);
