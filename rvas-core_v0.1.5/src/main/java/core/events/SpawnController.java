@@ -25,6 +25,7 @@ package core.events;
 
 import core.backend.Config;
 import core.events.ChunkListener;
+import core.tasks.Analytics;
 
 import java.util.*;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -184,6 +185,8 @@ public class SpawnController implements Listener {
 	@EventHandler // Brand-new players spawn randomly, according to configs
 	public void onJoin(PlayerJoinEvent event) {
 		if (debug) System.out.println("PlayerJoinEvent triggered.");
+		
+		Analytics.total_joins++;
 		
 		final World thisWorld = event.getPlayer().getWorld();
 		Location thisLocation = thisWorld.getSpawnLocation();

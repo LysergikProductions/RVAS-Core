@@ -162,7 +162,7 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 2400L, 2400L); // TODO: final is 36000L each
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L); // TODO: final is 36000L each
 		
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Loading event listeners");
@@ -270,14 +270,14 @@ public class Main extends JavaPlugin implements Listener {
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
 			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");			
 			FileManager.backupData(FileManager.donor_list, "donator-backup-", ".db");
+			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
 			
 			//FileManager.backupData(FileManager.all_donor_codes, "codes/all-backup-", ".db");
 			//FileManager.backupData(FileManager.used_donor_codes, "codes/used-backup-", ".db");
 			
-			FileManager.backupData(FileManager.server_statistics_list, "analytics-backup-", ".csv");
-			FileManager.backupData(FileManager.core_server_config, "config-backup-", ".txt");
-			FileManager.backupData(FileManager.motd_message_list, "motds-backup-", ".txt");
-			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
+			//FileManager.backupData(FileManager.server_statistics_list, "analytics-backup-", ".csv");
+			//FileManager.backupData(FileManager.core_server_config, "config-backup-", ".txt");
+			//FileManager.backupData(FileManager.motd_message_list, "motds-backup-", ".txt");			
 			
 		} catch (IOException ex) {
 			System.out.println("[core.main] WARNING - Failed to save one or more backup files.");

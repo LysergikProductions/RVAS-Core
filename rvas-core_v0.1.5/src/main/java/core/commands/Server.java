@@ -98,6 +98,8 @@ public class Server implements CommandExecutor {
 		TextComponent withers_b = new TextComponent("" + witherCount);
 		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
 		TextComponent slowMode_b = new TextComponent(Boolean.toString(Chat.slowChatEnabled));
+		TextComponent uptime_a = new TextComponent("Server Uptime: ");
+		TextComponent uptime_b = new TextComponent(Utilities.calculateTime((double)ServerMeta.getUptime()));
 		
 		// style individual components //
 		title_sep.setColor(ChatColor.GRAY);
@@ -106,7 +108,7 @@ public class Server implements CommandExecutor {
 		
 		tps_a.setColor(ChatColor.RED); tps_a.setBold(true);
 		
-		slimit_a.setColor(ChatColor.RED); slimit_a.setBold(true);
+		slimit_a.setBold(true);
 		
 		skicks_a.setColor(ChatColor.RED); skicks_a.setBold(true);
 		
@@ -128,20 +130,21 @@ public class Server implements CommandExecutor {
 		rtrig_a.setColor(ChatColor.RED); rtrig_a.setBold(true);
 		rtrig_b.setColor(ChatColor.GRAY); rtrig_c.setColor(ChatColor.GRAY);
 		
-		if ((double)witherCount > ((double)witherLimit * 0.8)) {			
+		if ((double)witherCount >= ((double)witherLimit * 0.8)) {			
 			withers_b.setColor(ChatColor.RED);
 			
-		} else if ((double)witherCount > ((double)witherLimit * 0.5)
-				&& witherCount <= ((double)witherLimit * 0.8)) {
+		} else if ((double)witherCount >= ((double)witherLimit * 0.5)
+				&& witherCount < ((double)witherLimit * 0.8)) {
 			
 			withers_b.setColor(ChatColor.GOLD);
 			
-		} else if (witherCount <= ((double)witherLimit * 0.5)) {
+		} else if (witherCount < ((double)witherLimit * 0.5)) {
 			withers_b.setColor(ChatColor.GREEN);
 		}
 		
 		withers_a.setBold(true);
 		slowMode_a.setColor(ChatColor.RED); slowMode_a.setBold(true);
+		uptime_a.setColor(ChatColor.RED); uptime_a.setBold(true);
 		
 		// parse components into 1-line components
 		TextComponent title = new TextComponent(title_sep, title_name, title_sep);
@@ -164,6 +167,7 @@ public class Server implements CommandExecutor {
 		TextComponent rtrig = new TextComponent(rtrig_a, rtrig_b, rtrig_c);
 		TextComponent withers = new TextComponent(withers_a, withers_b);
 		TextComponent slowMode = new TextComponent(slowMode_a, slowMode_b);
+		TextComponent uptime = new TextComponent(uptime_a, uptime_b);
 		// more info
 		TextComponent moreInfo = new TextComponent("Click here to see more info..");
 		moreInfo.setColor(ChatColor.BLUE); moreInfo.setItalic(true);
@@ -172,11 +176,12 @@ public class Server implements CommandExecutor {
 		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Trying to lag the server will result in severe consequences.")));
 		moreInfo.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/server 2 "));
 		
+		// define second page
 		if (args.length != 0) {
 			switch (args[0]) {
 				case "2":
 			
-					Arrays.asList(new TextComponent(""), more_info_head, ujoins, ops, debug_head, slowMode, restart, rtrig)
+					Arrays.asList(new TextComponent(""), more_info_head, uptime, ujoins, ops, debug_head, slowMode, restart, rtrig)
 					.forEach(ln -> sender.spigot().sendMessage(ln));
 			
 					return true;

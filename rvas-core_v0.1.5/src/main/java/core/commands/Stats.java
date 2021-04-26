@@ -3,8 +3,12 @@ package core.commands;
 import core.Main;
 import core.backend.*;
 import core.objects.*;
+import core.tasks.Analytics;
 
+import java.io.*;
 import java.util.*;
+import java.text.SimpleDateFormat;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -18,23 +22,23 @@ import org.bukkit.OfflinePlayer;
 
 public class Stats implements CommandExecutor {
 	
-	public static int cmdCount = 0;
+	public static int sessionUses = 0;
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		cmdCount++;
+		sessionUses++; Analytics.stats_total++;
 		
 		Player player = (Player) sender;
 		UUID playerid = player.getUniqueId();
 		
 		PlayerSettings targetSettings = PlayerMeta.sPlayerSettings.get(playerid);
-		
 		if (targetSettings == null) {
 			
 			PlayerSettings newSettings = PlayerMeta.getNewSettings(Bukkit.getOfflinePlayer(playerid));
 			PlayerMeta.sPlayerSettings.put(playerid, newSettings);
 		}
-
+		
+		// top player by playtime
 		if (Main.Top == null) {
 			double largest = 0;
 			
@@ -65,6 +69,7 @@ public class Stats implements CommandExecutor {
 					
 				case "help":
 					HelpPages.helpStats(player);
+					Analytics.stats_help++;
 					return true;
 					
 				case "kills":	
@@ -119,7 +124,8 @@ public class Stats implements CommandExecutor {
 				
 				case "info":
 					
-					ChatPrint.printPlayerSettings(player);					
+					ChatPrint.printPlayerSettings(player);
+					Analytics.stats_info++;
 					return true;
 			}
 

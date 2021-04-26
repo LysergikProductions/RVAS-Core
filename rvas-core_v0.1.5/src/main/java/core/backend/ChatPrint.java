@@ -274,12 +274,12 @@ public class ChatPrint {
 		String spvp = ""; String kill = ""; String die = "";
 		String kdr = ""; String jMsgs = ""; String dMsgs = "";
 		
-		if (theseSettings.show_PVPstats == true) spvp = "Enabled"; else spvp = "Disabled";
-		if (theseSettings.show_kills == true) kill = "Enabled"; else kill = "Disabled";
-		if (theseSettings.show_deaths == true) die = "Enabled"; else die = "Disabled";
-		if (theseSettings.show_kd == true) kdr = "Enabled"; else kdr = "Disabled";
-		if (theseSettings.show_player_join_messages == true) jMsgs = "Enabled"; else jMsgs = "Disabled";
-		if (theseSettings.show_player_death_messages == true) dMsgs = "Enabled"; else dMsgs = "Disabled";
+		if (theseSettings.show_PVPstats) spvp = "Enabled"; else spvp = "Disabled";
+		if (theseSettings.show_kills) kill = "Enabled"; else kill = "Disabled";
+		if (theseSettings.show_deaths) die = "Enabled"; else die = "Disabled";
+		if (theseSettings.show_kd) kdr = "Enabled"; else kdr = "Disabled";
+		if (theseSettings.show_player_join_messages) jMsgs = "Enabled"; else jMsgs = "Disabled";
+		if (theseSettings.show_player_death_messages) dMsgs = "Enabled"; else dMsgs = "Disabled";
 		
 		TextComponent showPVP_b = new TextComponent("" + spvp);
 		TextComponent showKills_b = new TextComponent("" + kill);
