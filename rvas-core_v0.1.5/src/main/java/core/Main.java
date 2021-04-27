@@ -161,8 +161,14 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L); // TODO: final is 36000L each
+		
+		if (Boolean.parseBoolean(Config.getValue("announcer.enabled"))) {
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
+		}
+		
+		if (Boolean.parseBoolean(Config.getValue("analytics.enabled"))) {
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L); // TODO: final is 36000L each
+		}
 		
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Loading event listeners");
@@ -236,29 +242,8 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] --- RVAS-Core : Disabling ---");
 		System.out.println("[core.main] _____________________________");
 		
-		System.out.println("[core.main] __________________");
-		System.out.println("[core.main] Collecting garbage");
-		System.out.println("[core.main] __________________");
-		
-		for (World thisWorld: Bukkit.getServer().getWorlds()) {
-			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
-			
-			for (Entity e: thisWorld.getEntities()) {
-				if (e instanceof WitherSkull) {
-					e.remove();
-				}
-			}
-		}
-		
-		System.out.println("[core.main] ______________________");
-		System.out.println("[core.main] Printing session stats");
-		System.out.println("[core.main] ______________________");
-		
-		System.out.println("New Chunks Generated: " + ChunkListener.newCount);
-		System.out.println("New Unique Players: " + SpawnController.sessionNewPlayers);
-		System.out.println("Total Respawns: " + SpawnController.sessionTotalRespawns);
-		System.out.println("Bedrock Placed: " + BlockListener.placedBedrockCounter);
-		System.out.println("Bedrock Broken: " + BlockListener.brokenBedrockCounter);
+		// final analytics capture for this session
+		Analytics.capture();
 		
 		System.out.println("[core.main] ________________");
 		System.out.println("[core.main] Creating backups");
@@ -301,6 +286,30 @@ public class Main extends JavaPlugin implements Listener {
 			System.out.println("[core.main] WARNING - Failed to write one or more files.");
 			System.out.println("[core.main] " + ex);
 		}
+		
+		System.out.println("[core.main] __________________");
+		System.out.println("[core.main] Collecting garbage");
+		System.out.println("[core.main] __________________");
+		
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
+			
+			for (Entity e: thisWorld.getEntities()) {
+				if (e instanceof WitherSkull) {
+					e.remove();
+				}
+			}
+		}
+		
+		System.out.println("[core.main] ______________________");
+		System.out.println("[core.main] Printing session stats");
+		System.out.println("[core.main] ______________________");
+		
+		System.out.println("New Chunks Generated: " + ChunkListener.newCount);
+		System.out.println("New Unique Players: " + SpawnController.sessionNewPlayers);
+		System.out.println("Total Respawns: " + SpawnController.sessionTotalRespawns);
+		System.out.println("Bedrock Placed: " + BlockListener.placedBedrockCounter);
+		System.out.println("Bedrock Broken: " + BlockListener.brokenBedrockCounter);
 		
 		System.out.println("[core.main] ____________________________");
 		System.out.println("[core.main] --- RVAS-Core : Disabled ---");

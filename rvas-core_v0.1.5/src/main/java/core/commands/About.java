@@ -23,12 +23,10 @@ package core.commands;
  * 
  * */
 
-import java.util.Arrays;
+import core.tasks.Analytics;
+import core.backend.PlayerMeta;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import java.util.Arrays;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.ChatColor;
@@ -36,11 +34,18 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 public class About implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
+		
+		if (!PlayerMeta.isAdmin(player)) Analytics.about_cmd++;
 		
 		TextComponent by = new TextComponent("RVAS-core v0.1.2 by sinse420");
 		TextComponent source = new TextComponent("RVAS-core is open source. Access the GitHub by clicking this message.");

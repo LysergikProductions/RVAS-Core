@@ -224,7 +224,7 @@ public class SpawnController implements Listener {
 			
 			if (!playedBefore) {
 				System.out.println(joiner_name + "is playing for the first time!");
-				sessionNewPlayers++;
+				sessionNewPlayers++; Analytics.new_players++;
 				
 				for (Player onlinePlayer: Bukkit.getServer().getOnlinePlayers()) {
 					if (onlinePlayer.isOp()) {

@@ -253,6 +253,7 @@ public class BlockListener implements Listener {
 		}
 		
 		placedBedrockCounter++;
+		System.out.println("WARNING: " + placer_name + " just placed bedrock at " + block_loc.toString());
 		
 		if (debug && !devesp) {
 			long endTime = System.nanoTime();

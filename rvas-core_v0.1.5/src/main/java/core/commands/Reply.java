@@ -1,22 +1,22 @@
 package core.commands;
 
+import core.backend.PlayerMeta;
+import core.tasks.Analytics;
+
+import java.util.Arrays;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.chat.TextComponent;
-import core.backend.PlayerMeta;
-
-import java.util.Arrays;
-
 public class Reply implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player p = (Player) sender;
-
 		String sendName = p.getName();
 
 		if (args.length < 1) {
@@ -31,6 +31,8 @@ public class Reply implements CommandExecutor {
 			sender.spigot().sendMessage(new TextComponent("§cCan't reply to Console."));
 			return true;
 		}
+		
+		if (!PlayerMeta.isAdmin(p)) Analytics.r_cmd++;
 
 		// Get recipient
 		Player recv = Bukkit.getPlayer(Message.Replies.get(p.getUniqueId()));
@@ -77,5 +79,4 @@ public class Reply implements CommandExecutor {
 		Message.Replies.put(((Player) sender).getUniqueId(), recv.getUniqueId());
 		return true;
 	}
-
 }

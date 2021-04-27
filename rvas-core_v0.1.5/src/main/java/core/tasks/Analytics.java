@@ -87,8 +87,7 @@ public class Analytics extends TimerTask {
 		CSV_header = sb.toString();
 	}
 	
-	// TODO: get and track difference between current and previous total server playtime
-	
+	// TODO: get and track difference between current and previous total server playtime	
 	// TODO: track daily players (plays 4-7 days a week for at least 15min per day)
 	// TODO: track second-try players over time (players joining after a 90+ day hiatus)
 	// TODO: track weekly players (not daily player and plays at least one-day a week for 15min that day)
@@ -96,7 +95,7 @@ public class Analytics extends TimerTask {
 	private boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	public final static String analytics_work_path = "plugins/core/analytics/";
 	
-	@Override
+	@Override // write and reset analytics on-schedule
 	public void run() {	
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		
@@ -121,9 +120,13 @@ public class Analytics extends TimerTask {
 			
 			writeNewData(thisFile, line);
 			
-			// TODO: add remaining resets (see ln 206)
-			total_joins = 0;
-			stats_total = 0; stats_help = 0; stats_info = 0;
+			// reset data
+			total_joins = 0; new_players = 0; new_chunks = 0;
+			about_cmd = 0; admin_cmd = 0; discord_cmd = 0; help_cmd = 0;
+			kill_cmd = 0; kit_cmd = 0; w_cmd = 0; r_cmd = 0; msg_cmd = 0;
+			server_cmd = 0; sign_cmd = 0; stats_total = 0; stats_help = 0;
+			stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0;
+			
 			
 		} catch (Exception e) {
 			System.out.println(e);
@@ -132,6 +135,53 @@ public class Analytics extends TimerTask {
 		if (debug) System.out.println("[core.tasks.analytics] Analytics updated!");
 	}
 	
+	// write and reset analytics on-demand
+	public static boolean capture() {
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");		
+		Date date = new Date();
+		
+		File thisFile;
+		String current_date = formatter.format(date);
+		
+		try {
+			thisFile = new File(Analytics.analytics_work_path + "RVAS_Analytics.csv");
+			if (!thisFile.exists()) {
+				
+				thisFile.createNewFile();
+				Analytics.writeNewData(thisFile, CSV_header);
+			}
+			
+		} catch (IOException e) {
+			System.out.println(e);
+			return false;
+		}
+		
+		String line = valuesToCSV(
+				current_date, total_joins, new_players, new_chunks,
+				about_cmd, admin_cmd, discord_cmd, help_cmd, kill_cmd,
+				kit_cmd, w_cmd, r_cmd, msg_cmd, server_cmd, sign_cmd,
+				stats_total, stats_help, stats_info, tjm_cmd, tps_cmd, vm_cmd
+			);
+		
+		try {
+			Analytics.writeNewData(thisFile, line);
+			
+			// reset data
+			total_joins = 0; new_players = 0; new_chunks = 0;
+			about_cmd = 0; admin_cmd = 0; discord_cmd = 0; help_cmd = 0;
+			kill_cmd = 0; kit_cmd = 0; w_cmd = 0; r_cmd = 0; msg_cmd = 0;
+			server_cmd = 0; sign_cmd = 0; stats_total = 0; stats_help = 0;
+			stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0;
+			
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}		
+		return true;
+	}
+	
+	// convert data in RAM to a single CSV line
 	public static String valuesToCSV(
 			String date, int total_joins, int new_players, int new_chunks,
 			int about_cmd, int admin_cmd, int discord_cmd, int help_cmd, int kill_cmd,
@@ -167,9 +217,9 @@ public class Analytics extends TimerTask {
 		return out;
 	}
 	
+	// append single CSV Strings to file
 	public static boolean writeNewData(File thisFile, String thisLine) {
 		
-		// append == true
 		try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(analytics_work_path + thisFile.getName(), true));
 			
@@ -193,47 +243,5 @@ public class Analytics extends TimerTask {
 		}
 		
 		return sum;
-	}
-	
-	public static boolean incAnalytics() {
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");		
-		Date date = new Date();
-		
-		File thisFile;
-		String current_date = formatter.format(date);
-		
-		try {
-			thisFile = new File(Analytics.analytics_work_path + "RVAS_Analytics.csv");
-			if (!thisFile.exists()) {
-				
-				thisFile.createNewFile();
-				Analytics.writeNewData(thisFile, CSV_header);
-			}
-			
-		} catch (IOException e) {
-			System.out.println(e);
-			return false;
-		}
-		
-		String line = valuesToCSV(
-				current_date, total_joins, new_players, new_chunks,
-				about_cmd, admin_cmd, discord_cmd, help_cmd, kill_cmd,
-				kit_cmd, w_cmd, r_cmd, msg_cmd, server_cmd, sign_cmd,
-				stats_total, stats_help, stats_info, tjm_cmd, tps_cmd, vm_cmd
-			);
-		
-		try {
-			Analytics.writeNewData(thisFile, line);
-			
-			// TODO: add remaining resets
-			total_joins = 0;
-			stats_total = 0; stats_help = 0; stats_info = 0;
-			
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		
-		return true;
 	}
 }

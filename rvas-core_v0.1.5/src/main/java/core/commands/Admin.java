@@ -7,6 +7,7 @@ import core.backend.Utilities;
 
 import core.events.SpeedLimit;
 import core.events.BlockListener;
+import core.tasks.Analytics;
 
 import java.io.IOException;
 import java.util.*;
@@ -31,9 +32,10 @@ public class Admin implements CommandExecutor {
 	public static boolean disableWarnings = false;
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
 		Player player = (Player) sender;
+		
+		if (!player.isOp()) Analytics.admin_cmd++;
 		
 		if (args.length == 1) {
 			if (!PlayerMeta.isOp(sender)) {

@@ -1,5 +1,9 @@
 package core.commands;
 
+import core.backend.ItemCheck;
+import core.backend.PlayerMeta;
+import core.tasks.Analytics;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,17 +14,17 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang.WordUtils;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import net.md_5.bungee.api.chat.TextComponent;
-import core.backend.ItemCheck;
 
 public class Sign implements CommandExecutor {
 
@@ -31,6 +35,8 @@ public class Sign implements CommandExecutor {
 		}
 
 		Player p = (Player) sender;
+		if (!PlayerMeta.isAdmin(p)) Analytics.sign_cmd++;
+		
 		if (p.getInventory().getItemInMainHand() != null
 				&& !p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
 			ItemStack item = p.getInventory().getItemInMainHand();

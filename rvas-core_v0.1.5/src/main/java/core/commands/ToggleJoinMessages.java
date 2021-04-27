@@ -24,6 +24,7 @@ package core.commands;
 
 import core.backend.PlayerMeta;
 import core.objects.PlayerSettings;
+import core.tasks.Analytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ public class ToggleJoinMessages implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
+		if (!PlayerMeta.isAdmin(player)) Analytics.tjm_cmd++;
 		
 		PlayerSettings theseSettings = PlayerMeta.sPlayerSettings.get(player.getUniqueId());
 		

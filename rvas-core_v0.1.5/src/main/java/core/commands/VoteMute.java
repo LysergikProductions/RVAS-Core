@@ -1,9 +1,16 @@
 package core.commands;
 
+import core.backend.Config;
+import core.backend.PlayerMeta;
+import core.backend.PlayerMeta.MuteType;
+import core.tasks.Analytics;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -11,15 +18,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.chat.TextComponent;
-import core.backend.Config;
-import core.backend.PlayerMeta;
-import core.backend.PlayerMeta.MuteType;
-
 public class VoteMute implements CommandExecutor {
+	
 	static HashMap<UUID, Integer> _votes = new HashMap<UUID, Integer>();
 	static HashMap<UUID, List<UUID>> _voters = new HashMap<UUID, List<UUID>>();
 	static HashMap<String, List<UUID>> _voterIps = new HashMap<String, List<UUID>>();
+	
 	public static int cooldown = 0;
 
 	@Override
@@ -42,6 +46,9 @@ public class VoteMute implements CommandExecutor {
 
 		Player voter = (Player) sender;
 		Player toMute = Bukkit.getPlayer(args[0]);
+		
+		if (!PlayerMeta.isAdmin(voter)) Analytics.vm_cmd++;
+		
 		int popNeeded = (int) (Bukkit.getOnlinePlayers().size()
 				* (Float.parseFloat(Config.getValue("mute.pop")) / 100.0f));
 

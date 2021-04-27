@@ -1,21 +1,27 @@
 package core.commands;
 
-import java.text.DecimalFormat;
+import core.backend.LagProcessor;
+import core.backend.PlayerMeta;
+import core.tasks.Analytics;
 
+import java.text.DecimalFormat;
 import org.apache.commons.lang.math.IntRange;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
-import core.backend.LagProcessor;
+import org.bukkit.entity.Player;
 
 public class Tps implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		double tps = LagProcessor.getTPS();
+		
+		if (!PlayerMeta.isAdmin((Player)sender)) Analytics.tps_cmd++;
+		
 		if (tps > 20)
 			tps = 20;
 		if (!new IntRange(1, 20).containsInteger(tps)) {
@@ -58,5 +64,4 @@ public class Tps implements CommandExecutor {
 		}
 		return true;
 	}
-
 }

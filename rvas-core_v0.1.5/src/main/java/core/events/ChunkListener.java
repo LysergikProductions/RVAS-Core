@@ -27,6 +27,7 @@ package core.events;
 import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.backend.Utilities;
+import core.tasks.Analytics;
 
 import java.util.*;
 import java.text.DecimalFormat;
@@ -73,7 +74,7 @@ public class ChunkListener implements Listener {
 			
 			antiFurnaceBan(chunk);
 			
-		} else ChunkListener.newCount++;
+		} else {ChunkListener.newCount++; Analytics.new_chunks++;}
 	}
 	
 	public static void antiFurnaceBan(Chunk chunk) {

@@ -5,6 +5,8 @@ import core.backend.PlayerMeta;
 import core.backend.ServerMeta;
 import core.backend.Utilities;
 import core.backend.Config;
+
+import core.tasks.Analytics;
 import core.tasks.LagManager;
 import core.tasks.ProcessPlaytime;
 import core.events.SpeedLimit;
@@ -13,21 +15,24 @@ import core.events.Chat;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 public class Server implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		
+		if (!PlayerMeta.isAdmin((Player)sender)) Analytics.server_cmd++;
 		
 		int witherCount = LagManager.getWithers();
 		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
@@ -108,10 +113,11 @@ public class Server implements CommandExecutor {
 		
 		tps_a.setColor(ChatColor.RED); tps_a.setBold(true);
 		
-		slimit_a.setBold(true);
+		slimit_a.setColor(ChatColor.GRAY); slimit_a.setBold(true);
 		
 		skicks_a.setColor(ChatColor.RED); skicks_a.setBold(true);
 		
+		withers_a.setColor(ChatColor.GRAY); withers_a.setBold(true);
 		acr_a.setColor(ChatColor.RED); acr_a.setBold(true);
 		
 		ujoins_a.setColor(ChatColor.RED); ujoins_a.setBold(true);
@@ -142,7 +148,6 @@ public class Server implements CommandExecutor {
 			withers_b.setColor(ChatColor.GREEN);
 		}
 		
-		withers_a.setBold(true);
 		slowMode_a.setColor(ChatColor.RED); slowMode_a.setBold(true);
 		uptime_a.setColor(ChatColor.RED); uptime_a.setBold(true);
 		

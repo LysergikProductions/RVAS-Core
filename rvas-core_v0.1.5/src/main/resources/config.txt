@@ -9,14 +9,14 @@ config.version = 22
 // --- IMPORTANT  --- //
 // ------------------ //
 
-// - uuid for the full-access in-game owner's account
+// - !! UUID for the full-access owner's account !! - \\
 adminid = 
 
-// - ign for the full-access in-game owner's account
+// - !! IGN for the full-access owner's account !! - \\
 admin = sinse420
 
-// - Verbose console output
-// may globally broadcast some events info in chat
+// - Console output
+// may globally broadcast some info in chat
 
 debug = false
 devesp = false
@@ -24,14 +24,20 @@ devesp = false
 // - The tps under which the auto-restart timer ticks
 restart.threshold = 7.10
 
-// ----------------------- //
-// --- SPAWN SETTINGS  --- //
-// ----------------------- //
+// - Track useful and interesting plugin analytics
+analytics.enabled = true;
 
-// - Enable random spawning
+// - Enable auto-announcer
+announcer.enabled = true;
+
+// ----------------------------- //
+// --- WORLD SPAWN SETTINGS  --- //
+// ----------------------------- //
+
+// - Enable random-spawning
 spawn.random = true
 
-// - Override world-spawn on first join
+// - Random-spawn on first join
 spawn.random.join = true
 
 // - Define a rectangular area for spawn (must use #.0)
@@ -39,6 +45,10 @@ spawn.max.X = 420.0
 spawn.max.Z = 420.0
 spawn.min.X = -420.0
 spawn.min.Z = -420.0
+
+// - Define a circular area for spawn (+/- makes no difference)
+spawn.radius.X = 420.0
+spawn.radius.Z = 420.0
 
 // - Prevent players spawning in water
 spawn.prevent.drown = false
@@ -116,7 +126,7 @@ protect.bedrock.floor = true
 
 // - Repair (/setblock) bedrock floor (overworld/nether) / roof (nether)
 chunk.load.repair_roof = false
-chunk.load.repair_floor = true
+chunk.load.repair_floor = false
 
 // ---------------------------- //
 // --- ILLEGAL ITEM PATCHES --- //
