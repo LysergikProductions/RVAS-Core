@@ -162,12 +162,12 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
 		
-		if (Boolean.parseBoolean(Config.getValue("announcer.enabled"))) {
+		if (Config.getValue("announcer.enabled").equals("true")) {
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		}
 		
-		if (Boolean.parseBoolean(Config.getValue("analytics.enabled"))) {
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L); // TODO: final is 36000L each
+		if (Config.getValue("analytics.enabled").equals("true")) {
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 1200L, 1200L); // TODO: final is 6000L each
 		}
 		
 		System.out.println("[core.main] _______________________");

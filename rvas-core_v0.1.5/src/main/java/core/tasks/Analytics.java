@@ -25,7 +25,7 @@ package core.tasks;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
-import core.commands.Stats;
+import core.backend.FileManager;
 
 import java.io.*;
 import java.util.*;
@@ -93,7 +93,6 @@ public class Analytics extends TimerTask {
 	// TODO: track weekly players (not daily player and plays at least one-day a week for 15min that day)
 	
 	private boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	public final static String analytics_work_path = "plugins/core/analytics/";
 	
 	@Override // write and reset analytics on-schedule
 	public void run() {	
@@ -104,7 +103,7 @@ public class Analytics extends TimerTask {
 		
 		try {
 			
-			File thisFile = new File(analytics_work_path + "RVAS_Analytics.csv");				
+			File thisFile = FileManager.rvas_analytics;				
 			if (!thisFile.exists()) {
 				
 				thisFile.createNewFile();
@@ -145,7 +144,7 @@ public class Analytics extends TimerTask {
 		String current_date = formatter.format(date);
 		
 		try {
-			thisFile = new File(Analytics.analytics_work_path + "RVAS_Analytics.csv");
+			thisFile = FileManager.rvas_analytics;
 			if (!thisFile.exists()) {
 				
 				thisFile.createNewFile();
@@ -221,7 +220,7 @@ public class Analytics extends TimerTask {
 	public static boolean writeNewData(File thisFile, String thisLine) {
 		
 		try {
-			BufferedWriter w = new BufferedWriter(new FileWriter(analytics_work_path + thisFile.getName(), true));
+			BufferedWriter w = new BufferedWriter(new FileWriter(FileManager.plugin_work_path + "analytics/" + thisFile.getName(), true));
 			
 			w.write(thisLine + "\n");
 			w.close();

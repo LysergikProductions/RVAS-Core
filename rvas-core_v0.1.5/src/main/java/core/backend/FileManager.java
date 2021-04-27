@@ -1,8 +1,8 @@
 package core.backend;
 
 import core.Main;
-import core.objects.PVPstats;
-import core.objects.PlayerSettings;
+import core.objects.*;
+import core.tasks.Analytics;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public class FileManager {
+	
+	public static final String plugin_work_path = "plugins/core/";
 	
 	public static File pvpstats_user_database;
 	public static File playtime_user_database;
@@ -27,6 +29,8 @@ public class FileManager {
 	public static File core_server_config;
 	public static File motd_message_list;
 	public static File prison_user_database;
+	
+	public static File rvas_analytics;
 	
 	public static void backupData(File thisFile, String thisFileName, String ext) throws IOException {
 	    
@@ -58,11 +62,9 @@ public class FileManager {
 	
 	public static void setup() throws IOException {
 		
-		final String plugin_work_path = "plugins/core/";
-		
 		File plugin_work_directory = new File(plugin_work_path);
 		File backup_directory = new File(plugin_work_path + "backup");
-		File analytics_directory = new File(plugin_work_path + "analytics");
+		File analytics_directory = new File(plugin_work_path + "analytics/");
 		File donor_code_directory = new File(plugin_work_path + "codes");
 		
 		donor_list = new File(plugin_work_path + "donator.db");
@@ -78,6 +80,7 @@ public class FileManager {
 		settings_user_database = new File(plugin_work_path + "player_settings.txt");
 		muted_user_database = new File(plugin_work_path + "muted.db");
 		prison_user_database = new File(plugin_work_path + "prisoners.db");
+		rvas_analytics = new File(analytics_directory + "RVAS_Analytics.csv");		
 
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!backup_directory.exists()) backup_directory.mkdir();
@@ -101,6 +104,13 @@ public class FileManager {
 			
 			InputStream core_server_config_template = (Main.class.getResourceAsStream("/config.txt"));
 			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "config.txt"));
+		}
+		
+				
+		if (!rvas_analytics.exists()) {
+			
+			rvas_analytics.createNewFile();
+			Analytics.writeNewData(rvas_analytics, Analytics.CSV_header);
 		}
 
 		Config.load();
