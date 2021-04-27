@@ -24,6 +24,7 @@ package core.tasks;
  * */
 
 import core.backend.Config;
+import core.tasks.Analytics;
 import java.util.*;
 
 import org.bukkit.Bukkit;
@@ -52,6 +53,8 @@ public class LagManager implements Listener, Runnable {
 		
 		int max_age = Integer.parseInt(Config.getValue("wither.skull.max_ticks"));				
 		int removed_skulls = removeSkulls(max_age);
+		
+		Analytics.removed_skulls += removed_skulls;
 	}
 	
 	@EventHandler
@@ -62,11 +65,14 @@ public class LagManager implements Listener, Runnable {
 		
 		if (e.getEntity() instanceof Wither) {
 			
+			Analytics.wither_spawns++;
+			
 			if (debug) System.out.println("Wither Limit: " + witherLimit);
 			
 			currentWithers = getWithers();
 			
 			if (currentWithers > witherLimit-1) {
+				Analytics.failed_wither_spawns++;
 				e.setCancelled(true);
 				return;
 			}

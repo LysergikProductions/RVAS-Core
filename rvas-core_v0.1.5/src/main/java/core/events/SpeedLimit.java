@@ -1,5 +1,13 @@
 package core.events;
 
+import core.Main;
+import core.backend.Config;
+import core.backend.LagProcessor;
+import core.backend.Pair;
+import core.backend.ServerMeta;
+import core.commands.Admin;
+import core.tasks.Analytics;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,14 +26,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
-
-import core.Main;
-import core.backend.Config;
-import core.backend.LagProcessor;
-import core.backend.Pair;
-import core.backend.ServerMeta;
-import core.commands.Admin;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class SpeedLimit implements Listener
 {
@@ -132,7 +134,7 @@ public class SpeedLimit implements Listener
 					
 					ServerMeta.kickWithDelay(player,
 							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
-					totalKicks++;
+					totalKicks++; Analytics.speed_kicks++;
 					return;
 				}
 
@@ -142,7 +144,7 @@ public class SpeedLimit implements Listener
 					gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
 					ServerMeta.kickWithDelay(player,
 							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
-					totalKicks++;
+					totalKicks++; Analytics.speed_kicks++;
 					return;
 				}
 
@@ -161,10 +163,11 @@ public class SpeedLimit implements Listener
 						gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
 						ServerMeta.kickWithDelay(player,
 								Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
-						totalKicks++;
+						totalKicks++; Analytics.speed_kicks++;
 						return;
 						
 					} else {
+						Analytics.speed_warns++;
 						
 						// display speed with one decimal
 						player.spigot().sendMessage(new TextComponent("§4Your speed is " + speed + ", speed limit is " + speed_limit + ". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));

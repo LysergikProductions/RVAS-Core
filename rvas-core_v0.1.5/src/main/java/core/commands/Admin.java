@@ -12,8 +12,11 @@ import core.tasks.Analytics;
 import java.io.IOException;
 import java.util.*;
 
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -127,7 +130,21 @@ public class Admin implements CommandExecutor {
 				if (loc == null) {
 					sender.sendMessage(new TextComponent("§6No logout spot logged for " + args[1]));
 				} else {
-					sender.sendMessage(new TextComponent("§6"+args[1] + " logged out at " + loc.getX() + " " + loc.getY() + " " + loc.getZ()));
+					
+					String dimension;
+					
+					if (player.getWorld().getEnvironment().toString().contains("NORMAL")) {dimension = "overworld";}
+					else if (player.getWorld().getEnvironment().toString().contains("NETHER")) {dimension = "the_nether";}
+					else if (player.getWorld().getEnvironment().toString().contains("END")) {dimension = "the_end";}
+					else {dimension = "overworld";}
+					
+					String location = loc.getX() + " " + loc.getY() + " " + loc.getZ();
+					TextComponent logSpot = new TextComponent("§6"+args[1] + " logged out at " + location);
+					
+					logSpot.setClickEvent(new ClickEvent(
+							ClickEvent.Action.RUN_COMMAND, "/execute in " + dimension + "run tp @s " + location));
+					
+					sender.sendMessage();
 				}
 				return true;
 			}

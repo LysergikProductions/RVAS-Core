@@ -62,6 +62,7 @@ public class ChunkListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
 	public void onLoad(ChunkLoadEvent event) {
 		
+		Analytics.loaded_chunks++;
 		Chunk chunk = event.getChunk();
 		
 		if (!event.isNewChunk()) {

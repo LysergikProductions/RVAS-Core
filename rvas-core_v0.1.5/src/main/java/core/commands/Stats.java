@@ -26,10 +26,12 @@ public class Stats implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		sessionUses++; Analytics.stats_total++;
+		sessionUses++;
 		
 		Player player = (Player) sender;
 		UUID playerid = player.getUniqueId();
+		
+		if (!PlayerMeta.isAdmin(player)) Analytics.stats_total++;
 		
 		PlayerSettings targetSettings = PlayerMeta.sPlayerSettings.get(playerid);
 		if (targetSettings == null) {
@@ -69,7 +71,7 @@ public class Stats implements CommandExecutor {
 					
 				case "help":
 					HelpPages.helpStats(player);
-					Analytics.stats_help++;
+					if (!PlayerMeta.isAdmin(player)) Analytics.stats_help++;
 					return true;
 					
 				case "kills":	
@@ -125,7 +127,7 @@ public class Stats implements CommandExecutor {
 				case "info":
 					
 					ChatPrint.printPlayerSettings(player);
-					Analytics.stats_info++;
+					if (!PlayerMeta.isAdmin(player)) Analytics.stats_info++;
 					return true;
 			}
 

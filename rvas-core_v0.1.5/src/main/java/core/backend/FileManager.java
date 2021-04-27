@@ -30,8 +30,6 @@ public class FileManager {
 	public static File motd_message_list;
 	public static File prison_user_database;
 	
-	public static File rvas_analytics;
-	
 	public static void backupData(File thisFile, String thisFileName, String ext) throws IOException {
 	    
 	    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
@@ -79,8 +77,7 @@ public class FileManager {
 		pvpstats_user_database = new File(plugin_work_path + "pvpstats.txt");
 		settings_user_database = new File(plugin_work_path + "player_settings.txt");
 		muted_user_database = new File(plugin_work_path + "muted.db");
-		prison_user_database = new File(plugin_work_path + "prisoners.db");
-		rvas_analytics = new File(plugin_work_path + "analytics/RVAS_Analytics.csv");		
+		prison_user_database = new File(plugin_work_path + "prisoners.db");	
 
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!backup_directory.exists()) backup_directory.mkdir();
