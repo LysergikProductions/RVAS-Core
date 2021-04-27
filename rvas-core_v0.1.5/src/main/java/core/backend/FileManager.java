@@ -80,7 +80,7 @@ public class FileManager {
 		settings_user_database = new File(plugin_work_path + "player_settings.txt");
 		muted_user_database = new File(plugin_work_path + "muted.db");
 		prison_user_database = new File(plugin_work_path + "prisoners.db");
-		rvas_analytics = new File(analytics_directory + "RVAS_Analytics.csv");		
+		rvas_analytics = new File(plugin_work_path + "analytics/RVAS_Analytics.csv");		
 
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
 		if (!backup_directory.exists()) backup_directory.mkdir();

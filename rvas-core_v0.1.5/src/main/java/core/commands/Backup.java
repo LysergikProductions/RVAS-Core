@@ -60,7 +60,7 @@ public class Backup implements CommandExecutor {
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
 			
 			player.spigot().sendMessage(new TextComponent("saving playtimes.."));
-			FileManager.backupData(FileManager.playtime_user_database, "playtimes-backup-", ".db");
+			FileManager.backupData(FileManager.playtime_user_database, "playtime-backup-", ".db");
 			
 			player.spigot().sendMessage(new TextComponent("saving player-settings.."));
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");

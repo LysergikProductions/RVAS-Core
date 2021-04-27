@@ -117,8 +117,8 @@ public class Analytics extends TimerTask {
 		
 		File thisFile;		
 		try {
-			thisFile = FileManager.rvas_analytics;
-			if (!FileManager.rvas_analytics.exists()) {
+			thisFile = new File(FileManager.plugin_work_path + "analytics/RVAS_Analytics.csv");
+			if (!thisFile.exists()) {
 				
 				thisFile.createNewFile();
 				Analytics.writeNewData(thisFile, CSV_header);
