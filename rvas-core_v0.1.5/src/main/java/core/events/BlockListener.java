@@ -246,16 +246,17 @@ public class BlockListener implements Listener {
 			if (PlacementBanned.contains(blockType)) {
 				event.setCancelled(true);
 				
-				if (debug && !devesp) Bukkit.spigot().broadcast(
+				if (debug) Bukkit.spigot().broadcast(
 						new TextComponent(placer_name + "'s BlockPlaceEvent was cancelled."));
 				return;
 			}
 		}
 		
-		placedBedrockCounter++;
-		System.out.println("WARNING: " + placer_name + " just placed bedrock at " + block_loc.toString());
+		/*placedBedrockCounter++;
+		System.out.println("WARNING: " + placer_name + " just placed bedrock at " + block_loc.toString());*/
+		// TODO: add bedrock check for this ^
 		
-		if (debug && !devesp) {
+		if (debug && devesp) {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
 			

@@ -105,13 +105,6 @@ public class FileManager {
 			InputStream core_server_config_template = (Main.class.getResourceAsStream("/config.txt"));
 			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "config.txt"));
 		}
-		
-				
-		if (!rvas_analytics.exists()) {
-			
-			rvas_analytics.createNewFile();
-			Analytics.writeNewData(rvas_analytics, Analytics.CSV_header);
-		}
 
 		Config.load();
 

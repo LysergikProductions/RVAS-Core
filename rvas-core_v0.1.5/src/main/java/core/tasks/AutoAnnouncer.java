@@ -1,5 +1,9 @@
 package core.tasks;
 
+import core.backend.LagProcessor;
+import core.backend.Scheduler;
+import core.backend.Config;
+
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.TimerTask;
@@ -12,14 +16,14 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-import core.backend.LagProcessor;
-import core.backend.Scheduler;
-
 public class AutoAnnouncer extends TimerTask {
-	Random r = new Random();
+	
+	private Random r = new Random();
 
 	@Override
 	public void run() {
+		//if (!Config.getValue("announcer.enabled").equals("true")) return;
+		
 		int rnd = r.nextInt(11);
 
 		switch (rnd) {

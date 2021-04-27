@@ -84,7 +84,7 @@ public class ChunkListener implements Listener {
 		// limit furnace count to 2 sub-chunks worth of furnaces per chunk
 		if (furnace_count > 8192) {
 			
-			System.out.println("TOO MANY FURNACES. Removing 90% of them..");
+			System.out.println("WARNING: TOO MANY FURNACES. Removing 90% of them..");
 			Utilities.blockRemover(chunk, Material.FURNACE, (int)Math.rint((double)furnace_count * 0.9));
 		}
 	}

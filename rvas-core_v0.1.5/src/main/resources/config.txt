@@ -25,10 +25,10 @@ devesp = false
 restart.threshold = 7.10
 
 // - Track useful and interesting plugin analytics
-analytics.enabled = true;
+analytics.enabled = true
 
 // - Enable auto-announcer
-announcer.enabled = true;
+announcer.enabled = true
 
 // ----------------------------- //
 // --- WORLD SPAWN SETTINGS  --- //

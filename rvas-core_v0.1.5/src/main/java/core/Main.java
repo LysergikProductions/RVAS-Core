@@ -161,14 +161,10 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		
-		if (Config.getValue("announcer.enabled").equals("true")) {
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
-		}
-		
-		if (Config.getValue("analytics.enabled").equals("true")) {
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 1200L, 1200L); // TODO: final is 6000L each
-		}
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
+		Analytics.capture();
 		
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Loading event listeners");
@@ -207,6 +203,20 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				});
 		}
+		
+		// Listen for block place packets for eventual no-ghost
+		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
+				this, ListenerPriority.HIGHEST, PacketType.Play.Client.BLOCK_PLACE) {
+			
+			@Override
+			public void onPacketSending(PacketEvent event) {
+				
+				PacketContainer packetContainer = event.getPacket();
+				
+				System.out.println("DEBUG: RECEIVED BLOCK PLACE PACKET");
+				System.out.println(packetContainer);
+			}
+		});
 		
 		// Define banned & special blocks
 		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,

@@ -44,9 +44,15 @@ public class Analytics extends TimerTask {
 	// connection trackers
 	public static int total_joins = 0;
 	public static int new_players = 0;
+	public static int quit_players = 0; // TODO: implement this
 	
 	// performance trackers
 	public static int new_chunks = 0;
+	public static int loaded_chunks = 0; // TODO: implement this
+	public static int speed_warns = 0; // TODO: implement this
+	public static int  speed_kicks = 0; // TODO: implement this
+	public static int wither_spawns = 0; // TODO: implement this
+	public static int failed_wither_spawns = 0; // TODO: implement this
 	
 	// commands trackers
 	public static int about_cmd = 0;
@@ -71,7 +77,7 @@ public class Analytics extends TimerTask {
 	
 	public static String CSV_header; {
 		
-		StringBuilder sb = new StringBuilder(100);
+		StringBuilder sb = new StringBuilder(256);
 		
 		sb.append("\"Date\","); sb.append("\"Joins\",");
 		sb.append("\"New Players\","); sb.append("\"New Chunks\",");
@@ -92,66 +98,33 @@ public class Analytics extends TimerTask {
 	// TODO: track second-try players over time (players joining after a 90+ day hiatus)
 	// TODO: track weekly players (not daily player and plays at least one-day a week for 15min that day)
 	
-	private boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
+	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	
 	@Override // write and reset analytics on-schedule
-	public void run() {	
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	public void run() {
 		
-		Date date = new Date();
-		String current_date = formatter.format(date);
-		
-		try {
-			
-			File thisFile = FileManager.rvas_analytics;				
-			if (!thisFile.exists()) {
-				
-				thisFile.createNewFile();
-				Analytics.writeNewData(thisFile, CSV_header);
-			}
-			
-			String line = valuesToCSV(
-					current_date, total_joins, new_players, new_chunks,
-					about_cmd, admin_cmd, discord_cmd, help_cmd, kill_cmd,
-					kit_cmd, w_cmd, r_cmd, msg_cmd, server_cmd, sign_cmd,
-					stats_total, stats_help, stats_info, tjm_cmd, tps_cmd, vm_cmd
-				);
-			
-			writeNewData(thisFile, line);
-			
-			// reset data
-			total_joins = 0; new_players = 0; new_chunks = 0;
-			about_cmd = 0; admin_cmd = 0; discord_cmd = 0; help_cmd = 0;
-			kill_cmd = 0; kit_cmd = 0; w_cmd = 0; r_cmd = 0; msg_cmd = 0;
-			server_cmd = 0; sign_cmd = 0; stats_total = 0; stats_help = 0;
-			stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0;
-			
-			
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		
-		if (debug) System.out.println("[core.tasks.analytics] Analytics updated!");
+		// if (!Config.getValue("analytics.enabled").equals("true")) return;
+		// TODO: why doesn't ^this^ line return false and move to capture()?
+		Analytics.capture();
 	}
 	
 	// write and reset analytics on-demand
 	public static boolean capture() {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");		
 		Date date = new Date();
-		
-		File thisFile;
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");		
 		String current_date = formatter.format(date);
 		
+		File thisFile;		
 		try {
 			thisFile = FileManager.rvas_analytics;
-			if (!thisFile.exists()) {
+			if (!FileManager.rvas_analytics.exists()) {
 				
 				thisFile.createNewFile();
 				Analytics.writeNewData(thisFile, CSV_header);
 			}
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			System.out.println(e);
 			return false;
 		}
@@ -176,7 +149,9 @@ public class Analytics extends TimerTask {
 		} catch (Exception e) {
 			System.out.println(e);
 			return false;
-		}		
+		}
+		
+		if (debug) System.out.println("[core.tasks.analytics] Analytics updated!");
 		return true;
 	}
 	
@@ -220,7 +195,8 @@ public class Analytics extends TimerTask {
 	public static boolean writeNewData(File thisFile, String thisLine) {
 		
 		try {
-			BufferedWriter w = new BufferedWriter(new FileWriter(FileManager.plugin_work_path + "analytics/" + thisFile.getName(), true));
+			BufferedWriter w = new BufferedWriter(new FileWriter(
+					FileManager.plugin_work_path + "analytics/RVAS_Analytics.csv", true));
 			
 			w.write(thisLine + "\n");
 			w.close();
