@@ -19,6 +19,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.OfflinePlayer;
@@ -34,7 +35,10 @@ public class Main extends JavaPlugin implements Listener {
 	public static Plugin instance;
 	public static OfflinePlayer Top = null;
 	public Notifications NotificationHandler;
-
+	
+	public static long worldAge_atStart;
+	public static boolean isNewWorld;
+	
 	@Override
 	public void onEnable() {
 
@@ -161,8 +165,8 @@ public class Main extends JavaPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);	
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);			
 		
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Loading event listeners");
@@ -237,6 +241,27 @@ public class Main extends JavaPlugin implements Listener {
 		// Enable discord notifications for this instance
 		NotificationHandler = new Notifications();
 		getServer().getPluginManager().registerEvents(NotificationHandler, this);
+		
+		// Load chunk at 0,0 to test for world age
+		for (World thisWorld: getServer().getWorlds()) {
+			
+			if (thisWorld.getEnvironment().equals(Environment.NORMAL)) {
+				
+				thisWorld.getChunkAt(0, 0).load(true);
+				
+				worldAge_atStart = thisWorld.getChunkAt(0, 0)
+						.getChunkSnapshot().getCaptureFullTime();
+				
+				if (worldAge_atStart < 600) {
+					isNewWorld = true;
+					System.out.println("[core.main] This world is NEW! World Ticks: " + worldAge_atStart);
+				}
+				else {
+					isNewWorld = false;
+					System.out.println("[core.main] This world is not new! World Ticks: " + worldAge_atStart);
+				}
+			}
+		}
 		
 		System.out.println("[core.main] ________________________________");
 		System.out.println("[core.main] -- Finished loading RVAS-Core --");

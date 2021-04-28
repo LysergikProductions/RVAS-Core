@@ -19,26 +19,44 @@ import org.bukkit.entity.Player;
 
 // Playtime processor (every 20 ticks)
 public class ProcessPlaytime extends TimerTask {
+	
+	public static long lowTpsCounter = 0;
+	
 	private static long lastTime = 0;
 	private static long lastHour = 0;
-
-	public static long lowTpsCounter = 0;
 	private static long timeTillReset = 3600000;
 	
-	public static int currentNewChunks = 0;
-	public static int lastNewChunks = 0;
-
+	private static int currentNewChunks = 0;
+	private static int lastNewChunks = 0;
+	
+	private static double lastTPS = 0.00;
+	private static double currentTPS = 0.00;
+	
+	private static double difference = 0.00;
+	private static double onlinePlayers = 0;
+	
 	@Override
 	public void run() {
 		
 		currentNewChunks = ChunkListener.newCount;
+		onlinePlayers = (double)Bukkit.getOnlinePlayers().size();
 		
-		if (currentNewChunks - lastNewChunks > 320) {
+		if ((currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
 			System.out.println(
-					"!!!WARNING: more than 16 chunks per tick on average are being generated every second!!!");
+					"WARN more than 8 chunks per tick per player on average are being generated every second");
 		}
 		
 		lastNewChunks = currentNewChunks;
+		
+		currentTPS = LagProcessor.getTPS();
+		
+		if (lastTPS == 0.00) {difference = 0.00;}
+		else {difference = currentTPS - lastTPS;}
+		
+		// TODO: this line will be used to trigger LagManager.lagLogger()
+		if (difference > (lastTPS*0.5)) System.out.println("WARN 50+% tps drop in 1s");
+		
+		lastTPS = currentTPS;
 		
 		if (lastTime == 0) {
 			lastTime = System.currentTimeMillis();
@@ -65,7 +83,7 @@ public class ProcessPlaytime extends TimerTask {
 
 		// Check if we need a restart		
 		Double rThreshold = Double.parseDouble(Config.getValue("restart.threshold"));
-		if (LagProcessor.getTPS() < rThreshold) {
+		if (currentTPS < rThreshold) {
 			lowTpsCounter += sinceLast;
 			if (lowTpsCounter >= 300000) {
 				Utilities.restart(true);

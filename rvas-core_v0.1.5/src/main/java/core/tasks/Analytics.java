@@ -77,11 +77,11 @@ public class Analytics extends TimerTask {
 		
 		StringBuilder sb1 = new StringBuilder(256);
 		
-		sb1.append("\"Date\","); sb1.append("\"TPS\","); sb1.append("\"Online Players\"");
-		sb1.append("\"New UUIDs\""); sb1.append("\"Joins Events\",");
+		sb1.append("\"Date\","); sb1.append("\"TPS\","); sb1.append("\"Online Players\",");
+		sb1.append("\"New UUIDs\","); sb1.append("\"Joins Events\",");
 		sb1.append("\"New Chunks\","); sb1.append("\"Loaded Chunks\",");
-		sb1.append("\"Speed Warnings\""); sb1.append("\"Speed Kicks\"");
-		sb1.append("\"Wither Spawns\""); sb1.append("\"Failed Withers\"");
+		sb1.append("\"Speed Warnings\","); sb1.append("\"Speed Kicks\",");
+		sb1.append("\"Wither Spawns\","); sb1.append("\"Failed Withers\",");
 		sb1.append("\"Removed Wither Skulls\"");
 		
 		CSV_perfHeader = sb1.toString();

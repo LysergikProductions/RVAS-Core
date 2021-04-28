@@ -30,7 +30,9 @@ import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.Location;
 import org.bukkit.Chunk;
+import org.bukkit.ChunkSnapshot;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -124,5 +126,19 @@ public class LagManager implements Listener, Runnable {
 			}
 		}
 		return counter;
+	}
+	
+	public static boolean lagLogger(){
+		// return true after finding lag chunks
+		
+		int entityCount = 0;
+		for (Player p: Bukkit.getOnlinePlayers()) {
+			
+			ChunkSnapshot thatChunk_C = p.getWorld().getChunkAt(p.getLocation()).getChunkSnapshot();
+			
+			// check for signs of lag machines
+		}
+		
+		return false;
 	}
 }
