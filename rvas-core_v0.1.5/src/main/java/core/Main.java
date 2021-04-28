@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -33,6 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
 	
 	public static Plugin instance;
+	
 	public static OfflinePlayer Top = null;
 	public Notifications NotificationHandler;
 	
@@ -67,7 +69,7 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] __________________");
 		try {
 			PlayerMeta.loadDonators();
-			// PlayerMeta.loadMuted(); // throws IOException: 
+			PlayerMeta.loadMuted();
 			PlayerMeta.loadLagfags();
 			
 		} catch (IOException e) {			
@@ -173,26 +175,30 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] _______________________");
 		
 		PluginManager core_pm = getServer().getPluginManager();
+		ProtocolManager plib_manager = ProtocolLibrary.getProtocolManager();
 		
 		core_pm.registerEvents(new Chat(), this);
 		core_pm.registerEvents(new Connection(), this);
+		core_pm.registerEvents(new Voted(), this);
+		
+		core_pm.registerEvents(new PVP(), this);
 		core_pm.registerEvents(new Move(), this);
-		core_pm.registerEvents(new ItemCheckTriggers(), this);
+		core_pm.registerEvents(new SpawnController(), this);
+		
 		core_pm.registerEvents(new LagManager(), this);
 		core_pm.registerEvents(new SpeedLimit(), this);
-		core_pm.registerEvents(new PVP(), this);
+		core_pm.registerEvents(new ItemCheckTriggers(), this);
+		
+		NoGhost.C2S_Packets();
 		core_pm.registerEvents(new BlockListener(), this);
 		core_pm.registerEvents(new ChunkListener(), this);
 		core_pm.registerEvents(new OpListener(), this);
-		core_pm.registerEvents(new SpawnController(), this);
-		core_pm.registerEvents(new Voted(), this);
 		
-		System.out.println("[core.main] ..finishing up..");
 		
 		// Disable global wither-spawn sound
 		if (Config.getValue("global.sound.no_wither").equals("true")) {
-			ProtocolLibrary.getProtocolManager()
-				.addPacketListener(new PacketAdapter(this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
+			plib_manager.addPacketListener(new PacketAdapter(
+					this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
 					
 					@Override
 					public void onPacketSending(PacketEvent event) {
@@ -206,19 +212,7 @@ public class Main extends JavaPlugin implements Listener {
 				});
 		}
 		
-		// Listen for block place packets for eventual no-ghost
-		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
-				this, ListenerPriority.HIGHEST, PacketType.Play.Client.BLOCK_PLACE) {
-			
-			@Override
-			public void onPacketSending(PacketEvent event) {
-				
-				PacketContainer packetContainer = event.getPacket();
-				
-				System.out.println("DEBUG: RECEIVED BLOCK PLACE PACKET");
-				System.out.println(packetContainer);
-			}
-		});
+		System.out.println("[core.main] ..finishing up..");
 		
 		// Define banned & special blocks
 		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
@@ -253,12 +247,14 @@ public class Main extends JavaPlugin implements Listener {
 						.getChunkSnapshot().getCaptureFullTime();
 				
 				if (worldAge_atStart < 600) {
-					isNewWorld = true;
+					
 					System.out.println("[core.main] This world is NEW! World Ticks: " + worldAge_atStart);
+					isNewWorld = true; break; // <- only check first normal dimension found
 				}
 				else {
-					isNewWorld = false;
+					
 					System.out.println("[core.main] This world is not new! World Ticks: " + worldAge_atStart);
+					isNewWorld = false; break; // <- only check first normal dimension found
 				}
 			}
 		}
@@ -288,14 +284,7 @@ public class Main extends JavaPlugin implements Listener {
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
 			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");			
 			FileManager.backupData(FileManager.donor_list, "donator-backup-", ".db");
-			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
-			
-			//FileManager.backupData(FileManager.all_donor_codes, "codes/all-backup-", ".db");
-			//FileManager.backupData(FileManager.used_donor_codes, "codes/used-backup-", ".db");
-			
-			//FileManager.backupData(FileManager.server_statistics_list, "analytics-backup-", ".csv");
-			//FileManager.backupData(FileManager.core_server_config, "config-backup-", ".txt");
-			//FileManager.backupData(FileManager.motd_message_list, "motds-backup-", ".txt");			
+			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");			
 			
 		} catch (IOException ex) {
 			System.out.println("[core.main] WARNING - Failed to save one or more backup files.");

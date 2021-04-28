@@ -155,6 +155,8 @@ public class FileManager {
 			System.out.println("Exception while reading pvpstats.txt : " + e);
 		}
 		
+		System.out.println("---------------------------------------------------------------------");
+		
 		// Store PlayerSettings in RAM \\
 		try {
 			Files.readAllLines(settings_user_database.toPath()).forEach(line -> {

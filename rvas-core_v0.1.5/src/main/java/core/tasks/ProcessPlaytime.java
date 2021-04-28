@@ -26,14 +26,13 @@ public class ProcessPlaytime extends TimerTask {
 	private static long lastHour = 0;
 	private static long timeTillReset = 3600000;
 	
+	private static double onlinePlayers = 0;
 	private static int currentNewChunks = 0;
 	private static int lastNewChunks = 0;
 	
 	private static double lastTPS = 0.00;
 	private static double currentTPS = 0.00;
-	
-	private static double difference = 0.00;
-	private static double onlinePlayers = 0;
+	private static double difference = 0.00;	
 	
 	@Override
 	public void run() {
@@ -51,10 +50,13 @@ public class ProcessPlaytime extends TimerTask {
 		currentTPS = LagProcessor.getTPS();
 		
 		if (lastTPS == 0.00) {difference = 0.00;}
-		else {difference = currentTPS - lastTPS;}
+		else {difference = lastTPS - currentTPS;}
 		
-		// TODO: this line will be used to trigger LagManager.lagLogger()
-		if (difference > (lastTPS*0.5)) System.out.println("WARN 50+% tps drop in 1s");
+		// TODO: this line will be used to trigger LagManager.lagFinder()
+		if (difference > (lastTPS*0.5)) {
+			System.out.println("WARN 50+% tps drop in 20t");
+			Analytics.capture();
+		}
 		
 		lastTPS = currentTPS;
 		

@@ -82,7 +82,7 @@ public class Analytics extends TimerTask {
 		sb1.append("\"New Chunks\","); sb1.append("\"Loaded Chunks\",");
 		sb1.append("\"Speed Warnings\","); sb1.append("\"Speed Kicks\",");
 		sb1.append("\"Wither Spawns\","); sb1.append("\"Failed Withers\",");
-		sb1.append("\"Removed Wither Skulls\"");
+		sb1.append("\"Removed Wither Skulls\","); sb1.append("\"Loaded Withers\"");
 		
 		CSV_perfHeader = sb1.toString();
 	}
@@ -150,7 +150,8 @@ public class Analytics extends TimerTask {
 				current_date, LagProcessor.getTPS(),
 				conPlayers, new_players, total_joins,
 				new_chunks, loaded_chunks, speed_warns, speed_kicks,
-				wither_spawns, failed_wither_spawns, removed_skulls
+				wither_spawns, failed_wither_spawns, removed_skulls,
+				LagManager.getWithers()
 			);
 		
 		String commandsLine = toCommandsCSV(
@@ -186,7 +187,7 @@ public class Analytics extends TimerTask {
 			String date, double tps, int con_players, int new_players,
 			int total_joins, int new_chunks, int loaded_chunks,
 			int speed_warns, int speed_kicks, int wither_spawns,
-			int failed_wither_spawns, int removed_skulls
+			int failed_wither_spawns, int removed_skulls, int loaded_withers
 			) {
 		
 		StringBuilder sb = new StringBuilder(128);
@@ -202,7 +203,8 @@ public class Analytics extends TimerTask {
 		sb.append(String.valueOf(speed_kicks) + ',');
 		sb.append(String.valueOf(wither_spawns) + ',');
 		sb.append(String.valueOf(failed_wither_spawns) + ',');
-		sb.append(String.valueOf(removed_skulls));
+		sb.append(String.valueOf(removed_skulls) + ',');
+		sb.append(String.valueOf(loaded_withers));
 		
 		return sb.toString();
 	}

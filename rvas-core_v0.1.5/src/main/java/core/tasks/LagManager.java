@@ -128,7 +128,7 @@ public class LagManager implements Listener, Runnable {
 		return counter;
 	}
 	
-	public static boolean lagLogger(){
+	public static boolean lagFinder(){
 		// return true after finding lag chunks
 		
 		int entityCount = 0;
@@ -136,7 +136,7 @@ public class LagManager implements Listener, Runnable {
 			
 			ChunkSnapshot thatChunk_C = p.getWorld().getChunkAt(p.getLocation()).getChunkSnapshot();
 			
-			// check for signs of lag machines
+			// check for signs of lag machines, store with lagLogger() if any are found
 		}
 		
 		return false;
