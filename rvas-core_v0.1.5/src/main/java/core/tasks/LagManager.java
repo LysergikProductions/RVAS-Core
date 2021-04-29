@@ -24,6 +24,7 @@ package core.tasks;
  * */
 
 import core.backend.Config;
+import core.events.BlockListener;
 import core.tasks.Analytics;
 import java.util.*;
 
@@ -33,6 +34,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.Location;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
+import org.bukkit.Material;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -101,8 +103,9 @@ public class LagManager implements Listener, Runnable {
 			if (skulls_world != 0) {
 				
 				if (skulls_world == 1) skullMsg = "skull"; else skullMsg = "skulls";
-				System.out.println("Removed " + skulls_world + " wither " + skullMsg + " from " + thisWorld.getName());
-			}			
+				if (debug) System.out.println(
+						"Removed " + skulls_world + " wither " + skullMsg + " from " + thisWorld.getName());
+			}
 			skulls_all += skulls_world;
 		}
 		return skulls_all;
@@ -115,9 +118,7 @@ public class LagManager implements Listener, Runnable {
 		int counter = 0;
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			
-			if (debug) {
-				System.out.println("Counting withers in: " + thisWorld.getName());
-			}
+			if (debug) System.out.println("Counting withers in: " + thisWorld.getName());
 			
 			for (Entity e: thisWorld.getEntities()) {
 				if (e instanceof Wither) {
@@ -136,9 +137,19 @@ public class LagManager implements Listener, Runnable {
 			
 			ChunkSnapshot thatChunk_C = p.getWorld().getChunkAt(p.getLocation()).getChunkSnapshot();
 			
-			// check for signs of lag machines, store with lagLogger() if any are found
+			for (Material blockType: BlockListener.LagMats) {
+				if (thatChunk_C.contains(blockType.createBlockData())) {
+					//count how many of each all lagmats are found in this area
+					
+					lagLogger(p, thatChunk_C);
+					return true;
+				}
+			}
 		}
-		
 		return false;
+	}
+	
+	public static boolean lagLogger(Player thatPlayer, ChunkSnapshot thatPlayerChunk){
+		return true;
 	}
 }

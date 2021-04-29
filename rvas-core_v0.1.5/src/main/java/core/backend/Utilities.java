@@ -156,17 +156,22 @@ public class Utilities {
 	}
 	
 	public static int blockCounter(Chunk chunk, Material block) {
+		int counter = 0;
 		
-	    int counter = 0;
-	    for(int y = 0; y <= 255; y++) {
-	        for(int x = 0; x <= 15; x++) {
-	            for(int z = 0; z <= 15; z++) {
-	            	
-	                if(chunk.getBlock(x, y, z).getType() == block) counter++;
-	            }
-	        }
-	    }
-	    return counter;
+		try {
+		    for(int y = 0; y <= 255; y++) {
+		        for(int x = 0; x <= 15; x++) {
+		            for(int z = 0; z <= 15; z++) {
+		            	
+		                if(chunk.getBlock(x, y, z).getType() == block) counter++;
+		            }
+		        }
+		    }
+		    return counter;
+		} catch (Exception e) {
+			System.out.println(e);
+			return counter;
+		}
 	}
 	
 	public static int blockRemover(Chunk chunk, Material blockType, int limiter) {

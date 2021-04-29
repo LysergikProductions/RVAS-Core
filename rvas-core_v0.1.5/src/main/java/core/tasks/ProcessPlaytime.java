@@ -42,31 +42,32 @@ public class ProcessPlaytime extends TimerTask {
 		
 		if ((currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
 			System.out.println(
-					"WARN more than 8 chunks per tick per player on average are being generated every second");
+					"WARN more than 8 chunks per tick per player in last second");
+			Analytics.capture();
 		}
 		
 		lastNewChunks = currentNewChunks;
-		
 		currentTPS = LagProcessor.getTPS();
 		
 		if (lastTPS == 0.00) {difference = 0.00;}
 		else {difference = lastTPS - currentTPS;}
 		
-		// TODO: this line will be used to trigger LagManager.lagFinder()
 		if (difference > (lastTPS*0.5)) {
 			System.out.println("WARN 50+% tps drop in 20t");
-			Analytics.capture();
+			Analytics.capture(); LagManager.lagFinder();
 		}
 		
 		lastTPS = currentTPS;
 		
+		// get time since last tick in milliseconds
 		if (lastTime == 0) {
 			lastTime = System.currentTimeMillis();
 			lastHour = System.currentTimeMillis();
 			return;
 		}
-
-		long sinceLast = System.currentTimeMillis() - lastTime;
+		
+		long sinceLast = System.currentTimeMillis() - lastTime;		
+		if (sinceLast > 3000) Analytics.capture();
 
 		// Tick playtime and temporary mutes
 		Bukkit.getOnlinePlayers().forEach(p -> PlayerMeta.tickPlaytime(p, sinceLast));

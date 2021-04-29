@@ -1,10 +1,7 @@
 package core.events;
 
 import core.Main;
-import core.backend.Config;
-import core.backend.LagProcessor;
-import core.backend.Pair;
-import core.backend.ServerMeta;
+import core.backend.*;
 import core.commands.Admin;
 import core.tasks.Analytics;
 
@@ -93,7 +90,9 @@ public class SpeedLimit implements Listener
 
 			speeds.clear();
 
-			Bukkit.getOnlinePlayers().stream().filter(player -> !player.isOp()).forEach(player -> {
+			Bukkit.getOnlinePlayers().stream().filter(player -> !PlayerMeta.isAdmin(player)).forEach(player -> {
+				
+				double final_limit = speed_limit;
 				
 				// updated teleported player position
 				if (tped.contains(player.getUniqueId())) {
@@ -126,11 +125,14 @@ public class SpeedLimit implements Listener
 				if (grace == null) {
 					grace = GRACE_PERIOD;
 				}
-
+				
+				// allow ops to bypass higher tier, but not the base, speed limiters
+				if (player.isOp()) final_limit = 76.00;
+				
 				Vector v = new_location.subtract(previous_location).toVector();
 				double speed = Math.round(v.length() / duration * 10.0) / 10.0;
 				
-				if (speed > speed_limit+ 1 && (Config.getValue("speedlimit.agro").equals("true") || Admin.disableWarnings)) {
+				if (speed > final_limit+ 1 && (Config.getValue("speedlimit.agro").equals("true") || Admin.disableWarnings)) {
 					
 					ServerMeta.kickWithDelay(player,
 							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
@@ -157,7 +159,7 @@ public class SpeedLimit implements Listener
 
 				// player is going too fast, warn or kick
 				// +1 for leniency
-				if (speed > speed_limit+1) {
+				if (speed > final_limit+1) {
 					if (grace == 0) {
 						
 						gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
@@ -170,7 +172,7 @@ public class SpeedLimit implements Listener
 						Analytics.speed_warns++;
 						
 						// display speed with one decimal
-						player.spigot().sendMessage(new TextComponent("§4Your speed is " + speed + ", speed limit is " + speed_limit + ". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));
+						player.spigot().sendMessage(new TextComponent("§4Your speed is " + speed + ", speed limit is " + final_limit + ". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));
 					}
 					--grace;
 					gracePeriod.put(player.getUniqueId(), grace);

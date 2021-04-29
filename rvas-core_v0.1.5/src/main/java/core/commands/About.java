@@ -47,7 +47,7 @@ public class About implements CommandExecutor {
 		
 		if (!PlayerMeta.isAdmin(player)) Analytics.about_cmd++;
 		
-		TextComponent by = new TextComponent("RVAS-core v0.1.2 by sinse420");
+		TextComponent by = new TextComponent("RVAS-core v0.1.5 by sinse420");
 		TextComponent source = new TextComponent("RVAS-core is open source. Access the GitHub by clicking this message.");
 		TextComponent license = new TextComponent("Licensed under AGPL-3.0.");
 		

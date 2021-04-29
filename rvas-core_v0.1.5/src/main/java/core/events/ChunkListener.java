@@ -73,7 +73,12 @@ public class ChunkListener implements Listener {
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
 			
-			antiFurnaceBan(chunk);
+			try {
+				antiFurnaceBan(chunk);
+			} catch (Exception e) {
+				System.out.println(e);
+				return;
+			}
 			
 		} else {ChunkListener.newCount++; Analytics.new_chunks++;}
 	}
