@@ -44,9 +44,7 @@ public class Reply implements CommandExecutor {
 			return true;
 		}
 
-		if (recvName.equals("")) {
-			recvName = recv.getName();
-		}
+		recvName = recv.getName();
 
 		// Muted players can't send or recieve messages.
 		if (PlayerMeta.isMuted(p)) {

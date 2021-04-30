@@ -39,7 +39,8 @@ public class ItemCheck {
 	}
 
 	public static void IllegalCheck(ItemStack item, String trigger, Player player) {
-		
+		assert player != null;
+
 		// Dont check null items or air
 		if (item == null || item.getType().equals(Material.AIR)) return;
 		if (player != null && PlayerMeta.isAdmin(player)) return;
@@ -159,13 +160,9 @@ public class ItemCheck {
 							}
 							if (hasConflict) continue;
 						}
-
-						if (item.getEnchantmentLevel(e) > e.getMaxLevel()) {
-							newMeta.addEnchant(e, e.getMaxLevel(), false);
-						} else {
-							newMeta.addEnchant(e, item.getEnchantmentLevel(e), false);
-						}
+						newMeta.addEnchant(e, Math.min(item.getEnchantmentLevel(e), e.getMaxLevel()), false);
 					}
+
 				} catch (IllegalArgumentException e) {
 					item.setAmount(0);
 					return;
@@ -346,9 +343,7 @@ public class ItemCheck {
 		if (!i.hasItemMeta()) return false;
 		if (i.getItemMeta() instanceof BlockStateMeta) {
 			BlockStateMeta im = (BlockStateMeta) i.getItemMeta();
-			if (im.getBlockState() instanceof ShulkerBox) {
-				return true;
-			}
+			return im.getBlockState() instanceof ShulkerBox;
 		}
 		return false;
 	}

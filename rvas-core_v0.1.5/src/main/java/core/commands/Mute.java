@@ -16,7 +16,10 @@ public class Mute implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
 		String name = "";
-		
+
+		if(sender instanceof Player) { name = ((Player)sender).getName(); }
+		else { name = "CONSOLE"; }
+
 		if (!PlayerMeta.isOp(sender)) {
 			sender.sendMessage("§cYou can't use this.");
 			return true;
@@ -26,9 +29,6 @@ public class Mute implements CommandExecutor {
 			sender.sendMessage("§cInvalid syntax. Syntax: /mute <perm/temp/none/all> [player]");
 			return true;
 		}
-		
-		if(sender instanceof Player) { name = ((Player)sender).getName(); }
-		else { name = "CONSOLE"; }
 
 		String mode = args[0];
 		if (mode.equals("all")) {
@@ -40,13 +40,24 @@ public class Mute implements CommandExecutor {
 			return true;
 		}
 
-		Player toMute = Bukkit.getPlayer(args[1]);
+		Player toMute = null;
+		try {
+			if (args[1] != null) toMute = Bukkit.getPlayer(args[1]);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("/mute probably entered incorrectly..");
+			sender.spigot().sendMessage(new TextComponent("Syntax: /mute [type] [player]"));
+		} catch (NullPointerException e) {
+			System.out.println("/mute target is null");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		if (toMute == null) {
-			sender.sendMessage("§cPlayer is not online.");
+			sender.sendMessage("Player is not online.");
 			return true;
 		}
 		if (toMute.isOp()) {
-			sender.sendMessage("§cYou can't mute this person.");
+			sender.sendMessage("You can't mute this person.");
 			return true;
 		}
 

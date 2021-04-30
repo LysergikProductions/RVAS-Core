@@ -12,7 +12,11 @@ _**Doesn't prevent any vanilla exploits** by default_
 
 - Creative-mode **dupe/illegals limiter** to protect the economy from sneaky ops
 
+- Permanent **Item/Stack signing** with `/sign` for a **healthy economy**
+
 - Bedrock **Floor / Roof Protection** (configurable)
+
+- **Analytics** for *performance* and *commands-use*
 
 - Player **Statistics Tracking** (playtime, pvp-kills, etc)
 
@@ -31,7 +35,7 @@ _**Doesn't prevent any vanilla exploits** by default_
 - `/mute temp | permanent` - _(for ops only)_
 - `/admin color | spy | speed` - _show list of fastest moving players, use red ign chat color, etc_
 - `/repair exit | portals | roof | floor` - _precisely repair vital game structures_
-- `/tps`, `/stats`, `/backup` _and many more!_
+- `/tps`, `/stats`, `/backup`  _and many more!_
 
 ##### @ Server Operators
 For full admin functionality, in `core\config.txt`, please enter your uuid and current ign for the intended in-game master account

@@ -48,9 +48,7 @@ public class Message implements CommandExecutor {
 			return true;
 		}
 
-		if (recvName.equals("")) {
-			recvName = recv.getName();
-		}
+		recvName = recv.getName();
 
 		// Concatenate all messages
 		final String[] msg = {""};

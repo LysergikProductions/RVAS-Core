@@ -71,7 +71,6 @@ public class PVPdata {
 			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "0.00", 0);
 			sPVPStats.put(p.getUniqueId(), stats);
 		}
-		return;
 	}
 	
 	public static PVPstats getNewStats(OfflinePlayer p) {
@@ -84,8 +83,8 @@ public class PVPdata {
 		
 		if (stats != null && sPVPStats.containsKey(p.getUniqueId())) {
 			
-			Double kills = new Double(stats.killTotal);
-			Double deaths = new Double(stats.deathTotal);
+			double kills = (double) stats.killTotal;
+			double deaths = (double) stats.deathTotal;
 			
 			if (deaths < 0.710) {
 				stats.kd = "Unkillable!";

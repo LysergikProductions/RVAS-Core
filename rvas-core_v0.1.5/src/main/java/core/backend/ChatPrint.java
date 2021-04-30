@@ -159,9 +159,7 @@ public class ChatPrint {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");		
 		String firstPlayed = sdf.format(date);
 		String lastPlayed = sdf.format(new Date(target.getLastPlayed()));
-		
-		OfflinePlayer largestPlayer = target;
-		
+
 		// get all uniquley stylable components
 		TextComponent title_pre = new TextComponent("--- ");
 		TextComponent title_name = new TextComponent(target.getName());
@@ -175,7 +173,7 @@ public class ChatPrint {
 		TextComponent rank_b = new TextComponent("" + PlayerMeta.getRank(target));
 		TextComponent playtime_a = new TextComponent("Time played: ");
 		TextComponent playtime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(target)));
-		TextComponent toptime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(largestPlayer)));
+		TextComponent toptime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(target)));
 		
 		TextComponent tkills_a = new TextComponent("PVP Kills: ");
 		TextComponent tkills_b = new TextComponent("" + PVPdata.getStats(target).killTotal);

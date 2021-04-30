@@ -64,6 +64,7 @@ public class VoteMute implements CommandExecutor {
 		}
 
 		// Can't vote on an already-muted person.
+		assert toMute != null;
 		if (PlayerMeta.isMuted(toMute)) {
 			voter.spigot().sendMessage(new TextComponent("§cPlayer is already muted."));
 			return true;
@@ -196,5 +197,4 @@ public class VoteMute implements CommandExecutor {
 			cooldown = cooldown - 1;
 		}
 	}
-
 }

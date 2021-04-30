@@ -52,8 +52,7 @@ public class PVPstats implements Serializable {
 	@Override
     public String toString() {
 
-		String out = playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;
-		return out;
+		return playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;
     }
 	
 	public static PVPstats fromString(String line) {
@@ -89,8 +88,7 @@ public class PVPstats implements Serializable {
 		int spawnKills;		
 		try {spawnKills = Integer.parseInt(stats[4]);} catch (Exception e) {spawnKills = 0;}
 		if (debug) System.out.println("Parsed spawn kills: " + spawnKills);
-		
-		PVPstats out = new PVPstats(playerid, killTotal, deathTotal, kd, spawnKills);
-		return out;
+
+		return new PVPstats(playerid, killTotal, deathTotal, kd, spawnKills);
 	}
 }

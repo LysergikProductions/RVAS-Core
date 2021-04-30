@@ -52,7 +52,7 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] ______________________________");
 		
 		System.out.println("forcing default gamemode..");
-		getServer().setDefaultGameMode​(GameMode.SURVIVAL);
+		getServer().setDefaultGameMode(GameMode.SURVIVAL);
 		
 		System.out.println("[core.main] _____________");
 		System.out.println("[core.main] Loading files");

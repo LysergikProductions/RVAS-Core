@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
 
 public class Chat implements Listener {
 
-	private static Set<String> allUserCommands = new HashSet<>(Arrays.asList(
+	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
 		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "r",
 		"redeem", "server", "sign", "stats", "suicide", "tdm", "tjm", "tps", "vm", "vote", "w"
 	));
@@ -122,7 +122,8 @@ public class Chat implements Listener {
 				
 				if(lastChatTimes.containsKey(e.getPlayer().getUniqueId())) {
 					
-					if(lastChatTimes.get(e.getPlayer().getUniqueId()) + Integer.parseInt(Config.getValue("spam.wait_time")) > System.currentTimeMillis()) {
+					if(lastChatTimes.get(e.getPlayer().getUniqueId()) +
+							Integer.parseInt(Config.getValue("spam.wait_time")) > System.currentTimeMillis()) {
 						
 						censored = true;
 						
@@ -138,7 +139,8 @@ public class Chat implements Listener {
 				if(lastChatMessages.containsKey(e.getPlayer().getUniqueId())) {
 					
 					// slow chat is off, but how similar are the messages?
-					if(similarity(lastChatMessages.get(e.getPlayer().getUniqueId()), finalMessage) * 100 > Integer.parseInt(Config.getValue("spam.min_similarity"))) {
+					if(similarity(lastChatMessages.get(e.getPlayer().getUniqueId()), finalMessage)
+							* 100 > Integer.parseInt(Config.getValue("spam.min_similarity"))) {
 						
 						censored = true;
 						
@@ -165,14 +167,16 @@ public class Chat implements Listener {
 				if(e.getPlayer().isOp() && Config.getValue("spam.ops").equals("true")) {					
 					if(censored) {
 						
-						e.getPlayer().sendMessage(new TextComponent("§cYour message was flagged as spam, but since you are an OP, it was not filtered."));
+						e.getPlayer().sendMessage(new TextComponent(
+								"§cYour message was flagged as spam, but since you are an OP, it was not filtered."));
 						censored = false;
 					}
 					violationLevels.remove(e.getPlayer().getUniqueId());
 				}
 			
 				if(censored) {
-					Bukkit.getLogger().log(Level.INFO, "§4<" + username + "> " + finalMessage + " [deleted, vl="+violationLevels.get(e.getPlayer().getUniqueId())+"]");
+					Bukkit.getLogger().log(Level.INFO, "§4<" + username + "> " + finalMessage + " [deleted, vl="
+							+ violationLevels.get(e.getPlayer().getUniqueId())+"]");
 					return;
 				}
 			}

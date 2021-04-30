@@ -73,9 +73,7 @@ public class Connection implements Listener {
 			PlayerMeta.Playtimes.put(e.getPlayer().getUniqueId(), 0.0D);
 		}
 
-		if (Kit.kickedFromKit.contains(e.getPlayer().getUniqueId())) {
-			Kit.kickedFromKit.remove(e.getPlayer().getUniqueId());
-		}
+		Kit.kickedFromKit.remove(e.getPlayer().getUniqueId());
 
 		// Full player check on initial join
 		if (Config.getValue("item.illegal.onjoin").equals("true")) {
@@ -130,7 +128,7 @@ public class Connection implements Listener {
 		ServerMeta.preventReconnect(e.getPlayer(), Integer.parseInt(Config.getValue("speedlimit.rc_delay_safe")));
 	}
 
-	private String[] motds = {
+	private final String[] motds = {
 		"i'm not high, we're high" , "RIP boiling water, you will be mist" , "vanilla exploits rejoice!" , "needs more carpet" ,
 		"imagine imagining.."
 	};

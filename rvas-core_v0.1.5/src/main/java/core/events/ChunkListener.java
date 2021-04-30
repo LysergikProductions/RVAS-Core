@@ -99,112 +99,115 @@ public class ChunkListener implements Listener {
 		
 		DragonBattle dragon = chunk.getWorld().getEnderDragonBattle();
 		
-		if (chunk.getWorld().getEnvironment().equals(Environment.THE_END)
-				&& dragon.hasBeenPreviouslyKilled()) {
-		
+		if (chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
+			assert dragon != null;
+
+			//if (dragon == null) return; TODO: add this when removing assertion
+			if (!dragon.hasBeenPreviouslyKilled()) return;
+
 			int x_chunk = chunk.getX();
 			int z_chunk = chunk.getZ();
-			
+
 			// NW Quadrant
 			if (x_chunk == -1 && z_chunk == -1) {
 				System.out.println("NW EXIT PORTAL CHUNK LOADED");
-				
+
 				chunk.setForceLoaded(false);
-				
+
 				chunk.getBlock(15, 63, 15).setType(br);
 				chunk.getBlock(15, 63, 14).setType(br);
 				chunk.getBlock(14, 63, 15).setType(br);
-				
+
 				chunk.getBlock(15, 64, 15).setType(portal);
 				chunk.getBlock(15, 64, 14).setType(portal);
 				chunk.getBlock(15, 64, 13).setType(br);
-				
+
 				chunk.getBlock(14, 64, 15).setType(portal);
 				chunk.getBlock(14, 64, 14).setType(br);
 				chunk.getBlock(13, 64, 15).setType(br);
 			}
-			
+
 			// SW Quadrant
 			if (x_chunk == -1 && z_chunk == 0) {
 				System.out.println("SW EXIT PORTAL CHUNK LOADED");
-				
+
 				chunk.setForceLoaded(false);
-				
+
 				chunk.getBlock(15, 63, 0).setType(br);
 				chunk.getBlock(14, 63, 0).setType(br);
 				chunk.getBlock(15, 63, 1).setType(br);
 				chunk.getBlock(14, 63, 1).setType(br);
 				chunk.getBlock(15, 63, 2).setType(br);
-				
+
 				chunk.getBlock(15, 64, 0).setType(portal);
 				chunk.getBlock(14, 64, 0).setType(portal);
 				chunk.getBlock(13, 64, 0).setType(br);
-				
+
 				chunk.getBlock(15, 64, 1).setType(portal);
 				chunk.getBlock(14, 64, 1).setType(portal);
 				chunk.getBlock(13, 64, 1).setType(br);
-				
+
 				chunk.getBlock(15, 64, 2).setType(portal);
 				chunk.getBlock(14, 64, 2).setType(br);
 				chunk.getBlock(15, 64, 3).setType(br);
 			}
-			
+
 			// NE Quadrant
 			if (x_chunk == 0 && z_chunk == -1) {
 				System.out.println("NE EXIT PORTAL CHUNK LOADED");
-				
+
 				chunk.setForceLoaded(false);
-				
+
 				chunk.getBlock(0, 63, 15).setType(br);
 				chunk.getBlock(1, 63, 15).setType(br);
 				chunk.getBlock(2, 63, 15).setType(br);
 				chunk.getBlock(0, 63, 14).setType(br);
 				chunk.getBlock(1, 63, 14).setType(br);
-				
+
 				chunk.getBlock(0, 64, 15).setType(portal);
 				chunk.getBlock(1, 64, 15).setType(portal);
 				chunk.getBlock(2, 64, 15).setType(portal);
 				chunk.getBlock(3, 64, 15).setType(br);
-				
+
 				chunk.getBlock(0, 64, 14).setType(portal);
 				chunk.getBlock(1, 64, 14).setType(portal);
 				chunk.getBlock(2, 64, 14).setType(br);
-				
+
 				chunk.getBlock(0, 64, 13).setType(br);
 				chunk.getBlock(1, 64, 13).setType(br);
 			}
-			
+
 			// SE Quadrant
 			if (x_chunk == 0 && z_chunk == 0) {
 				System.out.println("SE EXIT PORTAL CHUNK LOADED");
-				
+
 				chunk.setForceLoaded(false);
-				
+
 				chunk.getBlock(0, 63, 0).setType(br);
 				chunk.getBlock(0, 63, 1).setType(br);
 				chunk.getBlock(0, 63, 2).setType(br);
-				
+
 				chunk.getBlock(1, 63, 0).setType(br);
 				chunk.getBlock(1, 63, 1).setType(br);
 				chunk.getBlock(1, 63, 2).setType(br);
-				
+
 				chunk.getBlock(2, 63, 0).setType(br);
 				chunk.getBlock(2, 63, 1).setType(br);
-				
+
 				chunk.getBlock(0, 64, 0).setType(br);
 				chunk.getBlock(0, 64, 1).setType(portal);
 				chunk.getBlock(0, 64, 2).setType(portal);
 				chunk.getBlock(0, 64, 3).setType(br);
-				
+
 				chunk.getBlock(1, 64, 0).setType(portal);
 				chunk.getBlock(1, 64, 1).setType(portal);
 				chunk.getBlock(1, 64, 2).setType(portal);
 				chunk.getBlock(1, 64, 3).setType(br);
-				
+
 				chunk.getBlock(2, 64, 0).setType(portal);
 				chunk.getBlock(2, 64, 1).setType(portal);
 				chunk.getBlock(2, 64, 2).setType(br);
-				
+
 				chunk.getBlock(3, 64, 0).setType(br);
 				chunk.getBlock(3, 64, 1).setType(br);
 			}

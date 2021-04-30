@@ -61,9 +61,7 @@ public class PlayerSettings implements Serializable {
 	@Override
     public String toString() {
 
-		String out = playerid + ":" + show_PVPstats + ":" + show_kills + ":" + show_deaths + ":" + show_kd + ":" + show_player_join_messages + ":" + show_player_death_messages;
-		
-		return out;
+		return playerid + ":" + show_PVPstats + ":" + show_kills + ":" + show_deaths + ":" + show_kd + ":" + show_player_join_messages + ":" + show_player_death_messages;
     }
 	
 	public static PlayerSettings fromString(String line) {
@@ -97,9 +95,8 @@ public class PlayerSettings implements Serializable {
 		
 		try {show_player_death_messages = Boolean.parseBoolean(settings[4]);}
 		catch (Exception e) {show_player_death_messages = true;}
-		
-		PlayerSettings out = new PlayerSettings(playerid, show_PVPstats, show_kills, show_deaths, show_kd,
+
+		return new PlayerSettings(playerid, show_PVPstats, show_kills, show_deaths, show_kd,
 				show_player_join_messages, show_player_death_messages);
-		return out;
 	}
 }

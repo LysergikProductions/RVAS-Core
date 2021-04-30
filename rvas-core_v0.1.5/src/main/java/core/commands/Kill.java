@@ -30,7 +30,7 @@ public class Kill implements CommandExecutor
 					
 					Objects.requireNonNull(Bukkit.getPlayer(args[0])).setHealth(0);
 					
-				} else if (sender instanceof Player) {
+				} else {
 					
 					if ((sender).isOp()) {
 						Objects.requireNonNull(Bukkit.getPlayer(args[0])).setHealth(0);

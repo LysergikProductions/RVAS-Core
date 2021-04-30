@@ -57,6 +57,7 @@ public class PVP implements Listener {
 		Player killer = killed.getKiller();
 		
 		try {
+			assert killer != null;
 			UUID killerID = killer.getUniqueId();
 		} catch (NullPointerException e) {
 			System.out.println("killerID in PVP.java is null.");
@@ -67,15 +68,14 @@ public class PVP implements Listener {
 		String killerName = "";
 		String killerLoc = "";
 		
-		if (killer != null && debug) {
+		if (debug) {
 			
 			killerName = killer.getName();
 			killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
 			
 			System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
-			
-		} else if (debug) System.out.println("[core.events.pvp] killer = null");
-		
+		}
+
 		// increment appropriate stats
 		PVPdata.incKillTotal(killer, 1);
 		PVPdata.incDeathTotal(killed, 1);
@@ -103,12 +103,11 @@ public class PVP implements Listener {
 		if (cX == null || cZ == null) {
 			
 			if (debug) System.out.println("[core.events.PVP] failed to retrieve location for victim: " + killedName);
-			return;
-			
+
 		} else if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {			
 			if (debug) System.out.println(killedName + " was killed in the spawn region!");
 
-			if (victim_playtime < 3600.0 && killer != null) {
+			if (victim_playtime < 3600.0) {
 				
 				System.out.println(killedName + " was also a new player!");
 				PVPdata.incSpawnKill(killer, 1);

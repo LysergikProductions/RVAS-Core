@@ -73,33 +73,15 @@ rvas-core_v0.1.5/.settings/*
 rvas-core_v0.1.5/.settings
 rvas-core_v0.1.5/target
 
-*.class
-
 # Java related
 target/**
 #*.jar
 *.war
 *.ear
-*.class
 
 # eclipse specific
-*.pydevproject
-.project
-.metadata
 bin/**
 tmp/**
 tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
 .classpath
-.settings/
-.loadpath
 
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch

@@ -161,21 +161,19 @@ public class SpawnController implements Listener {
 			if (!event.isBedSpawn() && !event.isAnchorSpawn()) {
 				
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
-				
-				if (thisLocation != null) {
-					Chunk spawnChunk = thisLocation.getChunk();
-					
-					if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
-					if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
-					
-					event.setRespawnLocation(thisLocation);
-					while (!spawnChunk.isLoaded()) spawnChunk.load(true);
-					
-					if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
-					if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
-					
-					return;
-				}
+
+				Chunk spawnChunk = thisLocation.getChunk();
+
+				if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
+				if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
+
+				event.setRespawnLocation(thisLocation);
+				while (!spawnChunk.isLoaded()) spawnChunk.load(true);
+
+				if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
+				if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
+
+				return;
 			}
 			System.out.println(event.getPlayer().getName() + " has a bed or anchor spawn");
 		}
@@ -233,12 +231,8 @@ public class SpawnController implements Listener {
 				}
 				
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
-				
-				if (thisLocation != null) {
-					
-					thisWorld.setSpawnLocation(thisLocation);
-					return;
-				}
+				thisWorld.setSpawnLocation(thisLocation);
+				return;
 			}
 		}
 	}

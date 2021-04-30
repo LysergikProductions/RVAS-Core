@@ -57,7 +57,8 @@ public class Stats implements CommandExecutor {
 		if (args.length != 0) {
 			
 			switch (args[0]) {
-				case "top":		
+				case "top":
+					assert Main.Top != null;
 					ChatPrint.printStats(player, Main.Top);
 					return true;
 					
@@ -74,8 +75,9 @@ public class Stats implements CommandExecutor {
 					if (!PlayerMeta.isAdmin(player)) Analytics.stats_help++;
 					return true;
 					
-				case "kills":	
-					
+				case "kills":
+
+					assert targetSettings != null;
 					targetSettings.show_kills = !targetSettings.show_kills;
 					
 					if (targetSettings.show_kills) {
@@ -90,7 +92,8 @@ public class Stats implements CommandExecutor {
 					return true;
 					
 				case "deaths":
-					
+
+					assert targetSettings != null;
 					targetSettings.show_deaths = !targetSettings.show_deaths;
 					
 					if (targetSettings.show_deaths) {
@@ -105,7 +108,8 @@ public class Stats implements CommandExecutor {
 					return true;
 					
 				case "kd":
-					
+
+					assert targetSettings != null;
 					targetSettings.show_kd = !targetSettings.show_kd;
 					
 					if (targetSettings.show_kd) {

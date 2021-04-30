@@ -41,7 +41,7 @@ public class Utilities {
 			hoursString = hours + " hours";
 		}
 		
-		if (days >= 1 && days < 2) {
+		if (days == 1) {
 			daysString = days + " day";
 		} else {
 			daysString = days + " days";
@@ -145,12 +145,9 @@ public class Utilities {
 	                return false;
 	            }
 	        }
-	        if (ip.endsWith(".") ) {
-	            return false;
-	        }
+			return !ip.endsWith(".");
 
-	        return true;
-	    } catch (NumberFormatException nfe) {
+		} catch (NumberFormatException nfe) {
 	        return false;
 	    }
 	}

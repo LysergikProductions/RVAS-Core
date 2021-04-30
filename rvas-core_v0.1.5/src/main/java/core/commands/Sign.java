@@ -36,9 +36,10 @@ public class Sign implements CommandExecutor {
 
 		Player p = (Player) sender;
 		if (!PlayerMeta.isAdmin(p)) Analytics.sign_cmd++;
-		
-		if (p.getInventory().getItemInMainHand() != null
-				&& !p.getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
+
+		ItemStack thisStack = p.getInventory().getItemInMainHand();
+
+		if (!thisStack.getType().equals(Material.AIR)) {
 			ItemStack item = p.getInventory().getItemInMainHand();
 			if (sign(item, p)) {
 				p.spigot()

@@ -22,7 +22,7 @@ public class Discord implements CommandExecutor {
 		if (!PlayerMeta.isAdmin(player)) Analytics.discord_cmd++;
 		String link = Config.getValue("discord.link");
 		
-		if (link != "tbd" && link != "" && link != null) {
+		if (!link.equals("tbd") && !link.equals("")) {
 			
 			TextComponent message = new TextComponent("Click this message to join the Discord.");
 			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));

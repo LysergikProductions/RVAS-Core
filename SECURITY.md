@@ -12,5 +12,4 @@ As 3.2 is the currently supported version, I will only listen to security vulner
 
 ## Reporting a Vulnerability
 
-Contact d2k11 ONLY! DO NOT CONTACT ANOTHER CONTRIBUTOR!
-d2k11#0001 on Discord, or join the AVAS Discord at https://avas.cc/discord.
+Contact LysergikProductions on Git

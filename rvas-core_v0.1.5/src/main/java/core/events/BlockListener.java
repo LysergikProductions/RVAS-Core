@@ -271,6 +271,7 @@ public class BlockListener implements Listener {
 		
 		Block blockToPlace = event.getBlockPlaced();		
 		blockToPlace.getState().update(false, true);
+		System.out.println("");
 	}
 	
 	public static boolean updateConfigs() {

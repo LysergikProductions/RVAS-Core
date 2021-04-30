@@ -22,7 +22,7 @@ public class ServerMeta {
 
 	public static boolean doAnalytics()
 	{
-		return Config.getValue("analytics.enabled") == "true";
+		return Config.getValue("analytics.enabled").equals("true");
 	}
 
 	// -- RC BLOCKING -- //
@@ -60,5 +60,4 @@ public class ServerMeta {
 			}
 		}
 	}
-
 }

@@ -103,9 +103,7 @@ public class PlayerMeta {
 		if (type.equals(MuteType.NONE)) {
 			
 			muteType = "un";
-			if (_temporaryMutes.containsKey(uuid)) {
-				_temporaryMutes.remove(uuid);
-			}
+			_temporaryMutes.remove(uuid);
 			
 			if (_permanentMutes.contains(uuid)) {
 				_permanentMutes.remove(uuid);
@@ -129,9 +127,10 @@ public class PlayerMeta {
 		} else if (type.equals(MuteType.PERMANENT)) {
 			
 			muteType = "permanently ";
-			
+
+			_temporaryMutes.remove(uuid);
 			if (!_permanentMutes.contains(uuid)) _permanentMutes.add(uuid);
-			if (_temporaryMutes.containsKey(uuid)) _temporaryMutes.remove(uuid);
+
 			saveMuted();
 			
 		} else if (type.equals(MuteType.IP)) {
@@ -176,14 +175,9 @@ public class PlayerMeta {
 	}
 
 	public static boolean isPrisoner(Player p) {
-		
-		if (
-			_lagfagList.containsKey(p.getUniqueId()) ||
-			_lagfagList.containsValue(p.getAddress().toString().split(":")[0])
-		){			
-			return true;
-			
-		} else return false;
+
+		return _lagfagList.containsKey(p.getUniqueId()) ||
+				_lagfagList.containsValue(p.getAddress().toString().split(":")[0]);
 	}
 
 	public static void saveLagfags() throws IOException {
@@ -227,14 +221,9 @@ public class PlayerMeta {
 		
 		try {
 			List<String> lines = new ArrayList<String>();
-			
-			for(UUID key : _permanentMutes) {
-				lines.add(key.toString());
-			}
-			
-			for(String ip : _ipMutes) {
-				lines.add(ip);
-			}
+
+			for(UUID key : _permanentMutes) lines.add(key.toString());
+			lines.addAll(_ipMutes);
 			
 			Files.write(Paths.get("plugins/core/muted.db"), String.join("\n", lines).getBytes());
 		}
@@ -294,8 +283,7 @@ public class PlayerMeta {
 	}
 	
 	public static PlayerSettings getNewSettings(OfflinePlayer p) {
-		PlayerSettings out = new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true);
-		return out;
+		return new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true);
 	}
 	
 	public static PlayerSettings getSettings(OfflinePlayer p) {
@@ -306,11 +294,7 @@ public class PlayerMeta {
 			
 			return settings;
 			
-		} else {
-			
-			PlayerSettings new_settings = getNewSettings(p);
-			return new_settings;
-		}
+		} else return getNewSettings(p);
 	}
 	
 	public static void writePlayerSettings() throws IOException {
@@ -349,10 +333,8 @@ public class PlayerMeta {
 		try {
 			admin_id = UUID.fromString(Config.getValue("adminid"));
 		} catch (Exception e) {return false;}
-		
-		if (admin_name.equals(target_name) && admin_id.equals(target_id)) {
-			return true;
-		} else return false;
+
+		return admin_name.equals(target_name) && admin_id.equals(target_id);
 	}
 	
 	public static String getIp(Player p) {

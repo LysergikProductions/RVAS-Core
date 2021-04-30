@@ -25,20 +25,16 @@ public class ProcessPlaytime extends TimerTask {
 	private static long lastTime = 0;
 	private static long lastHour = 0;
 	private static long timeTillReset = 3600000;
-	
-	private static double onlinePlayers = 0;
-	private static int currentNewChunks = 0;
+
 	private static int lastNewChunks = 0;
-	
+
 	private static double lastTPS = 0.00;
-	private static double currentTPS = 0.00;
-	private static double difference = 0.00;	
-	
+
 	@Override
 	public void run() {
-		
-		currentNewChunks = ChunkListener.newCount;
-		onlinePlayers = (double)Bukkit.getOnlinePlayers().size();
+
+		int currentNewChunks = ChunkListener.newCount;
+		double onlinePlayers = (double) Bukkit.getOnlinePlayers().size();
 		
 		if ((currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
 			System.out.println(
@@ -47,10 +43,13 @@ public class ProcessPlaytime extends TimerTask {
 		}
 		
 		lastNewChunks = currentNewChunks;
-		currentTPS = LagProcessor.getTPS();
-		
-		if (lastTPS == 0.00) {difference = 0.00;}
-		else {difference = lastTPS - currentTPS;}
+		double currentTPS = LagProcessor.getTPS();
+
+		double difference = 0.00;
+		if (lastTPS == 0.00) {
+			difference = 0.00;}
+		else {
+			difference = lastTPS - currentTPS;}
 		
 		if (difference > (lastTPS*0.5)) {
 			System.out.println("WARN 50+% tps drop in 20t");
@@ -85,7 +84,7 @@ public class ProcessPlaytime extends TimerTask {
 		}
 
 		// Check if we need a restart		
-		Double rThreshold = Double.parseDouble(Config.getValue("restart.threshold"));
+		double rThreshold = Double.parseDouble(Config.getValue("restart.threshold"));
 		if (currentTPS < rThreshold) {
 			lowTpsCounter += sinceLast;
 			if (lowTpsCounter >= 300000) {

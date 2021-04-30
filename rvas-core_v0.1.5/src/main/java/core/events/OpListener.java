@@ -201,7 +201,8 @@ public class OpListener implements Listener {
 			
 			HumanEntity ePlayer = event.getWhoClicked();
 			Player player = Bukkit.getPlayer(ePlayer.getUniqueId());
-			
+
+			assert player != null;
 			if (!PlayerMeta.isAdmin(player)) {
 				event.setCancelled(true);
 				

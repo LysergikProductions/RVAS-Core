@@ -78,7 +78,6 @@ public class LagManager implements Listener, Runnable {
 			if (currentWithers > witherLimit-1) {
 				Analytics.failed_wither_spawns++;
 				e.setCancelled(true);
-				return;
 			}
 		}
 	}
