@@ -1,4 +1,4 @@
-# RVAS-Core v0.1.4
+# RVAS-Core v0.1.5
 The core plugin behind RVAS (Real Vanilla Anarchy Survival)
 
 The main goal is to give server operators everything they need to get started with their own *anarchy-style* minecraft server
@@ -6,30 +6,36 @@ The main goal is to give server operators everything they need to get started wi
 _**Doesn't prevent any vanilla exploits** by default_
 
 #### Features:
-- **5-tier Speed Limiter** and other lag preventing features (configurable)
+- **5-tier Speed Limiter** and other **lag preventing features** (configurable)
 
-- **Integrated Random World-Spawn** that comes ready to use and is easy to configure
+- Integrated **Random World-Spawn** that comes ready to use and is easy to configure
 
-- **Creative-mode dupe/illegals limiter** to protect the economy from sneaky ops
+- Creative-mode **dupe/illegals limiter** to protect the economy from sneaky ops
 
-- **Bedrock Floor / Roof Protection** (configurable)
+- Permanent **Item/Stack signing** with `/sign` for a **healthy economy**
 
-- **Player Statistics Tracking** (playtime, pvp-kills, etc)
+- Bedrock **Floor / Roof Protection** (configurable)
+
+- **Analytics** for *performance* and *commands-use*
+
+- Player **Statistics Tracking** (playtime, pvp-kills, etc)
 
 - **Slow Chat** and **Anti-Spam** chat modes that ops can toggle
 
-- **Illegal Items and Blocks Management**
+- **Illegal Items Management**
+
+- The End **Exit-Portal** auto-repair
 
 - **Anti Furnace-Chunk-Ban**
 
-- **Customizable MOTDs**
+- Customizable MOTDs
 
 ##### Commands:
-- `/vm` - 1-hour long, democratic global-chat mute
-- `/mute temp | permanent` - (for ops only)
-- `/admin` - show list of fastest moving players, use red ign chat color, etc
-- `/repair exit | portals | roof | floor` - precisely repair vital game structures
-- `/tps`, `/stats`, `/backup` and many more!
+- `/vm` - _1-hour long, democratic global-chat mute_
+- `/mute temp | permanent` - _(for ops only)_
+- `/admin color | spy | speed` - _show list of fastest moving players, use red ign chat color, etc_
+- `/repair exit | portals | roof | floor` - _precisely repair vital game structures_
+- `/tps`, `/stats`, `/backup`  _and many more!_
 
 ##### @ Server Operators
 For full admin functionality, in `core\config.txt`, please enter your uuid and current ign for the intended in-game master account
