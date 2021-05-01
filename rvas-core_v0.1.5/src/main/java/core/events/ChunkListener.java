@@ -52,7 +52,7 @@ import org.bukkit.entity.Player;
 public class ChunkListener implements Listener {
 	
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean devesp = Boolean.parseBoolean(Config.getValue("devesp"));
+	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 	
 	static Material br = Material.BEDROCK;
 	static Material portal = Material.END_PORTAL;
@@ -77,7 +77,6 @@ public class ChunkListener implements Listener {
 				antiFurnaceBan(chunk);
 			} catch (Exception e) {
 				System.out.println(e);
-				return;
 			}
 			
 		} else {ChunkListener.newCount++; Analytics.new_chunks++;}

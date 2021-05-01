@@ -29,7 +29,6 @@ import core.backend.PlayerMeta;
 import java.util.*;
 import java.text.DecimalFormat;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
@@ -38,8 +37,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.Material;
 
 import org.bukkit.Bukkit;
@@ -54,7 +51,7 @@ public class BlockListener implements Listener {
 	static String roofProt = Config.getValue("protect.bedrock.roof");
 	static String floorProt = Config.getValue("protect.bedrock.floor");
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean devesp = Boolean.parseBoolean(Config.getValue("devesp"));
+	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 	
 	public static int brokenBedrockCounter = 0;
 	public static int placedBedrockCounter = 0;
@@ -101,12 +98,10 @@ public class BlockListener implements Listener {
 			int x = (int)block_loc.getX();
 			int y = (int)block_loc.getY();
 			int z = (int)block_loc.getZ();
-			
+
+			String breaker_name = breaker.getName();
 			Material blockType = block.getType();
 			Environment dimension = block.getWorld().getEnvironment();
-			
-			GameMode mode = breaker.getGameMode();		
-			String breaker_name = breaker.getName();
 			
 			TextComponent cancelPos = new TextComponent(
 					breaker_name + "'s BlockBreakEvent was cancelled: "
@@ -115,31 +110,32 @@ public class BlockListener implements Listener {
 			if (!breaker.isOp()) breaker.setGameMode(GameMode.SURVIVAL);			
 			
 			if (BreakBanned.contains(blockType)) {
-				
+
+				System.out.println("WARN " + breaker_name + " tried to break a protected admin block!");
+				if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
+
 				event.setCancelled(true);
-				
-				if (debug && !devesp) Bukkit.spigot().broadcast(
-						new TextComponent(breaker_name +
-								"'s BlockBreakEvent was cancelled: "
-								+ blockType.toString()));
-				return;
 				
 			// do things if block == bedrock
 			} else if (blockType.equals(Material.BEDROCK)) {
 				
 				// protect bedrock floor
 				if (y < 1 && floorProt.equals("true")) {
-					
-					event.setCancelled(true);					
-					if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
+
+					System.out.println("WARN " + breaker_name + " tried to break a protected floor block!");
+					if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
+
+					event.setCancelled(true);
 					return;
 					
 				// protect nether roof	
 				} else if (y == 127 && roofProt.equals("true") &&
 						dimension.equals(Environment.NETHER)) {
-					
+
+					System.out.println("WARN " + breaker_name + " tried to break a protected roof block!");
+					if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
+
 					event.setCancelled(true);
-					if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
 					return;
 				
 				// protect exit portal in the end
@@ -149,14 +145,16 @@ public class BlockListener implements Listener {
 					if (x < 4 && x > -4) {
 						if (z < 4 && z > -4) {
 							
+							System.out.println("WARN " + breaker_name + " tried to break a protected exit portal block!");
+							if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
+
 							event.setCancelled(true);
-							if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
 							return;
 						}
 					}
 				}
 				
-				if (debug && !devesp) Bukkit.spigot().broadcast(
+				if (debug && !verbose) Bukkit.spigot().broadcast(
 						new TextComponent(breaker_name + " just broke BEDROCK!"));
 				brokenBedrockCounter++;
 				
@@ -169,8 +167,7 @@ public class BlockListener implements Listener {
 						if (z < 4 && z > -4) {
 							
 							event.setCancelled(true);
-							if (debug && !devesp) Bukkit.spigot().broadcast(cancelPos);
-							return;
+							if (debug && !verbose) Bukkit.spigot().broadcast(cancelPos);
 						}
 					}
 				}
@@ -193,7 +190,6 @@ public class BlockListener implements Listener {
 		
 		Block block = event.getBlockPlaced();
 		Location block_loc = block.getLocation();
-		GameMode mode = placer.getGameMode();		
 		String placer_name = placer.getName();
 		
 		Material blockType = block.getType();
@@ -256,7 +252,7 @@ public class BlockListener implements Listener {
 		System.out.println("WARNING: " + placer_name + " just placed bedrock at " + block_loc.toString());*/
 		// TODO: add bedrock check for this ^
 		
-		if (debug && devesp) {
+		if (debug && verbose) {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
 			
@@ -271,7 +267,6 @@ public class BlockListener implements Listener {
 		
 		Block blockToPlace = event.getBlockPlaced();		
 		blockToPlace.getState().update(false, true);
-		System.out.println("");
 	}
 	
 	public static boolean updateConfigs() {
@@ -280,7 +275,7 @@ public class BlockListener implements Listener {
 			roofProt = Config.getValue("protect.bedrock.roof");
 			floorProt = Config.getValue("protect.bedrock.floor");
 			debug = Boolean.parseBoolean(Config.getValue("debug"));
-			devesp = Boolean.parseBoolean(Config.getValue("devesp"));
+			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 			
 			return true;
 			

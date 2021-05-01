@@ -94,18 +94,26 @@ public class Utilities {
 				
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("§6Server restarting in §6§l1 §r§6minute."));
+				System.out.println("60s");
+
 				TimeUnit.SECONDS.sleep(30);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("§6Server restarting in §6§l30 §r§6seconds."));
+				System.out.println("30s");
+
 				TimeUnit.SECONDS.sleep(15);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("§6Server restarting in §6§l15 §r§6seconds."));
+				System.out.println("15s");
+
 				TimeUnit.SECONDS.sleep(5);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("§6Server restarting in §6§l10 §r§6seconds."));
 				TimeUnit.SECONDS.sleep(5);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("§6Server restarting in §6§l5 §r§6seconds."));
+				System.out.println("5s");
+
 				TimeUnit.SECONDS.sleep(1);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("§6Server restarting in §6§l4 §r§6seconds."));

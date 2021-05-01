@@ -45,12 +45,12 @@ import org.bukkit.Bukkit;
 public class PVP implements Listener {
 	
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean devesp = Boolean.parseBoolean(Config.getValue("devesp"));
+	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 	
 	@EventHandler
 	public void onKill(PlayerDeathEvent event) {
 		
-		if (debug && !devesp) System.out.println("[core.events.pvp] onKill has been called");
+		if (debug && verbose) System.out.println("[core.events.pvp] onKill has been called");
 		
 		Player killed = event.getEntity();
 		UUID killedID = killed.getUniqueId();
@@ -60,7 +60,7 @@ public class PVP implements Listener {
 			assert killer != null;
 			UUID killerID = killer.getUniqueId();
 		} catch (NullPointerException e) {
-			System.out.println("killerID in PVP.java is null.");
+			if (debug) System.out.println("killerID in PVP.java is null.");
 			return;
 		}
 		
@@ -108,8 +108,8 @@ public class PVP implements Listener {
 			if (debug) System.out.println(killedName + " was killed in the spawn region!");
 
 			if (victim_playtime < 3600.0) {
-				
-				System.out.println(killedName + " was also a new player!");
+
+				if (debug) System.out.println(killedName + " was also a new player!");
 				PVPdata.incSpawnKill(killer, 1);
 			}
 		}

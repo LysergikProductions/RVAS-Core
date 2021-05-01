@@ -19,7 +19,7 @@ admin = sinse420
 // may globally broadcast some info in chat
 
 debug = false
-devesp = false
+verbose = false
 
 // - The tps under which the auto-restart timer ticks
 restart.threshold = 7.10

@@ -105,6 +105,7 @@ public class Analytics extends TimerTask {
 	}
 	
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
+	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 	
 	@Override // write and reset analytics on-schedule
 	public void run() {
@@ -178,7 +179,7 @@ public class Analytics extends TimerTask {
 		server_cmd = 0; sign_cmd = 0; stats_total = 0; stats_help = 0;
 		stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0;
 		
-		if (debug) System.out.println("[core.tasks.analytics] Analytics updated!");
+		if (debug && verbose) System.out.println("[core.tasks.analytics] Analytics updated!");
 		return true;
 	}
 	
@@ -266,5 +267,19 @@ public class Analytics extends TimerTask {
 			sum += PlayerMeta.getPlaytime(thisPlayer);
 		}		
 		return sum;
+	}
+
+	public static boolean updateConfigs() {
+
+		try {
+			debug = Boolean.parseBoolean(Config.getValue("debug"));
+			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
 	}
 }

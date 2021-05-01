@@ -23,9 +23,12 @@ package core.backend;
  * 
  * */
 
+import com.comphenix.protocol.reflect.StructureModifier;
+import com.destroystokyo.paper.block.TargetBlockInfo;
 import core.Main;
 import core.backend.Config;
 import core.backend.PlayerMeta;
+import core.events.BlockListener;
 import core.tasks.Analytics;
 
 import com.comphenix.protocol.PacketType;
@@ -35,17 +38,28 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
+import core.tasks.OnTick;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.FluidCollisionMode;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
 
 public class NoGhost implements Listener {
 	
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
+	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 	
-	public static void C2S_Packets() {
-		
+	public static void C2S_UsePackets() {
+		// capture use packets (right-click without placing any blocks)
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
 				Main.instance, ListenerPriority.LOW, PacketType.Play.Client.BLOCK_PLACE) {
 			
@@ -55,12 +69,69 @@ public class NoGhost implements Listener {
 				PacketContainer packetContainer = event.getPacket();
 				Player sender = event.getPlayer();
 				
-				if (debug) System.out.println("DEBUG: RECEIVED BLOCK PLACE PACKET" + event.getPacketType());
-				if (debug && PlayerMeta.isAdmin(sender)) sender.spigot().sendMessage(new TextComponent(
-						"I see your placement packet! " + event.getPacketType()
-					)
-				);
+				//if (debug) System.out.println("DEBUG: RECEIVED USE BUTTON PACKET" + event.getPacketType());
+				//if (debug && PlayerMeta.isAdmin(sender)) sender.spigot().sendMessage(new TextComponent(
+				//		"I see your client block_place packet! " + event.getPacketType()
+				//	)
+				//);
 			}
 		});
+	}
+
+	public static void C2S_UseBlockPackets() {
+
+		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
+				Main.instance, ListenerPriority.LOW, PacketType.Play.Client.USE_ITEM) {
+
+			@Override
+			public void onPacketReceiving(PacketEvent event) {
+				Player sender = event.getPlayer();
+				Block lookingAt = sender.getTargetBlock(6, TargetBlockInfo.FluidMode.NEVER);
+
+				ItemStack inHand; Material itemType;
+
+				try {
+					inHand = sender.getInventory().getItem(sender.getInventory().getHeldItemSlot());
+					itemType = inHand.getType();
+				} catch (Exception e) {
+					itemType = null;
+				}
+			}
+		});
+	}
+
+	public static void C2S_AnimationPackets() {
+
+		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
+				Main.instance, ListenerPriority.LOW, PacketType.Play.Client.ARM_ANIMATION) {
+
+			@Override
+			public void onPacketReceiving(PacketEvent event) {
+				/*if (event.isCancelled()) return;
+
+				Player sender = event.getPlayer();
+				PacketContainer packetContainer = event.getPacket();
+				PacketType thisType = packetContainer.getType();
+
+				if (debug && verbose) System.out.println("DEBUG: RECEIVED BLOCK RELATED PACKET" + event.getPacketType());
+				if (debug && PlayerMeta.isAdmin(sender)) sender.spigot().sendMessage(new TextComponent(
+								"I see your client arm_animation packet! ")
+				);*/
+			}
+		});
+	}
+
+	public static boolean updateConfigs() {
+
+		try {
+			debug = Boolean.parseBoolean(Config.getValue("debug"));
+			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
 	}
 }

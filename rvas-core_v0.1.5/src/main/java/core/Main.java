@@ -4,7 +4,6 @@ import core.backend.*;
 import core.commands.*;
 import core.events.*;
 import core.tasks.*;
-import votifier.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -70,7 +69,7 @@ public class Main extends JavaPlugin implements Listener {
 		try {
 			PlayerMeta.loadDonators();
 			PlayerMeta.loadMuted();
-			PlayerMeta.loadLagfags();
+			PlayerMeta.loadPrisoners();
 			
 		} catch (IOException e) {			
 			System.out.println("[core.main] An error occured loading files..");
@@ -188,12 +187,14 @@ public class Main extends JavaPlugin implements Listener {
 		core_pm.registerEvents(new LagManager(), this);
 		core_pm.registerEvents(new SpeedLimit(), this);
 		core_pm.registerEvents(new ItemCheckTriggers(), this);
-		
-		NoGhost.C2S_Packets();
+
 		core_pm.registerEvents(new BlockListener(), this);
 		core_pm.registerEvents(new ChunkListener(), this);
 		core_pm.registerEvents(new OpListener(), this);
-		
+
+		NoGhost.C2S_UseBlockPackets();
+		NoGhost.C2S_UsePackets();
+		NoGhost.C2S_AnimationPackets();
 		
 		// Disable global wither-spawn sound
 		if (Config.getValue("global.sound.no_wither").equals("true")) {
@@ -245,17 +246,18 @@ public class Main extends JavaPlugin implements Listener {
 				
 				worldAge_atStart = thisWorld.getChunkAt(0, 0)
 						.getChunkSnapshot().getCaptureFullTime();
-				
+
 				if (worldAge_atStart < 600) {
 					
 					System.out.println("[core.main] This world is NEW! World Ticks: " + worldAge_atStart);
-					isNewWorld = true; break; // <- only check first normal dimension found
-				}
-				else {
+					isNewWorld = true;
+
+				} else {
 					
 					System.out.println("[core.main] This world is not new! World Ticks: " + worldAge_atStart);
-					isNewWorld = false; break; // <- only check first normal dimension found
+					isNewWorld = false;
 				}
+				break; // <- only check first normal dimension found
 			}
 		}
 		
@@ -298,7 +300,7 @@ public class Main extends JavaPlugin implements Listener {
 		try {
 			PlayerMeta.saveDonators();
 			PlayerMeta.saveMuted();
-			PlayerMeta.saveLagfags();
+			PlayerMeta.savePrisoners();
 			
 			PlayerMeta.writePlaytime();
 			PlayerMeta.writePlayerSettings();

@@ -87,7 +87,7 @@ public class Server implements CommandExecutor {
 		TextComponent donos_a = new TextComponent("Donators: ");
 		TextComponent donos_b = new TextComponent("" + PlayerMeta._donatorList.size());
 		TextComponent laggers_a = new TextComponent("Lag-Prisoners: ");
-		TextComponent laggers_b = new TextComponent("" + PlayerMeta._lagfagList.size());
+		TextComponent laggers_b = new TextComponent("" + PlayerMeta._prisonerList.size());
 		TextComponent pmutes_a = new TextComponent("Permanent Mutes: ");
 		TextComponent pmutes_b = new TextComponent("" + PlayerMeta._permanentMutes.size());
 		TextComponent ops_a = new TextComponent("OP Accounts: ");

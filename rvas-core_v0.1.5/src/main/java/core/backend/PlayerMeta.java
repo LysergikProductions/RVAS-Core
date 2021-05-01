@@ -1,13 +1,10 @@
 package core.backend;
 
 import core.events.Chat;
-import core.backend.Config;
 
-import core.objects.PVPstats;
 import core.objects.PlayerSettings;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.ChatColor;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -19,21 +16,20 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.Bukkit;
 
 public class PlayerMeta {
 
-	public static List<String> _ipMutes = new ArrayList<String>();
-	public static List<UUID> _permanentMutes = new ArrayList<UUID>();
-	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<UUID, Double>();
+	public static List<String> _ipMutes = new ArrayList<>();
+	public static List<UUID> _permanentMutes = new ArrayList<>();
+	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<>();
 	
-	public static List<UUID> _donatorList = new ArrayList<UUID>();
-	public static List<String> DonorCodes = new ArrayList<String>();
-	public static List<String> UsedDonorCodes = new ArrayList<String>();
+	public static List<UUID> _donatorList = new ArrayList<>();
+	public static List<String> DonorCodes = new ArrayList<>();
+	public static List<String> UsedDonorCodes = new ArrayList<>();
 	
-	public static HashMap<UUID, String> _lagfagList = new HashMap<UUID, String>();
-	public static HashMap<UUID, Double> Playtimes = new HashMap<UUID, Double>();
-	public static Map <UUID, PlayerSettings> sPlayerSettings = new HashMap<UUID, PlayerSettings>();
+	public static HashMap<UUID, String> _prisonerList = new HashMap<>();
+	public static HashMap<UUID, Double> Playtimes = new HashMap<>();
+	public static Map <UUID, PlayerSettings> sPlayerSettings = new HashMap<>();
 
 	public static boolean MuteAll = false;
 
@@ -153,22 +149,20 @@ public class PlayerMeta {
 	}
 
 	// -- LAG PRISONERS -- \\
-	public static void togglePrisoner(Player p) {
+	public static void togglePrisoner(Player p) throws Exception {
 
-		if (!_lagfagList.containsKey(p.getUniqueId())) {
-			_lagfagList.put(p.getUniqueId(), p.getAddress().toString().split(":")[0]);
+		if (!_prisonerList.containsKey(p.getUniqueId())) {
+			_prisonerList.put(p.getUniqueId(), Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
 		} else {
 			try {
-				_lagfagList.remove(p.getUniqueId());
+				_prisonerList.remove(p.getUniqueId());
 			} catch (Exception e) {
-				System.out.println(
-						"[core.backend.playermeta] WARNING: Tried and failed to remove this uuid from prisoner list..");
-				System.out.println(e);
+				throw new Exception(e);
 			}
 		}	
 		
 		try {
-			saveLagfags();
+			savePrisoners();
 		} catch (IOException e) {
 			System.out.println("[core.backend.playermeta] Failed to save lag priosners.");
 		}
@@ -176,18 +170,18 @@ public class PlayerMeta {
 
 	public static boolean isPrisoner(Player p) {
 
-		return _lagfagList.containsKey(p.getUniqueId()) ||
-				_lagfagList.containsValue(p.getAddress().toString().split(":")[0]);
+		return _prisonerList.containsKey(p.getUniqueId()) ||
+				_prisonerList.containsValue(p.getAddress().toString().split(":")[0]);
 	}
 
-	public static void saveLagfags() throws IOException {
-		List<String> list = _lagfagList.keySet().stream().map(u -> u.toString() + ":" + _lagfagList.get(u)).collect(Collectors.toList());
+	public static void savePrisoners() throws IOException {
+		List<String> list = _prisonerList.keySet().stream().map(u -> u.toString() + ":" + _prisonerList.get(u)).collect(Collectors.toList());
 		Files.write(Paths.get("plugins/core/prisoners.db"), String.join("\n", list).getBytes());
 	}
 
-	public static void loadLagfags() throws IOException {
+	public static void loadPrisoners() throws IOException {
 		List<String> lines = Files.readAllLines(Paths.get("plugins/core/prisoners.db"));
-		lines.forEach(val -> _lagfagList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
+		lines.forEach(val -> _prisonerList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
 	}
 
 	// --- SAVE/LOAD DONATORS --- \\
@@ -220,7 +214,7 @@ public class PlayerMeta {
 	public static void saveMuted() {
 		
 		try {
-			List<String> lines = new ArrayList<String>();
+			List<String> lines = new ArrayList<>();
 
 			for(UUID key : _permanentMutes) lines.add(key.toString());
 			lines.addAll(_ipMutes);
@@ -309,7 +303,7 @@ public class PlayerMeta {
 			  } catch (IOException e) {
 				  throw new UncheckedIOException(e);
 			  }
-		};
+		}
 		w.close();
 	}
 	

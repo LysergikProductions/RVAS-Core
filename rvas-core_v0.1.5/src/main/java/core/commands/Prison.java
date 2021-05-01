@@ -1,5 +1,6 @@
 package core.commands;
 
+import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.events.SpawnController;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -24,6 +25,8 @@ public class Prison implements CommandExecutor {
 
 	//HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
 	//HashMap<UUID, Boolean> threadProgression = new HashMap<UUID, Boolean>();
+
+	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -108,9 +111,15 @@ public class Prison implements CommandExecutor {
 			return true;
 			
 		} else if (PlayerMeta.isAdmin(thisPlayer) || thisPlayer.isOp()) return false;
-		
-		PlayerMeta.togglePrisoner(thisPlayer);
-		
+
+		try {
+			PlayerMeta.togglePrisoner(thisPlayer);
+		} catch (Exception e) {
+			if (debug) e.printStackTrace();
+			player.spigot().sendMessage(new TextComponent("Failed to toggle LagPrisoner :/"));
+			return false;
+		}
+
 		if (PlayerMeta.isPrisoner(thisPlayer)) {
 			
 			Arrays.asList("§6" + thisPlayer.getName() + " was caught lagging the server!", "§6IP: " + thisPlayer.getAddress().toString().split(":")[0].replace("/", ""),
@@ -122,5 +131,17 @@ public class Prison implements CommandExecutor {
 			thisPlayer.setHealth(0);
 		}
 		return true;
+	}
+
+	public static boolean updateConfigs() {
+
+		try {
+			debug = Boolean.parseBoolean(Config.getValue("debug"));
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
 	}
 }

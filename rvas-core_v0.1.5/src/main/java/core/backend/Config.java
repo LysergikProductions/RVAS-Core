@@ -1,5 +1,11 @@
 package core.backend;
 
+import core.backend.Config;
+import core.commands.Prison;
+import core.events.BlockListener;
+import core.tasks.Analytics;
+import core.tasks.LagManager;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -7,7 +13,7 @@ import java.util.HashMap;
 
 public class Config {
 
-	private static HashMap<String, String> _values = new HashMap<String, String>();
+	private static HashMap<String, String> _values = new HashMap<>();
 
 	public static int version = 22;
 
@@ -17,9 +23,17 @@ public class Config {
 	}
 
 	public static void load() throws IOException {
+		boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+
 		Files.readAllLines(Paths.get("plugins/core/config.txt")).stream()
 				.filter(cases -> !cases.startsWith("//"))
 				.filter(cases -> !(cases.length() == 0)).forEach( val ->
 					_values.put(val.split("=")[0].trim(), val.split("=")[1].trim()));
+		
+		if (BlockListener.updateConfigs() && verbose) System.out.println("BlockListener sConfigs Updated!");
+		if (Analytics.updateConfigs()) System.out.println("Analytics sConfigs Updated!");
+		if (LagManager.updateConfigs()) System.out.println("LagManager sConfigs Updated!");
+		if (Prison.updateConfigs()) System.out.println("Prison sConfigs Updated!");
+		if (NoGhost.updateConfigs()) System.out.println("NoGhost sConfigs Updated!");
 	}
 }

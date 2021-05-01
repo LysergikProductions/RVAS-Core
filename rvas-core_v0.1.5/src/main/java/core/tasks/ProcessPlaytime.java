@@ -53,7 +53,7 @@ public class ProcessPlaytime extends TimerTask {
 		
 		if (difference > (lastTPS*0.5)) {
 			System.out.println("WARN 50+% tps drop in 20t");
-			Analytics.capture(); LagManager.lagFinder();
+			Analytics.capture(); //LagManager.lagFinder();
 		}
 		
 		lastTPS = currentTPS;

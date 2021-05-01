@@ -6,7 +6,6 @@ import core.backend.PlayerMeta;
 import core.backend.Utilities;
 
 import core.events.SpeedLimit;
-import core.events.BlockListener;
 import core.tasks.Analytics;
 
 import java.io.IOException;
@@ -81,7 +80,6 @@ public class Admin implements CommandExecutor {
 				case "RELOAD":
 					try {
 						Config.load();
-						BlockListener.updateConfigs();
 						sender.spigot().sendMessage(new TextComponent("§aSuccessfully reloaded."));
 
 					} catch (IOException e) {

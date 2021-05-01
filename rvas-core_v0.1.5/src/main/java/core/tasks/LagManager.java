@@ -50,6 +50,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 public class LagManager implements Listener, Runnable {
 	
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
+	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 	
 	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
 	@Override
@@ -71,7 +72,7 @@ public class LagManager implements Listener, Runnable {
 			
 			Analytics.wither_spawns++;
 			
-			if (debug) System.out.println("Wither Limit: " + witherLimit);
+			if (debug && verbose) System.out.println("Wither Limit: " + witherLimit);
 			
 			currentWithers = getWithers();
 			
@@ -117,7 +118,7 @@ public class LagManager implements Listener, Runnable {
 		int counter = 0;
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			
-			if (debug) System.out.println("Counting withers in: " + thisWorld.getName());
+			if (debug && verbose) System.out.println("Counting withers in: " + thisWorld.getName());
 			
 			for (Entity e: thisWorld.getEntities()) {
 				if (e instanceof Wither) {
@@ -125,6 +126,7 @@ public class LagManager implements Listener, Runnable {
 				}
 			}
 		}
+		if (debug) System.out.println("Counted Withers: " + counter);
 		return counter;
 	}
 	
@@ -150,5 +152,19 @@ public class LagManager implements Listener, Runnable {
 	
 	public static boolean lagLogger(Player thatPlayer, ChunkSnapshot thatPlayerChunk){
 		return true;
+	}
+
+	public static boolean updateConfigs() {
+
+		try {
+			debug = Boolean.parseBoolean(Config.getValue("debug"));
+			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
 	}
 }
