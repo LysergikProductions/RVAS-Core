@@ -26,10 +26,6 @@ import core.backend.PlayerMeta;
 import core.objects.PlayerSettings;
 import core.tasks.Analytics;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -61,11 +57,10 @@ public class ToggleJoinMessages implements CommandExecutor {
 			
 			player.spigot().sendMessage(new TextComponent("§6Enabled join and leave messages."));
 			
-		} else if (!theseSettings.show_player_join_messages) {
+		} else {
 			
 			player.spigot().sendMessage(new TextComponent("§6Disabled join and leave messages."));
 		}
-		
 		return true;
 	}
 }

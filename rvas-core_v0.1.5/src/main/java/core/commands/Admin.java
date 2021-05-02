@@ -14,8 +14,6 @@ import java.util.*;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -27,9 +25,9 @@ import org.bukkit.command.CommandSender;
 
 public class Admin implements CommandExecutor {
 
-	public static List<UUID> Spies = new ArrayList<UUID>();
-	public static List<UUID> MsgToggle = new ArrayList<UUID>();
-	public static List<UUID> UseRedName = new ArrayList<UUID>();
+	public static List<UUID> Spies = new ArrayList<>();
+	public static List<UUID> MsgToggle = new ArrayList<>();
+	public static List<UUID> UseRedName = new ArrayList<>();
 	public static Map<String, Location> LogOutSpots = new HashMap<>();
 	public static boolean disableWarnings = false;
 

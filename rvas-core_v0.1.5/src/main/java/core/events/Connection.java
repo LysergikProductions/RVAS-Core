@@ -3,7 +3,6 @@ package core.events;
 import core.backend.*;
 import core.commands.Admin;
 import core.commands.Kit;
-import core.commands.ToggleJoinMessages;
 import core.objects.PlayerSettings;
 
 import org.bukkit.Bukkit;
@@ -57,7 +56,6 @@ public class Connection implements Listener {
 		if (!ServerMeta.canReconnect(e.getPlayer())) {
 			e.setKickMessage("§6Connection throttled. Please wait some time before reconnecting.");
 			e.setResult(Result.KICK_OTHER);
-			return;
 		}
 	}
 
@@ -135,7 +133,7 @@ public class Connection implements Listener {
 
 	private Random r = new Random();
 
-	private List<String> allMotds = new ArrayList<String>();
+	private List<String> allMotds = new ArrayList<>();
 
 	private boolean done = false;
 
@@ -143,11 +141,11 @@ public class Connection implements Listener {
 	public void onPing(ServerListPingEvent e) {
 		if (!done) {
 			try {
-				allMotds = new ArrayList<String>(Arrays.asList(motds));
+				allMotds = new ArrayList<>(Arrays.asList(motds));
 				System.out.println("[core.events.connection] Loading " + motds.length + " custom MOTDs...");
 				allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
 			} catch (IOException e1) {
-				allMotds = new ArrayList<String>(Arrays.asList(motds));
+				allMotds = new ArrayList<>(Arrays.asList(motds));
 			}
 			done = true;
 			System.out.println("[core.events.connection] Loaded " + allMotds.size() + " MOTDs");
@@ -163,6 +161,6 @@ public class Connection implements Listener {
 				e.setMotd("§9rvas test §7| §aopen §7| §9TPS: " + tps);
 			}
 		}
-		e.setMaxPlayers(10);
+		e.setMaxPlayers(13);
 	}
 }

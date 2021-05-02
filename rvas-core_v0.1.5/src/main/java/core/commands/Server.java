@@ -104,7 +104,7 @@ public class Server implements CommandExecutor {
 		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
 		TextComponent slowMode_b = new TextComponent(Boolean.toString(Chat.slowChatEnabled));
 		TextComponent uptime_a = new TextComponent("Server Uptime: ");
-		TextComponent uptime_b = new TextComponent(Utilities.calculateTime((double)ServerMeta.getUptime()));
+		TextComponent uptime_b = new TextComponent(Utilities.calculateTime(ServerMeta.getUptime()));
 		
 		// style individual components //
 		title_sep.setColor(ChatColor.GRAY);

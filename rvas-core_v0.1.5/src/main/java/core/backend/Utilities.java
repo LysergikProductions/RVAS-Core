@@ -1,9 +1,5 @@
 package core.backend;
 
-import java.net.*;
-import java.nio.charset.Charset;
-import java.io.*;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -26,14 +22,14 @@ public class Utilities {
 		long daysRem = (long) (seconds % 86400);
 		
 		if (days < 1) hours = (long) (seconds / 3600);
-		else hours = (long)daysRem / 3600;
+		else hours = daysRem / 3600;
 		
 		long hoursRem = (long) (seconds % 3600);		
 		long minutes = hoursRem / 60;
 		
-		String daysString = "";
-		String hoursString = "";
-		String minutesString = "";
+		String daysString;
+		String hoursString;
+		String minutesString;
 
 		if (hours == 1) {
 			hoursString = hours + " hour";
@@ -204,7 +200,7 @@ public class Utilities {
 		
 		World world = chunk.getWorld();
 		
-		Map<String, Chunk> chunks = new HashMap<String, Chunk>();{
+		Map<String, Chunk> chunks = new HashMap<>();{
 			chunks.put("C", chunk);
 			chunks.put("N", world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
 			chunks.put("NE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() - 1));

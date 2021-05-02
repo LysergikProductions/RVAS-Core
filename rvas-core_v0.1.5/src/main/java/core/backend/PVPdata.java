@@ -32,7 +32,7 @@ import org.bukkit.OfflinePlayer;
 
 public class PVPdata {
 	
-	public static Map <UUID, PVPstats> sPVPStats = new HashMap<UUID, PVPstats>();
+	public static Map <UUID, PVPstats> sPVPStats = new HashMap<>();
 	
 	public static void incKillTotal(Player p, int inc) {
 		if (sPVPStats.containsKey(p.getUniqueId())) {
@@ -74,8 +74,7 @@ public class PVPdata {
 	}
 	
 	public static PVPstats getNewStats(OfflinePlayer p) {
-		PVPstats out = new PVPstats(p.getUniqueId(), 0, 0, "null", 0);
-		return out;
+		return new PVPstats(p.getUniqueId(), 0, 0, "null", 0);
 	}
 	
 	public static PVPstats getStats(OfflinePlayer p) {
@@ -83,8 +82,8 @@ public class PVPdata {
 		
 		if (stats != null && sPVPStats.containsKey(p.getUniqueId())) {
 			
-			double kills = (double) stats.killTotal;
-			double deaths = (double) stats.deathTotal;
+			double kills = stats.killTotal;
+			double deaths = stats.deathTotal;
 			
 			if (deaths < 0.710) {
 				stats.kd = "Unkillable!";
@@ -115,7 +114,7 @@ public class PVPdata {
 			  } catch (IOException e) {
 				  throw new UncheckedIOException(e);
 			  }
-		};
+		}
 		w.close();
 	}
 }

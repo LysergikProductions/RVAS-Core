@@ -24,7 +24,6 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.events.ChunkListener;
 import core.tasks.Analytics;
 
 import java.util.*;
@@ -60,7 +59,7 @@ public class SpawnController implements Listener {
 	public static int sessionTotalRespawns = 0;
 	public static int sessionNewPlayers = 0;
 	
-	public static ArrayList<Material> BannedSpawnFloors = new ArrayList<>(); {
+	public static ArrayList<Material> BannedSpawnFloors = new ArrayList<>(); static {
 		BannedSpawnFloors.addAll(Arrays.asList(
 				Material.CAVE_AIR, Material.VOID_AIR, Material.WALL_TORCH));
 	}
@@ -76,10 +75,10 @@ public class SpawnController implements Listener {
 		boolean open_air = Boolean.parseBoolean(Config.getValue("spawn.prevent.inside"));
 		
 		// if a configured value can't be parsed to Double, set to default
-		if (config_max_x.isNaN()) max_x = 420.0; else max_x = config_max_x.doubleValue();
-		if (config_max_z.isNaN()) max_z = 420.0; else max_z = config_max_z.doubleValue();	
-		if (config_min_x.isNaN()) min_x = -420.0; else min_x = config_min_x.doubleValue();
-		if (config_min_z.isNaN()) min_z = -420.0; else min_z = config_min_z.doubleValue();
+		if (config_max_x.isNaN()) max_x = 420.0; else max_x = config_max_x;
+		if (config_max_z.isNaN()) max_z = 420.0; else max_z = config_max_z;
+		if (config_min_x.isNaN()) min_x = -420.0; else min_x = config_min_x;
+		if (config_min_z.isNaN()) min_z = -420.0; else min_z = config_min_z;
 		
 		// get random x, z coords and check them top-down from y256 for validity
 		while (!valid_spawn_location) {
@@ -93,7 +92,7 @@ public class SpawnController implements Listener {
 			int y = 257;
 			while (y > 1) {
 				
-				Location headLoc = new Location(thisWorld, tryLocation_x, (double)y, tryLocation_z);
+				Location headLoc = new Location(thisWorld, tryLocation_x, y, tryLocation_z);
 				Location legsLoc = new Location(thisWorld, tryLocation_x, (double)y-1, tryLocation_z);
 				Location floorLoc = new Location(thisWorld, tryLocation_x, (double)y-2, tryLocation_z);
 				
@@ -105,7 +104,7 @@ public class SpawnController implements Listener {
 				
 				if (!headBlock.getType().equals(Material.AIR) || !legsBlock.getType().equals(Material.AIR)) {
 					continue;
-					
+
 				} else if (!floorBlock.getType().equals(Material.AIR)) {
 					
 					// potential valid spawn, check for unwanted spawn surfaces	
@@ -113,14 +112,14 @@ public class SpawnController implements Listener {
 						
 						if (debug)
 							System.out.println("Found valid respawn location on "
-									+ floorBlock.getType().toString() + "!");
+									+ floorBlock.getType() + "!");
 						
 						valid_spawn_location = true;
 						
 						newSpawnLocation.setWorld(thisWorld);
-						newSpawnLocation.setX((double)tryLocation_x);
-						newSpawnLocation.setY((double)y);
-						newSpawnLocation.setZ((double)tryLocation_z);
+						newSpawnLocation.setX(tryLocation_x);
+						newSpawnLocation.setY(y);
+						newSpawnLocation.setZ(tryLocation_z);
 						
 						break;
 						
@@ -232,7 +231,6 @@ public class SpawnController implements Listener {
 				
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
 				thisWorld.setSpawnLocation(thisLocation);
-				return;
 			}
 		}
 	}

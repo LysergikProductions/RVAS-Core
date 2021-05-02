@@ -22,7 +22,7 @@ public class AutoAnnouncer extends TimerTask {
 
 	@Override
 	public void run() {
-		//if (!Config.getValue("announcer.enabled").equals("true")) return;
+		if (Config.getValue("announcer.enabled").equals("false")) return;
 		
 		int rnd = r.nextInt(11);
 

@@ -27,21 +27,16 @@ package core.events;
 import core.backend.PlayerMeta;
 import core.backend.Config;
 import core.backend.Utilities;
-import core.tasks.LagManager;
 
 import java.util.*;
-
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.inventory.*;
 
@@ -49,10 +44,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
 	
 	// currently not in use
-	public static ArrayList<String> OwnerCommands = new ArrayList<>(); {
+	public static ArrayList<String> OwnerCommands = new ArrayList<>(); static {
 		OwnerCommands.addAll(Arrays.asList(
 				"/op", "/deop", "/ban", "/attribute", "/default", "/execute", "/rl",
 				"/summon", "/give", "/set", "/difficulty", "/replace", "/enchant",
@@ -61,7 +57,7 @@ public class OpListener implements Listener {
 				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
 				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
 				"/restart", "/worldb", "/gamerule", "/score"));
-	};
+	}
 	
 	// this happens *before* the OP Lock plugin will see the command
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -154,7 +150,7 @@ public class OpListener implements Listener {
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent("You cannot target " + admin_name));
 			}
-		} else if (isAdmin && event.getMessage().startsWith("/op sauce")) {		
+		} else if (event.getMessage().startsWith("/op sauce")) {
 			event.setCancelled(true);
 			
 			if (sender.isOp()) {

@@ -31,16 +31,12 @@ import core.backend.LagProcessor;
 import java.io.*;
 import java.util.*;
 import java.text.SimpleDateFormat;
-import java.text.DecimalFormat;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.lang.StringBuilder;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 
+@SuppressWarnings({"StringBufferReplaceableByString", "StringConcatenationInsideStringBufferAppend"})
 public class Analytics extends TimerTask {
 	
 	// connection trackers
@@ -73,21 +69,21 @@ public class Analytics extends TimerTask {
 	public static String commands_work_path = FileManager.plugin_work_path
 			+ "analytics/RVAS_Analytics-commands.csv";
 	
-	public static String CSV_perfHeader; {
-		
-		StringBuilder sb1 = new StringBuilder(256);
-		
+	public static String CSV_perfHeader; static {
+
+		StringBuilder sb1 = new StringBuilder(128);
+
 		sb1.append("\"Date\","); sb1.append("\"TPS\","); sb1.append("\"Online Players\",");
 		sb1.append("\"New UUIDs\","); sb1.append("\"Joins Events\",");
 		sb1.append("\"New Chunks\","); sb1.append("\"Loaded Chunks\",");
 		sb1.append("\"Speed Warnings\","); sb1.append("\"Speed Kicks\",");
 		sb1.append("\"Wither Spawns\","); sb1.append("\"Failed Withers\",");
 		sb1.append("\"Removed Wither Skulls\","); sb1.append("\"Loaded Withers\"");
-		
+
 		CSV_perfHeader = sb1.toString();
 	}
 	
-	public static String CSV_cmdHeader; {
+	public static String CSV_cmdHeader; static {
 		
 		StringBuilder sb2 = new StringBuilder(128);
 		
@@ -170,8 +166,8 @@ public class Analytics extends TimerTask {
 		catch (Exception e) {System.out.println(e);}
 		
 		// reset data
-		conPlayers = 0; new_players = 0; total_joins = 0;
-		new_chunks = 0; loaded_chunks = 0; speed_warns = 0; speed_kicks = 0;
+		new_players = 0; total_joins = 0; new_chunks = 0;
+		loaded_chunks = 0; speed_warns = 0; speed_kicks = 0;
 		wither_spawns = 0; failed_wither_spawns = 0; removed_skulls = 0;
 		
 		about_cmd = 0; admin_cmd = 0; discord_cmd = 0; help_cmd = 0;
@@ -205,7 +201,7 @@ public class Analytics extends TimerTask {
 		sb.append(String.valueOf(wither_spawns) + ',');
 		sb.append(String.valueOf(failed_wither_spawns) + ',');
 		sb.append(String.valueOf(removed_skulls) + ',');
-		sb.append(String.valueOf(loaded_withers));
+		sb.append(loaded_withers);
 		
 		return sb.toString();
 	}
@@ -237,7 +233,7 @@ public class Analytics extends TimerTask {
 		sb.append(String.valueOf(stats_info) + ',');
 		sb.append(String.valueOf(tjm_cmd) + ',');
 		sb.append(String.valueOf(tps_cmd) + ',');
-		sb.append(String.valueOf(vm_cmd));
+		sb.append(vm_cmd);
 		
 		return sb.toString();
 	}
@@ -260,7 +256,6 @@ public class Analytics extends TimerTask {
 	// TODO: see if calling this method in a thread is necessary for performance
 	// currently unused
 	public static double sumPlaytimes() {
-		
 		double sum = 0;
 		
 		for (OfflinePlayer thisPlayer: Bukkit.getServer().getOfflinePlayers()) {

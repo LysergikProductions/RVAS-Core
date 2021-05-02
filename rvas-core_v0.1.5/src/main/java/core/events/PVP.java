@@ -27,17 +27,13 @@ package core.events;
 import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.backend.PVPdata;
-import core.backend.Utilities;
 
 import java.util.UUID;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import org.bukkit.entity.EnderCrystal;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
@@ -58,15 +54,15 @@ public class PVP implements Listener {
 		
 		try {
 			assert killer != null;
-			UUID killerID = killer.getUniqueId();
 		} catch (NullPointerException e) {
-			if (debug) System.out.println("killerID in PVP.java is null.");
+			if (debug) System.out.println("killer was null.");
 			return;
 		}
-		
+
+		String killerName;
+		String killerLoc;
+
 		String killedName = killed.getName();
-		String killerName = "";
-		String killerLoc = "";
 		
 		if (debug) {
 			
@@ -84,27 +80,23 @@ public class PVP implements Listener {
 		OfflinePlayer victim = Bukkit.getOfflinePlayer(killedID);
 		double victim_playtime = PlayerMeta.getPlaytime(victim);
 		
-		Double cX = killed.getLocation().getX();
-		Double cZ = killed.getLocation().getZ();
+		double cX = killed.getLocation().getX();
+		double cZ = killed.getLocation().getZ();
 		
 		double max_x; double max_z;
 		double min_x; double min_z;
 		
-		Double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
-		Double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
-		Double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
-		Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+		double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
+		double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
+		double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
+		double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
 		
-		if (config_max_x.isNaN()) max_x = 420.0; else max_x = config_max_x.doubleValue();
-		if (config_max_z.isNaN()) max_z = 420.0; else max_z = config_max_z.doubleValue();	
-		if (config_min_x.isNaN()) min_x = -420.0; else min_x = config_min_x.doubleValue();
-		if (config_min_z.isNaN()) min_z = -420.0; else min_z = config_min_z.doubleValue();
-		
-		if (cX == null || cZ == null) {
-			
-			if (debug) System.out.println("[core.events.PVP] failed to retrieve location for victim: " + killedName);
+		if (Double.isNaN(config_max_x)) max_x = 420.0; else max_x = config_max_x;
+		if (Double.isNaN(config_max_z)) max_z = 420.0; else max_z = config_max_z;
+		if (Double.isNaN(config_min_x)) min_x = -420.0; else min_x = config_min_x;
+		if (Double.isNaN(config_min_z)) min_z = -420.0; else min_z = config_min_z;
 
-		} else if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {			
+		if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {
 			if (debug) System.out.println(killedName + " was killed in the spawn region!");
 
 			if (victim_playtime < 3600.0) {

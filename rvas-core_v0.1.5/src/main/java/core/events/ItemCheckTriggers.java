@@ -1,32 +1,21 @@
 package core.events;
 
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Material;
+import core.backend.Config;
+import core.backend.ItemCheck;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.inventory.ItemStack;
-import core.backend.Config;
-import core.backend.ItemCheck;
-import core.backend.PlayerMeta;
-
-import java.util.Arrays;
-import java.util.Random;
 
 public class ItemCheckTriggers implements Listener {
-
-	static Material[] lagItems = { Material.REDSTONE, Material.REDSTONE_BLOCK, Material.ARMOR_STAND,
-			Material.STICKY_PISTON, Material.PISTON, Material.REDSTONE_WALL_TORCH, Material.COMPARATOR,
-			Material.REDSTONE_WIRE, Material.REPEATER, Material.OBSERVER, Material.LEVER };
-
-	static Random r = new Random();
 
 	@EventHandler
 	public void onDispense(BlockDispenseArmorEvent e) {

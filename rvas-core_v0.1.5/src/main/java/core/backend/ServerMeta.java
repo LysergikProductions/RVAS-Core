@@ -14,21 +14,15 @@ public class ServerMeta {
 	{
 		_uptimeInSeconds += msToAdd / 1000;
 	}
-
 	public static double getUptime()
 	{
 		return _uptimeInSeconds;
 	}
 
-	public static boolean doAnalytics()
-	{
-		return Config.getValue("analytics.enabled").equals("true");
-	}
-
 	// -- RC BLOCKING -- //
 
-	private static HashMap<UUID, Double> Delays = new HashMap<UUID, Double>();
-	private static HashMap<UUID, Double> InitialDelays = new HashMap<UUID, Double>();
+	private static HashMap<UUID, Double> Delays = new HashMap<>();
+	private static HashMap<UUID, Double> InitialDelays = new HashMap<>();
 
 	public static void kickWithDelay(Player p, double delay) {
 		Delays.put(p.getUniqueId(), 0D);

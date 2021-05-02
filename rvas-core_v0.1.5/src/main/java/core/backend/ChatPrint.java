@@ -23,11 +23,6 @@ package core.backend;
  * 
  * */
 
-import core.events.Chat;
-import core.backend.Config;
-import core.backend.PlayerMeta;
-import core.backend.PVPdata;
-import core.backend.Utilities;
 import core.objects.*;
 
 import java.util.*;
@@ -54,10 +49,10 @@ public class ChatPrint {
 		
 		receiver.spigot().sendMessage(new TextComponent(""));
 		
-		int gaps_eaten = (int)target.getStatistic(Statistic.USE_ITEM, Material.ENCHANTED_GOLDEN_APPLE);
-		int mined_obi = (int)target.getStatistic(Statistic.MINE_BLOCK, Material.OBSIDIAN);
-		int mined_ancientDebris = (int)target.getStatistic(Statistic.MINE_BLOCK, Material.ANCIENT_DEBRIS);
-		int placed_obi = (int)target.getStatistic(Statistic.USE_ITEM, Material.OBSIDIAN);
+		int gaps_eaten = target.getStatistic(Statistic.USE_ITEM, Material.ENCHANTED_GOLDEN_APPLE);
+		int mined_obi = target.getStatistic(Statistic.MINE_BLOCK, Material.OBSIDIAN);
+		int mined_ancientDebris = target.getStatistic(Statistic.MINE_BLOCK, Material.ANCIENT_DEBRIS);
+		int placed_obi = target.getStatistic(Statistic.USE_ITEM, Material.OBSIDIAN);
 		
 		TextComponent sep = new TextComponent("---");
 		TextComponent title = new TextComponent(" " + target.getName() + "'s MC-Stats ");
@@ -143,8 +138,7 @@ public class ChatPrint {
 	}
 	
 	public static boolean printStats(Player receiver, OfflinePlayer target) {
-		
-		Player player = target.getPlayer();
+
 		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
 		
 		if (targetSettings == null) {			
@@ -160,7 +154,7 @@ public class ChatPrint {
 		String firstPlayed = sdf.format(date);
 		String lastPlayed = sdf.format(new Date(target.getLastPlayed()));
 
-		// get all uniquley stylable components
+		// get all uniquely styleable components
 		TextComponent title_pre = new TextComponent("--- ");
 		TextComponent title_name = new TextComponent(target.getName());
 		TextComponent title_suf = new TextComponent("'s Statistics ---");
@@ -173,7 +167,6 @@ public class ChatPrint {
 		TextComponent rank_b = new TextComponent("" + PlayerMeta.getRank(target));
 		TextComponent playtime_a = new TextComponent("Time played: ");
 		TextComponent playtime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(target)));
-		TextComponent toptime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(target)));
 		
 		TextComponent tkills_a = new TextComponent("PVP Kills: ");
 		TextComponent tkills_b = new TextComponent("" + PVPdata.getStats(target).killTotal);
@@ -204,7 +197,6 @@ public class ChatPrint {
 		
 		TextComponent rank = new TextComponent(rank_a, rank_b);
 		TextComponent playtime = new TextComponent(playtime_a, playtime_b);
-		TextComponent toptime = new TextComponent(playtime_a, toptime_b);
 		
 		TextComponent tkills = new TextComponent(tkills_a, tkills_b);
 		TextComponent tdeaths = new TextComponent(tdeaths_a, tdeaths_b);
@@ -219,8 +211,8 @@ public class ChatPrint {
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
 		kd.setColor(ChatColor.GRAY);
 		
-		ArrayList<TextComponent> statsLines = new ArrayList<>(); {
-			statsLines.addAll(Arrays.asList(title, joined, lastSeen, rank, playtime));
+		ArrayList<TextComponent> statsLines; {
+			statsLines = new ArrayList<>(Arrays.asList(title, joined, lastSeen, rank, playtime));
 		}
 		
 		if (targetSettings.show_PVPstats) {
@@ -269,8 +261,8 @@ public class ChatPrint {
 		showJoinMsgs_a.setColor(ChatColor.GOLD);
 		showDeathMsgs_a.setColor(ChatColor.GOLD);
 		
-		String spvp = ""; String kill = ""; String die = "";
-		String kdr = ""; String jMsgs = ""; String dMsgs = "";
+		String spvp; String kill; String die;
+		String kdr; String jMsgs; String dMsgs;
 		
 		if (theseSettings.show_PVPstats) spvp = "Enabled"; else spvp = "Disabled";
 		if (theseSettings.show_kills) kill = "Enabled"; else kill = "Disabled";

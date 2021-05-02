@@ -15,7 +15,7 @@ public class Mute implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		String name = "";
+		String name;
 
 		if(sender instanceof Player) { name = ((Player)sender).getName(); }
 		else { name = "CONSOLE"; }

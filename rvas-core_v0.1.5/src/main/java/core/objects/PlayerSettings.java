@@ -23,14 +23,8 @@ package core.objects;
  * 
  * */
 
-import core.backend.Config;
-
 import java.util.UUID;
 import java.io.Serializable;
-
-import org.bukkit.entity.Player;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Bukkit;
 
 public class PlayerSettings implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -44,8 +38,6 @@ public class PlayerSettings implements Serializable {
 	
 	public boolean show_player_join_messages;
 	public boolean show_player_death_messages;
-	
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	
 	public PlayerSettings(
 			UUID playerid, boolean show_PVPstats, boolean show_kills,
@@ -68,11 +60,7 @@ public class PlayerSettings implements Serializable {
 		// Example of intended given line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:true:true:true:true:false:true
 		
 		String[] settings = line.split(":");
-		
 		UUID playerid = UUID.fromString(settings[0]);
-		
-		OfflinePlayer player = Bukkit.getOfflinePlayer(playerid);
-		String player_name = player.getName();
 		
 		boolean show_PVPstats;		
 		try {show_PVPstats = Boolean.parseBoolean(settings[1]);} catch (Exception e) {show_PVPstats = false;}

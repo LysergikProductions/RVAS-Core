@@ -37,7 +37,7 @@ public class Reply implements CommandExecutor {
 		// Get recipient
 		Player recv = Bukkit.getPlayer(Message.Replies.get(p.getUniqueId()));
 		// Name to use [for stealth]
-		String recvName = "";
+		String recvName;
 		// Can't send to offline players
 		if (recv == null) {
 			sender.spigot().sendMessage(new TextComponent("§cPlayer is not online."));
@@ -56,7 +56,7 @@ public class Reply implements CommandExecutor {
 		}
 
 		// Concatenate
-		final String msg[] = new String[]{""};
+		final String[] msg = new String[]{""};
 		Arrays.asList(args).forEach( s -> msg[0] += s + " ");
 		msg[0] = msg[0].trim();
 

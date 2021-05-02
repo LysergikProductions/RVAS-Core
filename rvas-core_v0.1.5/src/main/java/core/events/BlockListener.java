@@ -56,7 +56,7 @@ public class BlockListener implements Listener {
 	public static int brokenBedrockCounter = 0;
 	public static int placedBedrockCounter = 0;
 	
-	public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
+	//public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
 	
 	public static ArrayList<Material> BreakBanned = new ArrayList<>();
 	{
@@ -81,8 +81,6 @@ public class BlockListener implements Listener {
 				Material.DISPENSER, Material.GRAVEL, Material.ARMOR_STAND, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
 	}
 	
-	static Random r = new Random();
-	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event) {
 		
@@ -104,8 +102,7 @@ public class BlockListener implements Listener {
 			Environment dimension = block.getWorld().getEnvironment();
 			
 			TextComponent cancelPos = new TextComponent(
-					breaker_name + "'s BlockBreakEvent was cancelled: "
-					+ blockType.toString());
+					breaker_name + "'s BlockBreakEvent was cancelled: " + blockType);
 			
 			if (!breaker.isOp()) breaker.setGameMode(GameMode.SURVIVAL);			
 			
@@ -179,7 +176,7 @@ public class BlockListener implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlace(BlockPlaceEvent event) {
 		
 		long startTime = System.nanoTime();		

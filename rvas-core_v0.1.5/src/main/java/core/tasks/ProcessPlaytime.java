@@ -12,10 +12,7 @@ import core.backend.Utilities;
 import core.commands.VoteMute;
 
 import java.util.TimerTask;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 // Playtime processor (every 20 ticks)
 public class ProcessPlaytime extends TimerTask {
@@ -34,7 +31,7 @@ public class ProcessPlaytime extends TimerTask {
 	public void run() {
 
 		int currentNewChunks = ChunkListener.newCount;
-		double onlinePlayers = (double) Bukkit.getOnlinePlayers().size();
+		double onlinePlayers = Bukkit.getOnlinePlayers().size();
 		
 		if ((currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
 			System.out.println(
@@ -45,7 +42,7 @@ public class ProcessPlaytime extends TimerTask {
 		lastNewChunks = currentNewChunks;
 		double currentTPS = LagProcessor.getTPS();
 
-		double difference = 0.00;
+		double difference;
 		if (lastTPS == 0.00) {
 			difference = 0.00;}
 		else {

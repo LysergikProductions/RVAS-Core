@@ -41,7 +41,7 @@ public class Message implements CommandExecutor {
 		// Get recipient
 		final Player recv = Bukkit.getPlayer(args[0]);
 		// Name to use [for stealth]
-		String recvName = "";
+		String recvName;
 		// Can't send to offline players
 		if (recv == null) {
 			sender.spigot().sendMessage(new TextComponent("§cPlayer is no longer online."));

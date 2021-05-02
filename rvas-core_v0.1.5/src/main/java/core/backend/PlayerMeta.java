@@ -254,20 +254,6 @@ public class PlayerMeta {
 				LinkedHashMap::new));
 	}
 
-	private static HashMap<UUID, Double> sortByValue(HashMap<UUID, Double> hm) {
-		// Create a list from elements of HashMap
-		List<Map.Entry<UUID, Double>> list = new LinkedList(hm.entrySet());
-
-		// Sort the list
-		Collections.sort(list, (o1, o2) -> -(o1.getValue()).compareTo(o2.getValue()));
-
-		// put data from sorted list to hashmap
-		HashMap<UUID, Double> temp = new LinkedHashMap();
-		list.forEach(aa -> temp.put(aa.getKey(), aa.getValue()));
-
-		return temp;
-	}
-
 	public static void writePlaytime() throws IOException {
 		List<String> list = new ArrayList();
 

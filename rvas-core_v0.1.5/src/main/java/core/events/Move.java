@@ -1,30 +1,26 @@
 package core.events;
 
-import io.papermc.paper.event.entity.EntityMoveEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Chunk;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Container;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.entity.EnderCrystal;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPortalEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import core.backend.Config;
-import core.backend.ItemCheck;
 import core.backend.LruCache;
 import core.backend.PlayerMeta;
 
 import java.util.*;
+import net.md_5.bungee.api.chat.TextComponent;
+
+import org.bukkit.Chunk;
+import org.bukkit.GameMode;
+import org.bukkit.entity.EnderCrystal;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public class Move implements Listener {
 
-	public static HashMap<UUID, Chunk> lastChunks = new HashMap<UUID, Chunk>();
+	public static HashMap<UUID, Chunk> lastChunks = new HashMap<>();
 
 	// per-player cache of chunks that have been checked aggressively for illegal items
 	private static LruCache<Player, LruCache<Chunk, Boolean>> playerChunks
@@ -37,9 +33,7 @@ public class Move implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		UUID playerUuid = player.getUniqueId();
-		
-		boolean needsCheck = false;
+
 		boolean inNether = player.getLocation().getWorld().getName().endsWith("the_nether");
 		boolean inEnd = player.getLocation().getWorld().getName().endsWith("the_end");
 		double yCoord = player.getLocation().getY();
@@ -78,26 +72,23 @@ public class Move implements Listener {
 			randomNumber = r.nextInt(250);
 			if (randomNumber == 21) {
 				player.kickPlayer("§6lmao -tries to move-");
-				return;
 			}
 		}
 	}
 		
 	@EventHandler
 	public void onEntityPortal(EntityPortalEvent e) {
-		// prevent ender crystals with bottoms showing from making it through portals
-		// in current versions of paper (build =< 588), these crystals break chunks around them permanently
+		// Prevent invulnerable end-crystals from breaking spawn chunks
+		// https://github.com/PaperMC/Paper/issues/5404
+
 		if(e.getEntityType().equals(EntityType.ENDER_CRYSTAL)) {
+
 			EnderCrystal crystal = (EnderCrystal)e.getEntity();
-			
-			if (crystal.isShowingBottom()) {
-				e.setCancelled(true);
-				return;
-			}
+			if (crystal.isShowingBottom()) e.setCancelled(true);
 		}
 	}
 }
-// some stuff to potentially reference
+						// some stuff to potentially reference
 								/*
 								// -- ILLEGAL PLACEMENT PATCH -- //
 								boolean illegalItemAgro = Boolean.parseBoolean(Config.getValue("item.illegal.agro"));

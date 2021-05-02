@@ -33,5 +33,4 @@ public class SetDonator implements CommandExecutor {
 		}
 		return true;
 	}
-
 }

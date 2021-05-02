@@ -6,8 +6,6 @@ import core.commands.Admin;
 import core.tasks.Analytics;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,15 +27,15 @@ public class SpeedLimit implements Listener
 	// default: 10 second grace period
 	private static final int GRACE_PERIOD = 5;
 
-	private static HashMap<UUID, Location> locs = new HashMap<UUID, Location>();
-	private static List<UUID> tped = new ArrayList<UUID>();
-	private static HashMap<UUID, Integer> gracePeriod = new HashMap<UUID, Integer>();
+	private static HashMap<UUID, Location> locs = new HashMap<>();
+	private static List<UUID> tped = new ArrayList<>();
+	private static HashMap<UUID, Integer> gracePeriod = new HashMap<>();
 	private static long lastCheck = -1;
-	private static HashMap<String, Double> speeds = new HashMap<String, Double>();
+	private static HashMap<String, Double> speeds = new HashMap<>();
 
 	public static int totalKicks = 0;
 
-	// Speedlimit Monitor
+	// Speed Monitor
 	public static void scheduleSlTask() {
 		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, () -> {
@@ -213,22 +211,14 @@ public class SpeedLimit implements Listener
 		
 		// create a list from the speeds map
 		List<Map.Entry<String, Double> > list =
-			new ArrayList<Map.Entry<String, Double> >(speeds.entrySet());
+				new ArrayList<>(speeds.entrySet());
 
-		Collections.sort(list, new Comparator<Map.Entry<String, Double> >() {
-			
-			@Override
-			public int compare(Map.Entry<String, Double> o1,
-					Map.Entry<String, Double> o2)
-			{
-				return (o2.getValue()).compareTo(o1.getValue());
-			}
-		});
+		list.sort((o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
 
 		// format them into speed strings
-		List< Pair<Double, String> > ret = new ArrayList< Pair<Double, String> >();
+		List< Pair<Double, String> > ret = new ArrayList<>();
 		for (Map.Entry<String, Double> aa : list) {
-			ret.add(new Pair<Double, String>(aa.getValue(), aa.getKey()));
+			ret.add(new Pair<>(aa.getValue(), aa.getKey()));
 		}
 		return ret;
 	}

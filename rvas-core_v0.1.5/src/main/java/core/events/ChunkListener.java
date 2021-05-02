@@ -25,26 +25,18 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
 import core.backend.Utilities;
 import core.tasks.Analytics;
 
-import java.util.*;
-import java.text.DecimalFormat;
 import net.md_5.bungee.api.chat.TextComponent;
-//import net.md_5.bungee.api.chat.ComponentBuilder;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World.Environment;
 import org.bukkit.Chunk;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.Material;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
@@ -59,7 +51,7 @@ public class ChunkListener implements Listener {
 	
 	public static int newCount = 0;
 	
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLoad(ChunkLoadEvent event) {
 		
 		Analytics.loaded_chunks++;
@@ -219,7 +211,7 @@ public class ChunkListener implements Listener {
 			
 			int counter = 0;
 			int i_x = 0;
-			int i_z = 0;
+			int i_z;
 			
 			while (i_x <= 15 ) {
 
@@ -236,9 +228,9 @@ public class ChunkListener implements Listener {
 			
 			if (debug && counter != 0) {
 				System.out.println(counter + " bedrock blocks replaced:");
-				System.out.println("Dimension: " + chunk.getWorld().getEnvironment().toString()
+				System.out.println("Dimension: " + chunk.getWorld().getEnvironment()
 						+ " | Chunk section coords: " + chunk.getX() + ", " + chunk.getZ());
-				System.out.println("");
+				System.out.println();
 				
 				if (receiver != null) {
 					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
@@ -253,7 +245,7 @@ public class ChunkListener implements Listener {
 			
 			int counter = 0;
 			int i_x = 0;
-			int i_z = 0;
+			int i_z;
 			
 			while (i_x <= 15 ) {
 
@@ -270,9 +262,9 @@ public class ChunkListener implements Listener {
 			
 			if (debug && counter != 0) {
 				System.out.println(counter + " bedrock blocks replaced:");
-				System.out.println("Dimension: " + chunk.getWorld().getEnvironment().toString()
+				System.out.println("Dimension: " + chunk.getWorld().getEnvironment()
 						+ " | Chunk section coords: " + chunk.getX() + ", " + chunk.getZ());
-				System.out.println("");
+				System.out.println();
 				
 				if (receiver != null) {
 					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));

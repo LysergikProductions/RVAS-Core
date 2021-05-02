@@ -22,20 +22,16 @@ package core.commands;
  * 
  * */
 
-import core.backend.Config;
 import core.events.ChunkListener;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class Repair implements CommandExecutor {
 	
@@ -88,12 +84,11 @@ public class Repair implements CommandExecutor {
 
 			// user has submitted an unexpected argument/s
 			player.spigot().sendMessage(new TextComponent("Check your spelling!"));
-			return true;
-			
+
 		} else { // user supplied no arguments
 			
 			player.spigot().sendMessage(new TextComponent("You must include what to repair!"));
-			return true;
 		}
+		return true;
 	}
 }

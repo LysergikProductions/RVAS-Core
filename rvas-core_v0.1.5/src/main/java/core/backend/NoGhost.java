@@ -23,13 +23,10 @@ package core.backend;
  * 
  * */
 
-import com.comphenix.protocol.reflect.StructureModifier;
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import core.Main;
 import core.backend.Config;
 import core.backend.PlayerMeta;
-import core.events.BlockListener;
-import core.tasks.Analytics;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -45,7 +42,6 @@ import org.bukkit.FluidCollisionMode;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Item;
 import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

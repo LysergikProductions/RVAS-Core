@@ -28,10 +28,10 @@ import core.backend.Config;
 import java.util.UUID;
 import java.io.Serializable;
 
-import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
 
+@SuppressWarnings({"SpellCheckingInspection", "CommentedOutCode"})
 public class PVPstats implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

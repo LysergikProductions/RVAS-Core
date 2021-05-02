@@ -5,6 +5,7 @@ import core.commands.Prison;
 import core.events.BlockListener;
 import core.tasks.Analytics;
 import core.tasks.LagManager;
+import core.tasks.OnTick;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,5 +36,6 @@ public class Config {
 		if (LagManager.updateConfigs()) System.out.println("LagManager sConfigs Updated!");
 		if (Prison.updateConfigs()) System.out.println("Prison sConfigs Updated!");
 		if (NoGhost.updateConfigs()) System.out.println("NoGhost sConfigs Updated!");
+		if (OnTick.updateConfigs()) System.out.println("OnTick sConfigs Updated!");
 	}
 }

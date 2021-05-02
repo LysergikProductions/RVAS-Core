@@ -2,7 +2,6 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
-import core.backend.ServerMeta;
 import core.backend.PlayerMeta.MuteType;
 import core.commands.Admin;
 
@@ -27,10 +26,10 @@ public class Chat implements Listener {
 		"redeem", "server", "sign", "stats", "suicide", "tdm", "tjm", "tps", "vm", "vote", "w"
 	));
 	
-	private HashMap<UUID, Long> lastChatTimes = new HashMap<UUID, Long>();
-	private HashMap<UUID, String> lastChatMessages = new HashMap<UUID, String>();
+	private HashMap<UUID, Long> lastChatTimes = new HashMap<>();
+	private HashMap<UUID, String> lastChatMessages = new HashMap<>();
 	
-	public static HashMap<UUID, Integer> violationLevels = new HashMap<UUID, Integer>();
+	public static HashMap<UUID, Integer> violationLevels = new HashMap<>();
 	public static boolean slowChatEnabled = false;
 
 	@EventHandler

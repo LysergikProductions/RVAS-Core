@@ -25,21 +25,14 @@ package core.tasks;
 
 import core.backend.Config;
 import core.events.BlockListener;
-import core.tasks.Analytics;
-import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.Location;
-import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkull;
 
@@ -65,7 +58,7 @@ public class LagManager implements Listener, Runnable {
 	@EventHandler
 	public void onEntitySpawn(EntitySpawnEvent e) {
 		
-		int currentWithers = 0;
+		int currentWithers;
 		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
 		
 		if (e.getEntity() instanceof Wither) {
@@ -85,7 +78,7 @@ public class LagManager implements Listener, Runnable {
 	
 	public static int removeSkulls(int age_limit) {
 		
-		int skulls_world = 0;
+		int skulls_world;
 		int skulls_all = 0;
 		
 		String skullMsg;
@@ -112,10 +105,8 @@ public class LagManager implements Listener, Runnable {
 	}
 	
 	public static int getWithers() {
-		
-		int witherLimit = Integer.parseInt(Config.getValue("wither.limit"));
-		
 		int counter = 0;
+
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			
 			if (debug && verbose) System.out.println("Counting withers in: " + thisWorld.getName());
@@ -133,14 +124,14 @@ public class LagManager implements Listener, Runnable {
 	public static boolean lagFinder(){
 		// return true after finding lag chunks
 		
-		int entityCount = 0;
+		//int entityCount = 0;
 		for (Player p: Bukkit.getOnlinePlayers()) {
 			
 			ChunkSnapshot thatChunk_C = p.getWorld().getChunkAt(p.getLocation()).getChunkSnapshot();
 			
 			for (Material blockType: BlockListener.LagMats) {
 				if (thatChunk_C.contains(blockType.createBlockData())) {
-					//count how many of each all lagmats are found in this area
+					//count how many of each all lag-mats are found in this area
 					
 					lagLogger(p, thatChunk_C);
 					return true;

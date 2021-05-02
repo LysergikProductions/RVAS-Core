@@ -25,14 +25,14 @@ public class Redeem implements CommandExecutor {
 		}
 
 		if (PlayerMeta.DonorCodes.contains(args[0]) && !PlayerMeta.UsedDonorCodes.contains(args[0])) {
+
 			PlayerMeta.UsedDonorCodes.add(args[0]);
 			PlayerMeta.setDonator(player, true);
 			Bukkit.getServer().spigot()
 					.broadcast(new TextComponent("§6" + player.getName() + " just donated to the server!"));
-			return true;
 		} else {
 			player.spigot().sendMessage(new TextComponent("§cThis code is not valid."));
-			return true;
 		}
+		return true;
 	}
 }

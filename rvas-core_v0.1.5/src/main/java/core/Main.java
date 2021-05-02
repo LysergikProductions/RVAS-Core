@@ -44,7 +44,6 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 
 		instance = this;
-		boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 		
 		System.out.println("[core.main] ______________________________");
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");

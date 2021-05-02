@@ -33,5 +33,4 @@ public class Say implements CommandExecutor
 		System.out.println("§d[Server] " + data[0]);
 		return true;
 	}
-
 }

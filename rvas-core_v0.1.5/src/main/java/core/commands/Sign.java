@@ -82,10 +82,10 @@ public class Sign implements CommandExecutor {
 		m.update(code.getBytes());
 		byte[] digest = m.digest();
 		BigInteger bigInt = new BigInteger(1, digest);
-		String hashtext = bigInt.toString(16);
+		StringBuilder hashtext = new StringBuilder(bigInt.toString(16));
 		// Now we need to zero pad it if you actually want the full 32 chars.
 		while (hashtext.length() < 32) {
-			hashtext = "0" + hashtext;
+			hashtext.insert(0, "0");
 		}
 
 		DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
@@ -107,7 +107,7 @@ public class Sign implements CommandExecutor {
 			return false;
 		}
 
-		List<String> lores = new ArrayList<String>();
+		List<String> lores = new ArrayList<>();
 
 		lores.add(verifier);
 		lores.add(date);

@@ -5,11 +5,7 @@ import core.backend.*;
 import core.objects.*;
 import core.tasks.Analytics;
 
-import java.io.*;
 import java.util.*;
-import java.text.SimpleDateFormat;
-
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
@@ -63,13 +59,10 @@ public class Stats implements CommandExecutor {
 					return true;
 					
 				case "leaderboard":
+				case "5":
 					ChatPrint.printLeaders(player);
 					return true;
-					
-				case "5":// change printLeaders to be able to take a desired list size argument
-					ChatPrint.printLeaders(player);
-					return true;
-					
+
 				case "help":
 					HelpPages.helpStats(player);
 					if (!PlayerMeta.isAdmin(player)) Analytics.stats_help++;
@@ -84,7 +77,7 @@ public class Stats implements CommandExecutor {
 						
 						player.spigot().sendMessage(new TextComponent("Your kills are now public."));
 						
-					} else if (!targetSettings.show_kills) {
+					} else {
 						
 						player.spigot().sendMessage(new TextComponent("Your kills are now hidden."));
 					}
@@ -100,7 +93,7 @@ public class Stats implements CommandExecutor {
 						
 						player.spigot().sendMessage(new TextComponent("Your deaths are now public."));
 						
-					} else if (!targetSettings.show_deaths) {
+					} else {
 						
 						player.spigot().sendMessage(new TextComponent("Your deaths are now hidden."));
 					}
@@ -116,7 +109,7 @@ public class Stats implements CommandExecutor {
 						
 						player.spigot().sendMessage(new TextComponent("Your k/d ratio is now public."));
 						
-					} else if (!targetSettings.show_kd) {
+					} else {
 						
 						player.spigot().sendMessage(new TextComponent("Your k/d ratio is now hidden."));
 					}
@@ -138,26 +131,20 @@ public class Stats implements CommandExecutor {
 			// user has submitted a probable username argument
 			OfflinePlayer offline_player = Bukkit.getOfflinePlayer(args[0]);
 			
-			if (offline_player == null ) {
-				
-				player.spigot().sendMessage(new TextComponent("This player has never joined."));
-				return true;
-				
-			} else if (!offline_player.hasPlayedBefore()) {
+			if (offline_player == null || !offline_player.hasPlayedBefore()) {
 				
 				player.spigot().sendMessage(new TextComponent("This player has never joined."));
 				return true;
 			}
 			
 			ChatPrint.printStats(player, offline_player);
-			return true;
-			
+
 		} else { // user supplied no arguments
 			
 			OfflinePlayer target = Bukkit.getOfflinePlayer(player.getUniqueId());
 			
 			ChatPrint.printStats(player, target);
-			return true;
 		}
+		return true;
 	}
 }

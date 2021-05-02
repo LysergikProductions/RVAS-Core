@@ -22,14 +22,10 @@ package core.commands;
  * 
  * */
 
-import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.backend.FileManager;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.io.IOException;
-
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
@@ -73,21 +69,6 @@ public class Backup implements CommandExecutor {
 			
 			player.spigot().sendMessage(new TextComponent("saving prisoners.."));
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
-			
-			//player.spigot().sendMessage(new TextComponent("codes.."));
-			//FileManager.backupData(FileManager.all_donor_codes, "codes/all-backup-", ".db");
-			
-			//player.spigot().sendMessage(new TextComponent("used codes.."));
-			//FileManager.backupData(FileManager.used_donor_codes, "codes/used-backup-", ".db");
-			
-			//player.spigot().sendMessage(new TextComponent("saving analytics.."));
-			//FileManager.backupData(FileManager.server_statistics_list, "analytics-backup-", ".csv");
-			
-			//player.spigot().sendMessage(new TextComponent("saving configs.."));
-			//FileManager.backupData(FileManager.core_server_config, "config-backup-", ".txt");
-			
-			//player.spigot().sendMessage(new TextComponent("saving motds.."));
-			//FileManager.backupData(FileManager.motd_message_list, "motds-backup-", ".txt");
 			
 		} catch (IOException e) {
 			

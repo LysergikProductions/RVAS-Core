@@ -20,9 +20,9 @@ import org.bukkit.entity.Player;
 
 public class VoteMute implements CommandExecutor {
 	
-	static HashMap<UUID, Integer> _votes = new HashMap<UUID, Integer>();
-	static HashMap<UUID, List<UUID>> _voters = new HashMap<UUID, List<UUID>>();
-	static HashMap<String, List<UUID>> _voterIps = new HashMap<String, List<UUID>>();
+	static HashMap<UUID, Integer> _votes = new HashMap<>();
+	static HashMap<UUID, List<UUID>> _voters = new HashMap<>();
+	static HashMap<String, List<UUID>> _voterIps = new HashMap<>();
 	
 	public static int cooldown = 0;
 
@@ -53,7 +53,7 @@ public class VoteMute implements CommandExecutor {
 				* (Float.parseFloat(Config.getValue("mute.pop")) / 100.0f));
 
 		if (popNeeded <= 1) {
-			int rnd = (int) ((Math.random() * (5 - 0)) + 0);
+			int rnd = (int) ((Math.random() * (5)) + 0);
 			if (rnd == 3) {
 				voter.spigot().sendMessage(new TextComponent("§cno votey not enough"));
 			} else {
@@ -110,7 +110,7 @@ public class VoteMute implements CommandExecutor {
 		}
 		// Create new list of votes
 		else {
-			previousVotes = new ArrayList<UUID>();
+			previousVotes = new ArrayList<>();
 		}
 
 		// Load previous IP votes
@@ -136,7 +136,7 @@ public class VoteMute implements CommandExecutor {
 
 		// Create new list of IP votes
 		else {
-			previousIpVotes = new ArrayList<UUID>();
+			previousIpVotes = new ArrayList<>();
 		}
 
 		// If our candidate has been voted on before
@@ -157,12 +157,10 @@ public class VoteMute implements CommandExecutor {
 						new TextComponent("§6The vote to mute " + args[0] + " passed after " + popNeeded + " votes."));
 				_votes.remove(toMute.getUniqueId());
 				previousVotes.remove(toMute.getUniqueId());
-				return true;
 
 			} else {
 				voter.spigot().sendMessage(new TextComponent("§aSuccessfully submitted vote for " + toMute.getName()
 						+ ". " + (popNeeded - votes) + " more needed for mute."));
-				return true;
 			}
 		}
 		// If our candidate has not been voted on before
@@ -182,8 +180,8 @@ public class VoteMute implements CommandExecutor {
 							+ toMute.getName() + ". " + (popNeeded - 1) + " more votes are needed to mute. §lUse /vm "
 							+ toMute.getName() + " to vote."));
 			cooldown = 1500;
-			return true;
 		}
+		return true;
 	}
 
 	public static void clear() {

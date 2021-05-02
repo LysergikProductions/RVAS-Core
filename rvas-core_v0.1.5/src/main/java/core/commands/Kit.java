@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
 
 // funny command haha
 public class Kit implements CommandExecutor {
-	public static List<UUID> kickedFromKit = new ArrayList<UUID>();
+	public static List<UUID> kickedFromKit = new ArrayList<>();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -31,20 +31,15 @@ public class Kit implements CommandExecutor {
 			kickedFromKit.add(player.getUniqueId());
 			player.kickPlayer("§6imagine kits in vanilla survival lol [pog]");
 			
-			/*if (!PlayerMeta.isMuted(player)) {
-				
-				
-			}*/
+			if (!PlayerMeta.isMuted(player)) return true;
 			
 			Bukkit.getServer().spigot().broadcast(new TextComponent(
 					"§a" + player.getName() + " got their complimentary starter kit! Get yours by typing /kit."));
-			
-			return true;
-			
+
 		} else {
 			
 			player.spigot().sendMessage(new TextComponent("§cThis command has been disabled by your administrator."));
-			return true;
 		}
+		return true;
 	}
 }

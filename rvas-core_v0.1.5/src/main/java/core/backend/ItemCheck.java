@@ -21,7 +21,7 @@ import org.bukkit.potion.PotionType;
 public class ItemCheck {
 
 	public static ArrayList<Material> Banned = new ArrayList<>(), Special = new ArrayList<>(), LegalHeads = new ArrayList<>();
-	{
+	static {
 		// Banned materials.
 		Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
@@ -39,18 +39,16 @@ public class ItemCheck {
 	}
 
 	public static void IllegalCheck(ItemStack item, String trigger, Player player) {
-		assert player != null;
+		if (player == null) return;
+		if (PlayerMeta.isAdmin(player)) return;
 
-		// Dont check null items or air
 		if (item == null || item.getType().equals(Material.AIR)) return;
-		if (player != null && PlayerMeta.isAdmin(player)) return;
-		
+
 		if (
 				Config.getValue("item.illegal").equals("false") ||
-				
-				player != null && player.isOp() &&
-				Config.getValue("skip.ops").equals("true") &&
+				player.isOp() && Config.getValue("skip.ops").equals("true") &&
 				!Banned.contains(item.getType())) {
+
 			return;
 		}
 		
@@ -70,7 +68,7 @@ public class ItemCheck {
 				});
 
 				if (item.getAmount() > 1) {
-					System.out.println("[core.backend.itemcheck] ILLEGAL: "+trigger+", "+item.getType().toString()+", "+player.getName()+","
+					System.out.println("[core.backend.itemcheck] ILLEGAL: "+trigger+", "+ item.getType() +", "+player.getName()+","
 							+ "("+player.getLocation().getX()+", "+player.getLocation().getY()+", "+player.getLocation().getZ()+")");
 					item.setAmount(1);
 				}
@@ -307,13 +305,11 @@ public class ItemCheck {
 				}
 			}
 			item.setAmount(0);
-			return;
 		}
 
 		// Fix player heads
 		else if (item.getItemMeta() instanceof SkullMeta && Config.getValue("item.illegal.heads").equals("true")) {
 			removeEnchants(item);
-			return;
 		}
 	}
 
@@ -330,7 +326,6 @@ public class ItemCheck {
 				}
 				if (ench.getMaxLevel() > meta.getEnchantLevel(ench)) {
 					meta.removeEnchant(ench);
-					continue;
 				}
 			}
 		}

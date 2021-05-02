@@ -2,7 +2,6 @@ package core.backend;
 
 import core.Main;
 import core.objects.*;
-import core.tasks.Analytics;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -128,8 +127,7 @@ public class FileManager {
 		}
 
 		try {
-			Files.readAllLines(used_donor_codes.toPath()).forEach(val ->
-				PlayerMeta.UsedDonorCodes.add(val));
+			PlayerMeta.UsedDonorCodes.addAll(Files.readAllLines(used_donor_codes.toPath()));
 		} catch (Exception e) {
 			System.out.println("Exception while reading used.db : " + e);
 		}	

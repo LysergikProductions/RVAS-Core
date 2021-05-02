@@ -9,17 +9,11 @@ import core.backend.Scheduler;
 import core.commands.VoteMute;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 
 // Tps processor
 public class OnTick extends TimerTask {
 
 	public static Map<Location, Material> blocksToFix = new HashMap<>();
-
-	public static int lowTpsCounter = 0;
-	public static int timeTillReset = 1200;
-
 	public static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 
 	@Override
