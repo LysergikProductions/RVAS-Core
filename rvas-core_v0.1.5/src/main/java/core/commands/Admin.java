@@ -138,13 +138,13 @@ public class Admin implements CommandExecutor {
 					else if (player.getWorld().getEnvironment().toString().contains("END")) {dimension = "the_end";}
 					else {dimension = "overworld";}
 					
-					String location = loc.getX() + " " + loc.getY() + " " + loc.getZ();
+					String location = (int)loc.getX() + " " + (int)loc.getY() + " " + (int)loc.getZ();
 					TextComponent logSpot = new TextComponent("§6"+args[1] + " logged out at " + location);
 					
 					logSpot.setClickEvent(new ClickEvent(
-							ClickEvent.Action.RUN_COMMAND, "/execute in " + dimension + "run tp @s " + location));
+							ClickEvent.Action.RUN_COMMAND, "/execute in " + dimension + " run tp @s " + location));
 					
-					sender.sendMessage();
+					sender.sendMessage(logSpot);
 				}
 				return true;
 			}

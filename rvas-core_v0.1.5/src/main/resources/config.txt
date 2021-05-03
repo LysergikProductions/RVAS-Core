@@ -95,10 +95,10 @@ movement.illegals.check = false
 // ----------------- //
 
 // - Check for and enforce survival mode when non-op players place blocks
-protect.gamemode.onplace = false
+protect.gamemode.onplace = true
 
 // - Check for and enforce survival mode when non-op players break blocks
-protect.gamemode.onbreak = false
+protect.gamemode.onbreak = true
 
 // ------------------------- //
 // --- PLACEMENT PATCHES --- //
@@ -181,7 +181,7 @@ item.illegal.agro.flush_period = 3600
 vote.enable = true
 
 // - Enable or disable manual execution of vote reward
-vote.debug = true
+vote.debug = false
 
 // - Vote reward multiplier. default = 1
 vote.multiplier = 1

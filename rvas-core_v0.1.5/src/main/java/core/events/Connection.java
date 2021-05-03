@@ -5,6 +5,9 @@ import core.commands.Admin;
 import core.commands.Kit;
 import core.objects.PlayerSettings;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.*;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -28,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+@SuppressWarnings("deprecation")
 public class Connection implements Listener {
 	
 	public static String serverHostname = "RVAS";
@@ -122,13 +126,13 @@ public class Connection implements Listener {
 			doJoinMessage(MessageType.LEAVE, e.getPlayer());
 		}
 		Location l = e.getPlayer().getLocation();            //store Location floored to block
-		Admin.LogOutSpots.put(e.getPlayer().getName(), new Location(l.getWorld(), l.getBlockX(), l.getBlockY(), l.getBlockZ()));
+		Admin.LogOutSpots.put(e.getPlayer().getName(), l);
 		ServerMeta.preventReconnect(e.getPlayer(), Integer.parseInt(Config.getValue("speedlimit.rc_delay_safe")));
 	}
 
 	private final String[] motds = {
 		"i'm not high, we're high" , "RIP boiling water, you will be mist" , "vanilla exploits rejoice!" , "needs more carpet" ,
-		"imagine imagining.."
+		"imagine imagining..", "Now with less fat!"
 	};
 
 	private Random r = new Random();
@@ -139,10 +143,11 @@ public class Connection implements Listener {
 
 	@EventHandler
 	public void onPing(ServerListPingEvent e) {
+
 		if (!done) {
 			try {
 				allMotds = new ArrayList<>(Arrays.asList(motds));
-				System.out.println("[core.events.connection] Loading " + motds.length + " custom MOTDs...");
+				System.out.println("[core.events.connection] Loading " + motds.length + " default MOTDs...");
 				allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
 			} catch (IOException e1) {
 				allMotds = new ArrayList<>(Arrays.asList(motds));
@@ -150,9 +155,15 @@ public class Connection implements Listener {
 			done = true;
 			System.out.println("[core.events.connection] Loaded " + allMotds.size() + " MOTDs");
 		}
+
 		int rnd = r.nextInt(allMotds.size());
 		String tps = new DecimalFormat("#.##").format(LagProcessor.getTPS());
-		e.setMotd(serverHostname+" §7| §5" + allMotds.get(rnd) + " §7| §9TPS: " + tps);
+
+		final String msg = "§3§l        RVA-Survival 1.16.5 §r§7 |  TPS: " + tps +
+				"        §r§6§o" + allMotds.get(rnd);
+
+		e.setMotd(msg);
+
 		if(serverHostname.equals("test")) {
 			if(Bukkit.hasWhitelist()) {
 				e.setMotd("§9rvas test §7| §4closed §7| §9TPS: " + tps);

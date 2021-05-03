@@ -28,7 +28,9 @@ _**Doesn't prevent any vanilla exploits** by default_
 
 - **Anti Furnace-Chunk-Ban**
 
-- Customizable MOTDs
+- **Lag Machine Detection**
+
+- Customizable + randomized MOTDs
 
 ##### Commands:
 - `/vm` - _1-hour long, democratic global-chat mute_

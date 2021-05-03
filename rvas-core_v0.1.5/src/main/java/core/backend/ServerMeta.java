@@ -24,6 +24,7 @@ public class ServerMeta {
 	private static HashMap<UUID, Double> Delays = new HashMap<>();
 	private static HashMap<UUID, Double> InitialDelays = new HashMap<>();
 
+	@SuppressWarnings("deprecation")
 	public static void kickWithDelay(Player p, double delay) {
 		Delays.put(p.getUniqueId(), 0D);
 		InitialDelays.put(p.getUniqueId(), delay);

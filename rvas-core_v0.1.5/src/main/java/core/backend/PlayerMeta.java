@@ -262,7 +262,8 @@ public class PlayerMeta {
 
 		Files.write(Paths.get("plugins/core/playtime.db"), String.join("\n", list).getBytes());
 	}
-	
+
+	// Handle player settings
 	public static PlayerSettings getNewSettings(OfflinePlayer p) {
 		return new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true);
 	}
