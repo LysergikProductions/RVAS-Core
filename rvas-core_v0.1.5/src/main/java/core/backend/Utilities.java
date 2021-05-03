@@ -4,11 +4,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -238,5 +235,16 @@ public class Utilities {
 		}
 		System.out.println(msg.getText());
 		return true;
+	}
+
+	public static String getDimensionName (Location thisLoc) {
+		String out;
+
+		if (thisLoc.getWorld().getEnvironment().equals(World.Environment.NORMAL)) out = "overworld";
+		else if (thisLoc.getWorld().getEnvironment().equals(World.Environment.NETHER)) out = "the_nether";
+		else if (thisLoc.getWorld().getEnvironment().equals(World.Environment.THE_END)) out = "the_end";
+		else out = null;
+
+		return out;
 	}
 }

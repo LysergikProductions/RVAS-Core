@@ -24,13 +24,16 @@ package core.tasks;
  * */
 
 import core.backend.Config;
+import core.backend.Utilities;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
-
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Wither;
-import org.bukkit.entity.WitherSkull;
+import org.bukkit.entity.*;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -69,6 +72,31 @@ public class LagManager implements Listener, Runnable {
 				Analytics.failed_wither_spawns++;
 				e.setCancelled(true);
 			}
+		}
+
+		Location spawnLoc = e.getLocation();
+		String dimension = Utilities.getDimensionName(spawnLoc);
+		EntityType thisType = e.getEntity().getType();
+
+		if (thisType.equals(EntityType.ARMOR_STAND)) {
+			int counter = 0;
+
+			for (Entity thisEntity: e.getLocation().getChunk().getEntities()) {
+				if (thisEntity.getType().equals(thisType)) counter++;
+			}
+
+			TextComponent warn = new TextComponent("WARN "); warn.setBold(true);
+			warn.setColor(ChatColor.RED);
+
+			TextComponent msg = new TextComponent("17+ armor stands at " +
+					spawnLoc.getX() + ", " + spawnLoc.getY() + ", " + spawnLoc.getZ() + " in " + dimension);
+
+			String cmd = "/execute in " + dimension + " run tp @s " +
+					spawnLoc.getX() + " " + spawnLoc.getY() + " " + spawnLoc.getZ();
+
+			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
+
+			if (counter > 16) Utilities.notifyOps(new TextComponent(warn, msg));
 		}
 	}
 	

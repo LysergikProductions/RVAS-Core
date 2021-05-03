@@ -5,9 +5,6 @@ import core.commands.Admin;
 import core.commands.Kit;
 import core.objects.PlayerSettings;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.*;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -132,7 +129,7 @@ public class Connection implements Listener {
 
 	private final String[] motds = {
 		"i'm not high, we're high" , "RIP boiling water, you will be mist" , "vanilla exploits rejoice!" , "needs more carpet" ,
-		"imagine imagining..", "Now with less fat!"
+		"imagine imagining..", "now with less fat!"
 	};
 
 	private Random r = new Random();

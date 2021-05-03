@@ -24,12 +24,12 @@ package core.events;
  * */
 
 import core.backend.Config;
+import core.backend.Utilities;
 import core.backend.PlayerMeta;
 
 import java.util.*;
 import java.text.DecimalFormat;
 
-import core.backend.Utilities;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -49,6 +49,7 @@ import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("deprecation")
 public class BlockListener implements Listener {
 
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
@@ -83,7 +84,7 @@ public class BlockListener implements Listener {
 				Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH, Material.ACTIVATOR_RAIL, Material.POWERED_RAIL,
 				Material.LEVER, Material.PISTON, Material.STICKY_PISTON, Material.REDSTONE_LAMP, Material.GLOWSTONE,
 				Material.OBSERVER, Material.HOPPER, Material.DROPPER, Material.REPEATER, Material.COMPARATOR,
-				Material.DISPENSER, Material.GRAVEL, Material.ARMOR_STAND, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
+				Material.DISPENSER, Material.GRAVEL, Material.DRAGON_EGG, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -193,13 +194,7 @@ public class BlockListener implements Listener {
 		
 		Block block = event.getBlockPlaced();
 		Location block_loc = block.getLocation();
-		Environment dimension = block_loc.getWorld().getEnvironment();
-		String env;
-
-		if (dimension.equals(Environment.NORMAL)) env = "overworld";
-		else if (dimension.equals(Environment.NETHER)) env = "the_nether";
-		else if (dimension.equals(Environment.THE_END)) env = "the_end";
-		else env = null;
+		String env = Utilities.getDimensionName(block_loc);
 
 		Material blockType = block.getType();
 		String mat = blockType.toString();
@@ -226,7 +221,7 @@ public class BlockListener implements Listener {
 		}
 
 		// Watchdog for potential lag machines
-		if (LagMats.contains(blockType) || mat.contains("MINECART") || mat.contains("DOOR")) {
+		if (LagMats.contains(blockType) || mat.contains("DOOR")) {
 			int counter = 0;
 
 			for (Material thisMat: LagMats) {
@@ -239,7 +234,7 @@ public class BlockListener implements Listener {
 			warn.setColor(ChatColor.RED);
 
 			TextComponent msg = new TextComponent("Potential lag-machine at " +
-					block.getX() + ", " + block.getY() + ", " + block.getZ() + " in " + dimension +
+					block.getX() + ", " + block.getY() + ", " + block.getZ() + " in " + env +
 					" by " + placer_name + " with UUID: " + placer.getUniqueId());
 
 			String cmd = "/execute in " + env + " run tp @s " +
