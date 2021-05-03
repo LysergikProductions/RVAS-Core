@@ -28,6 +28,10 @@ import core.backend.PlayerMeta;
 
 import java.util.*;
 import java.text.DecimalFormat;
+
+import core.backend.Utilities;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.event.Listener;
@@ -46,12 +50,13 @@ import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 
 public class BlockListener implements Listener {
-	
-	// do these 4 need to be static? do they update with `Config.load()` from `/admin reload` ?
-	static String roofProt = Config.getValue("protect.bedrock.roof");
-	static String floorProt = Config.getValue("protect.bedrock.floor");
+
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+	static boolean roofProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.roof"));
+	static boolean floorProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.floor"));
+	static boolean modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
+	static boolean modeOnBreak = Boolean.parseBoolean(Config.getValue("protect.gamemode.onbreak"));
 	
 	public static int brokenBedrockCounter = 0;
 	public static int placedBedrockCounter = 0;
@@ -59,21 +64,21 @@ public class BlockListener implements Listener {
 	//public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
 	
 	public static ArrayList<Material> BreakBanned = new ArrayList<>();
-	{
+	static {
 		BreakBanned.addAll(Arrays.asList(Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK,
 				Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 	}
 	
 	public static ArrayList<Material> PlacementBanned = new ArrayList<>();
-	{
+	{ // TODO: add config for restricting bedrock and portal-frame placement by adding to this array accordingly
 		PlacementBanned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 	}
 	
 	public static ArrayList<Material> LagMats = new ArrayList<>();
-	{
+	static {
 		LagMats.addAll(Arrays.asList(Material.REDSTONE, Material.REDSTONE_WIRE, Material.REDSTONE_BLOCK,
 				Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH, Material.ACTIVATOR_RAIL, Material.POWERED_RAIL,
 				Material.LEVER, Material.PISTON, Material.STICKY_PISTON, Material.REDSTONE_LAMP, Material.GLOWSTONE,
@@ -104,7 +109,7 @@ public class BlockListener implements Listener {
 			TextComponent cancelPos = new TextComponent(
 					breaker_name + "'s BlockBreakEvent was cancelled: " + blockType);
 			
-			if (!breaker.isOp()) breaker.setGameMode(GameMode.SURVIVAL);			
+			if (!breaker.isOp() || modeOnBreak) breaker.setGameMode(GameMode.SURVIVAL);
 			
 			if (BreakBanned.contains(blockType)) {
 
@@ -117,7 +122,7 @@ public class BlockListener implements Listener {
 			} else if (blockType.equals(Material.BEDROCK)) {
 				
 				// protect bedrock floor
-				if (y < 1 && floorProt.equals("true")) {
+				if (y < 1 && floorProt) {
 
 					System.out.println("WARN " + breaker_name + " tried to break a protected floor block!");
 					if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
@@ -126,7 +131,7 @@ public class BlockListener implements Listener {
 					return;
 					
 				// protect nether roof	
-				} else if (y == 127 && roofProt.equals("true") &&
+				} else if (y == 127 && roofProt &&
 						dimension.equals(Environment.NETHER)) {
 
 					System.out.println("WARN " + breaker_name + " tried to break a protected roof block!");
@@ -184,14 +189,23 @@ public class BlockListener implements Listener {
 		
 		Player placer = event.getPlayer();
 		if (PlayerMeta.isAdmin(placer)) return;
+		String placer_name = placer.getName();
 		
 		Block block = event.getBlockPlaced();
 		Location block_loc = block.getLocation();
-		String placer_name = placer.getName();
-		
+		Environment dimension = block_loc.getWorld().getEnvironment();
+		String env;
+
+		if (dimension.equals(Environment.NORMAL)) env = "overworld";
+		else if (dimension.equals(Environment.NETHER)) env = "the_nether";
+		else if (dimension.equals(Environment.THE_END)) env = "the_end";
+		else env = null;
+
 		Material blockType = block.getType();
 		String mat = blockType.toString();
-		
+
+		if (!placer.isOp() || modeOnPlace) placer.setGameMode(GameMode.SURVIVAL);
+
 		// prevent lag-prisoners from placing things that can cause lag
 		if (PlayerMeta.isPrisoner(placer)) {
 
@@ -210,7 +224,34 @@ public class BlockListener implements Listener {
 				return;
 			}
 		}
-		
+
+		// Watchdog for potential lag machines
+		if (LagMats.contains(blockType) || mat.contains("MINECART") || mat.contains("DOOR")) {
+			int counter = 0;
+
+			for (Material thisMat: LagMats) {
+				if (thisMat != Material.GRAVEL) {
+					counter += Utilities.blockCounter(block.getChunk(), thisMat);
+				}
+			}
+
+			TextComponent warn = new TextComponent("WARN "); warn.setBold(true);
+			warn.setColor(ChatColor.RED);
+
+			TextComponent msg = new TextComponent("Potential lag-machine at " +
+					block.getX() + ", " + block.getY() + ", " + block.getZ() + " in " + dimension +
+					" by " + placer_name + " with UUID: " + placer.getUniqueId());
+
+			String cmd = "/execute in " + env + " run tp @s " +
+					block.getX() + " " + block.getY() + " " + block.getZ();
+
+			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
+
+			if (counter > 256) {
+				Utilities.notifyOps(new TextComponent(warn, msg));
+			}
+		}
+
 		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
 		if (mat.contains("SHULKER_BOX")) {
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -242,12 +283,11 @@ public class BlockListener implements Listener {
 				if (debug) Bukkit.spigot().broadcast(
 						new TextComponent(placer_name + "'s BlockPlaceEvent was cancelled."));
 				return;
+			} else if (blockType.equals(Material.BEDROCK)) {
+				placedBedrockCounter++;
+				System.out.println("WARN: " + placer_name + " just placed bedrock at " + block_loc);
 			}
 		}
-		
-		/*placedBedrockCounter++;
-		System.out.println("WARNING: " + placer_name + " just placed bedrock at " + block_loc.toString());*/
-		// TODO: add bedrock check for this ^
 		
 		if (debug && verbose) {
 			long endTime = System.nanoTime();
@@ -258,21 +298,15 @@ public class BlockListener implements Listener {
 		}
 	}
 	
-	// this occurs after onPlace because of EventPriority
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void noGhost(BlockPlaceEvent event) {
-		
-		Block blockToPlace = event.getBlockPlaced();		
-		blockToPlace.getState().update(false, true);
-	}
-	
 	public static boolean updateConfigs() {
 		
 		try {
-			roofProt = Config.getValue("protect.bedrock.roof");
-			floorProt = Config.getValue("protect.bedrock.floor");
 			debug = Boolean.parseBoolean(Config.getValue("debug"));
 			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+			roofProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.roof"));
+			floorProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.floor"));
+			modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
+			modeOnBreak = Boolean.parseBoolean(Config.getValue("protect.gamemode.onbreak"));
 			
 			return true;
 			

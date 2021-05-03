@@ -11,7 +11,9 @@ import org.bukkit.block.Block;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
+@SuppressWarnings("deprecation")
 public class Utilities {
 	
 	public static String calculateTime(double seconds) {
@@ -223,5 +225,18 @@ public class Utilities {
 			}
 		}
 		return counter;
+	}
+
+	// send a message to all online ops and console
+	public static boolean notifyOps(TextComponent msg) {
+		if (msg == null) return false;
+
+		for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
+			try {
+				if (thisPlayer.isOp()) thisPlayer.spigot().sendMessage(msg);
+			} catch (Exception e) {return false;}
+		}
+		System.out.println(msg.getText());
+		return true;
 	}
 }

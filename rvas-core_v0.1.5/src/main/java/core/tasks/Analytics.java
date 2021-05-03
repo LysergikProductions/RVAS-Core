@@ -56,6 +56,7 @@ public class Analytics extends TimerTask {
 	public static int about_cmd = 0; public static int admin_cmd = 0;
 	public static int discord_cmd = 0; public static int help_cmd = 0;
 	public static int kill_cmd = 0; public static int kit_cmd = 0;
+
 	public static int w_cmd = 0; public static int r_cmd = 0;
 	public static int msg_cmd = 0; public static int server_cmd = 0;
 	public static int sign_cmd = 0;
@@ -99,16 +100,14 @@ public class Analytics extends TimerTask {
 		
 		CSV_cmdHeader = sb2.toString();
 	}
-	
+
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+	public static boolean doAnalytics = Boolean.parseBoolean(Config.getValue("analytics.enabled"));
 	
-	@Override // write and reset analytics on-schedule
+	@Override
 	public void run() {
-		
-		// if (!Config.getValue("analytics.enabled").equals("true")) return;
-		// TODO: why doesn't ^this^ line return false and move to capture()?
-		Analytics.capture();
+		if (doAnalytics) Analytics.capture();
 	}
 	
 	// write and reset analytics on-demand

@@ -24,15 +24,11 @@ package core.tasks;
  * */
 
 import core.backend.Config;
-import core.events.BlockListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.Material;
 
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkull;
 
@@ -119,30 +115,6 @@ public class LagManager implements Listener, Runnable {
 		}
 		if (debug) System.out.println("Counted Withers: " + counter);
 		return counter;
-	}
-	
-	public static boolean lagFinder(){
-		// return true after finding lag chunks
-		
-		//int entityCount = 0;
-		for (Player p: Bukkit.getOnlinePlayers()) {
-			
-			ChunkSnapshot thatChunk_C = p.getWorld().getChunkAt(p.getLocation()).getChunkSnapshot();
-			
-			for (Material blockType: BlockListener.LagMats) {
-				if (thatChunk_C.contains(blockType.createBlockData())) {
-					//count how many of each all lag-mats are found in this area
-					
-					lagLogger(p, thatChunk_C);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	public static boolean lagLogger(Player thatPlayer, ChunkSnapshot thatPlayerChunk){
-		return true;
 	}
 
 	public static boolean updateConfigs() {

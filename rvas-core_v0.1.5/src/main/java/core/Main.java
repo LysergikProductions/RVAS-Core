@@ -16,12 +16,9 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.WitherSkull;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Listener;
 import org.bukkit.GameMode;
@@ -42,7 +39,6 @@ public class Main extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onEnable() {
-
 		instance = this;
 		
 		System.out.println("[core.main] ______________________________");
@@ -235,9 +231,10 @@ public class Main extends JavaPlugin implements Listener {
 		// Enable discord notifications for this instance
 		NotificationHandler = new Notifications();
 		getServer().getPluginManager().registerEvents(NotificationHandler, this);
-		
+
 		// Load chunk at 0,0 to test for world age
 		for (World thisWorld: getServer().getWorlds()) {
+			System.out.println("[core.main] Checking world age..");
 			
 			if (thisWorld.getEnvironment().equals(Environment.NORMAL)) {
 				
@@ -246,7 +243,7 @@ public class Main extends JavaPlugin implements Listener {
 				worldAge_atStart = thisWorld.getChunkAt(0, 0)
 						.getChunkSnapshot().getCaptureFullTime();
 
-				if (worldAge_atStart < 600) {
+				if (worldAge_atStart < 710) {
 					
 					System.out.println("[core.main] This world is NEW! World Ticks: " + worldAge_atStart);
 					isNewWorld = true;
@@ -266,8 +263,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	@Override
-	public void onDisable()
-	{
+	public void onDisable() {
 		System.out.println("[core.main] _____________________________");
 		System.out.println("[core.main] --- RVAS-Core : Disabling ---");
 		System.out.println("[core.main] _____________________________");
@@ -313,16 +309,11 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] __________________");
 		System.out.println("[core.main] Collecting garbage");
 		System.out.println("[core.main] __________________");
-		
-		for (World thisWorld: Bukkit.getServer().getWorlds()) {
-			System.out.println("Clearing wither skulls in: " + thisWorld.getName());
-			
-			for (Entity e: thisWorld.getEntities()) {
-				if (e instanceof WitherSkull) {
-					e.remove();
-				}
-			}
-		}
+
+		int max_age = Integer.parseInt(Config.getValue("wither.skull.max_ticks"));
+		int removed_skulls = LagManager.removeSkulls(max_age);
+
+		System.out.println("Found " + removed_skulls + " remaining skull/s to trash..");
 		
 		System.out.println("[core.main] ______________________");
 		System.out.println("[core.main] Printing session stats");

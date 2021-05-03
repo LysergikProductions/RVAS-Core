@@ -4,11 +4,12 @@ import core.events.Chat;
 import core.events.ChunkListener;
 
 import core.backend.Config;
-import core.backend.LagProcessor;
-import core.backend.PlayerMeta;
-import core.backend.Scheduler;
-import core.backend.ServerMeta;
 import core.backend.Utilities;
+import core.backend.Scheduler;
+import core.backend.LagProcessor;
+
+import core.backend.PlayerMeta;
+import core.backend.ServerMeta;
 import core.commands.VoteMute;
 
 import java.util.TimerTask;
@@ -24,7 +25,6 @@ public class ProcessPlaytime extends TimerTask {
 	private static long timeTillReset = 3600000;
 
 	private static int lastNewChunks = 0;
-
 	private static double lastTPS = 0.00;
 
 	@Override
@@ -50,7 +50,7 @@ public class ProcessPlaytime extends TimerTask {
 		
 		if (difference > (lastTPS*0.5)) {
 			System.out.println("WARN 50+% tps drop in 20t");
-			Analytics.capture(); //LagManager.lagFinder();
+			Analytics.capture();
 		}
 		
 		lastTPS = currentTPS;

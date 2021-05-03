@@ -44,7 +44,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
-@SuppressWarnings("SpellCheckingInspection")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class OpListener implements Listener {
 	
 	// currently not in use
@@ -56,7 +56,7 @@ public class OpListener implements Listener {
 				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
 				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
 				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
-				"/restart", "/worldb", "/gamerule", "/score"));
+				"/restart", "/worldb", "/gamerule", "/score", "/tell", "/dupe"));
 	}
 	
 	// this happens *before* the OP Lock plugin will see the command
@@ -67,26 +67,27 @@ public class OpListener implements Listener {
 		String admin_name = Config.getValue("admin");
 		
 		boolean isAdmin = PlayerMeta.isAdmin(sender);
+		String msg = event.getMessage();
 		
 		// allow ops to use /execute, but only for teleporting between dimensions
 		if (
-				event.getMessage().startsWith("/execute in the_end run tp") ||
-				event.getMessage().startsWith("/execute in the_nether run tp") ||
-				event.getMessage().startsWith("/execute in overworld run tp")) {
+				msg.startsWith("/execute in the_end run tp") ||
+				msg.startsWith("/execute in the_nether run tp") ||
+				msg.startsWith("/execute in overworld run tp")) {
 			
-			if (!event.getMessage().contains("@a") && !event.getMessage().contains(admin_name) && sender.isOp()) {
+			if (!msg.contains("@a") && !msg.contains(admin_name) && sender.isOp()) {
 				return;
 			}
 		}
 		
 		// take-over handling of /lr when receiving /lr skulls (lr normally for 'LaggRemover')
-		if (event.getMessage().startsWith("/lr skulls")) {
+		if (msg.startsWith("/lr skulls")) {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) sender.chat("/kill @e[type=minecraft:wither_skull]");
 		}
 		
-		if (event.getMessage().startsWith("/lr items")) {
+		if (msg.startsWith("/lr items")) {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) {
@@ -98,59 +99,59 @@ public class OpListener implements Listener {
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!isAdmin) {
 			if (
-					event.getMessage().contains("/op") ||
-					event.getMessage().contains("/deop") ||
-					event.getMessage().contains("/ban") ||
-					event.getMessage().contains("/attribute") ||
-					event.getMessage().contains("/default") ||
-					event.getMessage().contains("/execute") ||
-					event.getMessage().contains("/rl") ||
-					event.getMessage().contains("/summon") ||
-					event.getMessage().contains("/give") ||
-					event.getMessage().contains("/set") ||
-					event.getMessage().contains("/difficulty") ||
-					event.getMessage().contains("/replace") ||
-					event.getMessage().contains("/enchant") ||
-					event.getMessage().contains("/time") ||
-					event.getMessage().contains("/weather") ||
-					event.getMessage().contains("/schedule") ||
-					event.getMessage().contains("/data") ||
-					event.getMessage().contains("/fill") ||
-					event.getMessage().contains("/save") ||
-					event.getMessage().contains("/loot") ||
-					event.getMessage().contains("/experience") ||
-					event.getMessage().contains("/forceload") ||
-					event.getMessage().contains("/function") ||
-					event.getMessage().contains("/spreadplayers") ||
-					event.getMessage().contains("/xp") ||
-					event.getMessage().contains("/reload") ||
-					event.getMessage().contains("/gamerule") ||
-					event.getMessage().contains("/world") ||
-					event.getMessage().contains("/restart") ||
-					event.getMessage().contains("/spigot") ||
-					event.getMessage().contains("/plugins") ||
-					event.getMessage().contains("/protocol") ||
-					event.getMessage().contains("/packet") ||
-					event.getMessage().contains("/whitelist") ||
-					event.getMessage().contains("/minecraft") ||
-					event.getMessage().contains("/dupe") ||
-					event.getMessage().contains("/score") ||
-					event.getMessage().contains("/gamerule")) {
+					msg.contains("/op") ||
+					msg.contains("/deop") ||
+					msg.contains("/ban") ||
+					msg.contains("/attribute") ||
+					msg.contains("/default") ||
+					msg.contains("/execute") ||
+					msg.contains("/rl") ||
+					msg.contains("/summon") ||
+					msg.contains("/give") ||
+					msg.contains("/set") ||
+					msg.contains("/difficulty") ||
+					msg.contains("/replace") ||
+					msg.contains("/enchant") ||
+					msg.contains("/time") ||
+					msg.contains("/weather") ||
+					msg.contains("/schedule") ||
+					msg.contains("/data") ||
+					msg.contains("/fill") ||
+					msg.contains("/save") ||
+					msg.contains("/loot") ||
+					msg.contains("/experience") ||
+					msg.contains("/forceload") ||
+					msg.contains("/function") ||
+					msg.contains("/spreadplayers") ||
+					msg.contains("/xp") ||
+					msg.contains("/reload") ||
+					msg.contains("/world") ||
+					msg.contains("/restart") ||
+					msg.contains("/spigot") ||
+					msg.contains("/plugins") ||
+					msg.contains("/protocol") ||
+					msg.contains("/packet") ||
+					msg.contains("/whitelist") ||
+					msg.contains("/minecraft") ||
+					msg.contains("/dupe") ||
+					msg.contains("/score") ||
+					msg.contains("/tell") ||
+					msg.contains("/gamerule")) {
 				
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent("no"));
 				
-			} else if (event.getMessage().contains("@a")) {
+			} else if (msg.contains("@a")) {
 				
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent("You cannot target everyone!"));
 				
-			} else if (event.getMessage().contains(admin_name)) {
+			} else if (msg.contains(admin_name)) {
 				
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent("You cannot target " + admin_name));
 			}
-		} else if (event.getMessage().startsWith("/op sauce")) {
+		} else if (msg.startsWith("/op sauce")) {
 			event.setCancelled(true);
 			
 			if (sender.isOp()) {

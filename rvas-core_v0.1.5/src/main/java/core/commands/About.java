@@ -38,16 +38,18 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class About implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		Player player = (Player) sender;
 		
 		if (!PlayerMeta.isAdmin(player)) Analytics.about_cmd++;
 		
-		TextComponent by = new TextComponent("RVAS-core v0.1.5 by sinse420");
+		TextComponent by = new TextComponent("RVAS-core v0.1.5(#208) by sinse420");
 		TextComponent source = new TextComponent("RVAS-core is open source. Access the GitHub by clicking this message.");
 		TextComponent license = new TextComponent("Licensed under AGPL-3.0.");
 		

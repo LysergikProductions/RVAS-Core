@@ -40,15 +40,18 @@ spawn.random = true
 // - Random-spawn on first join
 spawn.random.join = true
 
-// - Define a rectangular area for spawn (must use #.0)
+// - Use circular Spawn Region? (COMING SOON!)
+spawn.circular = false
+
+// - Define a circular area for spawn (COMING SOON!)
+spawn.radius.X = 420.0
+spawn.radius.Z = 420.0
+
+// - Define a rectangular area for spawn
 spawn.max.X = 420.0
 spawn.max.Z = 420.0
 spawn.min.X = -420.0
 spawn.min.Z = -420.0
-
-// - Define a circular area for spawn (+/- makes no difference)
-spawn.radius.X = 420.0
-spawn.radius.Z = 420.0
 
 // - Prevent players spawning in water
 spawn.prevent.drown = false

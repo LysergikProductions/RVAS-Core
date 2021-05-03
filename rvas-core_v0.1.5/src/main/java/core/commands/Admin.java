@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Admin implements CommandExecutor {
 
@@ -32,7 +33,8 @@ public class Admin implements CommandExecutor {
 	public static boolean disableWarnings = false;
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {		
+	@SuppressWarnings("deprecation")
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		Player player = (Player) sender;
 		
 		if (!player.isOp()) Analytics.admin_cmd++;
@@ -116,7 +118,9 @@ public class Admin implements CommandExecutor {
 						sender.spigot().sendMessage(new TextComponent("§6Disabled aggressive speed limit."));
 					}
 					return true;
-					
+
+				case "LAG":
+					return true;
 			}
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("spot")) {

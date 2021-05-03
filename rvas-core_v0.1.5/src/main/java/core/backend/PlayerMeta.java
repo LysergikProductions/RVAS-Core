@@ -39,10 +39,9 @@ public class PlayerMeta {
 		return _donatorList.contains(p.getUniqueId());
 	}
 
-	public static void setDonator(Player p, boolean status)
-	{
-		if (status)
-		{
+	public static void setDonator(Player p, boolean status) {
+
+		if (status) {
 			if (!_donatorList.contains(p.getUniqueId())) {
 				_donatorList.add(p.getUniqueId());
 			}
@@ -73,6 +72,7 @@ public class PlayerMeta {
 		return false;
 	}
 
+	/* @DEPRECATED
 	public static MuteType getMuteType(Player p){
 		if (isMuted(p)) {
 			if (_temporaryMutes.containsKey(p.getUniqueId())) {
@@ -89,8 +89,9 @@ public class PlayerMeta {
 			}
 		}
 		return MuteType.NONE;
-	}
+	}*/
 
+	@SuppressWarnings("deprecation")
 	public static void setMuteType(Player p, MuteType type)
 	{
 		UUID uuid = p.getUniqueId();
@@ -255,7 +256,7 @@ public class PlayerMeta {
 	}
 
 	public static void writePlaytime() throws IOException {
-		List<String> list = new ArrayList();
+		List<String> list = new ArrayList<>();
 
 		Playtimes.keySet().forEach(user -> list.add(user.toString() + ":" + Math.rint(Playtimes.get(user))));
 
