@@ -22,8 +22,14 @@ public class DupeHand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		
-		Player player = (Player) sender;
+		Player player;
+
+		try {
+			player = (Player) sender;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			player = null;
+		}
 		
 		if (!PlayerMeta.isOp(sender)) {
 			player.kickPlayer("§6get fucked newfag [pog]");
@@ -53,7 +59,7 @@ public class DupeHand implements CommandExecutor {
 					}
 				}
 
-				HashMap<Integer, ItemStack> didntFit = player.getInventory().addItem(modItemInHand);
+				HashMap<Integer, ItemStack> didntFit = target.getInventory().addItem(modItemInHand);
 				if (!didntFit.isEmpty()) {
 					didntFit.forEach((key, value) -> {
 						target.getWorld().dropItem(target.getLocation(), value);

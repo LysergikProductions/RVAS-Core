@@ -36,11 +36,11 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public static long worldAge_atStart;
 	public static boolean isNewWorld;
-	
+
 	@Override
 	public void onEnable() {
 		instance = this;
-		
+
 		System.out.println("[core.main] ______________________________");
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] ______________________________");
@@ -173,7 +173,6 @@ public class Main extends JavaPlugin implements Listener {
 		
 		core_pm.registerEvents(new Chat(), this);
 		core_pm.registerEvents(new Connection(), this);
-		core_pm.registerEvents(new Voted(), this);
 		
 		core_pm.registerEvents(new PVP(), this);
 		core_pm.registerEvents(new Move(), this);
@@ -256,6 +255,9 @@ public class Main extends JavaPlugin implements Listener {
 				break; // <- only check first normal dimension found
 			}
 		}
+
+		//System.out.println("Initializing Votifier..");
+		//getPluginLoader().enablePlugin(new votifier.Votifier());
 		
 		System.out.println("[core.main] ________________________________");
 		System.out.println("[core.main] -- Finished loading RVAS-Core --");
