@@ -268,6 +268,7 @@ public class Analytics extends TimerTask {
 		try {
 			debug = Boolean.parseBoolean(Config.getValue("debug"));
 			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+			doAnalytics = Boolean.parseBoolean(Config.getValue("analytics.enabled"));
 
 			return true;
 
