@@ -255,9 +255,6 @@ public class Main extends JavaPlugin implements Listener {
 				break; // <- only check first normal dimension found
 			}
 		}
-
-		//System.out.println("Initializing Votifier..");
-		//getPluginLoader().enablePlugin(new votifier.Votifier());
 		
 		System.out.println("[core.main] ________________________________");
 		System.out.println("[core.main] -- Finished loading RVAS-Core --");
