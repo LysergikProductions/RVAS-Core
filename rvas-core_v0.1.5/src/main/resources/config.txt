@@ -288,9 +288,6 @@ discord.link = https://discord.gg/RcTJTsMt8p
 // --- MISC --- //
 // ------------ //
 
-// - Enable Discord analytics notifications. false = disabled [default] true = enabled
-analytics.enabled = false
-
 // - Discord Bot ID for analytics notifications. Default: empty. 
 analytics.bot_id = 
 
