@@ -118,7 +118,7 @@ public class Notifications implements Listener {
 	private ArrayList<String> loadFacts() {
 		ArrayList<String> fact = new ArrayList<>();
 
-		Scanner scanner = new Scanner(Notifications.class.getClassLoader().getResourceAsStream("facts.txt"));
+		Scanner scanner = new Scanner(Notifications.class.getClassLoader().getResourceAsStream("rvas-core_v0.2/src/main/resources/facts.txt"));
 
 		scanner.forEachRemaining(fact_line -> {
 			if (!fact_line.trim().isEmpty())
