@@ -22,15 +22,15 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-public class Notifications implements Listener {
+public class DiscordBot implements Listener {
 
 	private static ArrayList<String> facts;
 	public static ArrayList<RestChannel> chatChannels = new ArrayList<>();
 
 	private static final Random r = new Random();
 
-	public Notifications() {
-		if (!Config.getValue("analytics.enabled").equals("true"))
+	public DiscordBot() {
+		if (!Config.getValue("discord.bot").equals("true"))
 			return;
 
 		facts = loadFacts();
@@ -118,7 +118,7 @@ public class Notifications implements Listener {
 	private ArrayList<String> loadFacts() {
 		ArrayList<String> fact = new ArrayList<>();
 
-		Scanner scanner = new Scanner(Notifications.class.getClassLoader().getResourceAsStream("rvas-core_v0.2/src/main/resources/facts.txt"));
+		Scanner scanner = new Scanner(Notifications.class.getClassLoader().getResourceAsStream("facts.txt"));
 
 		scanner.forEachRemaining(fact_line -> {
 			if (!fact_line.trim().isEmpty())

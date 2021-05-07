@@ -32,7 +32,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static Plugin instance;
 	
 	public static OfflinePlayer Top = null;
-	public Notifications NotificationHandler;
+	public DiscordBot DiscordHandler;
 	
 	public static long worldAge_atStart;
 	public static boolean isNewWorld;
@@ -228,8 +228,8 @@ public class Main extends JavaPlugin implements Listener {
 		SpeedLimit.scheduleSlTask();
 		
 		// Enable discord notifications for this instance
-		//NotificationHandler = new Notifications();
-		//getServer().getPluginManager().registerEvents(NotificationHandler, this);
+		DiscordHandler = new DiscordBot();
+		getServer().getPluginManager().registerEvents(DiscordHandler, this);
 
 		// Load chunk at 0,0 to test for world age
 		for (World thisWorld: getServer().getWorlds()) {

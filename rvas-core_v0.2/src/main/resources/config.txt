@@ -288,8 +288,11 @@ discord.link = https://discord.gg/RcTJTsMt8p
 // --- MISC --- //
 // ------------ //
 
+// - Enable Discord bot
+discord.bot = false
+
 // - Discord Bot ID for analytics notifications. Default: empty. 
-analytics.bot_id = 
+analytics.bot_id =
 
 // - Force survival mode on relog except OPs false = disabled true = enabled [default]
 misc.survival = true

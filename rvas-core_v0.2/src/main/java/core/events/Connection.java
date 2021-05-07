@@ -157,7 +157,7 @@ public class Connection implements Listener {
 		String tps = new DecimalFormat("#.##").format(LagProcessor.getTPS());
 
 		final String msg = "§3§l        RVA-Survival 1.16.5 §r§7 |  TPS: " + tps +
-				"         §r§6§o" + allMotds.get(rnd);
+				"          §r§6§o" + allMotds.get(rnd);
 
 		e.setMotd(msg);
 
