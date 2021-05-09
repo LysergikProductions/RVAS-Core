@@ -26,10 +26,14 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.Utilities;
+import core.commands.Repair;
 import core.tasks.Analytics;
 
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -58,8 +62,11 @@ public class ChunkListener implements Listener {
 		Chunk chunk = event.getChunk();
 		
 		if (!event.isNewChunk()) {
-			
-			fixEndExit(chunk);			
+
+			int y_low = Utilities.getExitFloor(chunk);
+			if (y_low == -1) y_low = Repair.y_default;
+
+			fixEndExit(chunk, y_low);
 			chunk.setForceLoaded(false); // WARNING: this line will interfere with force-loaded spawn chunks
 			
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
@@ -85,16 +92,21 @@ public class ChunkListener implements Listener {
 			Utilities.blockRemover(chunk, Material.FURNACE, (int)Math.rint((double)furnace_count * 0.9));
 		}
 	}
-	
-	public static void fixEndExit(Chunk chunk) { // <- intentionally ignores central pillar
+
+	public static int y_low = 62;
+	public static int y_high = 63;
+	public static boolean foundPortal = false;
+
+	public static void fixEndExit(Chunk chunk, int y) { // <- intentionally ignores central pillar
 		
 		DragonBattle dragon = chunk.getWorld().getEnderDragonBattle();
 		
 		if (chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
-			assert dragon != null;
+			if (dragon == null || !dragon.hasBeenPreviouslyKilled()) {
 
-			//if (dragon == null) return; TODO: add this when removing assertion
-			if (!dragon.hasBeenPreviouslyKilled()) return;
+				Utilities.notifyOps(new TextComponent("Cannot repair portal; dragon has never been killed!"));
+				return;
+			}
 
 			int x_chunk = chunk.getX();
 			int z_chunk = chunk.getZ();
@@ -105,17 +117,17 @@ public class ChunkListener implements Listener {
 
 				chunk.setForceLoaded(false);
 
-				chunk.getBlock(15, 63, 15).setType(br);
-				chunk.getBlock(15, 63, 14).setType(br);
-				chunk.getBlock(14, 63, 15).setType(br);
+				chunk.getBlock(15, y_low, 15).setType(br);
+				chunk.getBlock(15, y_low, 14).setType(br);
+				chunk.getBlock(14, y_low, 15).setType(br);
 
-				chunk.getBlock(15, 64, 15).setType(portal);
-				chunk.getBlock(15, 64, 14).setType(portal);
-				chunk.getBlock(15, 64, 13).setType(br);
+				chunk.getBlock(15, y_high, 15).setType(portal);
+				chunk.getBlock(15, y_high, 14).setType(portal);
+				chunk.getBlock(15, y_high, 13).setType(br);
 
-				chunk.getBlock(14, 64, 15).setType(portal);
-				chunk.getBlock(14, 64, 14).setType(br);
-				chunk.getBlock(13, 64, 15).setType(br);
+				chunk.getBlock(14, y_high, 15).setType(portal);
+				chunk.getBlock(14, y_high, 14).setType(br);
+				chunk.getBlock(13, y_high, 15).setType(br);
 			}
 
 			// SW Quadrant
@@ -124,23 +136,23 @@ public class ChunkListener implements Listener {
 
 				chunk.setForceLoaded(false);
 
-				chunk.getBlock(15, 63, 0).setType(br);
-				chunk.getBlock(14, 63, 0).setType(br);
-				chunk.getBlock(15, 63, 1).setType(br);
-				chunk.getBlock(14, 63, 1).setType(br);
-				chunk.getBlock(15, 63, 2).setType(br);
+				chunk.getBlock(15, y_low, 0).setType(br);
+				chunk.getBlock(14, y_low, 0).setType(br);
+				chunk.getBlock(15, y_low, 1).setType(br);
+				chunk.getBlock(14, y_low, 1).setType(br);
+				chunk.getBlock(15, y_low, 2).setType(br);
 
-				chunk.getBlock(15, 64, 0).setType(portal);
-				chunk.getBlock(14, 64, 0).setType(portal);
-				chunk.getBlock(13, 64, 0).setType(br);
+				chunk.getBlock(15, y_high, 0).setType(portal);
+				chunk.getBlock(14, y_high, 0).setType(portal);
+				chunk.getBlock(13, y_high, 0).setType(br);
 
-				chunk.getBlock(15, 64, 1).setType(portal);
-				chunk.getBlock(14, 64, 1).setType(portal);
-				chunk.getBlock(13, 64, 1).setType(br);
+				chunk.getBlock(15, y_high, 1).setType(portal);
+				chunk.getBlock(14, y_high, 1).setType(portal);
+				chunk.getBlock(13, y_high, 1).setType(br);
 
-				chunk.getBlock(15, 64, 2).setType(portal);
-				chunk.getBlock(14, 64, 2).setType(br);
-				chunk.getBlock(15, 64, 3).setType(br);
+				chunk.getBlock(15, y_high, 2).setType(portal);
+				chunk.getBlock(14, y_high, 2).setType(br);
+				chunk.getBlock(15, y_high, 3).setType(br);
 			}
 
 			// NE Quadrant
@@ -149,23 +161,23 @@ public class ChunkListener implements Listener {
 
 				chunk.setForceLoaded(false);
 
-				chunk.getBlock(0, 63, 15).setType(br);
-				chunk.getBlock(1, 63, 15).setType(br);
-				chunk.getBlock(2, 63, 15).setType(br);
-				chunk.getBlock(0, 63, 14).setType(br);
-				chunk.getBlock(1, 63, 14).setType(br);
+				chunk.getBlock(0, y_low, 15).setType(br);
+				chunk.getBlock(1, y_low, 15).setType(br);
+				chunk.getBlock(2, y_low, 15).setType(br);
+				chunk.getBlock(0, y_low, 14).setType(br);
+				chunk.getBlock(1, y_low, 14).setType(br);
 
-				chunk.getBlock(0, 64, 15).setType(portal);
-				chunk.getBlock(1, 64, 15).setType(portal);
-				chunk.getBlock(2, 64, 15).setType(portal);
-				chunk.getBlock(3, 64, 15).setType(br);
+				chunk.getBlock(0, y_high, 15).setType(portal);
+				chunk.getBlock(1, y_high, 15).setType(portal);
+				chunk.getBlock(2, y_high, 15).setType(portal);
+				chunk.getBlock(3, y_high, 15).setType(br);
 
-				chunk.getBlock(0, 64, 14).setType(portal);
-				chunk.getBlock(1, 64, 14).setType(portal);
-				chunk.getBlock(2, 64, 14).setType(br);
+				chunk.getBlock(0, y_high, 14).setType(portal);
+				chunk.getBlock(1, y_high, 14).setType(portal);
+				chunk.getBlock(2, y_high, 14).setType(br);
 
-				chunk.getBlock(0, 64, 13).setType(br);
-				chunk.getBlock(1, 64, 13).setType(br);
+				chunk.getBlock(0, y_high, 13).setType(br);
+				chunk.getBlock(1, y_high, 13).setType(br);
 			}
 
 			// SE Quadrant
@@ -174,33 +186,33 @@ public class ChunkListener implements Listener {
 
 				chunk.setForceLoaded(false);
 
-				chunk.getBlock(0, 63, 0).setType(br);
-				chunk.getBlock(0, 63, 1).setType(br);
-				chunk.getBlock(0, 63, 2).setType(br);
+				chunk.getBlock(0, y_low, 0).setType(br);
+				chunk.getBlock(0, y_low, 1).setType(br);
+				chunk.getBlock(0, y_low, 2).setType(br);
 
-				chunk.getBlock(1, 63, 0).setType(br);
-				chunk.getBlock(1, 63, 1).setType(br);
-				chunk.getBlock(1, 63, 2).setType(br);
+				chunk.getBlock(1, y_low, 0).setType(br);
+				chunk.getBlock(1, y_low, 1).setType(br);
+				chunk.getBlock(1, y_low, 2).setType(br);
 
-				chunk.getBlock(2, 63, 0).setType(br);
-				chunk.getBlock(2, 63, 1).setType(br);
+				chunk.getBlock(2, y_low, 0).setType(br);
+				chunk.getBlock(2, y_low, 1).setType(br);
 
-				chunk.getBlock(0, 64, 0).setType(br);
-				chunk.getBlock(0, 64, 1).setType(portal);
-				chunk.getBlock(0, 64, 2).setType(portal);
-				chunk.getBlock(0, 64, 3).setType(br);
+				chunk.getBlock(0, y_high, 0).setType(br);
+				chunk.getBlock(0, y_high, 1).setType(portal);
+				chunk.getBlock(0, y_high, 2).setType(portal);
+				chunk.getBlock(0, y_high, 3).setType(br);
 
-				chunk.getBlock(1, 64, 0).setType(portal);
-				chunk.getBlock(1, 64, 1).setType(portal);
-				chunk.getBlock(1, 64, 2).setType(portal);
-				chunk.getBlock(1, 64, 3).setType(br);
+				chunk.getBlock(1, y_high, 0).setType(portal);
+				chunk.getBlock(1, y_high, 1).setType(portal);
+				chunk.getBlock(1, y_high, 2).setType(portal);
+				chunk.getBlock(1, y_high, 3).setType(br);
 
-				chunk.getBlock(2, 64, 0).setType(portal);
-				chunk.getBlock(2, 64, 1).setType(portal);
-				chunk.getBlock(2, 64, 2).setType(br);
+				chunk.getBlock(2, y_high, 0).setType(portal);
+				chunk.getBlock(2, y_high, 1).setType(portal);
+				chunk.getBlock(2, y_high, 2).setType(br);
 
-				chunk.getBlock(3, 64, 0).setType(br);
-				chunk.getBlock(3, 64, 1).setType(br);
+				chunk.getBlock(3, y_high, 0).setType(br);
+				chunk.getBlock(3, y_high, 1).setType(br);
 			}
 		}
 	}

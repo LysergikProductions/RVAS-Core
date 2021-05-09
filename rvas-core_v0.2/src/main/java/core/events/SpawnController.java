@@ -189,7 +189,7 @@ public class SpawnController implements Listener {
 		Location thisLocation = thisWorld.getSpawnLocation();
 		Chunk spawnChunk = thisLocation.getChunk();
 		
-		ChunkListener.fixEndExit(spawnChunk);
+		//ChunkListener.fixEndExit(spawnChunk);
 		
 		if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
 		if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());

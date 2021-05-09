@@ -247,4 +247,21 @@ public class Utilities {
 
 		return out;
 	}
+
+	public static int getExitFloor(Chunk chunk) {
+		int y = 257;
+		while (y > 1) {
+
+			Material topBlock = new Location(chunk.getWorld(), 1, y, 1).getBlock().getType();
+			Material bottomBlock = new Location(chunk.getWorld(), 1, y-1, 1).getBlock().getType();
+
+			if (topBlock.equals(Material.AIR) || bottomBlock.equals(Material.AIR)) {
+				y--; continue;
+			} else if (topBlock.equals(Material.BEDROCK) && !bottomBlock.equals(Material.BEDROCK)) {
+				return y+1;
+			}
+			y--;
+		}
+		return -1;
+	}
 }

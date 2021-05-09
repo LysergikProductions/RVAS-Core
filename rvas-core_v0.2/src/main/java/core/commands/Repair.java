@@ -22,8 +22,11 @@ package core.commands;
  * 
  * */
 
+import core.backend.Utilities;
 import core.events.ChunkListener;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,7 +37,9 @@ import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 public class Repair implements CommandExecutor {
-	
+	public static int y_default = 63;
+	public static int y_low;
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
@@ -42,34 +47,37 @@ public class Repair implements CommandExecutor {
 		Chunk chunk = player.getLocation().getChunk();
 		
 		if (!player.isOp()) return false;
-		
+
+		y_low = Utilities.getExitFloor(chunk);
+		if (y_low == -1) y_low = y_default;
+
 		if (args.length != 0) {
 			
 			switch (args[0]) {
 			
 				case "portals":// - Fix all End-related portals in the sender's current *chunk*
 					
-					ChunkListener.fixEndExit(chunk);
+					ChunkListener.fixEndExit(chunk, y_low);
 					return true;
 					
 				case "exit":// - Fix entire end exit portal when sender is in The End
-					
+
 					Chunk pos_pos = player.getWorld().getChunkAt(0, 0);
 					Chunk pos_neg = player.getWorld().getChunkAt(0, -1);
 					Chunk ned_pos = player.getWorld().getChunkAt(-1, 0);
 					Chunk neg_neg = player.getWorld().getChunkAt(-1, -1);
 					
 					pos_pos.load(false); // <- load (but don't generate) end chunk's
-					ChunkListener.fixEndExit(pos_pos); // try using onLoad() only, to trigger fixEndExit()
+					ChunkListener.fixEndExit(pos_pos, y_low); // try using onLoad() only, to trigger fixEndExit()
 					
 					pos_neg.load(false);
-					ChunkListener.fixEndExit(pos_neg);
+					ChunkListener.fixEndExit(pos_neg, y_low);
 					
 					ned_pos.load(false);
-					ChunkListener.fixEndExit(ned_pos);
+					ChunkListener.fixEndExit(ned_pos, y_low);
 					
 					neg_neg.load(false);
-					ChunkListener.fixEndExit(neg_neg);
+					ChunkListener.fixEndExit(neg_neg, y_low);
 					
 					return true;
 					
