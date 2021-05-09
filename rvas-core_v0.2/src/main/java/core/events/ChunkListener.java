@@ -31,9 +31,6 @@ import core.tasks.Analytics;
 
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -93,13 +90,10 @@ public class ChunkListener implements Listener {
 		}
 	}
 
-	public static int y_low = 62;
-	public static int y_high = 63;
-	public static boolean foundPortal = false;
-
 	public static void fixEndExit(Chunk chunk, int y) { // <- intentionally ignores central pillar
-		
 		DragonBattle dragon = chunk.getWorld().getEnderDragonBattle();
+
+		int y_low = y; int y_high = y+1;
 		
 		if (chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
 			if (dragon == null || !dragon.hasBeenPreviouslyKilled()) {

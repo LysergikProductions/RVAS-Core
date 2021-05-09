@@ -258,7 +258,7 @@ public class Utilities {
 			if (topBlock.equals(Material.AIR) || bottomBlock.equals(Material.AIR)) {
 				y--; continue;
 			} else if (topBlock.equals(Material.BEDROCK) && !bottomBlock.equals(Material.BEDROCK)) {
-				return y+1;
+				return y;
 			}
 			y--;
 		}

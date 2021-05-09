@@ -34,7 +34,7 @@ public class Mute implements CommandExecutor {
 			Bukkit.getServer().spigot()
 					.broadcast(PlayerMeta.MuteAll ?
 							new TextComponent("§4§l" + name + " §r§4has silenced the chat.") :
-							new TextComponent("§a§l" + name + " §r§ahas unsilenced the chat."));
+							new TextComponent("§a§l" + name + " §r§ahas un-silenced the chat."));
 			return true;
 		}
 

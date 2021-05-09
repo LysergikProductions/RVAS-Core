@@ -25,8 +25,6 @@ package core.commands;
 import core.backend.Utilities;
 import core.events.ChunkListener;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
