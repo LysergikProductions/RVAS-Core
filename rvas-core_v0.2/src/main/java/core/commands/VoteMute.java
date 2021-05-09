@@ -5,11 +5,6 @@ import core.backend.PlayerMeta;
 import core.backend.PlayerMeta.MuteType;
 import core.tasks.Analytics;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
@@ -17,6 +12,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class VoteMute implements CommandExecutor {
 	
@@ -48,7 +48,13 @@ public class VoteMute implements CommandExecutor {
 		Player toMute = Bukkit.getPlayer(args[0]);
 		
 		if (!PlayerMeta.isAdmin(voter)) Analytics.vm_cmd++;
-		
+
+		if (PlayerMeta.getPlaytime(Bukkit.getOfflinePlayer(voter.getUniqueId())) < 1800) {
+
+			sender.spigot().sendMessage(new TextComponent("§cYou can vote after playing for 30 minutes or more!"));
+			return false;
+		}
+
 		int popNeeded = (int) (Bukkit.getOnlinePlayers().size()
 				* (Float.parseFloat(Config.getValue("mute.pop")) / 100.0f));
 

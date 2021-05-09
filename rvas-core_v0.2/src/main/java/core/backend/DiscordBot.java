@@ -59,17 +59,17 @@ public class DiscordBot implements Listener {
 					//if it's the right command
 					.filter(message -> message.getContent().equalsIgnoreCase("!tps")).flatMap(Message::getChannel)
 					.flatMap(channel -> channel
-							.createMessage(//"TPS is currently " + new DecimalFormat("#.##").format(LagProcessor.getTPS()))
+							.createMessage(
 									messageSpec -> messageSpec.setEmbed(embedSpec ->
 											embedSpec.setTitle("RVAS Server | Server TPS")
 													.setAuthor("HappyDroid Bot", "https://avas.cc/", "https://avas.cc/favicon.png")
 									 .setColor(Color.RUBY)
 													.addField("Server Info",
-															"TPS is currently " + new DecimalFormat("#.##").format(LagProcessor.getTPS()),
+															"TPS is currently " + new DecimalFormat("0.00").format(LagProcessor.getTPS()),
 															false)
 													.addField("\u200B", "\u200B", false)
 													.addField("Current Player Count",
-															new DecimalFormat("##").format(Bukkit.getOnlinePlayers().size()) + "/20",
+															new DecimalFormat("##").format(Bukkit.getOnlinePlayers().size()) + "/13",
 															true)
 													.addField("Server Up Time", Utilities.calculateTime(ServerMeta.getUptime()), true)
 									))).subscribe();
@@ -118,7 +118,7 @@ public class DiscordBot implements Listener {
 	private ArrayList<String> loadFacts() {
 		ArrayList<String> fact = new ArrayList<>();
 
-		Scanner scanner = new Scanner(Notifications.class.getClassLoader().getResourceAsStream("facts.txt"));
+		Scanner scanner = new Scanner(DiscordBot.class.getClassLoader().getResourceAsStream("facts.txt"));
 
 		scanner.forEachRemaining(fact_line -> {
 			if (!fact_line.trim().isEmpty())

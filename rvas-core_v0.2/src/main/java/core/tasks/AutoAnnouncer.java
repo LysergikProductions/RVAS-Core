@@ -24,13 +24,9 @@ public class AutoAnnouncer extends TimerTask {
 	public void run() {
 		if (Config.getValue("announcer.enabled").equals("false")) return;
 		
-		int rnd = r.nextInt(11);
+		int rnd = r.nextInt(10);
 
 		switch (rnd) {
-			case 0:
-				String tps = new DecimalFormat("#.##").format(LagProcessor.getTPS());
-				Bukkit.spigot().broadcast(new TextComponent("§6You are playing on RVAS. TPS is " + tps + "."));
-				break;
 			case 1:
 				Bukkit.spigot()
 						.broadcast(new TextComponent("§6You can vote to mute a player by doing §l/vm [playername]."));

@@ -26,6 +26,7 @@ package core.tasks;
 import core.backend.Config;
 import core.backend.Utilities;
 
+import core.events.Connection;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -50,8 +51,9 @@ public class LagManager implements Listener, Runnable {
 		
 		int max_age = Integer.parseInt(Config.getValue("wither.skull.max_ticks"));				
 		int removed_skulls = removeSkulls(max_age);
-		
+
 		Analytics.removed_skulls += removed_skulls;
+		Connection.joinCounter = 0;
 	}
 	
 	@EventHandler

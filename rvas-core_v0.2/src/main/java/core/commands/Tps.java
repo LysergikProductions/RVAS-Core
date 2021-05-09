@@ -29,7 +29,7 @@ public class Tps implements CommandExecutor {
 					"TPS is either extremely low or still processing. Try again later.");
 			sender.spigot().sendMessage(component);
 		} else {
-			String message_formatted_ticks_per_second = new DecimalFormat("#.##").format(tps);
+			String message_formatted_ticks_per_second = new DecimalFormat("0.000").format(tps);
 			double ticks_per_second_percentage = Math.round(100 - ((tps / 20.0D) * 100.0D));
 			String message_formatted_percentage = new DecimalFormat("###.##").format(ticks_per_second_percentage);
 			TextComponent component = new TextComponent(

@@ -289,7 +289,7 @@ public class BlockListener implements Listener {
 			long duration = (endTime - startTime);
 			
 			placer.spigot().sendMessage(new TextComponent(
-					"PlaceTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms"));
+					"PlaceTime: " + new DecimalFormat("0.000").format((double)duration/1000000.0) + " ms"));
 		}
 	}
 	

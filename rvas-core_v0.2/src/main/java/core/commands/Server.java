@@ -74,7 +74,7 @@ public class Server implements CommandExecutor {
 		TextComponent players_a = new TextComponent("Connected Players: ");
 		TextComponent players_b = new TextComponent("" + Bukkit.getOnlinePlayers().size());
 		TextComponent tps_a = new TextComponent("Current TPS: ");
-		TextComponent tps_b = new TextComponent(new DecimalFormat("#.##").format(LagProcessor.getTPS()));
+		TextComponent tps_b = new TextComponent(new DecimalFormat("0.00").format(LagProcessor.getTPS()));
 		TextComponent slimit_a = new TextComponent("Current Speed Limit: ");
 		TextComponent slimit_b = new TextComponent(speed_limit + " bps");
 		TextComponent skicks_a = new TextComponent("Speed Limit Kicks: ");

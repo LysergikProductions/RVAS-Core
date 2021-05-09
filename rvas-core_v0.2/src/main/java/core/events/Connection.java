@@ -32,10 +32,23 @@ import java.util.Random;
 public class Connection implements Listener {
 	
 	public static String serverHostname = "RVAS";
+	public static double lastJoinTime = 0.00;
+	public static double thisJoinTime = 0.00;
 	
 	@EventHandler
 	public void onConnect(PlayerLoginEvent e) {
-		
+		thisJoinTime = System.currentTimeMillis();
+
+		if (lastJoinTime > 0.00 && joinCounter > 16) {
+			if (thisJoinTime - lastJoinTime < 710) {
+
+				e.setKickMessage("§6The server is getting bombarded with connections. Please try again later.");
+				e.setResult(Result.KICK_OTHER);
+			}
+		}
+
+		lastJoinTime = System.currentTimeMillis();
+
 		// Set server name if it's forced
 		if(Config.getValue("motd.force").equals("true")) {
 			serverHostname = Config.getValue("motd.force.name");
@@ -48,7 +61,7 @@ public class Connection implements Listener {
 		
 		// Custom whitelist kick
 		if(Bukkit.hasWhitelist() && !Bukkit.getWhitelistedPlayers().contains(e.getPlayer())
-				&& !e.getPlayer().isOp() && serverHostname.equals("test.avas.cc")) {
+				&& !e.getPlayer().isOp() && serverHostname.equals("rvas.testing")) {
 			e.setKickMessage("§6The test server is closed right now. Please try again later.");
 			e.setResult(Result.KICK_OTHER);
 			return;
@@ -60,8 +73,13 @@ public class Connection implements Listener {
 		}
 	}
 
+	public static int joinCounter = 0;
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
+		thisJoinTime = System.currentTimeMillis();
+
+		joinCounter++;
 		e.setJoinMessage(null);
 		
 		if (!PlayerMeta.isMuted(e.getPlayer()) && !Kit.kickedFromKit.contains(e.getPlayer().getUniqueId())) {
@@ -154,10 +172,11 @@ public class Connection implements Listener {
 		}
 
 		int rnd = r.nextInt(allMotds.size());
-		String tps = new DecimalFormat("#.##").format(LagProcessor.getTPS());
+
+		String tps = new DecimalFormat("0.00").format(LagProcessor.getTPS());
 
 		final String msg = "§3§l        RVA-Survival 1.16.5 §r§7 |  TPS: " + tps +
-				"          §r§6§o" + allMotds.get(rnd);
+				"           §r§6§o" + allMotds.get(rnd);
 
 		e.setMotd(msg);
 
