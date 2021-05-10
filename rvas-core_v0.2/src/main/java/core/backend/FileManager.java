@@ -97,18 +97,16 @@ public class FileManager {
 		}
 
 		if (!core_server_config.exists()) {
-			
-			InputStream core_server_config_template = (Main.class.getResourceAsStream("/rvas-core_v0.2/src/main/resources/config.txt"));
-			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "/rvas-core_v0.2/src/main/resources/config.txt"));
+			InputStream core_server_config_template = (Main.class.getResourceAsStream("/config.txt"));
+			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "config.txt"));
 		}
 
 		Config.load();
 
 		if (Integer.parseInt(Config.getValue("config.version")) < Config.version) {
-			
 			core_server_config.delete();
-			InputStream core_server_config_template = (Main.class.getResourceAsStream("/rvas-core_v0.2/src/main/resources/config.txt"));
-			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "/rvas-core_v0.2/src/main/resources/config.txt"));
+			InputStream core_server_config_template = (Main.class.getResourceAsStream("/config.txt"));
+			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "config.txt"));
 		}
 		
 		if (!prison_user_database.exists()) prison_user_database.createNewFile();

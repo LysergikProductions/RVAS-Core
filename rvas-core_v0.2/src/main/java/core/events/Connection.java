@@ -5,6 +5,8 @@ import core.commands.Admin;
 import core.commands.Kit;
 import core.objects.PlayerSettings;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -23,10 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @SuppressWarnings("deprecation")
 public class Connection implements Listener {
@@ -78,31 +77,47 @@ public class Connection implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		joinCounter++; e.setJoinMessage(null);
-		
-		if (!PlayerMeta.isMuted(e.getPlayer()) && !Kit.kickedFromKit.contains(e.getPlayer().getUniqueId())) {
-			doJoinMessage(MessageType.JOIN, e.getPlayer());
+
+		Player thisPlayer = e.getPlayer();
+		UUID playerid = e.getPlayer().getUniqueId();
+
+		if (!PlayerMeta.isMuted(thisPlayer) && !Kit.kickedFromKit.contains(playerid)) {
+			doJoinMessage(MessageType.JOIN, thisPlayer);
 		}
 		
-		if(!PlayerMeta.Playtimes.containsKey(e.getPlayer().getUniqueId())) {
-			PlayerMeta.Playtimes.put(e.getPlayer().getUniqueId(), 0.0D);
+		if(!PlayerMeta.Playtimes.containsKey(playerid)) {
+			PlayerMeta.Playtimes.put(playerid, 0.0D);
 		}
 
-		Kit.kickedFromKit.remove(e.getPlayer().getUniqueId());
+		Kit.kickedFromKit.remove(playerid);
 
 		// Full player check on initial join
 		if (Config.getValue("item.illegal.onjoin").equals("true")) {
-			e.getPlayer().getInventory().forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_INVENTORY_ITEM", e.getPlayer()));
-			e.getPlayer().getEnderChest().forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_ENDER_CHEST_ITEM", e.getPlayer()));
-			Arrays.stream(e.getPlayer().getInventory().getArmorContents()).forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_ARMOR_ITEM", e.getPlayer()));
+			thisPlayer.getInventory().forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_INVENTORY_ITEM", thisPlayer));
+			thisPlayer.getEnderChest().forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_ENDER_CHEST_ITEM", thisPlayer));
+			Arrays.stream(thisPlayer.getInventory().getArmorContents()).forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_ARMOR_ITEM", thisPlayer));
 
-			ItemCheck.IllegalCheck(e.getPlayer().getInventory().getItemInMainHand(), "LOGON_MAIN_HAND", e.getPlayer());
+			ItemCheck.IllegalCheck(thisPlayer.getInventory().getItemInMainHand(), "LOGON_MAIN_HAND", thisPlayer);
 
-			ItemCheck.IllegalCheck(e.getPlayer().getInventory().getItemInOffHand(), "LOGON_OFF_HAND", e.getPlayer());
+			ItemCheck.IllegalCheck(thisPlayer.getInventory().getItemInOffHand(), "LOGON_OFF_HAND", thisPlayer);
 		}
 
 		// Set survival if enabled; exempt ops
-		if (Config.getValue("misc.survival").equals("true") && !e.getPlayer().isOp()) {
-			e.getPlayer().setGameMode(GameMode.SURVIVAL);
+		if (Config.getValue("misc.survival").equals("true") && !thisPlayer.isOp()) {
+			thisPlayer.setGameMode(GameMode.SURVIVAL);
+		}
+
+		// Send join messages to joining players
+		String everyMsg = Config.getValue("join.message.everyJoin").replace('"', ' ').trim();
+		String firstMsg = Config.getValue("join.message.firstJoin").replace('"', ' ').trim();
+
+		TextComponent everyComp = new TextComponent(everyMsg); everyComp.setColor(ChatColor.BLUE);
+		TextComponent firstComp = new TextComponent(firstMsg); firstComp.setColor(ChatColor.BLUE);
+
+		if (thisPlayer.hasPlayedBefore()) {
+			if (!everyMsg.equals("")) thisPlayer.spigot().sendMessage(everyComp);
+		} else {
+			if (!firstMsg.equals("")) thisPlayer.spigot().sendMessage(firstComp);
 		}
 	}
 

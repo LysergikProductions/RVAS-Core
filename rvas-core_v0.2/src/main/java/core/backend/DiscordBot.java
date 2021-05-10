@@ -34,9 +34,11 @@ public class DiscordBot implements Listener {
 			return;
 
 		facts = loadFacts();
+		String botID = Config.getValue("analytics.bot.id");
+		if (botID.equals("")) return;
 
-		//Login a bot and do stuff when it's login
-		DiscordClientBuilder.create(Config.getValue("analytics.bot_id")).build().login().subscribe((client) -> {
+		// Login to the bot account
+		DiscordClientBuilder.create(botID).build().login().subscribe((client) -> {
 
 			//called when the bot is ready
 			client.getEventDispatcher().on(ReadyEvent.class).subscribe(event -> {

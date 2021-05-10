@@ -21,6 +21,10 @@ admin = sinse420
 debug = false
 verbose = false
 
+// - Join Messages
+join.message.firstJoin = "Welcome to real-anarchy. Use /help for commands available to you."
+join.message.everyJoin = "Vote-dupe is now active! Dupe your main-hand using /vote and voting for us!"
+
 // - The tps under which the auto-restart timer ticks
 restart.threshold = 7.10
 
