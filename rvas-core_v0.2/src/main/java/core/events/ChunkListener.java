@@ -278,4 +278,18 @@ public class ChunkListener implements Listener {
 			}
 		}
 	}
+
+	public static boolean updateConfigs() {
+
+		try {
+			debug = Boolean.parseBoolean(Config.getValue("debug"));
+			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
+	}
 }

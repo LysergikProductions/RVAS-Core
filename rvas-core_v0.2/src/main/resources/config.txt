@@ -56,6 +56,9 @@ spawn.min.Z = -420.0
 // - Prevent players spawning in water
 spawn.prevent.drown = false
 
+// - If spawning in liquids, force shallow-only spawning (max 1 block deep liquids)
+spawn.force.shallow = true
+
 // - Prevent players spawning where they would catch on fire
 spawn.prevent.burn = true
 

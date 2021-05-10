@@ -55,6 +55,8 @@ public class SpawnController implements Listener {
 	static Double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
 	static Double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
 	static Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+
+	static boolean forceShallow = Boolean.parseBoolean(Config.getValue("spawn.force.shallow"));
 	
 	public static int sessionTotalRespawns = 0;
 	public static int sessionNewPlayers = 0;
@@ -160,6 +162,21 @@ public class SpawnController implements Listener {
 			if (!event.isBedSpawn() && !event.isAnchorSpawn()) {
 				
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
+				Block spawnBlock = thisLocation.getBlock();
+
+				if (forceShallow && spawnBlock.equals(Material.WATER) || spawnBlock.equals(Material.LAVA)) {
+					Block nextBlockDown = spawnBlock.getWorld().getBlockAt(spawnBlock.getX(), spawnBlock.getY()-1, spawnBlock.getZ());
+
+					while (nextBlockDown.equals(Material.WATER) || nextBlockDown.equals(Material.LAVA) ||
+							nextBlockDown.equals(Material.KELP) || nextBlockDown.equals(Material.KELP_PLANT)) {
+
+						thisLocation = getRandomSpawn(thisWorld, thisLocation);
+						spawnBlock = thisLocation.getBlock();
+						nextBlockDown = spawnBlock.getWorld().getBlockAt(spawnBlock.getX(), spawnBlock.getY()-1, spawnBlock.getZ());
+
+						continue;
+					}
+				}
 
 				Chunk spawnChunk = thisLocation.getChunk();
 
@@ -232,6 +249,25 @@ public class SpawnController implements Listener {
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
 				thisWorld.setSpawnLocation(thisLocation);
 			}
+		}
+	}
+
+	public static boolean updateConfigs() {
+
+		try {
+			debug = Boolean.parseBoolean(Config.getValue("debug"));
+			forceShallow = Boolean.parseBoolean(Config.getValue("spawn.force.shallow"));
+
+			Double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
+			Double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
+			Double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
+			Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
 		}
 	}
 }
