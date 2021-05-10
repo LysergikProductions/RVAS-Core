@@ -110,7 +110,7 @@ public class BlockListener implements Listener {
 			TextComponent cancelPos = new TextComponent(
 					breaker_name + "'s BlockBreakEvent was cancelled: " + blockType);
 			
-			if (!breaker.isOp() || modeOnBreak) breaker.setGameMode(GameMode.SURVIVAL);
+			if (!breaker.isOp() && modeOnBreak) breaker.setGameMode(GameMode.SURVIVAL);
 			
 			if (BreakBanned.contains(blockType)) {
 
@@ -143,7 +143,7 @@ public class BlockListener implements Listener {
 				
 				// protect exit portal in the end
 				} else if (dimension.equals(Environment.THE_END) &&
-						y == 63 || y == 64) {
+						y == ChunkListener.y_low || y == ChunkListener.y_low+1) {
 					
 					if (x < 4 && x > -4) {
 						if (z < 4 && z > -4) {
@@ -164,7 +164,8 @@ public class BlockListener implements Listener {
 			// protect natural The_End entry and exit portals
 			} else if (blockType.equals(Material.END_PORTAL)) {
 				
-				if (dimension.equals(Environment.THE_END) && y ==64) {
+				if (dimension.equals(Environment.THE_END) &&
+						y == ChunkListener.y_low || y == ChunkListener.y_low+1) {
 					
 					if (x < 4 && x > -4) {
 						if (z < 4 && z > -4) {
@@ -199,7 +200,7 @@ public class BlockListener implements Listener {
 		Material blockType = block.getType();
 		String mat = blockType.toString();
 
-		if (!placer.isOp() || modeOnPlace) placer.setGameMode(GameMode.SURVIVAL);
+		if (!placer.isOp() && modeOnPlace) placer.setGameMode(GameMode.SURVIVAL);
 
 		// prevent lag-prisoners from placing things that can cause lag
 		if (PlayerMeta.isPrisoner(placer)) {

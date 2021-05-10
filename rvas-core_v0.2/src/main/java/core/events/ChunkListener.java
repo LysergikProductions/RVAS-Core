@@ -26,7 +26,6 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.Utilities;
-import core.commands.Repair;
 import core.tasks.Analytics;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -51,20 +50,22 @@ public class ChunkListener implements Listener {
 	static Material portal = Material.END_PORTAL;
 	
 	public static int newCount = 0;
+	public static boolean foundExitPortal = false;
+	public static int y_low = 62;
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLoad(ChunkLoadEvent event) {
 		
 		Analytics.loaded_chunks++;
 		Chunk chunk = event.getChunk();
-		
+
 		if (!event.isNewChunk()) {
-
-			int y_low = Utilities.getExitFloor(chunk);
-			if (y_low == -1) y_low = Repair.y_default;
-
-			fixEndExit(chunk, y_low);
 			chunk.setForceLoaded(false); // WARNING: this line will interfere with force-loaded spawn chunks
+
+			if (chunk.getX() == 0 && chunk.getZ() == 0) fixEndExit(chunk, y_low);
+			if (chunk.getX() == 0 && chunk.getZ() == -1) fixEndExit(chunk, y_low);
+			if (chunk.getX() == -1 && chunk.getZ() == 0) fixEndExit(chunk, y_low);
+			if (chunk.getX() == -1 && chunk.getZ() == -1) fixEndExit(chunk, y_low);
 			
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
@@ -96,6 +97,11 @@ public class ChunkListener implements Listener {
 		int y_low = y; int y_high = y+1;
 		
 		if (chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
+			if (!foundExitPortal && chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
+				if (chunk.getX() == 0 && chunk.getZ() == 0) y_low = Utilities.getExitFloor(chunk);
+				if (y_low != -1) ChunkListener.foundExitPortal = true;
+			}
+
 			if (dragon == null || !dragon.hasBeenPreviouslyKilled()) {
 
 				Utilities.notifyOps(new TextComponent("Cannot repair portal; dragon has never been killed!"));

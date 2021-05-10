@@ -252,15 +252,14 @@ public class Utilities {
 		int y = 257;
 		while (y > 1) {
 
-			Material topBlock = new Location(chunk.getWorld(), 1, y, 1).getBlock().getType();
-			Material bottomBlock = new Location(chunk.getWorld(), 1, y-1, 1).getBlock().getType();
+			Material topBlock = chunk.getWorld().getBlockAt(1, y, 1).getType();
+			Material bottomBlock = chunk.getWorld().getBlockAt(1, y-1, 1).getType();
 
 			if (topBlock.equals(Material.AIR) || bottomBlock.equals(Material.AIR)) {
 				y--; continue;
 			} else if (topBlock.equals(Material.BEDROCK) && !bottomBlock.equals(Material.BEDROCK)) {
 				return y;
-			}
-			y--;
+			} else {y--; continue;}
 		}
 		return -1;
 	}

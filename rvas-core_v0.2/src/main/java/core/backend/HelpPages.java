@@ -40,6 +40,7 @@ public class HelpPages {
 	public static boolean helpStats(Player receiver) {
 		
 		TextComponent head = new TextComponent("--- /stats help ---");
+		head.setColor(ChatColor.BLUE);
 		
 		TextComponent self_a = new TextComponent("/stats");
 		TextComponent players_a = new TextComponent("/stats [player name]");

@@ -25,6 +25,8 @@ package core.commands;
 import core.backend.Utilities;
 import core.events.ChunkListener;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -35,7 +37,7 @@ import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 public class Repair implements CommandExecutor {
-	public static int y_default = 63;
+	public static int y_default = 62;
 	public static int y_low;
 
 	@Override
@@ -46,8 +48,14 @@ public class Repair implements CommandExecutor {
 		
 		if (!player.isOp()) return false;
 
-		y_low = Utilities.getExitFloor(chunk);
-		if (y_low == -1) y_low = y_default;
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			if (!ChunkListener.foundExitPortal && thisWorld.getEnvironment().equals(World.Environment.THE_END)) {
+
+				y_low = Utilities.getExitFloor(thisWorld.getChunkAt(0, 0));
+				if (y_low == -1) y_low = y_default;
+				else ChunkListener.foundExitPortal = true;
+			}
+		}
 
 		if (args.length != 0) {
 			
@@ -59,6 +67,10 @@ public class Repair implements CommandExecutor {
 					return true;
 					
 				case "exit":// - Fix entire end exit portal when sender is in The End
+					if (args.length == 2) {
+						ChunkListener.y_low = Integer.parseInt(args[1]);
+						System.out.println("Set y_low to " + ChunkListener.y_low);
+					}
 
 					Chunk pos_pos = player.getWorld().getChunkAt(0, 0);
 					Chunk pos_neg = player.getWorld().getChunkAt(0, -1);

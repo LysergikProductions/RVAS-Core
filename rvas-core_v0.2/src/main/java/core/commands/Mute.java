@@ -101,5 +101,4 @@ public class Mute implements CommandExecutor {
 		}
 		return true;
 	}
-
 }
