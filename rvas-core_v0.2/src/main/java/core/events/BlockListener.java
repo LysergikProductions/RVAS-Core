@@ -30,6 +30,7 @@ import core.backend.PlayerMeta;
 import java.util.*;
 import java.text.DecimalFormat;
 
+import core.commands.Repair;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -143,7 +144,7 @@ public class BlockListener implements Listener {
 				
 				// protect exit portal in the end
 				} else if (dimension.equals(Environment.THE_END) &&
-						y == ChunkListener.y_low || y == ChunkListener.y_low+1) {
+						y == Repair.y_low || y == Repair.y_low+1) {
 					
 					if (x < 4 && x > -4) {
 						if (z < 4 && z > -4) {
@@ -165,7 +166,7 @@ public class BlockListener implements Listener {
 			} else if (blockType.equals(Material.END_PORTAL)) {
 				
 				if (dimension.equals(Environment.THE_END) &&
-						y == ChunkListener.y_low || y == ChunkListener.y_low+1) {
+						y == Repair.y_low || y == Repair.y_low+1) {
 					
 					if (x < 4 && x > -4) {
 						if (z < 4 && z > -4) {

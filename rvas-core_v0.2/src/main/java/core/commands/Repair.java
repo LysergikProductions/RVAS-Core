@@ -49,10 +49,10 @@ public class Repair implements CommandExecutor {
 		if (!player.isOp()) return false;
 
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
-			if (!ChunkListener.foundExitPortal && thisWorld.getEnvironment().equals(World.Environment.THE_END)) {
+			if (thisWorld.getEnvironment().equals(World.Environment.THE_END)) {
 
 				y_low = Utilities.getExitFloor(thisWorld.getChunkAt(0, 0));
-				if (y_low == -1) y_low = y_default;
+				if (y_low < 2) y_low = y_default;
 				else ChunkListener.foundExitPortal = true;
 			}
 		}
@@ -68,8 +68,8 @@ public class Repair implements CommandExecutor {
 					
 				case "exit":// - Fix entire end exit portal when sender is in The End
 					if (args.length == 2) {
-						ChunkListener.y_low = Integer.parseInt(args[1]);
-						System.out.println("Set y_low to " + ChunkListener.y_low);
+						y_low = Integer.parseInt(args[1]);
+						System.out.println("Set y_low to " + y_low);
 					}
 
 					Chunk pos_pos = player.getWorld().getChunkAt(0, 0);
