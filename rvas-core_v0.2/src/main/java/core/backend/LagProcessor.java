@@ -2,6 +2,7 @@ package core.backend;
 
 /* Calculate the exponentially weighted moving average of TPS */
 public class LagProcessor implements Runnable {
+
 	public static long LAST_TICK_TS = -1;
 	public static double AVERAGE_TICK = 50.0; // 20 TPS = 50 ms tick len
 	public static double ALPHA = 0.01; // TODO make this a config option

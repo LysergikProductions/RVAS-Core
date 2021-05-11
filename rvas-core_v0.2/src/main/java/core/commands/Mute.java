@@ -8,15 +8,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class Mute implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		String name;
 
-		if(sender instanceof Player) { name = ((Player)sender).getName(); }
-		else { name = "CONSOLE"; }
+		if (sender instanceof Player) name = sender.getName();
+		else name = "CONSOLE";
 
 		if (!PlayerMeta.isOp(sender)) {
 			sender.sendMessage("§cYou can't use this.");

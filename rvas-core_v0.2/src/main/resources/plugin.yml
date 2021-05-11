@@ -57,3 +57,5 @@ commands:
    desription: backup RVAS-core managed data
   info:
    desription: get useful information for ops
+  global:
+    description: do novel global events for all players

@@ -1,10 +1,8 @@
 package core.tasks;
 
-import core.backend.LagProcessor;
 import core.backend.Scheduler;
 import core.backend.Config;
 
-import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.TimerTask;
 
@@ -16,6 +14,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
+@SuppressWarnings("deprecation")
 public class AutoAnnouncer extends TimerTask {
 	
 	private Random r = new Random();

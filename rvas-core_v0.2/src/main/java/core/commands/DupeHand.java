@@ -1,27 +1,31 @@
 package core.commands;
 
+import core.backend.Config;
+import core.backend.PlayerMeta;
+
 import java.util.*;
 import java.util.stream.IntStream;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import core.backend.Config;
-import core.backend.PlayerMeta;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
 // INTERNAL USE ONLY
 
+@SuppressWarnings("deprecation")
 public class DupeHand implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		Player player;
 
 		try {
@@ -48,7 +52,7 @@ public class DupeHand implements CommandExecutor {
 			int rewardMultiplier = Integer.parseInt(Config.getValue("vote.multiplier"));
 			ItemStack itemInHand = target.getInventory().getItemInMainHand();
 			if (Config.getValue("vote.heal").equals("true")) {
-				target.setHealth(target.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				target.setHealth(Objects.requireNonNull(target.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
 			}
 			IntStream.range(0, rewardMultiplier).mapToObj(x -> itemInHand).forEach(modItemInHand -> {
 				if (modItemInHand.getItemMeta() != null) {

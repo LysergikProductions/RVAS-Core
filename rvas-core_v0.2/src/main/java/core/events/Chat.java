@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("deprecation")
 public class Chat implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
@@ -252,6 +253,6 @@ public class Chat implements Listener {
 	}
 
 	private boolean isBlank(String check) {
-		return check == null || check.isEmpty() || check.length() == 0 || check.trim().isEmpty();
+		return check == null || check.isEmpty() || check.trim().isEmpty();
 	}
 }

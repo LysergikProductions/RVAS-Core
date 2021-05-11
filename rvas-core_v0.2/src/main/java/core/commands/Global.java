@@ -29,11 +29,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class Global implements CommandExecutor {
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		
 		// check args
 		if (args.length != 0) {
@@ -48,10 +49,10 @@ public class Global implements CommandExecutor {
 							
 							Location player_loc = p.getLocation();
 							
-							player_loc.setX(player_loc.getX()+8.00);
-							player_loc.setZ(player_loc.getZ()+8.00);
+							player_loc.setX(player_loc.getX()+7.10+i);
+							player_loc.setZ(player_loc.getZ()+7.10-i);
 							
-							p.getWorld().strikeLightning(player_loc);
+							p.getWorld().spigot().strikeLightning(player_loc, false);
 						}
 					}	
 					return true;

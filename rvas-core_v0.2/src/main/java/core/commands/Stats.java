@@ -6,22 +6,25 @@ import core.objects.*;
 import core.tasks.Analytics;
 
 import java.util.*;
-import net.md_5.bungee.api.chat.TextComponent;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
+
+@SuppressWarnings("deprecation")
 public class Stats implements CommandExecutor {
 	
 	public static int sessionUses = 0;
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		sessionUses++;
 		
 		Player player = (Player) sender;
@@ -132,7 +135,7 @@ public class Stats implements CommandExecutor {
 			// user has submitted a probable username argument
 			OfflinePlayer offline_player = Bukkit.getOfflinePlayer(args[0]);
 			
-			if (offline_player == null || !offline_player.hasPlayedBefore()) {
+			if (!offline_player.hasPlayedBefore()) {
 				
 				player.spigot().sendMessage(new TextComponent("This player has never joined."));
 				return true;

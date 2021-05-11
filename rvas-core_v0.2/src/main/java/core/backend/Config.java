@@ -2,6 +2,8 @@ package core.backend;
 
 import core.commands.Prison;
 import core.events.BlockListener;
+import core.events.ChunkListener;
+import core.events.Connection;
 import core.events.SpawnController;
 import core.tasks.Analytics;
 import core.tasks.LagManager;
@@ -39,13 +41,14 @@ public class Config {
 		});
 		
 		if (BlockListener.updateConfigs() && verbose) System.out.println("BlockListener sConfigs Updated!");
-		if (BlockListener.updateConfigs() && verbose) System.out.println("ChunkListener sConfigs Updated!");
+		if (ChunkListener.updateConfigs() && verbose) System.out.println("ChunkListener sConfigs Updated!");
 		if (Analytics.updateConfigs() && verbose) System.out.println("Analytics sConfigs Updated!");
 		if (LagManager.updateConfigs() && verbose) System.out.println("LagManager sConfigs Updated!");
 		if (Prison.updateConfigs() && verbose) System.out.println("Prison sConfigs Updated!");
 		if (NoGhost.updateConfigs() && verbose) System.out.println("NoGhost sConfigs Updated!");
 		if (OnTick.updateConfigs() && verbose) System.out.println("OnTick sConfigs Updated!");
 		if (SpawnController.updateConfigs() && verbose) System.out.println("SpawnController sConfigs Updated!");
+		if (Connection.updateConfigs() && verbose) System.out.println("MOTDs Updated!");
 
 		System.out.println("Configs updated!");
 	}

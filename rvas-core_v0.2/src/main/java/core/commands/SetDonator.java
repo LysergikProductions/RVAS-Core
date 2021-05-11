@@ -1,18 +1,22 @@
 package core.commands;
 
+import core.backend.PlayerMeta;
+
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import core.backend.PlayerMeta;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class SetDonator implements CommandExecutor {
 
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
 			sender.spigot().sendMessage(new TextComponent("§cYou can't run this."));
 			return true;

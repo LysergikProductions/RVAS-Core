@@ -29,18 +29,21 @@ import core.events.ChunkListener;
 import core.events.BlockListener;
 import core.events.SpawnController;
 
+import org.bukkit.entity.Player;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
+import org.jetbrains.annotations.NotNull;
+
+@SuppressWarnings("deprecation")
 public class Info implements CommandExecutor {
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;

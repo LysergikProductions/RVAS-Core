@@ -23,21 +23,22 @@ package core.commands;
  * */
 
 import core.events.Chat;
+import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
-import org.bukkit.entity.Player;
-
+@SuppressWarnings("deprecation")
 public class SlowChat implements CommandExecutor {
 	
 	static String msg;
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;

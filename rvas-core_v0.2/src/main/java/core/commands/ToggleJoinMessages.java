@@ -26,18 +26,21 @@ import core.backend.PlayerMeta;
 import core.objects.PlayerSettings;
 import core.tasks.Analytics;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.Bukkit;
 
-import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
+
+@SuppressWarnings("deprecation")
 public class ToggleJoinMessages implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		Player player = (Player) sender;
 		if (!PlayerMeta.isAdmin(player)) Analytics.tjm_cmd++;
 		

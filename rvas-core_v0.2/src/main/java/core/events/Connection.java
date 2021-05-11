@@ -158,15 +158,14 @@ public class Connection implements Listener {
 	}
 
 	private final String[] motds = {
-		"i'm not high, we're high" , "RIP boiling water, you will be mist" , "vanilla exploits rejoice!" , "needs more carpet" ,
-		"imagine imagining..", "now with less fat!"
+		"⛏ i'm not high, we're high"  , "⛏ vanilla exploits rejoice!" , "⛏ needs more carpet" ,
+		"⛏ imagine imagining..", "⛏ now with less fat!", "⛏ what is sleep?"
 	};
 
 	private Random r = new Random();
-
 	private List<String> allMotds = new ArrayList<>();
 
-	private boolean done = false;
+	public static boolean done = false;
 
 	@EventHandler
 	public void onPing(ServerListPingEvent e) {
@@ -201,5 +200,18 @@ public class Connection implements Listener {
 			}
 		}
 		e.setMaxPlayers(13);
+	}
+
+	public static boolean updateConfigs() {
+
+		try {
+			done = false;
+
+			return true;
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return false;
+		}
 	}
 }

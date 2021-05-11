@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+@SuppressWarnings("deprecation")
 public class Move implements Listener {
 
 	public static HashMap<UUID, Chunk> lastChunks = new HashMap<>();

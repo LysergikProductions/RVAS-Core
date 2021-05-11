@@ -15,22 +15,26 @@ import core.events.Chat;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
+import org.jetbrains.annotations.NotNull;
+
+@SuppressWarnings("deprecation")
 public class Server implements CommandExecutor {
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		
 		if (!PlayerMeta.isAdmin((Player)sender)) Analytics.server_cmd++;
 		

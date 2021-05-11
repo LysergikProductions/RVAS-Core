@@ -5,19 +5,19 @@ import core.backend.PlayerMeta;
 import core.backend.PlayerMeta.MuteType;
 import core.tasks.Analytics;
 
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.*;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class VoteMute implements CommandExecutor {
 	
 	static HashMap<UUID, Integer> _votes = new HashMap<>();
@@ -27,7 +27,7 @@ public class VoteMute implements CommandExecutor {
 	public static int cooldown = 0;
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		
 		if (args.length != 1) {
 			sender.spigot().sendMessage(new TextComponent("§cInvalid syntax. Syntax: /vm [player]"));
@@ -120,7 +120,7 @@ public class VoteMute implements CommandExecutor {
 		}
 
 		// Load previous IP votes
-		if (_voterIps.containsKey(voter.getAddress().toString())) {
+		if (_voterIps.containsKey(Objects.requireNonNull(voter.getAddress()).toString())) {
 			previousIpVotes = _voterIps.get(voter.getAddress().toString());
 			if (previousIpVotes.contains(toMute.getUniqueId())) {
 				int votes = _votes.get(toMute.getUniqueId());

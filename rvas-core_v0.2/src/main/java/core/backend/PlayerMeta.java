@@ -1,7 +1,6 @@
 package core.backend;
 
 import core.events.Chat;
-
 import core.objects.PlayerSettings;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -13,9 +12,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 public class PlayerMeta {
 
@@ -34,8 +33,7 @@ public class PlayerMeta {
 	public static boolean MuteAll = false;
 
 	// GET/SET DONATOR STATUS \\
-	public static boolean isDonator(Player p)
-	{
+	public static boolean isDonator(Player p) {
 		return _donatorList.contains(p.getUniqueId());
 	}
 
@@ -172,7 +170,7 @@ public class PlayerMeta {
 	public static boolean isPrisoner(Player p) {
 
 		return _prisonerList.containsKey(p.getUniqueId()) ||
-				_prisonerList.containsValue(p.getAddress().toString().split(":")[0]);
+				_prisonerList.containsValue(Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
 	}
 
 	public static void savePrisoners() throws IOException {
@@ -320,6 +318,6 @@ public class PlayerMeta {
 	}
 	
 	public static String getIp(Player p) {
-		return p.getAddress().toString().split(":")[0].replace("/", "");
+		return Objects.requireNonNull(p.getAddress()).toString().split(":")[0].replace("/", "");
 	}
 }

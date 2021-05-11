@@ -42,6 +42,7 @@ import org.bukkit.Material;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("deprecation")
 public class ChunkListener implements Listener {
 	
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
@@ -104,7 +105,7 @@ public class ChunkListener implements Listener {
 	public static void fixEndExit(Chunk chunk, int y) { // <- intentionally ignores central pillar
 		DragonBattle dragon = chunk.getWorld().getEnderDragonBattle();
 
-		int y_low = y; int y_high = y_low+1;
+		int y_high = y+1;
 		
 		if (chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
 			if (dragon == null || !dragon.hasBeenPreviouslyKilled()) {
@@ -122,9 +123,9 @@ public class ChunkListener implements Listener {
 
 				chunk.setForceLoaded(false);
 
-				chunk.getBlock(15, y_low, 15).setType(br);
-				chunk.getBlock(15, y_low, 14).setType(br);
-				chunk.getBlock(14, y_low, 15).setType(br);
+				chunk.getBlock(15, y, 15).setType(br);
+				chunk.getBlock(15, y, 14).setType(br);
+				chunk.getBlock(14, y, 15).setType(br);
 
 				chunk.getBlock(15, y_high, 15).setType(portal);
 				chunk.getBlock(15, y_high, 14).setType(portal);
@@ -141,11 +142,11 @@ public class ChunkListener implements Listener {
 
 				chunk.setForceLoaded(false);
 
-				chunk.getBlock(15, y_low, 0).setType(br);
-				chunk.getBlock(14, y_low, 0).setType(br);
-				chunk.getBlock(15, y_low, 1).setType(br);
-				chunk.getBlock(14, y_low, 1).setType(br);
-				chunk.getBlock(15, y_low, 2).setType(br);
+				chunk.getBlock(15, y, 0).setType(br);
+				chunk.getBlock(14, y, 0).setType(br);
+				chunk.getBlock(15, y, 1).setType(br);
+				chunk.getBlock(14, y, 1).setType(br);
+				chunk.getBlock(15, y, 2).setType(br);
 
 				chunk.getBlock(15, y_high, 0).setType(portal);
 				chunk.getBlock(14, y_high, 0).setType(portal);
@@ -166,11 +167,11 @@ public class ChunkListener implements Listener {
 
 				chunk.setForceLoaded(false);
 
-				chunk.getBlock(0, y_low, 15).setType(br);
-				chunk.getBlock(1, y_low, 15).setType(br);
-				chunk.getBlock(2, y_low, 15).setType(br);
-				chunk.getBlock(0, y_low, 14).setType(br);
-				chunk.getBlock(1, y_low, 14).setType(br);
+				chunk.getBlock(0, y, 15).setType(br);
+				chunk.getBlock(1, y, 15).setType(br);
+				chunk.getBlock(2, y, 15).setType(br);
+				chunk.getBlock(0, y, 14).setType(br);
+				chunk.getBlock(1, y, 14).setType(br);
 
 				chunk.getBlock(0, y_high, 15).setType(portal);
 				chunk.getBlock(1, y_high, 15).setType(portal);
@@ -191,16 +192,16 @@ public class ChunkListener implements Listener {
 
 				chunk.setForceLoaded(false);
 
-				chunk.getBlock(0, y_low, 0).setType(br);
-				chunk.getBlock(0, y_low, 1).setType(br);
-				chunk.getBlock(0, y_low, 2).setType(br);
+				chunk.getBlock(0, y, 0).setType(br);
+				chunk.getBlock(0, y, 1).setType(br);
+				chunk.getBlock(0, y, 2).setType(br);
 
-				chunk.getBlock(1, y_low, 0).setType(br);
-				chunk.getBlock(1, y_low, 1).setType(br);
-				chunk.getBlock(1, y_low, 2).setType(br);
+				chunk.getBlock(1, y, 0).setType(br);
+				chunk.getBlock(1, y, 1).setType(br);
+				chunk.getBlock(1, y, 2).setType(br);
 
-				chunk.getBlock(2, y_low, 0).setType(br);
-				chunk.getBlock(2, y_low, 1).setType(br);
+				chunk.getBlock(2, y, 0).setType(br);
+				chunk.getBlock(2, y, 1).setType(br);
 
 				chunk.getBlock(0, y_high, 0).setType(br);
 				chunk.getBlock(0, y_high, 1).setType(portal);

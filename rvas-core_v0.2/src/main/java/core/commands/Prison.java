@@ -2,25 +2,24 @@ package core.commands;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
-import core.events.SpawnController;
-import net.md_5.bungee.api.chat.TextComponent;
+//import core.events.SpawnController;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
+
+import org.bukkit.Bukkit;
+//import org.bukkit.GameMode;
+//import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
-// Toggle players being prisoners
+@SuppressWarnings("deprecation") // Toggle players being prisoners
 public class Prison implements CommandExecutor {
 
 	//HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
@@ -29,7 +28,7 @@ public class Prison implements CommandExecutor {
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		Player player = (Player) sender;
 		
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
@@ -122,10 +121,15 @@ public class Prison implements CommandExecutor {
 
 		if (PlayerMeta.isPrisoner(thisPlayer)) {
 			
-			Arrays.asList("§6" + thisPlayer.getName() + " was caught lagging the server!", "§6IP: " + thisPlayer.getAddress().toString().split(":")[0].replace("/", ""),
+			Arrays.asList(
+
+					"§6" + thisPlayer.getName() + " was caught lagging the server!", "§6IP: " +
+							Objects.requireNonNull(thisPlayer.getAddress()).toString().split(":")[0].replace("/", ""),
 					"§6COORDS: " + Math.round(thisPlayer.getLocation().getX()) + ", "
 					+ Math.round(thisPlayer.getLocation().getY()) + ", "
-					+ Math.round(thisPlayer.getLocation().getZ())).forEach(s -> Bukkit.getServer().spigot().broadcast(new TextComponent(s)));
+					+ Math.round(thisPlayer.getLocation().getZ())
+
+			).forEach(s -> Bukkit.getServer().spigot().broadcast(new TextComponent(s)));
 
 			thisPlayer.getEnderChest().clear();
 			thisPlayer.setHealth(0);

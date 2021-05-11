@@ -16,10 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class DiscordBot implements Listener {
@@ -49,9 +46,8 @@ public class DiscordBot implements Listener {
 			//called on all "Guild" (discord servers) when they are "created" (on startup, or when the bot is added)
 			client.getEventDispatcher().on(GuildCreateEvent.class).subscribe(event -> {
 				//get all channels with name "server-info"
-				event.getGuild().getChannels().filter(e -> e.getName().equals("server-chat")).subscribe((c) -> {
-					chatChannels.add(c.getRestChannel());
-				});
+				event.getGuild().getChannels().filter(e -> e.getName().equals("server-chat"))
+						.subscribe((c) -> chatChannels.add(c.getRestChannel()));
 			});
 
 			//!tps command
@@ -114,13 +110,15 @@ public class DiscordBot implements Listener {
 			<bot> : Hi there!
 	 */
 	private static void addCommand(GatewayDiscordClient c, String name, Consumer<MessageCreateEvent> cons) {
-		c.getEventDispatcher().on(MessageCreateEvent.class).filter((e) -> e.getMessage().getContent().startsWith(name)).subscribe(cons);
+		c.getEventDispatcher().on(MessageCreateEvent.class).filter((e) -> e.getMessage()
+				.getContent().startsWith(name)).subscribe(cons);
 	}
 
 	private ArrayList<String> loadFacts() {
 		ArrayList<String> fact = new ArrayList<>();
 
-		Scanner scanner = new Scanner(DiscordBot.class.getClassLoader().getResourceAsStream("facts.txt"));
+		Scanner scanner = new Scanner(
+				Objects.requireNonNull(DiscordBot.class.getClassLoader().getResourceAsStream("facts.txt")));
 
 		scanner.forEachRemaining(fact_line -> {
 			if (!fact_line.trim().isEmpty())
@@ -132,6 +130,7 @@ public class DiscordBot implements Listener {
 
 	//handle chat messages to send them to discord
 	//priority is "monitor" : should be ran LAST, so that muted messages won't get to discord
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onChat(AsyncPlayerChatEvent e) {
 		for (RestChannel c : chatChannels) {

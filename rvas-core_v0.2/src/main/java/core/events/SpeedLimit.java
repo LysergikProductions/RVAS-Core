@@ -35,7 +35,7 @@ public class SpeedLimit implements Listener
 
 	public static int totalKicks = 0;
 
-	// Speed Monitor
+	@SuppressWarnings("deprecation") // Speed Monitor
 	public static void scheduleSlTask() {
 		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, () -> {

@@ -25,8 +25,6 @@ package core.backend;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import core.Main;
-import core.backend.Config;
-import core.backend.PlayerMeta;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
@@ -35,19 +33,11 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
-import core.tasks.OnTick;
-import net.md_5.bungee.api.chat.TextComponent;
-
-import org.bukkit.FluidCollisionMode;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
 
 public class NoGhost implements Listener {
 	

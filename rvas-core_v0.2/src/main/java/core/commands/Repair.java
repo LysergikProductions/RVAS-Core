@@ -27,21 +27,23 @@ import core.events.ChunkListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.Chunk;
+import org.bukkit.entity.Player;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
-import org.bukkit.Chunk;
-import org.bukkit.entity.Player;
-
+@SuppressWarnings("deprecation")
 public class Repair implements CommandExecutor {
 	public static int y_default = 62;
 	public static int y_low;
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		
 		Player player = (Player) sender;
 		Chunk chunk = player.getLocation().getChunk();

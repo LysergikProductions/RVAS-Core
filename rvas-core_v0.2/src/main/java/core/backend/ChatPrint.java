@@ -41,10 +41,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 
+@SuppressWarnings("deprecation")
 public class ChatPrint {
 	
 	// - PLAYER STATS PAGES - \\
-	
+
 	public static boolean printMcStats(Player receiver, OfflinePlayer target) {
 		
 		receiver.spigot().sendMessage(new TextComponent(""));
@@ -140,15 +141,7 @@ public class ChatPrint {
 	public static boolean printStats(Player receiver, OfflinePlayer target) {
 
 		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
-		
-		if (targetSettings == null) {			
-			
-			PlayerSettings newSettings = PlayerMeta.getNewSettings(target);
-			PlayerMeta.sPlayerSettings.put(target.getUniqueId(), newSettings);
-			
-			targetSettings = newSettings;		
-		}
-		
+
 		Date date = new Date(target.getFirstPlayed());
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");		
 		String firstPlayed = sdf.format(date);

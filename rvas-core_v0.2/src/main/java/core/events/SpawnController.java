@@ -164,11 +164,11 @@ public class SpawnController implements Listener {
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
 				Block spawnBlock = thisLocation.getBlock();
 
-				if (forceShallow && spawnBlock.equals(Material.WATER) || spawnBlock.equals(Material.LAVA)) {
+				if (forceShallow && spawnBlock.getType().equals(Material.WATER) || spawnBlock.getType().equals(Material.LAVA)) {
 					Block nextBlockDown = spawnBlock.getWorld().getBlockAt(spawnBlock.getX(), spawnBlock.getY()-1, spawnBlock.getZ());
 
-					while (nextBlockDown.equals(Material.WATER) || nextBlockDown.equals(Material.LAVA) ||
-							nextBlockDown.equals(Material.KELP) || nextBlockDown.equals(Material.KELP_PLANT)) {
+					while (nextBlockDown.getType().equals(Material.WATER) || nextBlockDown.getType().equals(Material.LAVA) ||
+							nextBlockDown.getType().equals(Material.KELP) || nextBlockDown.getType().equals(Material.KELP_PLANT)) {
 
 						thisLocation = getRandomSpawn(thisWorld, thisLocation);
 						spawnBlock = thisLocation.getBlock();
@@ -195,8 +195,9 @@ public class SpawnController implements Listener {
 		}
 		System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core");
 	}
-	
-	@EventHandler // Brand-new players spawn randomly, according to configs
+
+	@EventHandler
+	@SuppressWarnings("deprecation")
 	public void onJoin(PlayerJoinEvent event) {
 		if (debug) System.out.println("PlayerJoinEvent triggered.");
 		
@@ -258,10 +259,10 @@ public class SpawnController implements Listener {
 			debug = Boolean.parseBoolean(Config.getValue("debug"));
 			forceShallow = Boolean.parseBoolean(Config.getValue("spawn.force.shallow"));
 
-			Double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
-			Double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
-			Double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
-			Double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+			config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
+			config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
+			config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
+			config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
 
 			return true;
 

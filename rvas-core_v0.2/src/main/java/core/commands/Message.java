@@ -7,20 +7,23 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
+
+@SuppressWarnings("deprecation")
 public class Message implements CommandExecutor {
 
 	public static HashMap<UUID, UUID> Replies = new HashMap();
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		
 		if (args.length < 2) {
 			sender.spigot().sendMessage(new TextComponent("§cIncorrect syntax. Syntax: /msg [player] [message]"));
@@ -35,8 +38,8 @@ public class Message implements CommandExecutor {
 		} else {
 			sendName = "Console";
 		}
-		
-		if (!PlayerMeta.isAdmin((Player)sender)) Analytics.msg_cmd++;
+
+		if (sender instanceof Player && !PlayerMeta.isAdmin((Player) sender)) Analytics.msg_cmd++;
 
 		// Get recipient
 		final Player recv = Bukkit.getPlayer(args[0]);
@@ -88,13 +91,16 @@ public class Message implements CommandExecutor {
 		if (!Admin.Spies.contains(recv.getUniqueId())) {
 			recv.spigot().sendMessage(new TextComponent("§dfrom " + sendName + ": " + msg[0]));
 		}
-		if (!Admin.Spies.contains(((Player) sender).getUniqueId())) {
+		if (sender instanceof Player && !Admin.Spies.contains(((Player) sender).getUniqueId())) {
 			sender.spigot().sendMessage(new TextComponent("§dto " + recvName + ": " + msg[0]));
 		}
-		Replies.put(recv.getUniqueId(), ((Player) sender).getUniqueId());
-		Replies.put(((Player) sender).getUniqueId(), recv.getUniqueId());
+		if (sender instanceof Player) {
+			Replies.put(recv.getUniqueId(), ((Player) sender).getUniqueId());
+		}
+		if (sender instanceof Player) {
+			Replies.put(((Player) sender).getUniqueId(), recv.getUniqueId());
+		}
 
 		return true;
 	}
-
 }
