@@ -167,6 +167,9 @@ public class ChatPrint {
 		TextComponent rank_b = new TextComponent("" + PlayerMeta.getRank(target));
 		TextComponent playtime_a = new TextComponent("Time played: ");
 		TextComponent playtime_b = new TextComponent(Utilities.calculateTime(PlayerMeta.getPlaytime(target)));
+
+		double hours = PlayerMeta.getPlaytime(target) / 3600;
+		Text playtime_hover = new Text(new DecimalFormat("0.00").format(hours) + " hours");
 		
 		TextComponent tkills_a = new TextComponent("PVP Kills: ");
 		TextComponent tkills_b = new TextComponent("" + PVPdata.getStats(target).killTotal);
@@ -175,6 +178,7 @@ public class ChatPrint {
 		
 		String spawnKills = String.valueOf(PVPdata.getStats(target).spawnKills);
 		HoverEvent hover_killDetail = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Spawn Kills: " + spawnKills));
+		HoverEvent hover_showHours = new HoverEvent(HoverEvent.Action.SHOW_TEXT, playtime_hover);
 		
 		// style individual components
 		joined_a.setColor(ChatColor.BLUE); joined_a.setBold(true);
@@ -184,6 +188,7 @@ public class ChatPrint {
 		rank_a.setColor(ChatColor.BLUE); rank_a.setBold(true);
 		
 		playtime_a.setColor(ChatColor.BLUE); playtime_a.setBold(true);
+		playtime_b.setHoverEvent(hover_showHours);
 		
 		tkills_a.setColor(ChatColor.BLUE); tkills_a.setBold(true);
 		tkills_b.setHoverEvent(hover_killDetail);

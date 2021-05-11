@@ -122,6 +122,7 @@ public class Stats implements CommandExecutor {
 					return true;
 				
 				case "info":
+				case "settings":
 					
 					ChatPrint.printPlayerSettings(player);
 					if (!PlayerMeta.isAdmin(player)) Analytics.stats_info++;
