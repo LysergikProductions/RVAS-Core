@@ -64,10 +64,6 @@ public class OpListener implements Listener {
 
 	public static boolean isSauceInitialized = false;
 
-	public static String armor_a; public static String armor_b;
-	public static String totems_armor1; public static String totems_armor2;
-	public static String feather_32k; public static String totems_shulker;
-
 	// this happens *before* the OP Lock plugin will see the command
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
@@ -125,10 +121,9 @@ public class OpListener implements Listener {
 
 		// 32k commands for testing anti-illegals; owner only
 		} else if (msg.startsWith("/op sauce")) {
-			event.setCancelled(true);
 
+			event.setCancelled(true); // <- cut-off default command processing
 			if (!sender.isOp()) return; // <- fallback security layer
-			if (!isSauceInitialized) Aliases.initSauce();
 
 			if (!msg.contains("=") || msg.endsWith("=")) {
 				sender.spigot().sendMessage(new TextComponent("Syntax: /op sauce=[type]"));
@@ -140,24 +135,24 @@ public class OpListener implements Listener {
 				if (Config.verbose) System.out.println(thisArg);
 
 				if (thisArg.contains("armor")) {
-					sender.chat(armor_a);
-					sender.chat(armor_b);
-					sender.chat(totems_armor1);
-					sender.chat(totems_armor2);
+					sender.chat(Aliases.armor_a);
+					sender.chat(Aliases.armor_b);
+					sender.chat(Aliases.totems_armor1);
+					sender.chat(Aliases.totems_armor2);
 
 				} else if (thisArg.contains("feather")) {
-					sender.chat(feather_32k);
+					sender.chat(Aliases.feather_32k);
 
 				} else if (thisArg.contains("totem")) {
-					sender.chat(totems_shulker);
+					sender.chat(Aliases.totems_shulker);
 
 				} else if (thisArg.contains("all")) {
-					sender.chat(armor_a);
-					sender.chat(armor_b);
-					sender.chat(totems_armor1);
-					sender.chat(totems_armor2);
-					sender.chat(totems_shulker);
-					sender.chat(feather_32k);
+					sender.chat(Aliases.armor_a);
+					sender.chat(Aliases.armor_b);
+					sender.chat(Aliases.totems_armor1);
+					sender.chat(Aliases.totems_armor2);
+					sender.chat(Aliases.totems_shulker);
+					sender.chat(Aliases.feather_32k);
 
 				} else {
 					sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "Invalid Argument: " + thisArg));
