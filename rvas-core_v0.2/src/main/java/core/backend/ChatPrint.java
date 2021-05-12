@@ -65,9 +65,10 @@ public class ChatPrint {
 		receiver.spigot().sendMessage(head);
 		
 		receiver.spigot().sendMessage(new TextComponent("Gaps Eaten: " + gaps_eaten));
+		receiver.spigot().sendMessage(new TextComponent("Mined Ancient Debris: " + mined_ancientDebris));
+
 		receiver.spigot().sendMessage(new TextComponent("Mined Obsidian: " + mined_obi));
 		receiver.spigot().sendMessage(new TextComponent("Placed Obsidian: " + placed_obi));
-		receiver.spigot().sendMessage(new TextComponent("Mined Ancient Debris: " + mined_ancientDebris));
 		
 		return true;
 	}
@@ -77,13 +78,10 @@ public class ChatPrint {
 		HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
 		HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
 		
-		for (UUID u : leaders.keySet()) {
-			realLeaders.put(u, leaders.get(u));
-		}
-		
-		int x = 0;
+		for (UUID u : leaders.keySet()) realLeaders.put(u, leaders.get(u));
 		ArrayList<TextComponent> list = new ArrayList<>();
-		
+
+		int x = 0;
 		for (UUID pid : realLeaders.keySet()) {
 			x++;
 			

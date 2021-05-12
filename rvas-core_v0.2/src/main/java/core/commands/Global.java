@@ -22,6 +22,12 @@ package core.commands;
  * 
  * */
 
+import core.backend.PlayerMeta;
+import core.events.SpawnController;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -32,30 +38,58 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public class Global implements CommandExecutor {
-	
+
+	public static TextComponent dreamMsg = new TextComponent("You wake up, confused.. was that a dream?");
+
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		
+
+		dreamMsg.setColor(ChatColor.GRAY); dreamMsg.setFont("");
+
 		// check args
 		if (args.length != 0) {
 			
 			switch (args[0].toUpperCase()) {
-				case "ZAP":		
+				case "ZAP":
+
 					int i = 0;
-					
 					while (i < 3) { i++;
 						
 						for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 							
 							Location player_loc = p.getLocation();
 							
-							player_loc.setX(player_loc.getX()+7.10+i);
-							player_loc.setZ(player_loc.getZ()+7.10-i);
+							player_loc.setX(player_loc.getX()+7.10+i*2);
+							player_loc.setZ(player_loc.getZ()+7.10-i*2);
 							
 							p.getWorld().spigot().strikeLightning(player_loc, false);
 						}
 					}	
 					return true;
+
+				case "DREAM":
+
+					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+						if (p.isOp() || PlayerMeta.isAdmin(p)) continue;
+
+						String player_name = p.getName();
+						Location playerSpawn = p.getBedSpawnLocation();
+						Location baseLoc = p.getLocation();
+						Location finalTP;
+
+						if (playerSpawn == null) finalTP = SpawnController.getRandomSpawn(p.getWorld(), baseLoc);
+						else finalTP = playerSpawn;
+
+						String x = String.valueOf(finalTP.getBlockX());
+						String y = String.valueOf(finalTP.getBlockY());
+						String z = String.valueOf(finalTP.getBlockZ());
+
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+								"/tp " + player_name + " " + x + " " + y + " " + z);
+
+
+						p.spigot().sendMessage(dreamMsg);
+					}
 			}
 		}
 		return true;

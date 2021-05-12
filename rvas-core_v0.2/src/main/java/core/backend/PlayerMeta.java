@@ -70,25 +70,6 @@ public class PlayerMeta {
 		return false;
 	}
 
-	/* @DEPRECATED
-	public static MuteType getMuteType(Player p){
-		if (isMuted(p)) {
-			if (_temporaryMutes.containsKey(p.getUniqueId())) {
-				
-				return MuteType.TEMPORARY;
-				
-			} else if(_permanentMutes.contains(p.getUniqueId())) {
-				
-				return MuteType.PERMANENT;
-				
-			} else if(_ipMutes.contains(getIp(p))) {
-				
-				return MuteType.IP;
-			}
-		}
-		return MuteType.NONE;
-	}*/
-
 	@SuppressWarnings("deprecation")
 	public static void setMuteType(Player p, MuteType type)
 	{
@@ -174,7 +155,9 @@ public class PlayerMeta {
 	}
 
 	public static void savePrisoners() throws IOException {
-		List<String> list = _prisonerList.keySet().stream().map(u -> u.toString() + ":" + _prisonerList.get(u)).collect(Collectors.toList());
+		List<String> list = _prisonerList.keySet().stream().map(u -> u.toString() + ":" + _prisonerList.get(u))
+				.collect(Collectors.toList());
+
 		Files.write(Paths.get("plugins/core/prisoners.db"), String.join("\n", list).getBytes());
 	}
 
@@ -226,14 +209,14 @@ public class PlayerMeta {
 	}
 
 	// --- PLAYTIME --- \\
-	
-	// tick and store playtime in seconds
 	public static void tickPlaytime(Player p, double msToAdd) {
-		
+		// tick and store playtime in seconds
 		if (Playtimes.containsKey(p.getUniqueId())) {
+
 			double value = Playtimes.get(p.getUniqueId());
 			value += msToAdd / 1000;
 			Playtimes.put(p.getUniqueId(), value);
+
 		} else {
 			Playtimes.put(p.getUniqueId(), msToAdd / 1000);
 		}
@@ -245,12 +228,19 @@ public class PlayerMeta {
 
 	public static int getRank(OfflinePlayer p) {
 		if (getPlaytime(p) == 0) return 0;
-		return Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).map(Map.Entry::getKey).collect(Collectors.toList()).lastIndexOf(p.getUniqueId()) + 1;
+
+		return Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).map(Map.Entry::getKey)
+				.collect(Collectors.toList()).lastIndexOf(p.getUniqueId()) + 1;
 	}
 
 	public static HashMap<UUID, Double> getTopFivePlayers() {
-		return Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(5).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-				LinkedHashMap::new));
+		HashMap<UUID, Double> out;
+
+		out = Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(6)
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+		out.remove(UUID.fromString(Config.getValue("adminid")));
+		return out;
 	}
 
 	public static void writePlaytime() throws IOException {
@@ -267,7 +257,6 @@ public class PlayerMeta {
 	}
 	
 	public static PlayerSettings getSettings(OfflinePlayer p) {
-		
 		PlayerSettings settings = sPlayerSettings.get(p.getUniqueId());
 		
 		if (settings != null && sPlayerSettings.containsKey(p.getUniqueId())) {
@@ -319,5 +308,24 @@ public class PlayerMeta {
 	
 	public static String getIp(Player p) {
 		return Objects.requireNonNull(p.getAddress()).toString().split(":")[0].replace("/", "");
+	}
+
+	@Deprecated
+	public static MuteType getMuteType(Player p){
+		if (isMuted(p)) {
+			if (_temporaryMutes.containsKey(p.getUniqueId())) {
+
+				return MuteType.TEMPORARY;
+
+			} else if(_permanentMutes.contains(p.getUniqueId())) {
+
+				return MuteType.PERMANENT;
+
+			} else if(_ipMutes.contains(getIp(p))) {
+
+				return MuteType.IP;
+			}
+		}
+		return MuteType.NONE;
 	}
 }
