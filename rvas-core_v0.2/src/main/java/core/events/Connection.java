@@ -27,7 +27,7 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Connection implements Listener {
 	
 	public static String serverHostname = "RVAS";
@@ -206,7 +206,6 @@ public class Connection implements Listener {
 
 		try {
 			done = false;
-
 			return true;
 
 		} catch (Exception e) {

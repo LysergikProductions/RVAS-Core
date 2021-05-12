@@ -53,8 +53,6 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("deprecation")
 public class BlockListener implements Listener {
 
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 	static boolean roofProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.roof"));
 	static boolean floorProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.floor"));
 	static boolean modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
@@ -116,7 +114,7 @@ public class BlockListener implements Listener {
 			if (BreakBanned.contains(blockType)) {
 
 				System.out.println("WARN " + breaker_name + " tried to break a protected admin block!");
-				if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
+				if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 
 				event.setCancelled(true);
 				
@@ -127,7 +125,7 @@ public class BlockListener implements Listener {
 				if (y < 1 && floorProt) {
 
 					System.out.println("WARN " + breaker_name + " tried to break a protected floor block!");
-					if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
+					if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 
 					event.setCancelled(true);
 					return;
@@ -137,7 +135,7 @@ public class BlockListener implements Listener {
 						dimension.equals(Environment.NETHER)) {
 
 					System.out.println("WARN " + breaker_name + " tried to break a protected roof block!");
-					if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
+					if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 
 					event.setCancelled(true);
 					return;
@@ -150,7 +148,7 @@ public class BlockListener implements Listener {
 						if (z < 4 && z > -4) {
 							
 							System.out.println("WARN " + breaker_name + " tried to break a protected exit portal block!");
-							if (debug && verbose) Bukkit.spigot().broadcast(cancelPos);
+							if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 
 							event.setCancelled(true);
 							return;
@@ -158,7 +156,7 @@ public class BlockListener implements Listener {
 					}
 				}
 				
-				if (debug && !verbose) Bukkit.spigot().broadcast(
+				if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(
 						new TextComponent(breaker_name + " just broke BEDROCK!"));
 				brokenBedrockCounter++;
 				
@@ -172,7 +170,7 @@ public class BlockListener implements Listener {
 						if (z < 4 && z > -4) {
 							
 							event.setCancelled(true);
-							if (debug && !verbose) Bukkit.spigot().broadcast(cancelPos);
+							if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 						}
 					}
 				}
@@ -188,7 +186,7 @@ public class BlockListener implements Listener {
 	public void onPlace(BlockPlaceEvent event) {
 		
 		long startTime = System.nanoTime();		
-		if (debug) System.out.println("onPlace triggered.." + startTime);
+		if (Config.debug) System.out.println("onPlace triggered.." + startTime);
 		
 		Player placer = event.getPlayer();
 		if (PlayerMeta.isAdmin(placer)) return;
@@ -277,7 +275,7 @@ public class BlockListener implements Listener {
 			if (PlacementBanned.contains(blockType)) {
 				event.setCancelled(true);
 				
-				if (debug) Bukkit.spigot().broadcast(
+				if (Config.debug) Bukkit.spigot().broadcast(
 						new TextComponent(placer_name + "'s BlockPlaceEvent was cancelled."));
 				return;
 			} else if (blockType.equals(Material.BEDROCK)) {
@@ -286,7 +284,7 @@ public class BlockListener implements Listener {
 			}
 		}
 		
-		if (debug && verbose) {
+		if (Config.debug && Config.verbose) {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
 			
@@ -298,8 +296,6 @@ public class BlockListener implements Listener {
 	public static boolean updateConfigs() {
 		
 		try {
-			debug = Boolean.parseBoolean(Config.getValue("debug"));
-			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 			roofProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.roof"));
 			floorProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.floor"));
 			modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));

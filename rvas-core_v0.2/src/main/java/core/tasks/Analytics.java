@@ -101,8 +101,6 @@ public class Analytics extends TimerTask {
 		CSV_cmdHeader = sb2.toString();
 	}
 
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 	public static boolean doAnalytics = Boolean.parseBoolean(Config.getValue("analytics.enabled"));
 	
 	@Override
@@ -174,7 +172,7 @@ public class Analytics extends TimerTask {
 		server_cmd = 0; sign_cmd = 0; stats_total = 0; stats_help = 0;
 		stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0;
 		
-		if (debug && verbose) System.out.println("[core.tasks.analytics] Analytics updated!");
+		if (Config.debug && Config.verbose) System.out.println("[core.tasks.analytics] Analytics updated!");
 		return true;
 	}
 	
@@ -266,8 +264,6 @@ public class Analytics extends TimerTask {
 	public static boolean updateConfigs() {
 
 		try {
-			debug = Boolean.parseBoolean(Config.getValue("debug"));
-			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
 			doAnalytics = Boolean.parseBoolean(Config.getValue("analytics.enabled"));
 
 			return true;

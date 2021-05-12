@@ -1,13 +1,7 @@
 package core.backend;
 
-import core.commands.Prison;
-import core.events.BlockListener;
-import core.events.ChunkListener;
-import core.events.Connection;
-import core.events.SpawnController;
+import core.events.*;
 import core.tasks.Analytics;
-import core.tasks.LagManager;
-import core.tasks.OnTick;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,19 +9,18 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class Config {
-
-	private static HashMap<String, String> _values = new HashMap<>();
-
 	public static int version = 22;
 
+	private static HashMap<String, String> _values = new HashMap<>();
 	public static String getValue(String key)
 	{
 		return _values.getOrDefault(key, "false");
 	}
 
-	public static void load() throws IOException {
-		boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
+	public static boolean debug = Boolean.parseBoolean(getValue("debug"));
+	public static boolean verbose = Boolean.parseBoolean(getValue("verbose"));
 
+	public static void load() throws IOException {
 		Files.readAllLines(Paths.get("plugins/core/config.txt")).stream()
 				.filter(cases -> !cases.startsWith("//"))
 				.filter(cases -> !(cases.length() == 0)).forEach( val -> {
@@ -39,14 +32,14 @@ public class Config {
 				System.out.println(e.getMessage());
 			}
 		});
-		
+
+		debug = Boolean.parseBoolean(getValue("debug"));
+		verbose = Boolean.parseBoolean(getValue("verbose"));
+
+		OpListener.isSauceInitialized = false;
+
 		if (BlockListener.updateConfigs() && verbose) System.out.println("BlockListener sConfigs Updated!");
-		if (ChunkListener.updateConfigs() && verbose) System.out.println("ChunkListener sConfigs Updated!");
 		if (Analytics.updateConfigs() && verbose) System.out.println("Analytics sConfigs Updated!");
-		if (LagManager.updateConfigs() && verbose) System.out.println("LagManager sConfigs Updated!");
-		if (Prison.updateConfigs() && verbose) System.out.println("Prison sConfigs Updated!");
-		if (NoGhost.updateConfigs() && verbose) System.out.println("NoGhost sConfigs Updated!");
-		if (OnTick.updateConfigs() && verbose) System.out.println("OnTick sConfigs Updated!");
 		if (SpawnController.updateConfigs() && verbose) System.out.println("SpawnController sConfigs Updated!");
 		if (Connection.updateConfigs() && verbose) System.out.println("MOTDs Updated!");
 

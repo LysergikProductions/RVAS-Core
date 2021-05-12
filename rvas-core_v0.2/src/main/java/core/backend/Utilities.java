@@ -263,4 +263,32 @@ public class Utilities {
 		}
 		return -1;
 	}
+
+	public static boolean isCmdRestricted (String thisCmd) {
+		if (
+				thisCmd.contains("/op") || thisCmd.contains("/deop") ||
+				thisCmd.contains("/ban") || thisCmd.contains("/attribute") ||
+				thisCmd.contains("/default") || thisCmd.contains("/execute") ||
+				thisCmd.contains("/rl") || thisCmd.contains("/summon") ||
+				thisCmd.contains("/give") || thisCmd.contains("/set") ||
+				thisCmd.contains("/difficulty") || thisCmd.contains("/replace") ||
+				thisCmd.contains("/enchant") || thisCmd.contains("/time") ||
+				thisCmd.contains("/weather") || thisCmd.contains("/schedule") ||
+				thisCmd.contains("/data") || thisCmd.contains("/fill") ||
+				thisCmd.contains("/save") || thisCmd.contains("/loot") ||
+				thisCmd.contains("/experience") || thisCmd.contains("/xp") ||
+				thisCmd.contains("/forceload") || thisCmd.contains("/function") ||
+				thisCmd.contains("/spreadplayers") || thisCmd.contains("/reload") ||
+				thisCmd.contains("/world") || thisCmd.contains("/restart") ||
+				thisCmd.contains("/spigot") || thisCmd.contains("/plugins") ||
+				thisCmd.contains("/protocol") || thisCmd.contains("/packet") ||
+				thisCmd.contains("/whitelist") || thisCmd.contains("/minecraft") ||
+				thisCmd.contains("/dupe") || thisCmd.contains("/score") ||
+				thisCmd.contains("/tell") || thisCmd.contains("/global") ||
+				thisCmd.contains("/gamerule")) {
+
+			return true;
+		}
+		return false;
+	}
 }

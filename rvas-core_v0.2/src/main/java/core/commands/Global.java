@@ -2,7 +2,7 @@ package core.commands;
 
 /* *
  * 
- *  About: Global effects for use on special occasions
+ *  About: Global effects for use on special occasions or during events
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -59,8 +59,8 @@ public class Global implements CommandExecutor {
 							
 							Location player_loc = p.getLocation();
 							
-							player_loc.setX(player_loc.getX()+7.10+i*2);
-							player_loc.setZ(player_loc.getZ()+7.10-i*2);
+							player_loc.setX(player_loc.getX()+7.10+(i*2));
+							player_loc.setZ(player_loc.getZ()+7.10-(i*2));
 							
 							p.getWorld().spigot().strikeLightning(player_loc, false);
 						}

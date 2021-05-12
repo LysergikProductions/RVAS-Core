@@ -46,8 +46,6 @@ import org.bukkit.block.Block;
 
 public class SpawnController implements Listener {
 	
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	
 	static double max_x; static double max_z;
 	static double min_x; static double min_z;
 	
@@ -112,7 +110,7 @@ public class SpawnController implements Listener {
 					// potential valid spawn, check for unwanted spawn surfaces	
 					if (!BannedSpawnFloors.contains(floorBlock.getType())) {
 						
-						if (debug)
+						if (Config.debug)
 							System.out.println("Found valid respawn location on "
 									+ floorBlock.getType() + "!");
 						
@@ -199,7 +197,7 @@ public class SpawnController implements Listener {
 	@EventHandler
 	@SuppressWarnings("deprecation")
 	public void onJoin(PlayerJoinEvent event) {
-		if (debug) System.out.println("PlayerJoinEvent triggered.");
+		if (Config.debug) System.out.println("PlayerJoinEvent triggered.");
 		
 		Analytics.total_joins++;
 		
@@ -256,7 +254,6 @@ public class SpawnController implements Listener {
 	public static boolean updateConfigs() {
 
 		try {
-			debug = Boolean.parseBoolean(Config.getValue("debug"));
 			forceShallow = Boolean.parseBoolean(Config.getValue("spawn.force.shallow"));
 
 			config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));

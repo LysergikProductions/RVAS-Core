@@ -25,8 +25,6 @@ public class Prison implements CommandExecutor {
 	//HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
 	//HashMap<UUID, Boolean> threadProgression = new HashMap<UUID, Boolean>();
 
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		Player player = (Player) sender;
@@ -114,7 +112,7 @@ public class Prison implements CommandExecutor {
 		try {
 			PlayerMeta.togglePrisoner(thisPlayer);
 		} catch (Exception e) {
-			if (debug) e.printStackTrace();
+			if (Config.debug) e.printStackTrace();
 			player.spigot().sendMessage(new TextComponent("Failed to toggle LagPrisoner :/"));
 			return false;
 		}
@@ -135,17 +133,5 @@ public class Prison implements CommandExecutor {
 			thisPlayer.setHealth(0);
 		}
 		return true;
-	}
-
-	public static boolean updateConfigs() {
-
-		try {
-			debug = Boolean.parseBoolean(Config.getValue("debug"));
-			return true;
-
-		} catch (Exception e) {
-			System.out.println(e);
-			return false;
-		}
 	}
 }

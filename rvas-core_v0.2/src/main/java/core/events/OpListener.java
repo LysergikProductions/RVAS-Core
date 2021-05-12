@@ -27,8 +27,11 @@ package core.events;
 import core.backend.PlayerMeta;
 import core.backend.Config;
 import core.backend.Utilities;
+import core.backend.Aliases;
 
 import java.util.*;
+
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
@@ -56,9 +59,15 @@ public class OpListener implements Listener {
 				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
 				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
 				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
-				"/restart", "/worldb", "/gamerule", "/score", "/tell", "/dupe"));
+				"/restart", "/worldb", "/gamerule", "/score", "/tell", "/dupe", "/global"));
 	}
-	
+
+	public static boolean isSauceInitialized = false;
+
+	public static String armor_a; public static String armor_b;
+	public static String totems_armor1; public static String totems_armor2;
+	public static String feather_32k; public static String totems_shulker;
+
 	// this happens *before* the OP Lock plugin will see the command
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
@@ -98,48 +107,10 @@ public class OpListener implements Listener {
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!isAdmin) {
-			if (
-					msg.contains("/op") ||
-					msg.contains("/deop") ||
-					msg.contains("/ban") ||
-					msg.contains("/attribute") ||
-					msg.contains("/default") ||
-					msg.contains("/execute") ||
-					msg.contains("/rl") ||
-					msg.contains("/summon") ||
-					msg.contains("/give") ||
-					msg.contains("/set") ||
-					msg.contains("/difficulty") ||
-					msg.contains("/replace") ||
-					msg.contains("/enchant") ||
-					msg.contains("/time") ||
-					msg.contains("/weather") ||
-					msg.contains("/schedule") ||
-					msg.contains("/data") ||
-					msg.contains("/fill") ||
-					msg.contains("/save") ||
-					msg.contains("/loot") ||
-					msg.contains("/experience") ||
-					msg.contains("/forceload") ||
-					msg.contains("/function") ||
-					msg.contains("/spreadplayers") ||
-					msg.contains("/xp") ||
-					msg.contains("/reload") ||
-					msg.contains("/world") ||
-					msg.contains("/restart") ||
-					msg.contains("/spigot") ||
-					msg.contains("/plugins") ||
-					msg.contains("/protocol") ||
-					msg.contains("/packet") ||
-					msg.contains("/whitelist") ||
-					msg.contains("/minecraft") ||
-					msg.contains("/dupe") ||
-					msg.contains("/score") ||
-					msg.contains("/tell") ||
-					msg.contains("/gamerule")) {
+			if (Utilities.isCmdRestricted(msg)) {
 				
 				event.setCancelled(true);
-				sender.spigot().sendMessage(new TextComponent("no"));
+				sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "no"));
 				
 			} else if (msg.contains("@a")) {
 				
@@ -151,39 +122,51 @@ public class OpListener implements Listener {
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent("You cannot target " + admin_name));
 			}
+
+		// 32k commands for testing anti-illegals; owner only
 		} else if (msg.startsWith("/op sauce")) {
 			event.setCancelled(true);
-			
-			if (sender.isOp()) {
-				
-				sender.chat(
-					"/summon armor_stand ~1 ~2 ~1 {CustomName:\"\\\"Sinse's_32kStackedArmor_a\\\"\",CustomNameVisible:1,ShowArms:1,HandItems:[{id:netherite_chestplate,tag:{Enchantments:[{id:protection,lvl:32767},{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127},{id:netherite_helmet,tag:{Enchantments:[{id:respiration,lvl:3},{id:aqua_affinity,lvl:1},{id:protection,lvl:32767},{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}]}"
-				);
-				
-				sender.chat(
-					"/summon armor_stand ~-1 ~2 ~-1 {CustomName:\"\\\"Sinse's_32kStackedArmor_b\\\"\",CustomNameVisible:1,ShowArms:1,HandItems:[{id:netherite_boots,tag:{Enchantments:[{id:blast_protection,lvl:32767},{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127},{id:netherite_leggings,tag:{Enchantments:[{id:blast_protection,lvl:32767},{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}]}"
-				);
-				
-				sender.chat(
-						"/summon armor_stand ~-1 ~2 ~1 {CustomName:\"StackedTotems\",CustomNameVisible:1,ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}"
-					);
-				
-				sender.chat(
-						"/summon armor_stand ~1 ~2 ~-1 {CustomName:\"StackedTotems\",CustomNameVisible:1,ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}"
-					);
-				
-				sender.chat(
-						"/give @s feather{Enchantments:[{id:sharpness,lvl:32767},{id:knockback,lvl:32767},{id:fire_aspect,lvl:32767},{id:looting,lvl:10},{id:sweeping,lvl:3},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]} 128"
-					);
-				
-				sender.chat(
-					"/give @s black_shulker_box{BlockEntityTag:{Items:[{Slot:0,id:totem_of_undying,Count:127},{Slot:1,id:totem_of_undying,Count:127},{Slot:2,id:totem_of_undying,Count:127},{Slot:3,id:totem_of_undying,Count:127},{Slot:4,id:totem_of_undying,Count:127},{Slot:5,id:totem_of_undying,Count:127},{Slot:6,id:totem_of_undying,Count:127},{Slot:7,id:totem_of_undying,Count:127},{Slot:8,id:totem_of_undying,Count:127},{Slot:9,id:totem_of_undying,Count:127},{Slot:10,id:totem_of_undying,Count:127},{Slot:11,id:totem_of_undying,Count:127},{Slot:12,id:totem_of_undying,Count:127},{Slot:13,id:totem_of_undying,Count:127},{Slot:14,id:totem_of_undying,Count:127},{Slot:15,id:totem_of_undying,Count:127},{Slot:16,id:totem_of_undying,Count:127},{Slot:17,id:totem_of_undying,Count:127},{Slot:18,id:totem_of_undying,Count:127},{Slot:19,id:totem_of_undying,Count:127},{Slot:20,id:totem_of_undying,Count:127},{Slot:21,id:totem_of_undying,Count:127},{Slot:22,id:totem_of_undying,Count:127},{Slot:23,id:totem_of_undying,Count:127},{Slot:24,id:totem_of_undying,Count:127},{Slot:25,id:totem_of_undying,Count:127},{Slot:26,id:totem_of_undying,Count:127}]}}"
-				);
+
+			if (!sender.isOp()) return; // <- fallback security layer
+			if (!isSauceInitialized) Aliases.initSauce();
+
+			if (!msg.contains("=") || msg.endsWith("=")) {
+				sender.spigot().sendMessage(new TextComponent("Syntax: /op sauce=[type]"));
+
+			} else {
+				String[] args = msg.split("=");
+				String thisArg = args[1];
+
+				if (Config.verbose) System.out.println(thisArg);
+
+				if (thisArg.contains("armor")) {
+					sender.chat(armor_a);
+					sender.chat(armor_b);
+					sender.chat(totems_armor1);
+					sender.chat(totems_armor2);
+
+				} else if (thisArg.contains("feather")) {
+					sender.chat(feather_32k);
+
+				} else if (thisArg.contains("totem")) {
+					sender.chat(totems_shulker);
+
+				} else if (thisArg.contains("all")) {
+					sender.chat(armor_a);
+					sender.chat(armor_b);
+					sender.chat(totems_armor1);
+					sender.chat(totems_armor2);
+					sender.chat(totems_shulker);
+					sender.chat(feather_32k);
+
+				} else {
+					sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "Invalid Argument: " + thisArg));
+				}
 			}
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // non-op players cannot be set to a mode besides survival mode
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // non-ops cannot be set to a mode besides survival mode
 	public void onModeChange(PlayerGameModeChangeEvent event) {
 		
 		if (!event.getNewGameMode().equals(GameMode.SURVIVAL) && !event.getPlayer().isOp()) {
@@ -191,7 +174,7 @@ public class OpListener implements Listener {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // only allow owner account to duplicate/get items from creative mode
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // only owner account can dupe/get items from creative mode
 	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
 		if (!Config.getValue("protect.lock.creative").equals("false")) {

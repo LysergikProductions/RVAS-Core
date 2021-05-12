@@ -42,9 +42,6 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 
 public class LagManager implements Listener, Runnable {
 	
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
-	
 	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)
 	@Override
 	public void run() {
@@ -66,7 +63,7 @@ public class LagManager implements Listener, Runnable {
 			
 			Analytics.wither_spawns++;
 			
-			if (debug && verbose) System.out.println("Wither Limit: " + witherLimit);
+			if (Config.debug && Config.verbose) System.out.println("Wither Limit: " + witherLimit);
 			
 			currentWithers = getWithers();
 			
@@ -122,7 +119,7 @@ public class LagManager implements Listener, Runnable {
 			if (skulls_world != 0) {
 				
 				if (skulls_world == 1) skullMsg = "skull"; else skullMsg = "skulls";
-				if (debug) System.out.println(
+				if (Config.debug) System.out.println(
 						"Removed " + skulls_world + " wither " + skullMsg + " from " + thisWorld.getName());
 			}
 			skulls_all += skulls_world;
@@ -135,7 +132,7 @@ public class LagManager implements Listener, Runnable {
 
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			
-			if (debug && verbose) System.out.println("Counting withers in: " + thisWorld.getName());
+			if (Config.debug && Config.verbose) System.out.println("Counting withers in: " + thisWorld.getName());
 			
 			for (Entity e: thisWorld.getEntities()) {
 				if (e instanceof Wither) {
@@ -143,21 +140,7 @@ public class LagManager implements Listener, Runnable {
 				}
 			}
 		}
-		if (debug) System.out.println("Counted Withers: " + counter);
+		if (Config.debug) System.out.println("Counted Withers: " + counter);
 		return counter;
-	}
-
-	public static boolean updateConfigs() {
-
-		try {
-			debug = Boolean.parseBoolean(Config.getValue("debug"));
-			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
-
-			return true;
-
-		} catch (Exception e) {
-			System.out.println(e);
-			return false;
-		}
 	}
 }

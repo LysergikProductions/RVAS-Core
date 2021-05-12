@@ -41,9 +41,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class NoGhost implements Listener {
 	
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
-	
 	public static void C2S_UsePackets() {
 		// capture use packets (right-click without placing any blocks)
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
@@ -105,19 +102,5 @@ public class NoGhost implements Listener {
 				);*/
 			}
 		});
-	}
-
-	public static boolean updateConfigs() {
-
-		try {
-			debug = Boolean.parseBoolean(Config.getValue("debug"));
-			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
-
-			return true;
-
-		} catch (Exception e) {
-			System.out.println(e);
-			return false;
-		}
 	}
 }

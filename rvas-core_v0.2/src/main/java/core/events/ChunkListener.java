@@ -45,9 +45,6 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("deprecation")
 public class ChunkListener implements Listener {
 	
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
-	
 	static Material br = Material.BEDROCK;
 	static Material portal = Material.END_PORTAL;
 	
@@ -244,7 +241,7 @@ public class ChunkListener implements Listener {
 				i_x++;
 			}
 			
-			if (debug && counter != 0) {
+			if (Config.debug && counter != 0) {
 				System.out.println(counter + " bedrock blocks replaced:");
 				System.out.println("Dimension: " + chunk.getWorld().getEnvironment()
 						+ " | Chunk section coords: " + chunk.getX() + ", " + chunk.getZ());
@@ -278,7 +275,7 @@ public class ChunkListener implements Listener {
 				i_x++;
 			}
 			
-			if (debug && counter != 0) {
+			if (Config.debug && counter != 0) {
 				System.out.println(counter + " bedrock blocks replaced:");
 				System.out.println("Dimension: " + chunk.getWorld().getEnvironment()
 						+ " | Chunk section coords: " + chunk.getX() + ", " + chunk.getZ());
@@ -288,20 +285,6 @@ public class ChunkListener implements Listener {
 					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
 				}
 			}
-		}
-	}
-
-	public static boolean updateConfigs() {
-
-		try {
-			debug = Boolean.parseBoolean(Config.getValue("debug"));
-			verbose = Boolean.parseBoolean(Config.getValue("verbose"));
-
-			return true;
-
-		} catch (Exception e) {
-			System.out.println(e);
-			return false;
 		}
 	}
 }

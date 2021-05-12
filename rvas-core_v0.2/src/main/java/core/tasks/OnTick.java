@@ -14,7 +14,6 @@ import org.bukkit.Material;
 public class OnTick extends TimerTask {
 
 	public static Map<Location, Material> blocksToFix = new HashMap<>();
-	public static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 
 	@Override
 	public void run() {
@@ -24,7 +23,7 @@ public class OnTick extends TimerTask {
 		if (blocksToFix.size() > 64) blocksToFix.clear();
 
 		try {
-			if (fixGhosts() && debug) System.out.println("Fixed Ghosts!");
+			if (fixGhosts() && Config.debug) System.out.println("Fixed Ghosts!");
 		} catch (Exception e) {
 			e.getStackTrace();
 		}
@@ -43,17 +42,5 @@ public class OnTick extends TimerTask {
 			return false;
 		}
 		return true;
-	}
-
-	public static boolean updateConfigs() {
-
-		try {
-			debug = Boolean.parseBoolean(Config.getValue("debug"));
-			return true;
-
-		} catch (Exception e) {
-			System.out.println(e);
-			return false;
-		}
 	}
 }
