@@ -1,11 +1,11 @@
-# RVAS-Core v0.1.5
+# RVAS-Core v0.2
 The core plugin behind RVAS (Real Vanilla Anarchy Survival)
 
 The main goal is to give server operators everything they need to get started with their own *anarchy-style* minecraft server
 
 _**Doesn't prevent any vanilla exploits** by default_
 
-#### Features:
+#### Notable Features:
 - **5-tier Speed Limiter** and other **lag preventing features** (configurable)
 
 - Integrated **Random World-Spawn** that comes ready to use and is easy to configure
@@ -14,7 +14,7 @@ _**Doesn't prevent any vanilla exploits** by default_
 
 - Permanent **Item/Stack signing** with `/sign` for a **healthy economy**
 
-- Bedrock **Floor / Roof Protection** (configurable)
+- Bedrock Floor / Roof and The End **exit portal Protection** (configurable)
 
 - **Analytics** for *performance* and *commands-use*
 
@@ -24,11 +24,7 @@ _**Doesn't prevent any vanilla exploits** by default_
 
 - **Illegal Items Management**
 
-- The End **Exit-Portal** auto-repair
-
-- **Anti Furnace-Chunk-Ban**
-
-- **Lag Machine Detection**
+- **Lag Machine Detection** and Anti Furnace-Chunk-Ban
 
 - Customizable + randomized MOTDs
 
