@@ -29,10 +29,11 @@ public class Move implements Listener {
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
+		Location loc = player.getLocation();
 
-		boolean inNether = player.getLocation().getWorld().getName().endsWith("the_nether");
-		boolean inEnd = player.getLocation().getWorld().getName().endsWith("the_end");
-		double yCoord = player.getLocation().getY();
+		boolean inNether = loc.getWorld().getEnvironment().equals(World.Environment.NETHER);
+		boolean inEnd = loc.getWorld().getEnvironment().equals(World.Environment.THE_END);
+		double yCoord = loc.getY();
 		
 		// This method is actually fired upon head rotate too, so skip event if the player's coords didn't change
 		if (event.getFrom().getBlockX() == event.getTo().getBlockX()
@@ -92,12 +93,18 @@ public class Move implements Listener {
 				}
 
 				Location spawnLoc = SpawnController.getRandomSpawn(overworld, overworld.getSpawnLocation());
+				spawnLoc.getChunk().load();
 				EnderCrystal finalCrystal = (EnderCrystal)overworld.spawnEntity(spawnLoc, EntityType.ENDER_CRYSTAL);
 
 				finalCrystal.setInvulnerable(true);
 				finalCrystal.setPersistent(true);
 				finalCrystal.setShowingBottom(true);
 				finalCrystal.setBeamTarget(new Location(overworld, 0.5, 128, 0.5));
+
+				crystal.remove();
+
+				if (Config.debug) System.out.println("Spawned crystal at " + spawnLoc.getX() +
+						" " + spawnLoc.getY() + " " + spawnLoc.getZ());
 			}
 		}
 	}
