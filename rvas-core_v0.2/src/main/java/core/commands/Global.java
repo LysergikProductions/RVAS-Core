@@ -38,8 +38,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import javax.rmi.CORBA.Util;
-
 public class Global implements CommandExecutor {
 
 	public static TextComponent dreamMsg; static {
@@ -69,8 +67,8 @@ public class Global implements CommandExecutor {
 							int range_max = (int)player_loc.getX() + 16;
 							int range_min = (int)player_loc.getX() - 16;
 
-							player_loc.setX(Utilities.getRandomNumber(range_min, range_max));
-							player_loc.setZ(Utilities.getRandomNumber(range_min, range_max));
+							player_loc.setX(player_loc.getX() + Utilities.getRandomNumber(range_min, range_max));
+							player_loc.setZ(player_loc.getZ() + Utilities.getRandomNumber(range_min, range_max));
 							
 							p.getWorld().spigot().strikeLightning(player_loc, false);
 						}

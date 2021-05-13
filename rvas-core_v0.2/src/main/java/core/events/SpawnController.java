@@ -77,14 +77,15 @@ public class SpawnController implements Listener {
 		if (config_min_x.isNaN()) min_x = -420.0; else min_x = config_min_x;
 		if (config_min_z.isNaN()) min_z = -420.0; else min_z = config_min_z;
 		
-		// get random x, z coords and check them top-down from y256 for validity
+		// get random x, z coordinates and check them top-down from y256 for validity
 		while (!valid_spawn_location) {
 			
-			// get random x, z coords within range and refer to the *center* of blocks
+			// get random x, z co-coordinates within range; refer to the *center* of blocks
 			double tryLocation_x = Math.rint(Utilities.getRandomNumber((int)min_x, (int)max_x)) + 0.5;
 			double tryLocation_z = Math.rint(Utilities.getRandomNumber((int)min_z, (int)max_z)) + 0.5;
 			
-			System.out.println("RVAS: Checking coords for respawn: " + tryLocation_x + ", " + tryLocation_z);
+			if (Config.debug) System.out.println("RVAS: Validating spawn coordinates: " +
+					tryLocation_x + ", " + tryLocation_z);
 			
 			int y = 257;
 			while (y > 1) {
@@ -98,11 +99,10 @@ public class SpawnController implements Listener {
 				Block floorBlock = floorLoc.getBlock();
 				
 				y--;
-				
-				if (!headBlock.getType().equals(Material.AIR) || !legsBlock.getType().equals(Material.AIR)) {
-					continue;
 
-				} else if (!floorBlock.getType().equals(Material.AIR)) {
+				if (headBlock.getType().equals(Material.AIR) &&
+						legsBlock.getType().equals(Material.AIR) &&
+						!floorBlock.getType().equals(Material.AIR)) {
 					
 					// potential valid spawn, check for unwanted spawn surfaces	
 					if (!BannedSpawnFloors.contains(floorBlock.getType())) {
@@ -110,7 +110,22 @@ public class SpawnController implements Listener {
 						if (Config.debug)
 							System.out.println("Found valid respawn location on "
 									+ floorBlock.getType() + "!");
-						
+
+						if (forceShallow &&
+								floorBlock.getType().equals(Material.WATER) ||
+								floorBlock.getType().equals(Material.LAVA)) {
+
+							Material nextBlockDown = floorBlock.getWorld()
+									.getBlockAt(floorBlock.getX(), floorBlock.getY()-1, floorBlock.getZ()).getType();
+
+							if (nextBlockDown.equals(Material.WATER) || nextBlockDown.equals(Material.LAVA) ||
+									nextBlockDown.equals(Material.KELP) || nextBlockDown.equals(Material.KELP_PLANT)) {
+
+								if (Config.debug) System.out.println("..but it wasn't shallow enough :(");
+								break;
+							}
+						}
+
 						valid_spawn_location = true;
 						
 						newSpawnLocation.setWorld(thisWorld);
@@ -120,8 +135,7 @@ public class SpawnController implements Listener {
 						
 						break;
 						
-					} else if (open_air) {break;
-					} else continue;
+					} else if (open_air) break;
 				}
 			}
 		}
@@ -155,24 +169,8 @@ public class SpawnController implements Listener {
 		// find then set a random spawn location if the player doesn't have a set spawn
 		if (Config.getValue("spawn.random").equals("true")) {			
 			if (!event.isBedSpawn() && !event.isAnchorSpawn()) {
-				
+
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
-				Block spawnBlock = thisLocation.getBlock();
-
-				if (forceShallow && spawnBlock.getType().equals(Material.WATER) || spawnBlock.getType().equals(Material.LAVA)) {
-					Block nextBlockDown = spawnBlock.getWorld().getBlockAt(spawnBlock.getX(), spawnBlock.getY()-1, spawnBlock.getZ());
-
-					while (nextBlockDown.getType().equals(Material.WATER) || nextBlockDown.getType().equals(Material.LAVA) ||
-							nextBlockDown.getType().equals(Material.KELP) || nextBlockDown.getType().equals(Material.KELP_PLANT)) {
-
-						thisLocation = getRandomSpawn(thisWorld, thisLocation);
-						spawnBlock = thisLocation.getBlock();
-						nextBlockDown = spawnBlock.getWorld().getBlockAt(spawnBlock.getX(), spawnBlock.getY()-1, spawnBlock.getZ());
-
-						continue;
-					}
-				}
-
 				Chunk spawnChunk = thisLocation.getChunk();
 
 				if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
