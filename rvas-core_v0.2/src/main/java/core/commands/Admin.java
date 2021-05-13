@@ -1,9 +1,6 @@
 package core.commands;
 
-import core.backend.Config;
-import core.backend.Pair;
-import core.backend.PlayerMeta;
-import core.backend.Utilities;
+import core.backend.*;
 
 import core.events.SpeedLimit;
 import core.tasks.Analytics;
@@ -119,7 +116,13 @@ public class Admin implements CommandExecutor {
 					}
 					return true;
 
-				case "LAG":
+				case "CRYSTAL":
+					player.chat(Aliases.invulCrystal);
+					return true;
+
+				case "ILLEGALS":
+				case "ILLEGAL":
+					player.chat(Aliases.illegals_kit);
 					return true;
 			}
 		} else if (args.length == 2) {

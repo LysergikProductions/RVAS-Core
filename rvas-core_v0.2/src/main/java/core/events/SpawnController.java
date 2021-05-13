@@ -24,6 +24,7 @@ package core.events;
  * */
 
 import core.backend.Config;
+import core.backend.Utilities;
 import core.tasks.Analytics;
 
 import java.util.*;
@@ -64,10 +65,6 @@ public class SpawnController implements Listener {
 				Material.CAVE_AIR, Material.VOID_AIR, Material.WALL_TORCH));
 	}
 	
-	public static int getRandomNumber(int min, int max) {
-	    return (int) ((Math.random() * (max - min)) + min);
-	}
-	
 	// takes a location object and gives it a random location within spawn range
 	public static Location getRandomSpawn(World thisWorld, Location newSpawnLocation) {
 		
@@ -84,8 +81,8 @@ public class SpawnController implements Listener {
 		while (!valid_spawn_location) {
 			
 			// get random x, z coords within range and refer to the *center* of blocks
-			double tryLocation_x = Math.rint(getRandomNumber((int)min_x, (int)max_x)) + 0.5;
-			double tryLocation_z = Math.rint(getRandomNumber((int)min_z, (int)max_z)) + 0.5;
+			double tryLocation_x = Math.rint(Utilities.getRandomNumber((int)min_x, (int)max_x)) + 0.5;
+			double tryLocation_z = Math.rint(Utilities.getRandomNumber((int)min_z, (int)max_z)) + 0.5;
 			
 			System.out.println("RVAS: Checking coords for respawn: " + tryLocation_x + ", " + tryLocation_z);
 			

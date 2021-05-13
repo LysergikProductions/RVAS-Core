@@ -34,7 +34,11 @@ import org.bukkit.entity.Player;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Utilities {
-	
+
+	public static int getRandomNumber(int min, int max) {
+		return (int) ((Math.random() * (max - min)) + min);
+	}
+
 	public static String calculateTime(double seconds) {
 		
 		long hours;

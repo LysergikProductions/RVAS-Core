@@ -23,6 +23,7 @@ package core.commands;
  * */
 
 import core.backend.PlayerMeta;
+import core.backend.Utilities;
 import core.events.SpawnController;
 
 import net.md_5.bungee.api.ChatColor;
@@ -36,6 +37,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+
+import javax.rmi.CORBA.Util;
 
 public class Global implements CommandExecutor {
 
@@ -62,9 +65,12 @@ public class Global implements CommandExecutor {
 						for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 							
 							Location player_loc = p.getLocation();
-							
-							player_loc.setX(player_loc.getX()+7.10+(i*2));
-							player_loc.setZ(player_loc.getZ()+7.10-(i*2));
+
+							int range_max = (int)player_loc.getX() + 16;
+							int range_min = (int)player_loc.getX() - 16;
+
+							player_loc.setX(Utilities.getRandomNumber(range_min, range_max));
+							player_loc.setZ(Utilities.getRandomNumber(range_min, range_max));
 							
 							p.getWorld().spigot().strikeLightning(player_loc, false);
 						}

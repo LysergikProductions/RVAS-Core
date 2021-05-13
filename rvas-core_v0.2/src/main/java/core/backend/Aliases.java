@@ -22,83 +22,80 @@ package core.backend;
  *
  * */
 
+@SuppressWarnings("SpellCheckingInspection")
 public class Aliases {
 
-    // chestplate and helmet
-    public static String armor_a; static {
+    public static String armor_a; public static String armor_b; static {
 
-        StringBuilder sb1 = new StringBuilder();
-        sb1.append("/summon armor_stand ~1 ~2 ~1 {CustomName:\"\\\"Sinse's_32kStackedArmor_a\\\"\",CustomNameVisible:1,");
+        // chestplate and helmet
+        armor_a = "/summon armor_stand ~1 ~2 ~1 {CustomName:\"\\\"Sinse's_32kStackedArmor_a\\\"\",CustomNameVisible:1," +
+                "ShowArms:1,HandItems:[{id:netherite_chestplate,tag:{Enchantments:[{id:protection,lvl:32767}," +
+                "{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}," +
+                "{id:netherite_helmet,tag:{Enchantments:[{id:respiration,lvl:3},{id:aqua_affinity,lvl:1},{id:protection,lvl:32767}," +
+                "{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}]}";
 
-        sb1.append("ShowArms:1,HandItems:[{id:netherite_chestplate,tag:{Enchantments:[{id:protection,lvl:32767},");
-        sb1.append("{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127},");
-
-        sb1.append("{id:netherite_helmet,tag:{Enchantments:[{id:respiration,lvl:3},{id:aqua_affinity,lvl:1},{id:protection,lvl:32767},");
-        sb1.append("{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}]}");
-
-        armor_a = sb1.toString();
-    }
-
-    // boots and leggings
-    public static String armor_b; static {
-
-        StringBuilder sb2 = new StringBuilder();
-        sb2.append("/summon armor_stand ~-1 ~2 ~-1 {CustomName:\"\\\"Sinse's_32kStackedArmor_b\\\"\",CustomNameVisible:1,");
-
-        sb2.append("ShowArms:1,HandItems:[{id:netherite_boots,tag:{Enchantments:[{id:blast_protection,lvl:32767},");
-        sb2.append("{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127},");
-
-        sb2.append("{id:netherite_leggings,tag:{Enchantments:[{id:blast_protection,lvl:32767},{id:thorns,lvl:32767},");
-        sb2.append("{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}]}");
-
-        armor_b = sb2.toString();
+        // boots and leggings
+        armor_b = "/summon armor_stand ~-1 ~2 ~-1 {CustomName:\"\\\"Sinse's_32kStackedArmor_b\\\"\",CustomNameVisible:1," +
+                "ShowArms:1,HandItems:[{id:netherite_boots,tag:{Enchantments:[{id:blast_protection,lvl:32767}," +
+                "{id:thorns,lvl:32767},{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}," +
+                "{id:netherite_leggings,tag:{Enchantments:[{id:blast_protection,lvl:32767},{id:thorns,lvl:32767}," +
+                "{id:unbreaking,lvl:32767},{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]},Count:127}]}";
     }
 
     // totems on armor stands
     public static String totems_armor1; public static String totems_armor2; static {
 
-        StringBuilder sb3a = new StringBuilder(); StringBuilder sb3b = new StringBuilder();
+        totems_armor1 = "/summon armor_stand ~-1 ~2 ~1 {CustomName:\"StackedTotems\",CustomNameVisible:1," +
+                "ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}";
 
-        sb3a.append("/summon armor_stand ~-1 ~2 ~1 {CustomName:\"StackedTotems\",CustomNameVisible:1,");
-        sb3a.append("ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}");
-
-        sb3b.append("/summon armor_stand ~1 ~2 ~-1 {CustomName:\"StackedTotems\",CustomNameVisible:1,");
-        sb3b.append("ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}");
-
-        totems_armor1 = sb3a.toString();
-        totems_armor2 = sb3b.toString();
+        totems_armor2 = "/summon armor_stand ~1 ~2 ~-1 {CustomName:\"StackedTotems\",CustomNameVisible:1," +
+                "ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}";
     }
 
     // totems in shulker box
     public static String totems_shulker; static {
 
-        StringBuilder sb4 = new StringBuilder();
-        sb4.append("/give @s black_shulker_box{BlockEntityTag:{Items:[{Slot:0,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:1,id:totem_of_undying,Count:127},{Slot:2,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:3,id:totem_of_undying,Count:127},{Slot:4,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:5,id:totem_of_undying,Count:127},{Slot:6,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:7,id:totem_of_undying,Count:127},{Slot:8,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:9,id:totem_of_undying,Count:127},{Slot:10,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:11,id:totem_of_undying,Count:127},{Slot:12,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:13,id:totem_of_undying,Count:127},{Slot:14,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:15,id:totem_of_undying,Count:127},{Slot:16,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:17,id:totem_of_undying,Count:127},{Slot:18,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:19,id:totem_of_undying,Count:127},{Slot:20,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:21,id:totem_of_undying,Count:127},{Slot:22,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:23,id:totem_of_undying,Count:127},{Slot:24,id:totem_of_undying,Count:127},");
-        sb4.append("{Slot:25,id:totem_of_undying,Count:127},{Slot:26,id:totem_of_undying,Count:127}]}}");
+        totems_shulker = "/give @s yellow_shulker_box{BlockEntityTag:{Items:[{Slot:0,id:totem_of_undying,Count:127}," +
+                "{Slot:1,id:totem_of_undying,Count:127},{Slot:2,id:totem_of_undying,Count:127}," +
+                "{Slot:3,id:totem_of_undying,Count:127},{Slot:4,id:totem_of_undying,Count:127}," +
+                "{Slot:5,id:totem_of_undying,Count:127},{Slot:6,id:totem_of_undying,Count:127}," +
+                "{Slot:7,id:totem_of_undying,Count:127},{Slot:8,id:totem_of_undying,Count:127}," +
+                "{Slot:9,id:totem_of_undying,Count:127},{Slot:10,id:totem_of_undying,Count:127}," +
+                "{Slot:11,id:totem_of_undying,Count:127},{Slot:12,id:totem_of_undying,Count:127}," +
+                "{Slot:13,id:totem_of_undying,Count:127},{Slot:14,id:totem_of_undying,Count:127}," +
+                "{Slot:15,id:totem_of_undying,Count:127},{Slot:16,id:totem_of_undying,Count:127}," +
+                "{Slot:17,id:totem_of_undying,Count:127},{Slot:18,id:totem_of_undying,Count:127}," +
+                "{Slot:19,id:totem_of_undying,Count:127},{Slot:20,id:totem_of_undying,Count:127}," +
+                "{Slot:21,id:totem_of_undying,Count:127},{Slot:22,id:totem_of_undying,Count:127}," +
+                "{Slot:23,id:totem_of_undying,Count:127},{Slot:24,id:totem_of_undying,Count:127}," +
+                "{Slot:25,id:totem_of_undying,Count:127},{Slot:26,id:totem_of_undying,Count:127}]}}";
+    }
 
-        totems_shulker = sb4.toString();
+    // illegals kit
+    public static String illegals_kit; static {
+
+        illegals_kit = "/give @s black_shulker_box{BlockEntityTag:{Items:[{Slot:0,id:totem_of_undying,Count:127}," +
+                "{Slot:1,id:barrier,Count:127},{Slot:2,id:structure_block,Count:127}," +
+                "{Slot:3,id:structure_void,Count:127},{Slot:4,id:enchanted_golden_apple,Count:127}," +
+                "{Slot:5,id:end_crystal,Count:127},{Slot:6,id:end_portal_frame,Count:127}," +
+                "{Slot:7,id:farmland,Count:127},{Slot:8,id:bedrock,Count:127}," +
+                "{Slot:9,id:knowledge_book,Count:127},{Slot:10,id:command_block,Count:127}," +
+                "{Slot:11,id:player_head,Count:127},{Slot:12,id:creeper_head,Count:127}," +
+                "{Slot:13,id:mule_spawn_egg,Count:127},{Slot:14,id:evoker_spawn_egg,Count:127}]}}";
     }
 
     // 32k feathers
     public static String feather_32k; static {
 
-        StringBuilder sb5 = new StringBuilder();
-        sb5.append("/give @s feather{Enchantments:[{id:sharpness,lvl:32767},{id:knockback,lvl:32767},");
-        sb5.append("{id:fire_aspect,lvl:32767},{id:looting,lvl:10},{id:sweeping,lvl:3},{id:unbreaking,lvl:32767},");
-        sb5.append("{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]} 128");
+        feather_32k = "/give @s feather{Enchantments:[{id:sharpness,lvl:32767},{id:knockback,lvl:32767}," +
+                "{id:fire_aspect,lvl:32767},{id:looting,lvl:10},{id:sweeping,lvl:3},{id:unbreaking,lvl:32767}," +
+                "{id:mending,lvl:1},{id:vanishing_curse,lvl:1}]} 128";
+    }
 
-        feather_32k = sb5.toString();
+    // invulnerable end-crystal below commander
+    public static String invulCrystal; static {
+
+        invulCrystal = "/summon minecraft:end_crystal ~ ~-4 ~ {" +
+                "ShowBottom:true,Invulnerable:true,BeamTarget:{X:0.5,Y:128,Z:0.5}}";
     }
 }
