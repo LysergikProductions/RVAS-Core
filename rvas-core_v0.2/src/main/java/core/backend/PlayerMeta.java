@@ -1,5 +1,6 @@
 package core.backend;
 
+import core.commands.Ignore;
 import core.events.Chat;
 import core.objects.PlayerSettings;
 
@@ -66,6 +67,13 @@ public class PlayerMeta {
 				setMuteType(p, MuteType.PERMANENT);
 			}
 			return true; 
+		}
+		return false;
+	}
+
+	public static boolean isIgnoring(UUID ignorer, UUID ignored) {
+		if(Ignore.Ignores.containsKey(ignorer)) {
+			return Ignore.Ignores.get(ignorer).contains(ignored);
 		}
 		return false;
 	}

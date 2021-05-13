@@ -155,6 +155,9 @@ public class Main extends JavaPlugin implements Listener {
 
 		System.out.println("/global");
 		this.getCommand("global").setExecutor(new Global());
+
+		System.out.println("/ignore");
+		this.getCommand("ignore").setExecutor(new Ignore());
 		
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");

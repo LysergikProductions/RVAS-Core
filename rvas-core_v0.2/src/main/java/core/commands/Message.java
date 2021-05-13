@@ -71,11 +71,23 @@ public class Message implements CommandExecutor {
 		// If either player is muted, refuse message.
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
+
 			if (PlayerMeta.isMuted(player)) {
 				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages."));
 				return true;
 			}
+
 			if (PlayerMeta.isMuted(recv) || (Admin.MsgToggle.contains(recv.getUniqueId()) && !player.isOp())) {
+				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
+				return true;
+			}
+
+			if(PlayerMeta.isIgnoring(player.getUniqueId(), recv.getUniqueId())) {
+				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
+				return true;
+			}
+
+			if(PlayerMeta.isIgnoring(recv.getUniqueId(), player.getUniqueId())) {
 				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
 				return true;
 			}

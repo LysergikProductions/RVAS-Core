@@ -21,49 +21,52 @@ public class Tps implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		double tps = LagProcessor.getTPS();
-		
 		if (!PlayerMeta.isAdmin((Player)sender)) Analytics.tps_cmd++;
-		
+
+		double tps = LagProcessor.getTPS();
 		if (tps > 20)
 			tps = 20;
+
 		if (!new IntRange(1, 20).containsInteger(tps)) {
 			TextComponent component = new TextComponent(
 					"TPS is either extremely low or still processing. Try again later.");
 			sender.spigot().sendMessage(component);
+
 		} else {
 			String message_formatted_ticks_per_second = new DecimalFormat("0.000").format(tps);
+
 			double ticks_per_second_percentage = Math.round(100 - ((tps / 20.0D) * 100.0D));
 			String message_formatted_percentage = new DecimalFormat("###.##").format(ticks_per_second_percentage);
-			TextComponent component = new TextComponent(
-					"TPS is " + message_formatted_ticks_per_second + ", which is " + message_formatted_percentage + "% slower than normal.");
+
+			TextComponent msg = new TextComponent(
+					"TPS is " + message_formatted_ticks_per_second + ", which is " +
+							message_formatted_percentage + "% below normal.");
 
 			switch (((int) ticks_per_second_percentage)/10) {
 				case 0:
 				case 1:
-					component.setColor(ChatColor.GREEN);
+					msg.setColor(ChatColor.GREEN);
 					break;
 				case 2:
 				case 3:
-					component.setColor(ChatColor.YELLOW);
+					msg.setColor(ChatColor.YELLOW);
 					break;
 				case 4:
 				case 5:
 				case 6:
-					component.setColor(ChatColor.GOLD);
+					msg.setColor(ChatColor.GOLD);
 					break;
 				case 7:
 				case 8:
 				case 9:
 				case 10:
-					component.setColor(ChatColor.RED);
+					msg.setColor(ChatColor.RED);
 					break;
 				default:
-					component.setColor(ChatColor.LIGHT_PURPLE);
+					msg.setColor(ChatColor.LIGHT_PURPLE);
 					break;
 			}
-
-			sender.spigot().sendMessage(component);
+			sender.spigot().sendMessage(msg);
 		}
 		return true;
 	}
