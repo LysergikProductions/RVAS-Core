@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -31,8 +32,8 @@ public class Move implements Listener {
 		Player player = event.getPlayer();
 		Location loc = player.getLocation();
 
-		boolean inNether = loc.getWorld().getEnvironment().equals(World.Environment.NETHER);
-		boolean inEnd = loc.getWorld().getEnvironment().equals(World.Environment.THE_END);
+		boolean inNether = loc.getWorld().getEnvironment().equals(Environment.NETHER);
+		boolean inEnd = loc.getWorld().getEnvironment().equals(Environment.THE_END);
 		double yCoord = loc.getY();
 		
 		// This method is actually fired upon head rotate too, so skip event if the player's coords didn't change
@@ -80,32 +81,52 @@ public class Move implements Listener {
 
 		if(e.getEntityType().equals(EntityType.ENDER_CRYSTAL)) {
 			EnderCrystal crystal = (EnderCrystal)e.getEntity();
+			Environment portalFrom = e.getFrom().getWorld().getEnvironment();
 
-			if (crystal.getWorld().getEnvironment().equals(World.Environment.THE_END) &&
-					crystal.isShowingBottom() || crystal.isInvulnerable()) {
+			World overworld = Utilities.getWorldByDimension(Environment.NORMAL);
+			if (overworld == null) {
+				System.out.println("WARN couldn't find NORMAL dimension onEntityPortal()");
+				return;
+			}
 
-				e.setCancelled(true);
+			if (crystal.isShowingBottom() || crystal.isInvulnerable()) {
 
-				World overworld = Utilities.getWorldByDimension(World.Environment.NORMAL);
-				if (overworld == null) {
-					System.out.println("WARN couldn't find NORMAL dimension onEntityPortal()");
-					return;
+				if (portalFrom.equals(Environment.THE_END)) {
+					e.setCancelled(true);
+
+					Location spawnLoc = SpawnController
+							.getRandomSpawn(overworld, overworld.getSpawnLocation());
+
+					spawnLoc.setY(spawnLoc.getY()+1);
+					TP_InvulCrystal(crystal, spawnLoc);
+
+					if (Config.debug) System.out.println("TP'd invulnerable crystal to " +
+							(int)spawnLoc.getX() + " " + (int)spawnLoc.getY() + " " + (int)spawnLoc.getZ());
+
+				} else {
+					e.setCancelled(true);
+
+					Location spawnLoc = e.getTo();
+					TP_InvulCrystal(crystal, spawnLoc);
+
+					if (Config.debug) System.out.println("TP'd invulnerable crystal to " +
+							(int)spawnLoc.getX() + " " + (int)spawnLoc.getY() + " " + (int)spawnLoc.getZ());
 				}
-
-				Location spawnLoc = SpawnController.getRandomSpawn(overworld, overworld.getSpawnLocation());
-				spawnLoc.getChunk().load();
-				EnderCrystal finalCrystal = (EnderCrystal)overworld.spawnEntity(spawnLoc, EntityType.ENDER_CRYSTAL);
-
-				finalCrystal.setInvulnerable(true);
-				finalCrystal.setPersistent(true);
-				finalCrystal.setShowingBottom(true);
-				finalCrystal.setBeamTarget(new Location(overworld, 0.5, 128, 0.5));
-
-				crystal.remove();
-
-				if (Config.debug) System.out.println("Spawned crystal at " + spawnLoc.getX() +
-						" " + spawnLoc.getY() + " " + spawnLoc.getZ());
 			}
 		}
+	}
+
+	private static void TP_InvulCrystal(EnderCrystal crystal, Location spawnLoc) {
+		spawnLoc.getChunk().load();
+
+		EnderCrystal finalCrystal = (EnderCrystal)spawnLoc.getWorld()
+				.spawnEntity(spawnLoc, EntityType.ENDER_CRYSTAL);
+
+		finalCrystal.setInvulnerable(true);
+		finalCrystal.setPersistent(true);
+		finalCrystal.setShowingBottom(true);
+		finalCrystal.setBeamTarget(new Location(spawnLoc.getWorld(), 0.5, 128, 0.5));
+
+		crystal.remove();
 	}
 }
