@@ -17,7 +17,7 @@ import org.bukkit.command.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Message implements CommandExecutor {
 
 	public static HashMap<UUID, UUID> Replies = new HashMap();

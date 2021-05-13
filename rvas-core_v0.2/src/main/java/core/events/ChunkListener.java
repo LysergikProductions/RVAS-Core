@@ -42,7 +42,7 @@ import org.bukkit.Material;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ChunkListener implements Listener {
 	
 	static Material br = Material.BEDROCK;

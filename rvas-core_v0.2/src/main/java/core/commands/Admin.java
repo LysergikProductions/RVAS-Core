@@ -131,14 +131,9 @@ public class Admin implements CommandExecutor {
 					sender.sendMessage(new TextComponent("§6No logout spot logged for " + args[1]));
 				} else {
 					
-					String dimension;
-					
-					if (player.getWorld().getEnvironment().toString().contains("NORMAL")) {dimension = "overworld";}
-					else if (player.getWorld().getEnvironment().toString().contains("NETHER")) {dimension = "the_nether";}
-					else if (player.getWorld().getEnvironment().toString().contains("END")) {dimension = "the_end";}
-					else {dimension = "overworld";}
-					
+					String dimension = Utilities.getDimensionName(loc);
 					String location = (int)loc.getX() + " " + (int)loc.getY() + " " + (int)loc.getZ();
+
 					TextComponent logSpot = new TextComponent("§6"+args[1] + " logged out at " + location);
 					
 					logSpot.setClickEvent(new ClickEvent(

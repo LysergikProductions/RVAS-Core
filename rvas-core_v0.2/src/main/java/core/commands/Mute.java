@@ -86,7 +86,7 @@ public class Mute implements CommandExecutor {
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"§a§l" + name + " §r§ahas unmuted §a§l" + toMute.getName() + "§r§a."));
+						"§a§l" + name + " §r§ahas un-muted §a§l" + toMute.getName() + "§r§a."));
 				PlayerMeta.setMuteType(toMute, MuteType.NONE);
 				break;
 			case "IP":

@@ -50,7 +50,7 @@ import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class BlockListener implements Listener {
 
 	static boolean roofProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.roof"));

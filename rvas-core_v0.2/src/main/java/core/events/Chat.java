@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Chat implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(

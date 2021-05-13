@@ -39,12 +39,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class Global implements CommandExecutor {
 
-	public static TextComponent dreamMsg = new TextComponent("You wake up, confused.. was that a dream?");
+	public static TextComponent dreamMsg; static {
+		dreamMsg = new TextComponent("You wake up, confused.. was that a dream?");
+		dreamMsg.setColor(ChatColor.GRAY);
+	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-		dreamMsg.setColor(ChatColor.GRAY); dreamMsg.setFont("");
+		Player op = (Player)sender;
 
 		// check args
 		if (args.length != 0) {
@@ -84,10 +88,7 @@ public class Global implements CommandExecutor {
 						String y = String.valueOf(finalTP.getBlockY());
 						String z = String.valueOf(finalTP.getBlockZ());
 
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								"/tp " + player_name + " " + x + " " + y + " " + z);
-
-
+						op.chat("/tp " + player_name + " " + x + " " + y + " " + z);
 						p.spigot().sendMessage(dreamMsg);
 					}
 			}
