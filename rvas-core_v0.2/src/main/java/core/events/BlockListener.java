@@ -226,7 +226,8 @@ public class BlockListener implements Listener {
 
 			for (Material thisMat: LagMats) {
 				if (thisMat != Material.GRAVEL) {
-					counter += Utilities.blockCounter(block.getChunk(), thisMat);
+					Material[] singleMat = {thisMat};
+					counter += Utilities.blocksCounter(block.getChunk(), singleMat);
 				}
 			}
 

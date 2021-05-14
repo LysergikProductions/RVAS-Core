@@ -124,7 +124,7 @@ public class PlayerMeta {
 			setMuteType(p, MuteType.PERMANENT);
 			_ipMutes.add(getIp(p));
 		}
-		p.spigot().sendMessage(new TextComponent("§7§oYou are now " + muteType + "muted."));
+		p.spigot().sendMessage(new TextComponent("\u00A77\u00A7oYou are now " + muteType + "muted."));
 	}
 
 	public static void tickTempMutes(double msToAdd) {

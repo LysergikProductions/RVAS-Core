@@ -49,10 +49,12 @@ public class About implements CommandExecutor {
 		
 		if (!PlayerMeta.isAdmin(player)) Analytics.about_cmd++;
 		
-		TextComponent by = new TextComponent("RVAS-core v0.2.1 (#236) by LysergikProductions");
+		TextComponent build = new TextComponent("RVAS-core v0.2.1 (#237)");
+		TextComponent by = new TextComponent("by LysergikProductions, w/code from d2k11 and help from ultradutch");
 		TextComponent source = new TextComponent("RVAS-core is open source. Access the GitHub by clicking this message.");
 		TextComponent license = new TextComponent("Licensed under AGPL-3.0.");
-		
+
+		build.setColor(ChatColor.GRAY);
 		by.setColor(ChatColor.RED); by.setBold(true);
 		source.setColor(ChatColor.GOLD);
 		license.setItalic(true);
@@ -61,7 +63,7 @@ public class About implements CommandExecutor {
 		license.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.gnu.org/licenses/agpl-3.0.en.html"));
 		license.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://www.gnu.org/licenses/agpl-3.0.en.html")));
 		
-		Arrays.asList(new TextComponent(""), by, source, license)
+		Arrays.asList(new TextComponent(""), build, by, source, license)
 		.forEach(ln -> sender.spigot().sendMessage(ln));
 		return true;
 	}

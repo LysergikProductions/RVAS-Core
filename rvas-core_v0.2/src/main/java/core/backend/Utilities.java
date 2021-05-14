@@ -24,6 +24,8 @@ package core.backend;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import core.events.ChunkListener;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.*;
@@ -31,6 +33,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Utilities {
@@ -180,16 +183,19 @@ public class Utilities {
 	        return false;
 	    }
 	}
-	
-	public static int blockCounter(Chunk chunk, Material block) {
+
+	// TODO: get this working..
+	public static int blocksCounter(Chunk chunk, Material[] blocks) {
 		int counter = 0;
 		
 		try {
-		    for(int y = 0; y <= 255; y++) {
-		        for(int x = 0; x <= 15; x++) {
-		            for(int z = 0; z <= 15; z++) {
-		            	
-		                if(chunk.getBlock(x, y, z).getType() == block) counter++;
+		    for (int y = 255; y >= 0; y--) {
+		        for (int x = 0; x <= 15; x++) {
+		            for (int z = 0; z <= 15; z++) {
+
+		            	if (Arrays.stream(blocks).parallel().equals(chunk.getBlock(x, y, z))) {
+		            		counter++;
+						}
 		            }
 		        }
 		    }
@@ -199,18 +205,42 @@ public class Utilities {
 			return counter;
 		}
 	}
+
+	public static int blockCounter(Chunk chunk, Material block) {
+		int counter = 0;
+
+		try {
+			for (int y = 0; y <= 255; y++) {
+				for (int x = 0; x <= 15; x++) {
+					for (int z = 0; z <= 15; z++) {
+
+						if(chunk.getBlock(x, y, z).getType() == block) {
+							counter++;
+						}
+					}
+				}
+			}
+			return counter;
+		} catch (Exception e) {
+			System.out.println(e);
+			return counter;
+		}
+	}
 	
-	public static int blockRemover(Chunk chunk, Material blockType, int limiter) {
+	public static int blockRemover(Chunk chunk, Material blockType, int limiter, boolean doPop) {
 		
 	    int counter = 0;
-	    for (int y = 0; y <= 255; y++) {
+	    for (int y = 255; y >= 0; y--) {
 	        for (int x = 0; x <= 15; x++) {
 	            for (int z = 0; z <= 15; z++) {
 	            	
 	            	Block thisBlock = chunk.getBlock(x, y, z);
+	            	Location thisLoc = thisBlock.getLocation();
 	            	
 	                if (thisBlock.getType() == blockType) {
 	                	counter++;
+
+						if (doPop) thisLoc.getWorld().dropItem(thisLoc, new ItemStack(thisBlock.getType(),1));
 	                	thisBlock.setType(Material.AIR);
 	                }
 	                if (counter >= limiter) return counter;

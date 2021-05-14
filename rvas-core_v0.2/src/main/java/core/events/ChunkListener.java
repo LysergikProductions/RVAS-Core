@@ -47,7 +47,7 @@ public class ChunkListener implements Listener {
 	
 	static Material br = Material.BEDROCK;
 	static Material portal = Material.END_PORTAL;
-	
+
 	public static int newCount = 0;
 	public static boolean foundExitPortal = false;
 	
@@ -63,39 +63,64 @@ public class ChunkListener implements Listener {
 		if (!event.isNewChunk()) {
 			chunk.setForceLoaded(false); // WARNING: this line will interfere with force-loaded spawn chunks
 
-			if (!foundExitPortal && dimension.equals(Environment.THE_END)) {
-				if (x == 0 && z == 0) Repair.y_low = Utilities.getExitFloor(chunk);
-				if (Repair.y_low != -1) ChunkListener.foundExitPortal = true;
-				else Repair.y_low = Repair.y_default;
-			}
-			if (dimension.equals(Environment.THE_END)) {
-				if (x == 0 && z == 0) fixEndExit(chunk, Repair.y_low);
-				if (x == 0 && z == -1) fixEndExit(chunk, Repair.y_low);
-				if (x == -1 && z == 0) fixEndExit(chunk, Repair.y_low);
-				if (x == -1 && z == -1) fixEndExit(chunk, Repair.y_low);
+			try {
+				if (!foundExitPortal && dimension.equals(Environment.THE_END)) {
+					if (x == 0 && z == 0) Repair.y_low = Utilities.getExitFloor(chunk);
+					if (Repair.y_low != -1) ChunkListener.foundExitPortal = true;
+					else Repair.y_low = Repair.y_default;
+				}
+
+				if (dimension.equals(Environment.THE_END)) {
+					if (x == 0 && z == 0) fixEndExit(chunk, Repair.y_low);
+					if (x == 0 && z == -1) fixEndExit(chunk, Repair.y_low);
+					if (x == -1 && z == 0) fixEndExit(chunk, Repair.y_low);
+					if (x == -1 && z == -1) fixEndExit(chunk, Repair.y_low);
+				}
+			} catch (Exception e) {
+				System.out.println("Failed to check/repair end-exit..");
+				if (Config.debug) System.out.println(e.getMessage());
+				if (Config.verbose) e.printStackTrace();
 			}
 			
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
 			
 			try {
-				antiFurnaceBan(chunk);
+				antiChunkBan(chunk);
 			} catch (Exception e) {
-				System.out.println(e);
+				if (Config.debug) System.out.println(e.getMessage());
+				if (Config.verbose) e.printStackTrace();
 			}
 			
 		} else {ChunkListener.newCount++; Analytics.new_chunks++;}
 	}
+
+	public static Material[] ChunkBanBlocks = {
+			Material.ENCHANTING_TABLE, Material.SMOKER,
+			Material.FURNACE, Material.BLAST_FURNACE
+	};
 	
-	public static void antiFurnaceBan(Chunk chunk) {
-		
+	public static void antiChunkBan(Chunk chunk) {
+		int removed_blocks = 0;
+
+		//int banBlock_count = Utilities.blocksCounter(chunk, ChunkBanBlocks);
 		int furnace_count = Utilities.blockCounter(chunk, Material.FURNACE);
+
+		//if (Config.debug && Config.verbose) System.out.println(
+				//"INFO: Found " + banBlock_count + " ban blocks");
+
+		if (Config.debug && Config.verbose) System.out.println(
+				"INFO: Found " + furnace_count + " furnace blocks");
 		
-		// limit furnace count to 2 sub-chunks worth of furnaces per chunk
+		// limit count to 2 sub-chunks worth of ban blocks per chunk
 		if (furnace_count > 8192) {
 			
-			System.out.println("WARNING: TOO MANY FURNACES. Removing 90% of them..");
-			Utilities.blockRemover(chunk, Material.FURNACE, (int)Math.rint((double)furnace_count * 0.9));
+			System.out.println("WARN: TOO MANY BAN BLOCKS. Popping 90% of them..");
+
+			removed_blocks = Utilities.blockRemover(
+					chunk, Material.FURNACE, (int)Math.rint((double)furnace_count * 0.9), true);
+
+			if (Config.debug) System.out.println("Removed " + removed_blocks + " chunk-banning blocks");
 		}
 	}
 
