@@ -33,9 +33,8 @@ public class ItemCheck {
 	}
 
 	public static void IllegalCheck(ItemStack item, String trigger, Player player) {
-		if (player == null) return;
-		if (PlayerMeta.isAdmin(player)) return;
 
+		if (player == null || PlayerMeta.isAdmin(player)) return;
 		if (item == null || item.getType().equals(Material.AIR)) return;
 
 		if (
@@ -45,7 +44,9 @@ public class ItemCheck {
 
 			return;
 		}
-		
+
+		if (Config.debug && Config.verbose) System.out.println("Checking ItemStack: " + item.getData());
+
 		// Delete any shulker boxes inside of other shulker boxes
 		if (item.getItemMeta() instanceof BlockStateMeta) {
 			

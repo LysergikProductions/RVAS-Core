@@ -48,7 +48,7 @@ public class Info implements CommandExecutor {
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;
 			
-		String humanUptime = Utilities.calculateTime(ServerMeta.getUptime());
+		String humanUptime = Utilities.timeToString(ServerMeta.getUptime());
 		
 		TextComponent head = new TextComponent("--- Session Stats ---");
 		head.setColor(ChatColor.GOLD); head.setBold(true);

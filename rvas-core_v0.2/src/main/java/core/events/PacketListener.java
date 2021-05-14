@@ -1,4 +1,4 @@
-package core.backend;
+package core.events;
 
 /* *
  * 
@@ -33,13 +33,14 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
+import core.backend.ItemCheck;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class NoGhost implements Listener {
+public class PacketListener implements Listener {
 	
 	public static void C2S_UsePackets() {
 		// capture use packets (right-click without placing any blocks)
@@ -68,21 +69,12 @@ public class NoGhost implements Listener {
 
 			@Override
 			public void onPacketReceiving(PacketEvent event) {
-				Player sender = event.getPlayer();
-				Block lookingAt = sender.getTargetBlock(6, TargetBlockInfo.FluidMode.NEVER);
-
-				ItemStack inHand; Material itemType;
-
-				try {
-					inHand = sender.getInventory().getItem(sender.getInventory().getHeldItemSlot());
-					itemType = inHand.getType();
-				} catch (Exception e) {
-					itemType = null;
-				}
+				//
 			}
 		});
 	}
 
+	// prevent use of illegal weapons, tools, and other items
 	public static void C2S_AnimationPackets() {
 
 		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
@@ -90,16 +82,20 @@ public class NoGhost implements Listener {
 
 			@Override
 			public void onPacketReceiving(PacketEvent event) {
-				/*if (event.isCancelled()) return;
+				if (event.isCancelled()) return;
 
 				Player sender = event.getPlayer();
-				PacketContainer packetContainer = event.getPacket();
-				PacketType thisType = packetContainer.getType();
+				ItemStack inHand;
 
-				if (debug && verbose) System.out.println("DEBUG: RECEIVED BLOCK RELATED PACKET" + event.getPacketType());
-				if (debug && PlayerMeta.isAdmin(sender)) sender.spigot().sendMessage(new TextComponent(
-								"I see your client arm_animation packet! ")
-				);*/
+				try {
+					inHand = sender.getInventory().getItem(sender.getInventory().getHeldItemSlot());
+				} catch (Exception e) {
+					inHand = null;
+				}
+
+				if (inHand != null) {
+					ItemCheck.IllegalCheck(inHand, "Animation Packet", sender);
+				}
 			}
 		});
 	}

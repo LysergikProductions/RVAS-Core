@@ -103,22 +103,24 @@ public class ChunkListener implements Listener {
 	public static void antiChunkBan(Chunk chunk) {
 		int removed_blocks = 0;
 
-		//int banBlock_count = Utilities.blocksCounter(chunk, ChunkBanBlocks);
-		int furnace_count = Utilities.blockCounter(chunk, Material.FURNACE);
-
-		//if (Config.debug && Config.verbose) System.out.println(
-				//"INFO: Found " + banBlock_count + " ban blocks");
-
-		if (Config.debug && Config.verbose) System.out.println(
-				"INFO: Found " + furnace_count + " furnace blocks");
+		int total_count = Utilities.blocksCounter(chunk, ChunkBanBlocks);
 		
 		// limit count to 2 sub-chunks worth of ban blocks per chunk
-		if (furnace_count > 8192) {
+		if (total_count > 8192) {
 			
 			System.out.println("WARN: TOO MANY BAN BLOCKS. Popping 90% of them..");
 
-			removed_blocks = Utilities.blockRemover(
-					chunk, Material.FURNACE, (int)Math.rint((double)furnace_count * 0.9), true);
+			removed_blocks += Utilities.blockRemover(
+					chunk, Material.FURNACE, (int)Math.rint((double)total_count * 0.9), false);
+
+			removed_blocks += Utilities.blockRemover(
+					chunk, Material.BLAST_FURNACE, (int)Math.rint((double)total_count * 0.9), false);
+
+			removed_blocks += Utilities.blockRemover(
+					chunk, Material.SMOKER, (int)Math.rint((double)total_count * 0.9), false);
+
+			removed_blocks += Utilities.blockRemover(
+					chunk, Material.ENCHANTING_TABLE, (int)Math.rint((double)total_count * 0.9), false);
 
 			if (Config.debug) System.out.println("Removed " + removed_blocks + " chunk-banning blocks");
 		}

@@ -69,7 +69,7 @@ public class DiscordBot implements Listener {
 													.addField("Current Player Count",
 															new DecimalFormat("##").format(Bukkit.getOnlinePlayers().size()) + "/13",
 															true)
-													.addField("Server Up Time", Utilities.calculateTime(ServerMeta.getUptime()), true)
+													.addField("Server Up Time", Utilities.timeToString(ServerMeta.getUptime()), true)
 									))).subscribe();
 
 			//!facts commands
@@ -94,7 +94,7 @@ public class DiscordBot implements Listener {
 											.addField("Current Player Count",
 													new DecimalFormat("##").format(Bukkit.getOnlinePlayers().size()) + "/20",
 													true)
-											.addField("Server Up Time", Utilities.calculateTime(ServerMeta.getUptime()), true);
+											.addField("Server Up Time", Utilities.timeToString(ServerMeta.getUptime()), true);
 								}
 						))).subscribe();
 		});

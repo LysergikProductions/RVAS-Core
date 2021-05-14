@@ -24,6 +24,7 @@ package core.events;
  * */
 
 import core.backend.Config;
+import core.backend.ItemCheck;
 import core.backend.Utilities;
 import core.backend.PlayerMeta;
 
@@ -35,6 +36,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.block.ShulkerBox;
+import org.bukkit.entity.Shulker;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -49,6 +52,7 @@ import org.bukkit.Location;
 import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class BlockListener implements Listener {
@@ -227,7 +231,7 @@ public class BlockListener implements Listener {
 			for (Material thisMat: LagMats) {
 				if (thisMat != Material.GRAVEL) {
 					Material[] singleMat = {thisMat};
-					counter += Utilities.blocksCounter(block.getChunk(), singleMat);
+					counter += Utilities.blockCounter(block.getChunk(), thisMat);
 				}
 			}
 
@@ -248,11 +252,20 @@ public class BlockListener implements Listener {
 			}
 		}
 
-		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
+		// destroy illegal items on shulker placement | prevent Ops duping shulkers in creative mode
 		if (mat.contains("SHULKER_BOX")) {
+
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
-					
 				event.setCancelled(true);
+
+				placer.spigot().sendMessage(new TextComponent(
+						ChatColor.RED + "You can only place shulkers in survival mode"));
+			}
+
+			ShulkerBox thisShulk = (ShulkerBox)event.getBlockReplacedState();
+
+			for (ItemStack thisStack: thisShulk.getInventory()) {
+				ItemCheck.IllegalCheck(thisStack, "Placed Shulker", placer);
 			}
 		}
 		

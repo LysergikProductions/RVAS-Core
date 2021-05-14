@@ -24,6 +24,7 @@ package core.backend;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import core.events.ChunkListener;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -42,7 +43,7 @@ public class Utilities {
 		return (int) ((Math.random() * (max - min)) + min);
 	}
 
-	public static String calculateTime(double seconds) {
+	public static String timeToString(double seconds) {
 		
 		long hours;
 		
@@ -184,7 +185,6 @@ public class Utilities {
 	    }
 	}
 
-	// TODO: get this working..
 	public static int blocksCounter(Chunk chunk, Material[] blocks) {
 		int counter = 0;
 		
@@ -193,19 +193,21 @@ public class Utilities {
 		        for (int x = 0; x <= 15; x++) {
 		            for (int z = 0; z <= 15; z++) {
 
-		            	if (Arrays.stream(blocks).parallel().equals(chunk.getBlock(x, y, z))) {
+		            	if (Arrays.stream(blocks).parallel()
+								.anyMatch(Predicate.isEqual(chunk.getBlock(x, y, z).getType()))) {
 		            		counter++;
 						}
 		            }
 		        }
-		    }
-		    return counter;
+		    } return counter;
+
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println(e.getMessage());
 			return counter;
 		}
 	}
 
+	@Deprecated
 	public static int blockCounter(Chunk chunk, Material block) {
 		int counter = 0;
 
@@ -213,14 +215,11 @@ public class Utilities {
 			for (int y = 0; y <= 255; y++) {
 				for (int x = 0; x <= 15; x++) {
 					for (int z = 0; z <= 15; z++) {
-
-						if(chunk.getBlock(x, y, z).getType() == block) {
-							counter++;
-						}
+						if(chunk.getBlock(x, y, z).getType() == block) counter++;
 					}
 				}
-			}
-			return counter;
+			} return counter;
+
 		} catch (Exception e) {
 			System.out.println(e);
 			return counter;
