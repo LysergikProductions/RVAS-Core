@@ -8,9 +8,6 @@ import core.tasks.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.ProtocolLibrary;
-
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -22,15 +19,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class Main extends JavaPlugin implements Listener {
-	
 	public static Plugin instance;
-	
+
+	public static final String version = "0.2.1"; public static final int build = 243;
+	public static long worldAge_atStart; public static boolean isNewWorld;
+
 	public static OfflinePlayer Top = null;
 	public DiscordBot DiscordHandler;
-	
-	public static long worldAge_atStart;
-	public static boolean isNewWorld;
 
 	@Override
 	public void onEnable() {

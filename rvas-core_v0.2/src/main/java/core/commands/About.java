@@ -23,6 +23,7 @@ package core.commands;
  * 
  * */
 
+import core.Main;
 import core.tasks.Analytics;
 import core.backend.PlayerMeta;
 
@@ -50,7 +51,7 @@ public class About implements CommandExecutor {
 		if (!PlayerMeta.isAdmin(player)) Analytics.about_cmd++;
 		
 		TextComponent build = new TextComponent(
-				ChatColor.GRAY + "RVAS-Core v0.2.1 (#242)");
+				ChatColor.GRAY + "RVAS-Core v" + Main.version + " (#" + Main.build + ")");
 		build.setBold(true);
 
 		TextComponent by = new TextComponent(

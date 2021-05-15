@@ -25,7 +25,6 @@ package core.events;
 import core.Main;
 import core.backend.Config;
 import core.backend.ItemCheck;
-import core.backend.Utilities;
 
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.PacketType;
