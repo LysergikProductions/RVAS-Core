@@ -129,7 +129,7 @@ public class Move implements Listener {
 					e.setCancelled(true);
 
 					Location spawnLoc = e.getTo();
-					TP_InvulCrystal(crystal, spawnLoc);
+					if (spawnLoc != null) TP_InvulCrystal(crystal, spawnLoc);
 
 					if (Config.debug) System.out.println("TP'd invulnerable crystal to " +
 							(int)spawnLoc.getX() + " " + (int)spawnLoc.getY() + " " + (int)spawnLoc.getZ());

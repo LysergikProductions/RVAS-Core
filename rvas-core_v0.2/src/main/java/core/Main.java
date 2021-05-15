@@ -8,13 +8,8 @@ import core.tasks.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
 
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -187,7 +182,6 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] _______________________");
 
 		PluginManager core_pm = getServer().getPluginManager();
-		ProtocolManager plib_manager = ProtocolLibrary.getProtocolManager();
 
 		try { core_pm.registerEvents(new Chat(), this);
 		} catch (Exception e) { e.printStackTrace(); }

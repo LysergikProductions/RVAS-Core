@@ -37,7 +37,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.block.ShulkerBox;
-import org.bukkit.entity.Shulker;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -74,15 +73,13 @@ public class BlockListener implements Listener {
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 	}
 	
-	public static ArrayList<Material> PlacementBanned = new ArrayList<>();
-	{ // TODO: add config for restricting bedrock and portal-frame placement by adding to this array accordingly
+	public static ArrayList<Material> PlacementBanned = new ArrayList<>(); static {
 		PlacementBanned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 	}
 	
-	public static ArrayList<Material> LagMats = new ArrayList<>();
-	static {
+	public static ArrayList<Material> LagMats = new ArrayList<>(); static {
 		LagMats.addAll(Arrays.asList(Material.REDSTONE, Material.REDSTONE_WIRE, Material.REDSTONE_BLOCK,
 				Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH, Material.ACTIVATOR_RAIL, Material.POWERED_RAIL,
 				Material.LEVER, Material.PISTON, Material.STICKY_PISTON, Material.REDSTONE_LAMP, Material.GLOWSTONE,
@@ -230,7 +227,6 @@ public class BlockListener implements Listener {
 
 			for (Material thisMat: LagMats) {
 				if (thisMat != Material.GRAVEL) {
-					Material[] singleMat = {thisMat};
 					counter += Utilities.blockCounter(block.getChunk(), thisMat);
 				}
 			}
@@ -318,7 +314,7 @@ public class BlockListener implements Listener {
 			return true;
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}

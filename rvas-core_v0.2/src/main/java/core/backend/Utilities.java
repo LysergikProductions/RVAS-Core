@@ -153,7 +153,7 @@ public class Utilities {
 				TimeUnit.SECONDS.sleep(1);
 				
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 			Bukkit.getServer().spigot().broadcast(new TextComponent("§6Server is restarting."));
 			Bukkit.shutdown();
@@ -247,32 +247,9 @@ public class Utilities {
 			} return counter;
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return counter;
 		}
-	}
-
-	public static int blockRemover(Chunk chunk, Material blockType, int limiter, boolean doPop) {
-		int counter = 0;
-
-	    for (int y = 255; y >= 0; y--) {
-	        for (int x = 0; x <= 15; x++) {
-	            for (int z = 0; z <= 15; z++) {
-	            	
-	            	Block thisBlock = chunk.getBlock(x, y, z);
-	            	Location thisLoc = thisBlock.getLocation();
-	            	
-	                if (thisBlock.getType() == blockType) {
-	                	counter++;
-
-						if (doPop) thisLoc.getWorld().dropItem(thisLoc, new ItemStack(thisBlock.getType(),1));
-	                	thisBlock.setType(Material.AIR);
-	                }
-	                if (counter >= limiter) return counter;
-	            }
-	        }
-	    }
-	    return counter;
 	}
 	
 	// clears a 3x3 chunk grid around the provided chunk
@@ -399,5 +376,29 @@ public class Utilities {
 			System.out.println(e.getMessage());
 			return counter;
 		}
+	}
+
+	@Deprecated
+	public static int blockRemover(Chunk chunk, Material blockType, int limiter, boolean doPop) {
+		int counter = 0;
+
+		for (int y = 255; y >= 0; y--) {
+			for (int x = 0; x <= 15; x++) {
+				for (int z = 0; z <= 15; z++) {
+
+					Block thisBlock = chunk.getBlock(x, y, z);
+					Location thisLoc = thisBlock.getLocation();
+
+					if (thisBlock.getType() == blockType) {
+						counter++;
+
+						if (doPop) thisLoc.getWorld().dropItem(thisLoc, new ItemStack(thisBlock.getType(),1));
+						thisBlock.setType(Material.AIR);
+					}
+					if (counter >= limiter) return counter;
+				}
+			}
+		}
+		return counter;
 	}
 }

@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class PlayerMeta {
 
 	public static List<String> _ipMutes = new ArrayList<>();

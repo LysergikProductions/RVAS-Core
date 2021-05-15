@@ -30,6 +30,7 @@ import java.io.*;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class PVPdata {
 	
 	public static Map <UUID, PVPstats> sPVPStats = new HashMap<>();

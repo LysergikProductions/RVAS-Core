@@ -31,7 +31,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class HelpPages {
 
 	public static boolean helpGeneral(Player receiver, int page) {

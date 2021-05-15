@@ -104,8 +104,7 @@ public class Chat implements Listener {
 				} else doSend = true;
 				
 			} catch (Exception ex) {
-				
-				System.out.println(ex);
+				ex.printStackTrace();
 				lastChatTimes.put(player.getUniqueId(), System.currentTimeMillis());
 			}
 		}

@@ -41,12 +41,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ChatPrint {
 	
 	// - PLAYER STATS PAGES - \\
 
-	public static boolean printMcStats(Player receiver, OfflinePlayer target) {
+	public static void printMcStats(Player receiver, OfflinePlayer target) {
 		
 		receiver.spigot().sendMessage(new TextComponent(""));
 		
@@ -69,11 +69,9 @@ public class ChatPrint {
 
 		receiver.spigot().sendMessage(new TextComponent("Mined Obsidian: " + mined_obi));
 		receiver.spigot().sendMessage(new TextComponent("Placed Obsidian: " + placed_obi));
-		
-		return true;
 	}
 	
-	public static boolean printLeaders(Player receiver) {
+	public static void printLeaders(Player receiver) {
 		
 		HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
 		HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
@@ -132,11 +130,9 @@ public class ChatPrint {
 		receiver.spigot().sendMessage(top5_head);
 		list.forEach(ln -> receiver.spigot().sendMessage(ln));
 		receiver.spigot().sendMessage(msg);
-		
-		return true;
 	}
 	
-	public static boolean printStats(Player receiver, OfflinePlayer target) {
+	public static void printStats(Player receiver, OfflinePlayer target) {
 
 		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
 
@@ -223,11 +219,9 @@ public class ChatPrint {
 		
 		// send final message to receiver
 		statsLines.forEach(ln -> receiver.spigot().sendMessage(ln));
-		
-		return true;
 	}
 	
-	public static boolean printPlayerSettings(Player receiver) {
+	public static void printPlayerSettings(Player receiver) {
 		
 		OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(receiver.getUniqueId());
 		
@@ -285,6 +279,5 @@ public class ChatPrint {
 		list.add(showKD); list.add(showJoinMsgs); list.add(showDeathMsgs);
 		
 		list.forEach(ln -> receiver.spigot().sendMessage(ln));
-		return true;
 	}
 }

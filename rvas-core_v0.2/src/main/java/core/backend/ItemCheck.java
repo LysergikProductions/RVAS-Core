@@ -126,9 +126,9 @@ public class ItemCheck {
 					for (Enchantment e : item.getEnchantments().keySet()) {
 
 						// If this item does not support this enchantment
-						if (!e.canEnchantItem(item) && Config.getValue("item.illegal.invalid").equals("false")) continue;
+						if (!e.canEnchantItem(item) && Config.getValue("item.rebuild.invalid").equals("false")) continue;
 
-						if (Config.getValue("item.illegal.invalid").equals("true")) {
+						if (Config.getValue("item.rebuild.invalid").equals("true")) {
 							// If this item has a conflict with another enchantment on the same item
 							boolean hasConflict = false;
 
@@ -292,7 +292,7 @@ public class ItemCheck {
 		}
 
 		// Delete player heads (exempt wither heads)
-		if (item.getItemMeta() instanceof SkullMeta && Config.getValue("item.illegal.heads").equals("false")) {
+		if (item.getItemMeta() instanceof SkullMeta && Config.getValue("item.legal.heads").equals("false")) {
 			for (Material m : LegalHeads) {
 				if (item.getType().equals(m)) {
 					return;
