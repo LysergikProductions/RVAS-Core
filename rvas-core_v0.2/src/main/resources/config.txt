@@ -134,34 +134,6 @@ protect.bedrock.floor = true
 chunk.load.repair_roof = false
 chunk.load.repair_floor = false
 
-// ---------------------------- //
-// --- ILLEGAL ITEM PATCHES --- //
-// ---------------------------- //
-
-// - Skip illegal checks for ops?
-skip.ops = false
-
-// - Check for illegal items? (false will disable most illegal item checks)
-item.illegal = true
-
-// - Can items be over-stacked?
-item.illegal.stacked = true
-
-// - Are player heads allowed?
-item.legal.heads = true
-
-// - Make unbreakable items breakable again
-item.illegal.unbreakable = true
-
-// - Rebuild invalid enchantments
-item.rebuild.invalid = true
-
-// - Remove these items from player inventories when they join
-item.illegal.onjoin = true
-
-// - Enable or disable aggressive checks. false = disabled || true = enabled [default]
-item.illegal.agro = true
-
 // -------------- //
 // --- VOTING --- //
 // -------------- //
@@ -272,6 +244,39 @@ motd.force.name = RVAS
 
 // - Discord link. string value. default = tbd
 discord.link = https://discord.gg/RcTJTsMt8p
+
+// ------------------------- //
+// --- ILLEGAL ITEM META --- //
+// ------------------------- //
+
+// - Skip illegal checks for ops?
+skip.ops = false
+
+// - Check for illegal items? (false will disable most illegal item checks)
+item.illegal = true
+
+// - Remove illegal items from player inventories when they join
+item.illegal.onjoin = true
+
+// - Check every InventoryMoveEvent (can affect performance w/many hoppers)
+item.illegal.inv_check = true
+
+// -------------------------------- //
+// --- WHAT IS AN ILLEGAL ITEM? --- //
+// -------------------------------- //
+
+// - true == is illegal
+item.banned.bedrock = false
+item.banned.portal_frame = false
+
+item.banned.knowledge_book = true
+item.banned.player_heads = true
+item.banned.structure_blocks = true
+item.banned.command_blocks = true
+
+item.banned.stacked = true
+item.rebuild.invalid_enchants = true
+item.rebuild.unbreakable = true
 
 // ------------ //
 // --- MISC --- //

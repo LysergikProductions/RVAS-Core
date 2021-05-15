@@ -49,15 +49,19 @@ public class About implements CommandExecutor {
 		
 		if (!PlayerMeta.isAdmin(player)) Analytics.about_cmd++;
 		
-		TextComponent build = new TextComponent("RVAS-core v0.2.1 (#241)");
-		TextComponent by = new TextComponent("by LysergikProductions, w/code from d2k11 and help from ultradutch");
-		TextComponent source = new TextComponent("RVAS-core is open source. Access the GitHub by clicking this message.");
-		TextComponent license = new TextComponent("Licensed under AGPL-3.0.");
+		TextComponent build = new TextComponent(
+				ChatColor.GRAY + "RVAS-Core v0.2.1 (#242)");
+		build.setBold(true);
 
-		build.setColor(ChatColor.GRAY);
-		by.setColor(ChatColor.RED); by.setBold(true);
-		source.setColor(ChatColor.GOLD);
-		license.setItalic(true);
+		TextComponent by = new TextComponent(
+				ChatColor.AQUA + "by LysergikProductions, " +
+				ChatColor.GRAY +  "w/code from d2k11 and help from ultradutch");
+
+		TextComponent source = new TextComponent(
+				ChatColor.GREEN + "RVAS-core is open source. Access the GitHub by clicking this message.");
+
+		TextComponent license = new TextComponent(
+				ChatColor.ITALIC + "Licensed under AGPL-3.0.");
 		
 		source.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));
 		license.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.gnu.org/licenses/agpl-3.0.en.html"));

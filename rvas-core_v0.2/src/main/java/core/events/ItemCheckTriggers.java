@@ -32,7 +32,7 @@ public class ItemCheckTriggers implements Listener {
 	// Prevents hopper exploits
 	@EventHandler
 	public void onInventoryMovedItem(InventoryMoveItemEvent event) {
-		if (Config.getValue("item.illegal.agro").equals("true")) {
+		if (Config.getValue("item.illegal.inv_check").equals("true")) {
 
 			ItemCheck.IllegalCheck(event.getItem(), "INVENTORY_MOVED_ITEM", null);
 

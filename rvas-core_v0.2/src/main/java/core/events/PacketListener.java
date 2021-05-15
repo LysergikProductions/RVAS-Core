@@ -25,6 +25,7 @@ package core.events;
 import core.Main;
 import core.backend.Config;
 import core.backend.ItemCheck;
+import core.backend.Utilities;
 
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.PacketType;
@@ -97,8 +98,11 @@ public class PacketListener implements Listener {
 					Chunk thisChunk = thisWorld.getChunkAt(chunk_x, chunk_z);
 					ChunkListener.antiChunkBan(thisChunk);
 
-					thisChunk.unload(true);
-					while (!thisChunk.isLoaded()) thisChunk.load();
+					thisChunk.unload(true); int i = 0;
+					while (!thisChunk.isLoaded()) {
+						thisChunk.load(); i++;
+						if (i > 8) break;
+					}
 				}
 			}
 		});
