@@ -44,7 +44,7 @@ import org.bukkit.entity.Player;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ChunkListener implements Listener {
-	
+
 	static Material br = Material.BEDROCK;
 	static Material portal = Material.END_PORTAL;
 
@@ -84,14 +84,12 @@ public class ChunkListener implements Listener {
 			
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
-
-			antiChunkBan(chunk);
 			
 		} else {ChunkListener.newCount++; Analytics.new_chunks++;}
 	}
 	
 	public static void antiChunkBan(Chunk chunk) {
-		int removed_blocks = 0; int total_count;
+		int removed_blocks; int total_count;
 
 		try {
 			total_count = Utilities.banBlockCounter(chunk);
@@ -103,7 +101,7 @@ public class ChunkListener implements Listener {
 		// limit count to 2 sub-chunks worth of ban blocks per chunk
 		if (total_count > 8192) {
 			
-			System.out.println("WARN: TOO MANY BAN BLOCKS. Popping 90% of them..");
+			System.out.println("WARN: TOO MANY BAN BLOCKS. Removing 90% of them..");
 			removed_blocks = Utilities.banBlockRemover(chunk, (int)Math.rint((double)total_count * 0.9));
 
 			if (Config.debug) System.out.println("Removed " + removed_blocks + " chunk-banning blocks");

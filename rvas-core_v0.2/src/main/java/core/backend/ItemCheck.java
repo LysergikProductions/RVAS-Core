@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.PotionType;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ItemCheck {
 
 	public static ArrayList<Material> Banned = new ArrayList<>(), Special = new ArrayList<>(), LegalHeads = new ArrayList<>();
@@ -132,24 +132,22 @@ public class ItemCheck {
 							// If this item has a conflict with another enchantment on the same item
 							boolean hasConflict = false;
 
-							if (newMeta.getEnchants() != null) {
-								for (Enchantment etwo : newMeta.getEnchants().keySet()) {
-									// Ignore self
-									if (etwo.equals(e))
-										continue;
+							for (Enchantment etwo : newMeta.getEnchants().keySet()) {
+								// Ignore self
+								if (etwo.equals(e))
+									continue;
 
-									// Remove conflicts
-									if (etwo.conflictsWith(e)) {
-										hasConflict = true;
-									}
+								// Remove conflicts
+								if (etwo.conflictsWith(e)) {
+									hasConflict = true;
+								}
 
-									// Except Infinity + Mending
-									if ((etwo.equals(Enchantment.ARROW_INFINITE) && e.equals(Enchantment.MENDING))) {
-										hasConflict = false;
-									} else if ((etwo.equals(Enchantment.MENDING)
-											&& e.equals(Enchantment.ARROW_INFINITE))) {
-										hasConflict = false;
-									}
+								// Except Infinity + Mending
+								if ((etwo.equals(Enchantment.ARROW_INFINITE) && e.equals(Enchantment.MENDING))) {
+									hasConflict = false;
+								} else if ((etwo.equals(Enchantment.MENDING)
+										&& e.equals(Enchantment.ARROW_INFINITE))) {
+									hasConflict = false;
 								}
 							}
 							if (hasConflict) continue;

@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
-import core.events.ChunkListener;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.*;
@@ -252,7 +251,7 @@ public class Utilities {
 			return counter;
 		}
 	}
-	
+
 	public static int blockRemover(Chunk chunk, Material blockType, int limiter, boolean doPop) {
 		int counter = 0;
 
@@ -333,16 +332,16 @@ public class Utilities {
 
 	public static int getExitFloor(Chunk chunk) {
 		int y = 257;
-		while (y > 1) {
 
+		while (y > 1) {
 			Material topBlock = chunk.getWorld().getBlockAt(1, y, 1).getType();
 			Material bottomBlock = chunk.getWorld().getBlockAt(1, y-1, 1).getType();
 
-			if (topBlock.equals(Material.AIR) || bottomBlock.equals(Material.AIR)) {
-				y--; continue;
-			} else if (topBlock.equals(Material.BEDROCK) && !bottomBlock.equals(Material.BEDROCK)) {
-				return y;
-			} else {y--; continue;}
+			if (topBlock.equals(Material.AIR) ||
+					bottomBlock.equals(Material.AIR)) y--;
+			else if (topBlock.equals(Material.BEDROCK) &&
+					!bottomBlock.equals(Material.BEDROCK)) return y;
+			else y--;
 		}
 		return -1;
 	}

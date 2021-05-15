@@ -26,15 +26,16 @@ import core.Main;
 import core.backend.Config;
 import core.backend.ItemCheck;
 
+import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
+import java.util.List;
+import com.comphenix.protocol.wrappers.nbt.NbtBase;
 
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -68,26 +69,37 @@ public class PacketListener implements Listener {
 		});
 	}
 
-	// listen for PacketPLayOutMapChunk packets to prevent chunk-bans
+	// listen for PacketPLayOutMapChunk packets to prevent chunk-bans in already loaded chunks
 	public static void S2C_MapChunkPackets() {
 
 		PacketManager.addPacketListener(new PacketAdapter(
-				Main.instance, ListenerPriority.LOW, PacketType.Play.Server.MAP_CHUNK) {
+				Main.instance, ListenerPriority.LOWEST, PacketType.Play.Server.MAP_CHUNK) {
 
 			@Override
 			public void onPacketSending(PacketEvent event) {
-				//if (event.isCancelled()) return;
+				if (event.isCancelled()) return;
 
-				//PacketContainer thisPacket = event.getPacket();
+				PacketContainer thisPacket = event.getPacket();
+				World thisWorld = event.getPlayer().getWorld();
 
-				/* TODO: find value of PacketPlayOutMapChunk
-				if (Config.verbose) {
-					System.out.println("Integers:" + thisPacket.getIntegers().getValues());
-					System.out.println("Integer Arrays:" + thisPacket.getIntegerArrays().getValues());
-					System.out.println("Byte Arrays: " + thisPacket.getByteArrays().getValues());
-					System.out.println("Booleans: " + thisPacket.getBooleans().getValues());
-					System.out.println("ByteArraySerializer" + thisPacket.getByteArraySerializer());
-				}*/
+				int chunk_x = thisPacket.getIntegers().read(0);
+				int chunk_z = thisPacket.getIntegers().read(1);
+
+				List<NbtBase<?>> blockEntityData = thisPacket.getListNbtModifier().read(0);
+
+				if (blockEntityData.size() > 8192) {
+					event.setCancelled(true);
+
+					System.out.println(
+							"WARN: Packet MAP_CHUNK contains more than 8192 list entries in getListNbtModifier().read(0)");
+					System.out.println("Calling ChunkListener.antiChunkBan()..");
+
+					Chunk thisChunk = thisWorld.getChunkAt(chunk_x, chunk_z);
+					ChunkListener.antiChunkBan(thisChunk);
+
+					thisChunk.unload(true);
+					while (!thisChunk.isLoaded()) thisChunk.load();
+				}
 			}
 		});
 	}
