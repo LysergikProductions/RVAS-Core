@@ -2,8 +2,7 @@ package core.events;
 
 /* *
  * 
- *  About: Listen for client packet events to check for and prevent
- *  	ghost-blocks from either placing or breaking blocks
+ *  About: Listen for packet events to help accomplish some goals
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -23,70 +22,38 @@ package core.events;
  * 
  * */
 
-import com.destroystokyo.paper.block.TargetBlockInfo;
 import core.Main;
+import core.backend.Config;
+import core.backend.ItemCheck;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
-import core.backend.ItemCheck;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class PacketListener implements Listener {
-	
-	public static void C2S_UsePackets() {
-		// capture use packets (right-click without placing any blocks)
-		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
-				Main.instance, ListenerPriority.LOW, PacketType.Play.Client.BLOCK_PLACE) {
-			
-			@Override
-			public void onPacketReceiving(PacketEvent event) {
-				
-				PacketContainer packetContainer = event.getPacket();
-				Player sender = event.getPlayer();
-				
-				//if (debug) System.out.println("DEBUG: RECEIVED USE BUTTON PACKET" + event.getPacketType());
-				//if (debug && PlayerMeta.isAdmin(sender)) sender.spigot().sendMessage(new TextComponent(
-				//		"I see your client block_place packet! " + event.getPacketType()
-				//	)
-				//);
-			}
-		});
-	}
 
-	public static void C2S_UseBlockPackets() {
-
-		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
-				Main.instance, ListenerPriority.LOW, PacketType.Play.Client.USE_ITEM) {
-
-			@Override
-			public void onPacketReceiving(PacketEvent event) {
-				//
-			}
-		});
-	}
+	public static ProtocolManager PacketManager = ProtocolLibrary.getProtocolManager();
 
 	// prevent use of illegal weapons, tools, and other items
 	public static void C2S_AnimationPackets() {
 
-		ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(
+		PacketManager.addPacketListener(new PacketAdapter(
 				Main.instance, ListenerPriority.LOW, PacketType.Play.Client.ARM_ANIMATION) {
 
 			@Override
 			public void onPacketReceiving(PacketEvent event) {
-				if (event.isCancelled()) return;
-
 				Player sender = event.getPlayer();
-				ItemStack inHand;
 
+				ItemStack inHand;
 				try {
 					inHand = sender.getInventory().getItem(sender.getInventory().getHeldItemSlot());
 				} catch (Exception e) {
@@ -94,7 +61,50 @@ public class PacketListener implements Listener {
 				}
 
 				if (inHand != null) {
+					if (Config.verbose) System.out.println("Checking item for legality..");
 					ItemCheck.IllegalCheck(inHand, "Animation Packet", sender);
+				}
+			}
+		});
+	}
+
+	// listen for PacketPLayOutMapChunk packets to prevent chunk-bans
+	public static void S2C_MapChunkPackets() {
+
+		PacketManager.addPacketListener(new PacketAdapter(
+				Main.instance, ListenerPriority.LOW, PacketType.Play.Server.MAP_CHUNK) {
+
+			@Override
+			public void onPacketSending(PacketEvent event) {
+				//if (event.isCancelled()) return;
+
+				//PacketContainer thisPacket = event.getPacket();
+
+				/* TODO: find value of PacketPlayOutMapChunk
+				if (Config.verbose) {
+					System.out.println("Integers:" + thisPacket.getIntegers().getValues());
+					System.out.println("Integer Arrays:" + thisPacket.getIntegerArrays().getValues());
+					System.out.println("Byte Arrays: " + thisPacket.getByteArrays().getValues());
+					System.out.println("Booleans: " + thisPacket.getBooleans().getValues());
+					System.out.println("ByteArraySerializer" + thisPacket.getByteArraySerializer());
+				}*/
+			}
+		});
+	}
+
+	// Disable global wither-spawn sound
+	public static void S2C_WitherSpawnSound() {
+		PacketManager.addPacketListener(new PacketAdapter(
+				Main.instance, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
+
+			@Override
+			public void onPacketSending(PacketEvent event) {
+				PacketContainer packetContainer = event.getPacket();
+
+				if (Config.getValue("global.sound.no_wither").equals("true")) {
+					if (packetContainer.getIntegers().read(0) == 1023) {
+						packetContainer.getBooleans().write(0, false);
+					}
 				}
 			}
 		});

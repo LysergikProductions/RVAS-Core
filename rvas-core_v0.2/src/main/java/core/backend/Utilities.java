@@ -185,29 +185,56 @@ public class Utilities {
 	    }
 	}
 
-	public static int blocksCounter(Chunk chunk, Material[] blocks) {
+	public static int banBlockCounter(Chunk chunk) {
 		int counter = 0;
-		
+
 		try {
-		    for (int y = 255; y >= 0; y--) {
-		        for (int x = 0; x <= 15; x++) {
-		            for (int z = 0; z <= 15; z++) {
+			for (int y = 255; y >= 0; y--) {
+				for (int x = 0; x <= 15; x++) {
+					for (int z = 0; z <= 15; z++) {
+						Material thisMat = chunk.getBlock(x, y, z).getType();
 
-		            	if (Arrays.stream(blocks).parallel()
-								.anyMatch(Predicate.isEqual(chunk.getBlock(x, y, z).getType()))) {
-		            		counter++;
+						if (
+								thisMat.equals(Material.FURNACE) ||
+								thisMat.equals(Material.BLAST_FURNACE) ||
+								thisMat.equals(Material.SMOKER) ||
+								thisMat.equals(Material.ENCHANTING_TABLE)) {
+
+							counter++;
 						}
-		            }
-		        }
-		    } return counter;
-
+					}
+				}
+			} return counter;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return counter;
 		}
 	}
 
-	@Deprecated
+	public static int banBlockRemover(Chunk chunk, int limiter) {
+		int counter = 0;
+
+		for (int y = 255; y >= 0; y--) {
+			for (int x = 0; x <= 15; x++) {
+				for (int z = 0; z <= 15; z++) {
+					Block thisBlock = chunk.getBlock(x, y, z);
+
+					if (
+							thisBlock.getType().equals(Material.FURNACE) ||
+							thisBlock.getType().equals(Material.BLAST_FURNACE) ||
+							thisBlock.getType().equals(Material.SMOKER) ||
+							thisBlock.getType().equals(Material.ENCHANTING_TABLE)) {
+
+						thisBlock.setType(Material.AIR);
+						counter++;
+					}
+					if (counter >= limiter) return counter;
+				}
+			}
+		}
+		return counter;
+	}
+
 	public static int blockCounter(Chunk chunk, Material block) {
 		int counter = 0;
 
@@ -227,8 +254,8 @@ public class Utilities {
 	}
 	
 	public static int blockRemover(Chunk chunk, Material blockType, int limiter, boolean doPop) {
-		
-	    int counter = 0;
+		int counter = 0;
+
 	    for (int y = 255; y >= 0; y--) {
 	        for (int x = 0; x <= 15; x++) {
 	            for (int z = 0; z <= 15; z++) {
@@ -280,17 +307,16 @@ public class Utilities {
 	}
 
 	// send a message to all online ops and console
-	public static boolean notifyOps(TextComponent msg) {
-		if (msg == null) return false;
+	public static void notifyOps(TextComponent msg) {
+		if (msg == null) return;
 
 		for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
 			try {
 				if (thisPlayer.isOp()) thisPlayer.spigot().sendMessage(msg);
-			} catch (Exception e) {return false;}
+			} catch (Exception e) {return;}
 		}
 
 		System.out.println(msg.getText());
-		return true;
 	}
 
 	public static String getDimensionName (Location thisLoc) {
@@ -351,5 +377,28 @@ public class Utilities {
 			if (thisWorld.getEnvironment().equals(thisEnv)) return thisWorld;
 		}
 		return null;
+	}
+
+	@Deprecated
+	public static int blocksCounter(Chunk chunk, Material[] blocks) {
+		int counter = 0;
+
+		try {
+			for (int y = 255; y >= 0; y--) {
+				for (int x = 0; x <= 15; x++) {
+					for (int z = 0; z <= 15; z++) {
+
+						if (Arrays.stream(blocks).parallel()
+								.anyMatch(Predicate.isEqual(chunk.getBlock(x, y, z).getType()))) {
+							counter++;
+						}
+					}
+				}
+			} return counter;
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return counter;
+		}
 	}
 }

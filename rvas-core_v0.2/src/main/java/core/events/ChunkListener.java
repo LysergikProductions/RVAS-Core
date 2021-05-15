@@ -84,43 +84,27 @@ public class ChunkListener implements Listener {
 			
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
-			
-			try {
-				antiChunkBan(chunk);
-			} catch (Exception e) {
-				if (Config.debug) System.out.println(e.getMessage());
-				if (Config.verbose) e.printStackTrace();
-			}
+
+			antiChunkBan(chunk);
 			
 		} else {ChunkListener.newCount++; Analytics.new_chunks++;}
 	}
-
-	public static Material[] ChunkBanBlocks = {
-			Material.ENCHANTING_TABLE, Material.SMOKER,
-			Material.FURNACE, Material.BLAST_FURNACE
-	};
 	
 	public static void antiChunkBan(Chunk chunk) {
-		int removed_blocks = 0;
+		int removed_blocks = 0; int total_count;
 
-		int total_count = Utilities.blocksCounter(chunk, ChunkBanBlocks);
+		try {
+			total_count = Utilities.banBlockCounter(chunk);
+		} catch (Exception e) {
+			e.printStackTrace();
+			total_count = 0;
+		}
 		
 		// limit count to 2 sub-chunks worth of ban blocks per chunk
 		if (total_count > 8192) {
 			
 			System.out.println("WARN: TOO MANY BAN BLOCKS. Popping 90% of them..");
-
-			removed_blocks += Utilities.blockRemover(
-					chunk, Material.FURNACE, (int)Math.rint((double)total_count * 0.9), false);
-
-			removed_blocks += Utilities.blockRemover(
-					chunk, Material.BLAST_FURNACE, (int)Math.rint((double)total_count * 0.9), false);
-
-			removed_blocks += Utilities.blockRemover(
-					chunk, Material.SMOKER, (int)Math.rint((double)total_count * 0.9), false);
-
-			removed_blocks += Utilities.blockRemover(
-					chunk, Material.ENCHANTING_TABLE, (int)Math.rint((double)total_count * 0.9), false);
+			removed_blocks = Utilities.banBlockRemover(chunk, (int)Math.rint((double)total_count * 0.9));
 
 			if (Config.debug) System.out.println("Removed " + removed_blocks + " chunk-banning blocks");
 		}

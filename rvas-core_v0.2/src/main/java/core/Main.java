@@ -223,29 +223,11 @@ public class Main extends JavaPlugin implements Listener {
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try {
-			PacketListener.C2S_UseBlockPackets();
-			PacketListener.C2S_UsePackets();
 			PacketListener.C2S_AnimationPackets();
 
-		} catch (Exception e) { e.printStackTrace(); }
+			PacketListener.S2C_MapChunkPackets();
+			PacketListener.S2C_WitherSpawnSound();
 
-		try {
-			// Disable global wither-spawn sound
-			if (Config.getValue("global.sound.no_wither").equals("true")) {
-				plib_manager.addPacketListener(new PacketAdapter(
-						this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
-
-					@Override
-					public void onPacketSending(PacketEvent event) {
-
-						PacketContainer packetContainer = event.getPacket();
-
-						if (packetContainer.getIntegers().read(0) == 1023) {
-							packetContainer.getBooleans().write(0, false);
-						}
-					}
-				});
-			}
 		} catch (Exception e) { e.printStackTrace(); }
 		
 		System.out.println("[core.main] ..finishing up..");

@@ -81,7 +81,7 @@ public class Aliases {
                 "{Slot:7,id:farmland,Count:127},{Slot:8,id:bedrock,Count:127}," +
                 "{Slot:9,id:knowledge_book,Count:127},{Slot:10,id:command_block,Count:127}," +
                 "{Slot:11,id:player_head,Count:127},{Slot:12,id:creeper_head,Count:127}," +
-                "{Slot:13,id:mule_spawn_egg,Count:127},{Slot:14,id:evoker_spawn_egg,Count:127}]}}";
+                "{Slot:13,id:mule_spawn_egg,Count:127},{Slot:14,id:wither_head,Count:127}]}}";
     }
 
     // 32k feathers
