@@ -100,7 +100,7 @@ public class PacketListener implements Listener {
 					thisChunk.unload(true); int i = 0;
 					while (!thisChunk.isLoaded()) {
 						thisChunk.load(); i++;
-						if (i > 8) break;
+						if (i > 2) break;
 					}
 				}
 			}

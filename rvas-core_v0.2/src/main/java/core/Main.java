@@ -23,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
 	public static Plugin instance;
 
-	public static final String version = "0.2.1"; public static final int build = 243;
+	public static final String version = "0.2.2"; public static final int build = 246;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;

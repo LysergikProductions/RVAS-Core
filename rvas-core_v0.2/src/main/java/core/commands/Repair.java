@@ -76,7 +76,7 @@ public class Repair implements CommandExecutor {
 
 					Chunk pos_pos = player.getWorld().getChunkAt(0, 0);
 					Chunk pos_neg = player.getWorld().getChunkAt(0, -1);
-					Chunk ned_pos = player.getWorld().getChunkAt(-1, 0);
+					Chunk neg_pos = player.getWorld().getChunkAt(-1, 0);
 					Chunk neg_neg = player.getWorld().getChunkAt(-1, -1);
 					
 					pos_pos.load(false); // <- load (but don't generate) end chunk's
@@ -85,8 +85,8 @@ public class Repair implements CommandExecutor {
 					pos_neg.load(false);
 					ChunkListener.fixEndExit(pos_neg, y_low);
 					
-					ned_pos.load(false);
-					ChunkListener.fixEndExit(ned_pos, y_low);
+					neg_pos.load(false);
+					ChunkListener.fixEndExit(neg_pos, y_low);
 					
 					neg_neg.load(false);
 					ChunkListener.fixEndExit(neg_neg, y_low);

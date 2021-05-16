@@ -18,7 +18,9 @@ public class FileManager {
 	public static File pvpstats_user_database;
 	public static File playtime_user_database;
 	public static File settings_user_database;
+
 	public static File muted_user_database;
+	public static File prison_user_database;
 	
 	public static File donor_list;
 	public static File all_donor_codes;
@@ -27,7 +29,8 @@ public class FileManager {
 	public static File server_statistics_list;
 	public static File core_server_config;
 	public static File motd_message_list;
-	public static File prison_user_database;
+	public static File auto_announce_list;
+
 	
 	public static void backupData(File thisFile, String thisFileName, String ext) throws IOException {
 	    
@@ -54,7 +57,7 @@ public class FileManager {
 	            out.flush();
 	        }
 	        
-	    } catch (IOException e) {System.out.println(e);}
+	    } catch (IOException e) {e.printStackTrace();}
 	}
 	
 	public static void setup() throws IOException {
@@ -71,6 +74,7 @@ public class FileManager {
 		server_statistics_list = new File(plugin_work_path + "analytics.csv");
 		core_server_config = new File(plugin_work_path + "config.txt");
 		motd_message_list = new File(plugin_work_path + "motds.txt");
+		auto_announce_list = new File(plugin_work_path + "announcements.txt");
 		
 		playtime_user_database = new File(plugin_work_path + "playtime.db");
 		pvpstats_user_database = new File(plugin_work_path + "pvpstats.txt");
@@ -88,6 +92,7 @@ public class FileManager {
 		if (!used_donor_codes.exists()) used_donor_codes.createNewFile();
 		if (!muted_user_database.exists()) muted_user_database.createNewFile();
 		if (!motd_message_list.exists()) motd_message_list.createNewFile();
+		if (!auto_announce_list.exists()) auto_announce_list.createNewFile();
 
 		if (!server_statistics_list.exists()) {
 			

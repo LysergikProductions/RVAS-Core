@@ -2,6 +2,7 @@ package core.backend;
 
 import core.events.*;
 import core.tasks.Analytics;
+import core.tasks.AutoAnnouncer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,6 +44,7 @@ public class Config {
 		if (SpawnController.updateConfigs() && verbose) System.out.println("SpawnController sConfigs Updated!");
 		if (ItemCheck.updateConfigs() && verbose) System.out.println("Banned Block sConfigs Updated!");
 		if (Connection.updateConfigs() && verbose) System.out.println("MOTDs Updated!");
+		if (AutoAnnouncer.updateConfigs() && verbose) System.out.println("Announcements Updated!");
 
 		System.out.println("Configs updated!");
 	}

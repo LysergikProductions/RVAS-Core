@@ -157,46 +157,42 @@ public class Connection implements Listener {
 		ServerMeta.preventReconnect(e.getPlayer(), Integer.parseInt(Config.getValue("speedlimit.rc_delay_safe")));
 	}
 
-	private final String[] motds = {
+	private static final String[] motds = {
 		"⛏ i'm not high, we're high"  , "⛏ vanilla exploits rejoice!" , "⛏ needs more carpet" ,
 		"⛏ imagine imagining..", "⛏ now with less fat!", "⛏ what is sleep?"
 	};
 
 	private Random r = new Random();
-	private List<String> allMotds = new ArrayList<>();
 
-	public static boolean done = false;
-
-	@EventHandler
-	public void onPing(ServerListPingEvent e) {
-
-		if (!done) {
+	private static List<String> allMotds; static {
 			try {
 				allMotds = new ArrayList<>(Arrays.asList(motds));
 				System.out.println("[core.events.connection] Loading " + motds.length + " default MOTDs...");
 				allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
-			} catch (IOException e1) {
+
+			} catch (IOException ignore) {
 				allMotds = new ArrayList<>(Arrays.asList(motds));
 			}
-			done = true;
 			System.out.println("[core.events.connection] Loaded " + allMotds.size() + " MOTDs");
-		}
+	}
+
+	@EventHandler
+	public void onPing(ServerListPingEvent e) {
 
 		int rnd = r.nextInt(allMotds.size());
-
 		String tps = new DecimalFormat("0.00").format(LagProcessor.getTPS());
 
-		final String msg = "§3§l        RVA-Survival 1.16.5 §r§7 |  TPS: " + tps +
-				"           §r§6§o" + allMotds.get(rnd);
+		final String msg = "\u00A73\u00A7l        RVA-Survival 1.16.5 \u00A7r\u00A77 |  TPS: " + tps +
+				"           \u00A7r\u00A76\u00A7o" + allMotds.get(rnd);
 
 		e.setMotd(msg);
 
 		if(serverHostname.equals("test")) {
 			if(Bukkit.hasWhitelist()) {
-				e.setMotd("§9rvas test §7| §4closed §7| §9TPS: " + tps);
+				e.setMotd("\u00A79rvas test \u00A77| \u00A74closed \u00A77| \u00A79TPS: " + tps);
 			}
 			else {
-				e.setMotd("§9rvas test §7| §aopen §7| §9TPS: " + tps);
+				e.setMotd("\u00A79rvas test \u00A77| \u00A7aopen \u00A77| \u00A79TPS: " + tps);
 			}
 		}
 		e.setMaxPlayers(13);
@@ -205,10 +201,13 @@ public class Connection implements Listener {
 	public static boolean updateConfigs() {
 
 		try {
-			done = false;
+			allMotds = new ArrayList<>(Arrays.asList(motds));
+			System.out.println("[core.events.connection] Loading " + motds.length + " default MOTDs...");
+			allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
 			return true;
 
 		} catch (Exception e) {
+			allMotds = new ArrayList<>(Arrays.asList(motds));
 			e.printStackTrace();
 			return false;
 		}

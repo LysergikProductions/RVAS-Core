@@ -1,10 +1,34 @@
 package core.tasks;
 
+/* *
+ *
+ *  About: Announce string randomly selected from
+ * 			announcements.txt as a synced scheduled task
+ *
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * */
+
 import core.backend.Scheduler;
 import core.backend.Config;
 
-import java.util.Random;
-import java.util.TimerTask;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 
@@ -17,57 +41,63 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 @SuppressWarnings("deprecation")
 public class AutoAnnouncer extends TimerTask {
 	
-	private Random r = new Random();
+	private final Random r = new Random();
+
+	static List<String> announcements; static {
+		try {
+			announcements = new ArrayList<>();
+			announcements.addAll(Files.readAllLines(Paths.get("plugins/core/announcements.txt")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	static TextComponent source; static {
+		source = new TextComponent(
+				"RVAS-core is open-source! Click this message to access the repository.");
+		source.setColor(ChatColor.GOLD); source.setItalic(true);
+
+		source.setClickEvent(new ClickEvent(ClickEvent.Action
+				.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));
+
+		source.setHoverEvent(new HoverEvent(HoverEvent.Action
+				.SHOW_TEXT, new Text("see the source code by clicking here")));
+	}
 
 	@Override
 	public void run() {
 		if (Config.getValue("announcer.enabled").equals("false")) return;
-		
-		int rnd = r.nextInt(10);
 
-		switch (rnd) {
-			case 1:
-				Bukkit.spigot()
-						.broadcast(new TextComponent("§6You can vote to mute a player by doing §l/vm [playername]."));
-				break;
-			case 2:
-				Bukkit.spigot().broadcast(
-						new TextComponent("§6Use /kit anarchy to get some basic starter items, including steak!"));
-				break;
-			case 3:
-				Bukkit.spigot().broadcast(
-						new TextComponent("§6You can toggle join messages with /tjm."));
-				break;
-			//case 4:
-				//Bukkit.spigot().broadcast(new TextComponent("§6Lagging the server will result in §lsevere consequences."));
-				//break;
-			case 5:
-				Bukkit.spigot().broadcast(new TextComponent("§6Do /help to see the commands available to you."));
-				break;
-			case 6:
-				Bukkit.spigot().broadcast(new TextComponent("§6Use /server to see the current speed limit and other information."));
-				break;
-			case 7:
-				Bukkit.spigot().broadcast(new TextComponent("§6You can dupe the item/s in your main hand by supporting the server with /vote"));
-				break;
-			case 8:
-				Bukkit.spigot().broadcast(
-						new TextComponent("§6You can sign items to show them as uniquely yours by doing §l/sign."));
-				break;
-			case 9:
-				Bukkit.spigot().broadcast(
-						new TextComponent("§6Join the Discord by using §l/discord."));
-				break;
-			default:
-				TextComponent source = new TextComponent("RVAS-core is open-source! Click this message to access the repository.");
-				source.setColor(ChatColor.GOLD); source.setItalic(true);
-				
-				source.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));
-				source.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("see the source code by clicking here")));
-				
-				Bukkit.spigot().broadcast(source);
-				break;
+		int size = announcements.size();
+		int rnd = r.nextInt(size+1);
+		final String msg;
+		final TextComponent sourceMsg = source;
+
+		if (rnd == size || size == 0) {
+			Bukkit.spigot().broadcast(sourceMsg);
+			return;
+
+		} else {
+			try {
+				msg = announcements.get(rnd);
+			} catch (IndexOutOfBoundsException ignore) {
+				Bukkit.spigot().broadcast(sourceMsg);
+				return;
+			}
 		}
+
+		Bukkit.spigot().broadcast(new TextComponent(ChatColor.GOLD + msg));
 		Scheduler.setLastTaskId("autoAnnounce");
+	}
+
+	public static boolean updateConfigs() {
+		try {
+			announcements = new ArrayList<>();
+			announcements.addAll(Files.readAllLines(Paths.get("plugins/core/announcements.txt")));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }

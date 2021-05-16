@@ -31,27 +31,24 @@ import java.io.Serializable;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
 
-@SuppressWarnings({"SpellCheckingInspection", "CommentedOutCode"})
+@SuppressWarnings("SpellCheckingInspection")
 public class PVPstats implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public UUID playerid; public int killTotal;
 	public int deathTotal; public String kd;
-	
 	public int spawnKills;
-	//int killWcrystal;
-	//int logEscape;
 	
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	
 	public PVPstats(UUID playerid, int killTotal, int deathTotal, String kd, int spawnKills) {
+
 		this.playerid = playerid; this.killTotal = killTotal; this.deathTotal = deathTotal;
 		this.kd = kd; this.spawnKills = spawnKills;
 	}
 	
 	@Override
     public String toString() {
-
 		return playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;
     }
 	

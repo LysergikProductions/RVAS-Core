@@ -26,6 +26,7 @@ package core.objects;
 import java.util.UUID;
 import java.io.Serializable;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class PlayerSettings implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -52,8 +53,10 @@ public class PlayerSettings implements Serializable {
 	
 	@Override
     public String toString() {
-
-		return playerid + ":" + show_PVPstats + ":" + show_kills + ":" + show_deaths + ":" + show_kd + ":" + show_player_join_messages + ":" + show_player_death_messages;
+		String out; {
+				out = playerid + ":" + show_PVPstats + ":" + show_kills + ":" + show_deaths + ":" +
+						show_kd + ":" +show_player_join_messages + ":" + show_player_death_messages;
+		} return out;
     }
 	
 	public static PlayerSettings fromString(String line) {
