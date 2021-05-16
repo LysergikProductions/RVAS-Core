@@ -2,12 +2,15 @@ package core.commands;
 
 import core.backend.PlayerMeta;
 import core.backend.PlayerMeta.MuteType;
-import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+
+import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
@@ -21,12 +24,12 @@ public class Mute implements CommandExecutor {
 		else name = "CONSOLE";
 
 		if (!PlayerMeta.isOp(sender)) {
-			sender.sendMessage("§cYou can't use this.");
+			sender.sendMessage("\u00A7cYou can't use this.");
 			return true;
 		}
 
 		if (args.length < 1) {
-			sender.sendMessage("§cInvalid syntax. Syntax: /mute <perm/temp/none/all> [player]");
+			sender.sendMessage("\u00A7cInvalid syntax. Syntax: /mute <perm/temp/none/all> [player]");
 			return true;
 		}
 
@@ -35,8 +38,8 @@ public class Mute implements CommandExecutor {
 			PlayerMeta.MuteAll = !PlayerMeta.MuteAll;
 			Bukkit.getServer().spigot()
 					.broadcast(PlayerMeta.MuteAll ?
-							new TextComponent("§4§l" + name + " §r§4has silenced the chat.") :
-							new TextComponent("§a§l" + name + " §r§ahas un-silenced the chat."));
+							new TextComponent("\u00A74\u00A7l" + name + " \u00A7r\u00A74has silenced the chat.") :
+							new TextComponent("\u00A7a\u00A7l" + name + " \u00A7r\u00A7ahas un-silenced the chat."));
 			return true;
 		}
 
@@ -64,41 +67,49 @@ public class Mute implements CommandExecutor {
 		switch (mode.toUpperCase()) {
 			case "PERM":
 				if(PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("§cPlayer is already muted."));
+					sender.spigot().sendMessage(new TextComponent("\u00A7cPlayer is already muted."));
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"§4§l" + name + " §r§4has permanently muted §4§l" + toMute.getName() + " §r§4."));
+						"\u00A74\u00A7l" + name + " \u00A7r\u00A74has permanently muted \u00A74\u00A7l" +
+								toMute.getName() + " \u00A7r\u00A74."));
 				PlayerMeta.setMuteType(toMute, MuteType.PERMANENT);
 				break;
+
 			case "TEMP":
 				if(PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("§cPlayer is already muted."));
+					sender.spigot().sendMessage(new TextComponent("\u00A7cPlayer is already muted."));
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"§c§l" + name + " §r§chas temporarily muted §c§l" + toMute.getName() + " §r§c."));
+						"\u00A7c\u00A7l" + name + " \u00A7r\u00A7chas temporarily muted \u00A7c\u00A7l" +
+								toMute.getName() + " \u00A7r\u00A7c."));
 				PlayerMeta.setMuteType(toMute, MuteType.TEMPORARY);
 				break;
+
 			case "NONE":
 				if(!PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("§cPlayer isn't muted."));
+					sender.spigot().sendMessage(new TextComponent("\u00A7cPlayer isn't muted."));
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"§a§l" + name + " §r§ahas unmuted §a§l" + toMute.getName() + "§r§a."));
+						"\u00A7a\u00A7l" + name + " \u00A7r\u00A7ahas un-muted \u00A7a\u00A7l" +
+								toMute.getName() + "\u00A7r\u00A7a."));
 				PlayerMeta.setMuteType(toMute, MuteType.NONE);
 				break;
+
 			case "IP":
 				if(PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("§cIP is already muted."));
+					sender.spigot().sendMessage(new TextComponent("\u00A7cIP is already muted."));
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
-						"§4§l" + name + " §r§4has IP muted §4§l" + toMute.getName() + "§r§4."));
+						"\u00A74\u00A7l" + name + " \u00A7r\u00A74has IP muted \u00A74\u00A7l" +
+								toMute.getName() + "\u00A7r\u00A74."));
 				PlayerMeta.setMuteType(toMute, MuteType.IP);
+
 			default:
-				sender.sendMessage("§cInvalid syntax. Syntax: /mute <perm/temp/ip/none/all> [player]");
+				sender.sendMessage("\u00A7cInvalid syntax. Syntax: /mute <perm/temp/ip/none/all> [player]");
 				return true;
 		}
 		return true;

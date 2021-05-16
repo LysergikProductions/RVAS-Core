@@ -1,5 +1,6 @@
 package core.backend;
 
+import core.commands.Ignore;
 import core.events.Chat;
 import core.objects.PlayerSettings;
 
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class PlayerMeta {
 
 	public static List<String> _ipMutes = new ArrayList<>();
@@ -70,6 +72,13 @@ public class PlayerMeta {
 		return false;
 	}
 
+	public static boolean isIgnoring(UUID ignorer, UUID ignored) {
+		if(Ignore.Ignores.containsKey(ignorer)) {
+			return Ignore.Ignores.get(ignorer).contains(ignored);
+		}
+		return false;
+	}
+
 	@SuppressWarnings("deprecation")
 	public static void setMuteType(Player p, MuteType type)
 	{
@@ -116,7 +125,7 @@ public class PlayerMeta {
 			setMuteType(p, MuteType.PERMANENT);
 			_ipMutes.add(getIp(p));
 		}
-		p.spigot().sendMessage(new TextComponent("§7§oYou are now " + muteType + "muted."));
+		p.spigot().sendMessage(new TextComponent("\u00A77\u00A7oYou are now " + muteType + "muted."));
 	}
 
 	public static void tickTempMutes(double msToAdd) {

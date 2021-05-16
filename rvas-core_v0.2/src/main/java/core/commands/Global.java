@@ -23,6 +23,7 @@ package core.commands;
  * */
 
 import core.backend.PlayerMeta;
+import core.backend.Utilities;
 import core.events.SpawnController;
 
 import net.md_5.bungee.api.ChatColor;
@@ -39,12 +40,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class Global implements CommandExecutor {
 
-	public static TextComponent dreamMsg = new TextComponent("You wake up, confused.. was that a dream?");
+	public static TextComponent dreamMsg; static {
+		dreamMsg = new TextComponent("You wake up, confused.. was that a dream?");
+		dreamMsg.setColor(ChatColor.GRAY);
+	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-		dreamMsg.setColor(ChatColor.GRAY); dreamMsg.setFont("");
+		Player op = (Player)sender;
 
 		// check args
 		if (args.length != 0) {
@@ -58,9 +63,12 @@ public class Global implements CommandExecutor {
 						for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 							
 							Location player_loc = p.getLocation();
-							
-							player_loc.setX(player_loc.getX()+7.10+(i*2));
-							player_loc.setZ(player_loc.getZ()+7.10-(i*2));
+
+							int range_max = (int)player_loc.getX() + 16;
+							int range_min = (int)player_loc.getX() - 16;
+
+							player_loc.setX(player_loc.getX() + Utilities.getRandomNumber(range_min, range_max));
+							player_loc.setZ(player_loc.getZ() + Utilities.getRandomNumber(range_min, range_max));
 							
 							p.getWorld().spigot().strikeLightning(player_loc, false);
 						}
@@ -84,10 +92,7 @@ public class Global implements CommandExecutor {
 						String y = String.valueOf(finalTP.getBlockY());
 						String z = String.valueOf(finalTP.getBlockZ());
 
-						Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-								"/tp " + player_name + " " + x + " " + y + " " + z);
-
-
+						op.chat("/tp " + player_name + " " + x + " " + y + " " + z);
 						p.spigot().sendMessage(dreamMsg);
 					}
 			}

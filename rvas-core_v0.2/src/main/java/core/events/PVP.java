@@ -51,13 +51,6 @@ public class PVP implements Listener {
 		Player killed = event.getEntity();
 		UUID killedID = killed.getUniqueId();
 		Player killer = killed.getKiller();
-		
-		try {
-			assert killer != null;
-		} catch (NullPointerException e) {
-			if (debug) System.out.println("killer was null.");
-			return;
-		}
 
 		String killerName;
 		String killerLoc;
@@ -68,7 +61,7 @@ public class PVP implements Listener {
 			try {
 				killerName = killer.getName();
 				killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
-			} catch (Exception e) {
+			} catch (Exception ignore) {
 				System.out.println("[core.events.pvp] Killer was null!");
 				killerName = "null";
 				killerLoc = killed.getLocation().getX()+", "+killed.getLocation().getY()+", "+killed.getLocation().getZ();
@@ -78,12 +71,11 @@ public class PVP implements Listener {
 		}
 
 		// increment appropriate stats, do nothing if this was not a PVP kill
-		if (killer != null) PVPdata.incKillTotal(killer, 1);
-		else return;
+		if (killer != null) {
+			PVPdata.incKillTotal(killer, 1);
+			PVPdata.incDeathTotal(killed, 1);
+		} else return;
 
-		if (killed != null) PVPdata.incDeathTotal(killed, 1);
-		else return;
-		
 		// check if victim was in the spawn region on death
 		OfflinePlayer victim = Bukkit.getOfflinePlayer(killedID);
 		double victim_playtime = PlayerMeta.getPlaytime(victim);

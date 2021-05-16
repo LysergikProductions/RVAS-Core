@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>core</groupId>
     <artifactId>rvas-core</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <name>rvas</name>
     <description>paper-plugin</description>
 
@@ -69,7 +69,7 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.2.0-229-stable</finalName>
+        <finalName>rvas-core-0.2.1-243</finalName>
         <plugins>
             <!-- download source code in Eclipse, best practice-->
             <plugin>

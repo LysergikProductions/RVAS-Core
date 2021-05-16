@@ -1,7 +1,31 @@
 package core.backend;
 
+/* *
+ *
+ *  About: Various commonly-used pure and impure methods
+ *
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * */
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.*;
@@ -9,11 +33,16 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Utilities {
-	
-	public static String calculateTime(double seconds) {
+
+	public static int getRandomNumber(int min, int max) {
+		return (int) ((Math.random() * (max - min)) + min);
+	}
+
+	public static String timeToString(double seconds) {
 		
 		long hours;
 		
@@ -124,7 +153,7 @@ public class Utilities {
 				TimeUnit.SECONDS.sleep(1);
 				
 			} catch (Exception e) {
-				System.out.println(e);
+				e.printStackTrace();
 			}
 			Bukkit.getServer().spigot().broadcast(new TextComponent("§6Server is restarting."));
 			Bukkit.shutdown();
@@ -154,44 +183,73 @@ public class Utilities {
 	        return false;
 	    }
 	}
-	
-	public static int blockCounter(Chunk chunk, Material block) {
+
+	public static int banBlockCounter(Chunk chunk) {
 		int counter = 0;
-		
+
 		try {
-		    for(int y = 0; y <= 255; y++) {
-		        for(int x = 0; x <= 15; x++) {
-		            for(int z = 0; z <= 15; z++) {
-		            	
-		                if(chunk.getBlock(x, y, z).getType() == block) counter++;
-		            }
-		        }
-		    }
-		    return counter;
+			for (int y = 255; y >= 0; y--) {
+				for (int x = 0; x <= 15; x++) {
+					for (int z = 0; z <= 15; z++) {
+						Material thisMat = chunk.getBlock(x, y, z).getType();
+
+						if (
+								thisMat.equals(Material.FURNACE) ||
+								thisMat.equals(Material.BLAST_FURNACE) ||
+								thisMat.equals(Material.SMOKER) ||
+								thisMat.equals(Material.ENCHANTING_TABLE)) {
+
+							counter++;
+						}
+					}
+				}
+			} return counter;
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println(e.getMessage());
 			return counter;
 		}
 	}
-	
-	public static int blockRemover(Chunk chunk, Material blockType, int limiter) {
-		
-	    int counter = 0;
-	    for (int y = 0; y <= 255; y++) {
-	        for (int x = 0; x <= 15; x++) {
-	            for (int z = 0; z <= 15; z++) {
-	            	
-	            	Block thisBlock = chunk.getBlock(x, y, z);
-	            	
-	                if (thisBlock.getType() == blockType) {
-	                	counter++;
-	                	thisBlock.setType(Material.AIR);
-	                }
-	                if (counter >= limiter) return counter;
-	            }
-	        }
-	    }
-	    return counter;
+
+	public static int banBlockRemover(Chunk chunk, int limiter) {
+		int counter = 0;
+
+		for (int y = 255; y >= 0; y--) {
+			for (int x = 0; x <= 15; x++) {
+				for (int z = 0; z <= 15; z++) {
+					Block thisBlock = chunk.getBlock(x, y, z);
+
+					if (
+							thisBlock.getType().equals(Material.FURNACE) ||
+							thisBlock.getType().equals(Material.BLAST_FURNACE) ||
+							thisBlock.getType().equals(Material.SMOKER) ||
+							thisBlock.getType().equals(Material.ENCHANTING_TABLE)) {
+
+						thisBlock.setType(Material.AIR);
+						counter++;
+					}
+					if (counter >= limiter) return counter;
+				}
+			}
+		}
+		return counter;
+	}
+
+	public static int blockCounter(Chunk chunk, Material block) {
+		int counter = 0;
+
+		try {
+			for (int y = 0; y <= 255; y++) {
+				for (int x = 0; x <= 15; x++) {
+					for (int z = 0; z <= 15; z++) {
+						if(chunk.getBlock(x, y, z).getType() == block) counter++;
+					}
+				}
+			} return counter;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return counter;
+		}
 	}
 	
 	// clears a 3x3 chunk grid around the provided chunk
@@ -225,48 +283,49 @@ public class Utilities {
 	}
 
 	// send a message to all online ops and console
-	public static boolean notifyOps(TextComponent msg) {
-		if (msg == null) return false;
+	public static void notifyOps(TextComponent msg) {
+		if (msg == null) return;
 
 		for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
 			try {
 				if (thisPlayer.isOp()) thisPlayer.spigot().sendMessage(msg);
-			} catch (Exception e) {return false;}
+			} catch (Exception e) {return;}
 		}
+
 		System.out.println(msg.getText());
-		return true;
 	}
 
 	public static String getDimensionName (Location thisLoc) {
-		String out;
 
-		if (thisLoc.getWorld().getEnvironment().equals(World.Environment.NORMAL)) out = "overworld";
-		else if (thisLoc.getWorld().getEnvironment().equals(World.Environment.NETHER)) out = "the_nether";
-		else if (thisLoc.getWorld().getEnvironment().equals(World.Environment.THE_END)) out = "the_end";
-		else out = null;
+		String out = null;
+		World.Environment thisEnv = thisLoc.getWorld().getEnvironment();
+
+		if (thisEnv.equals(World.Environment.NORMAL)) out = "overworld";
+		else if (thisEnv.equals(World.Environment.NETHER)) out = "the_nether";
+		else if (thisEnv.equals(World.Environment.THE_END)) out = "the_end";
 
 		return out;
 	}
 
 	public static int getExitFloor(Chunk chunk) {
 		int y = 257;
-		while (y > 1) {
 
+		while (y > 1) {
 			Material topBlock = chunk.getWorld().getBlockAt(1, y, 1).getType();
 			Material bottomBlock = chunk.getWorld().getBlockAt(1, y-1, 1).getType();
 
-			if (topBlock.equals(Material.AIR) || bottomBlock.equals(Material.AIR)) {
-				y--; continue;
-			} else if (topBlock.equals(Material.BEDROCK) && !bottomBlock.equals(Material.BEDROCK)) {
-				return y;
-			} else {y--; continue;}
+			if (topBlock.equals(Material.AIR) ||
+					bottomBlock.equals(Material.AIR)) y--;
+			else if (topBlock.equals(Material.BEDROCK) &&
+					!bottomBlock.equals(Material.BEDROCK)) return y;
+			else y--;
 		}
 		return -1;
 	}
 
 	public static boolean isCmdRestricted (String thisCmd) {
-		if (
-				thisCmd.contains("/op") || thisCmd.contains("/deop") ||
+
+		return thisCmd.contains("/op") || thisCmd.contains("/deop") ||
 				thisCmd.contains("/ban") || thisCmd.contains("/attribute") ||
 				thisCmd.contains("/default") || thisCmd.contains("/execute") ||
 				thisCmd.contains("/rl") || thisCmd.contains("/summon") ||
@@ -285,10 +344,61 @@ public class Utilities {
 				thisCmd.contains("/whitelist") || thisCmd.contains("/minecraft") ||
 				thisCmd.contains("/dupe") || thisCmd.contains("/score") ||
 				thisCmd.contains("/tell") || thisCmd.contains("/global") ||
-				thisCmd.contains("/gamerule")) {
+				thisCmd.contains("/gamerule");
+	}
 
-			return true;
+	public static World getWorldByDimension(World.Environment thisEnv) {
+
+		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+			if (thisWorld.getEnvironment().equals(thisEnv)) return thisWorld;
 		}
-		return false;
+		return null;
+	}
+
+	@Deprecated
+	public static int blocksCounter(Chunk chunk, Material[] blocks) {
+		int counter = 0;
+
+		try {
+			for (int y = 255; y >= 0; y--) {
+				for (int x = 0; x <= 15; x++) {
+					for (int z = 0; z <= 15; z++) {
+
+						if (Arrays.stream(blocks).parallel()
+								.anyMatch(Predicate.isEqual(chunk.getBlock(x, y, z).getType()))) {
+							counter++;
+						}
+					}
+				}
+			} return counter;
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return counter;
+		}
+	}
+
+	@Deprecated
+	public static int blockRemover(Chunk chunk, Material blockType, int limiter, boolean doPop) {
+		int counter = 0;
+
+		for (int y = 255; y >= 0; y--) {
+			for (int x = 0; x <= 15; x++) {
+				for (int z = 0; z <= 15; z++) {
+
+					Block thisBlock = chunk.getBlock(x, y, z);
+					Location thisLoc = thisBlock.getLocation();
+
+					if (thisBlock.getType() == blockType) {
+						counter++;
+
+						if (doPop) thisLoc.getWorld().dropItem(thisLoc, new ItemStack(thisBlock.getType(),1));
+						thisBlock.setType(Material.AIR);
+					}
+					if (counter >= limiter) return counter;
+				}
+			}
+		}
+		return counter;
 	}
 }

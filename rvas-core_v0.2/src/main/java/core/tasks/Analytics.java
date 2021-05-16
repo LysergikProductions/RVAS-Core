@@ -24,7 +24,6 @@ package core.tasks;
  * */
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
 import core.backend.FileManager;
 import core.backend.LagProcessor;
 
@@ -34,7 +33,6 @@ import java.text.SimpleDateFormat;
 import java.lang.StringBuilder;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 
 @SuppressWarnings({"StringBufferReplaceableByString", "StringConcatenationInsideStringBufferAppend"})
 public class Analytics extends TimerTask {
@@ -72,33 +70,45 @@ public class Analytics extends TimerTask {
 	
 	public static String CSV_perfHeader; static {
 
-		StringBuilder sb1 = new StringBuilder(128);
+		StringBuilder sb = new StringBuilder(128);
 
-		sb1.append("\"Date\","); sb1.append("\"TPS\","); sb1.append("\"Online Players\",");
-		sb1.append("\"New UUIDs\","); sb1.append("\"Joins Events\",");
-		sb1.append("\"New Chunks\","); sb1.append("\"Loaded Chunks\",");
-		sb1.append("\"Speed Warnings\","); sb1.append("\"Speed Kicks\",");
-		sb1.append("\"Wither Spawns\","); sb1.append("\"Failed Withers\",");
-		sb1.append("\"Removed Wither Skulls\","); sb1.append("\"Loaded Withers\"");
+		sb.append("\"Date\","); sb.append("\"TPS\","); sb.append("\"Online Players\",");
+		sb.append("\"New UUIDs\","); sb.append("\"Joins Events\",");
+		sb.append("\"New Chunks\","); sb.append("\"Loaded Chunks\",");
+		sb.append("\"Speed Warnings\","); sb.append("\"Speed Kicks\",");
+		sb.append("\"Wither Spawns\","); sb.append("\"Failed Withers\",");
+		sb.append("\"Removed Wither Skulls\","); sb.append("\"Loaded Withers\"");
 
-		CSV_perfHeader = sb1.toString();
+		CSV_perfHeader = sb.toString();
 	}
 	
 	public static String CSV_cmdHeader; static {
 		
-		StringBuilder sb2 = new StringBuilder(128);
+		StringBuilder sb = new StringBuilder(128);
 		
-		sb2.append("\"Date\",");
-		sb2.append("\"/about\","); sb2.append("\"/admin\",");
-		sb2.append("\"/discord\","); sb2.append("\"/help\",");
-		sb2.append("\"/kill\","); sb2.append("\"/kit\",");
-		sb2.append("\"/w\","); sb2.append("\"/r\",");
-		sb2.append("\"/msg\","); sb2.append("\"/server\",");
-		sb2.append("\"/sign\","); sb2.append("\"Overall /stats\",");
-		sb2.append("\"/stats help\","); sb2.append("\"/stats info\",");
-		sb2.append("\"/tjm\","); sb2.append("\"/tps\","); sb2.append("\"/vm\""); 
+		sb.append("\"Date\",");
+		sb.append("\"/about\","); sb.append("\"/admin\",");
+		sb.append("\"/discord\","); sb.append("\"/help\",");
+		sb.append("\"/kill\","); sb.append("\"/kit\",");
+		sb.append("\"/w\","); sb.append("\"/r\",");
+		sb.append("\"/msg\","); sb.append("\"/server\",");
+		sb.append("\"/sign\","); sb.append("\"Overall /stats\",");
+		sb.append("\"/stats help\","); sb.append("\"/stats info\",");
+		sb.append("\"/tjm\","); sb.append("\"/tps\","); sb.append("\"/vm\"");
 		
-		CSV_cmdHeader = sb2.toString();
+		CSV_cmdHeader = sb.toString();
+	}
+
+	public static String CSV_illHeader; static {
+		StringBuilder sb = new StringBuilder(128);
+
+		sb.append("\"Date\","); sb.append("\"Name\",");
+		sb.append("\"UUID\","); sb.append("\"IP\",");
+		sb.append("\"Speed Kicks\","); sb.append("\"LagBLock Overload\",");
+		sb.append("\"Imprisoned\","); sb.append("\"VM Muted\",");
+		sb.append("\"Temp Muted\","); sb.append("\"Perm Muted\",");
+
+		CSV_illHeader = sb.toString();
 	}
 
 	public static boolean doAnalytics = Boolean.parseBoolean(Config.getValue("analytics.enabled"));
@@ -109,7 +119,7 @@ public class Analytics extends TimerTask {
 	}
 	
 	// write and reset analytics on-demand
-	public static boolean capture() {
+	public static void capture() {
 		
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");		
@@ -122,20 +132,18 @@ public class Analytics extends TimerTask {
 			commandsFile = new File(commands_work_path);
 			
 			if (!performanceFile.exists()) {
-				
-				performanceFile.createNewFile();
-				Analytics.writeNewData(performanceFile, CSV_perfHeader);
+				if (performanceFile.createNewFile()) Analytics
+						.writeNewData(performanceFile, CSV_perfHeader);
 			}
 			
 			if (!commandsFile.exists()) {
-				
-				commandsFile.createNewFile();
-				Analytics.writeNewData(commandsFile, CSV_cmdHeader);
+				if (commandsFile.createNewFile()) Analytics
+						.writeNewData(commandsFile, CSV_cmdHeader);
 			}
 			
 		} catch (Exception e) {
-			System.out.println(e);
-			return false;
+			e.getCause();
+			return;
 		}
 		
 		int conPlayers = Bukkit.getOnlinePlayers().size();
@@ -157,10 +165,10 @@ public class Analytics extends TimerTask {
 		
 		// append data to file
 		try {Analytics.writeNewData(performanceFile, performanceLine);}
-		catch (Exception e) {System.out.println(e);}
+		catch (Exception e) {e.getStackTrace();}
 		
 		try {Analytics.writeNewData(commandsFile, commandsLine);}
-		catch (Exception e) {System.out.println(e);}
+		catch (Exception e) {e.getStackTrace();}
 		
 		// reset data
 		new_players = 0; total_joins = 0; new_chunks = 0;
@@ -173,7 +181,6 @@ public class Analytics extends TimerTask {
 		stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0;
 		
 		if (Config.debug && Config.verbose) System.out.println("[core.tasks.analytics] Analytics updated!");
-		return true;
 	}
 	
 	// convert data to a single performance CSV-file line
@@ -236,7 +243,7 @@ public class Analytics extends TimerTask {
 	}
 	
 	// append single CSV Strings to file
-	public static boolean writeNewData(File thisFile, String thisLine) {
+	public static void writeNewData(File thisFile, String thisLine) {
 		
 		try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(thisFile, true));
@@ -247,18 +254,6 @@ public class Analytics extends TimerTask {
 		  } catch (IOException e) {
 			  throw new UncheckedIOException(e);
 		  }
-		return true;
-	}
-	
-	// TODO: see if calling this method in a thread is necessary for performance
-	// currently unused
-	public static double sumPlaytimes() {
-		double sum = 0;
-		
-		for (OfflinePlayer thisPlayer: Bukkit.getServer().getOfflinePlayers()) {
-			sum += PlayerMeta.getPlaytime(thisPlayer);
-		}		
-		return sum;
 	}
 
 	public static boolean updateConfigs() {
@@ -269,7 +264,7 @@ public class Analytics extends TimerTask {
 			return true;
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}

@@ -41,6 +41,7 @@ public class Config {
 		if (BlockListener.updateConfigs() && verbose) System.out.println("BlockListener sConfigs Updated!");
 		if (Analytics.updateConfigs() && verbose) System.out.println("Analytics sConfigs Updated!");
 		if (SpawnController.updateConfigs() && verbose) System.out.println("SpawnController sConfigs Updated!");
+		if (ItemCheck.updateConfigs() && verbose) System.out.println("Banned Block sConfigs Updated!");
 		if (Connection.updateConfigs() && verbose) System.out.println("MOTDs Updated!");
 
 		System.out.println("Configs updated!");

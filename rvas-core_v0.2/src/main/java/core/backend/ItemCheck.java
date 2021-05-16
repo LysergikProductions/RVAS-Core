@@ -11,15 +11,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.PotionType;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ItemCheck {
 
 	public static ArrayList<Material> Banned = new ArrayList<>(), Special = new ArrayList<>(), LegalHeads = new ArrayList<>();
 	static {
 		// Banned materials.
-		Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
-				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
-				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
+		Banned.addAll(Arrays.asList(Material.BARRIER, Material.WATER, Material.LAVA, Material.FARMLAND));
 		
 		// Items that need to be specially rebuilt.
 		Special.addAll(Arrays.asList(Material.ENCHANTED_BOOK, Material.POTION, Material.LINGERING_POTION,
@@ -30,12 +28,27 @@ public class ItemCheck {
 		
 		LegalHeads.addAll(Arrays.asList(Material.CREEPER_HEAD, Material.ZOMBIE_HEAD, Material.SKELETON_SKULL,
 				Material.WITHER_SKELETON_SKULL, Material.DRAGON_HEAD));
+
+		if (Config.getValue("item.banned.bedrock").equals("true")) Banned.add(Material.BEDROCK);
+		if (Config.getValue("item.banned.portal_frame").equals("true")) Banned.add(Material.END_PORTAL_FRAME);
+		if (Config.getValue("item.banned.knowledge_book").equals("true")) Banned.add(Material.KNOWLEDGE_BOOK);
+
+		if (Config.getValue("item.banned.command_blocks").equals("true")) {
+			Banned.add(Material.COMMAND_BLOCK);
+			Banned.add(Material.CHAIN_COMMAND_BLOCK);
+			Banned.add(Material.REPEATING_COMMAND_BLOCK);
+			Banned.add(Material.COMMAND_BLOCK_MINECART);
+		}
+
+		if (Config.getValue("item.banned.structure_blocks").equals("true")) {
+			Banned.add(Material.STRUCTURE_VOID);
+			Banned.add(Material.STRUCTURE_BLOCK);
+		}
 	}
 
 	public static void IllegalCheck(ItemStack item, String trigger, Player player) {
-		if (player == null) return;
-		if (PlayerMeta.isAdmin(player)) return;
 
+		if (player == null || PlayerMeta.isAdmin(player)) return;
 		if (item == null || item.getType().equals(Material.AIR)) return;
 
 		if (
@@ -45,7 +58,9 @@ public class ItemCheck {
 
 			return;
 		}
-		
+
+		if (Config.debug && Config.verbose) System.out.println("Checking ItemStack: " + item.getData());
+
 		// Delete any shulker boxes inside of other shulker boxes
 		if (item.getItemMeta() instanceof BlockStateMeta) {
 			
@@ -90,7 +105,9 @@ public class ItemCheck {
 		}
 
 		// Patch illegal stacked items
-		if (item.getAmount() > item.getMaxStackSize() && Config.getValue("item.illegal.stacked").equals("false")) {
+		if (item.getAmount() > item.getMaxStackSize()
+				&& Config.getValue("item.banned.stacked").equals("true")) {
+
 			boolean skipUnstack = false;
 			
 			// https://github.com/gcurtiss/protocol3/issues/6
@@ -99,10 +116,12 @@ public class ItemCheck {
 				EnchantmentStorageMeta esm = (EnchantmentStorageMeta)item.getItemMeta();
 				Set<Enchantment> enchantments = esm.getStoredEnchants().keySet();
 				
-				if(enchantments.contains(Enchantment.VANISHING_CURSE) || enchantments.contains(Enchantment.BINDING_CURSE) && enchantments.size() == 1) {
+				if(enchantments.contains(Enchantment.VANISHING_CURSE) ||
+						enchantments.contains(Enchantment.BINDING_CURSE) && enchantments.size() == 1) {
 					skipUnstack = true;
 				}
 			}
+
 			if(!skipUnstack) {
 				item.setAmount(item.getMaxStackSize());
 			}
@@ -124,30 +143,29 @@ public class ItemCheck {
 					for (Enchantment e : item.getEnchantments().keySet()) {
 
 						// If this item does not support this enchantment
-						if (!e.canEnchantItem(item) && Config.getValue("item.illegal.invalid").equals("false")) continue;
+						if (!e.canEnchantItem(item) &&
+								Config.getValue("item.rebuild.invalid_enchants").equals("false")) continue;
 
-						if (Config.getValue("item.illegal.invalid").equals("true")) {
+						if (Config.getValue("item.rebuild.invalid_enchants").equals("true")) {
 							// If this item has a conflict with another enchantment on the same item
 							boolean hasConflict = false;
 
-							if (newMeta.getEnchants() != null) {
-								for (Enchantment etwo : newMeta.getEnchants().keySet()) {
-									// Ignore self
-									if (etwo.equals(e))
-										continue;
+							for (Enchantment etwo : newMeta.getEnchants().keySet()) {
+								// Ignore self
+								if (etwo.equals(e))
+									continue;
 
-									// Remove conflicts
-									if (etwo.conflictsWith(e)) {
-										hasConflict = true;
-									}
+								// Remove conflicts
+								if (etwo.conflictsWith(e)) {
+									hasConflict = true;
+								}
 
-									// Except Infinity + Mending
-									if ((etwo.equals(Enchantment.ARROW_INFINITE) && e.equals(Enchantment.MENDING))) {
-										hasConflict = false;
-									} else if ((etwo.equals(Enchantment.MENDING)
-											&& e.equals(Enchantment.ARROW_INFINITE))) {
-										hasConflict = false;
-									}
+								// Except Infinity + Mending
+								if ((etwo.equals(Enchantment.ARROW_INFINITE) && e.equals(Enchantment.MENDING))) {
+									hasConflict = false;
+								} else if ((etwo.equals(Enchantment.MENDING)
+										&& e.equals(Enchantment.ARROW_INFINITE))) {
+									hasConflict = false;
 								}
 							}
 							if (hasConflict) continue;
@@ -169,7 +187,7 @@ public class ItemCheck {
 				dmg.setDamage(oldDmg.getDamage());
 				newMeta = (ItemMeta) dmg;
 				
-				if (Config.getValue("item.illegal.unbreakable").equals("false")) {
+				if (Config.getValue("item.rebuild.unbreakable").equals("true")) {
 					newMeta.setUnbreakable(item.getItemMeta().isUnbreakable());
 				} else {
 					newMeta.setUnbreakable(false);
@@ -292,13 +310,14 @@ public class ItemCheck {
 		}
 
 		// Delete player heads (exempt wither heads)
-		if (item.getItemMeta() instanceof SkullMeta && Config.getValue("item.illegal.heads").equals("false")) {
+		if (item.getItemMeta() instanceof SkullMeta &&
+				Config.getValue("item.banned.player_heads").equals("true")) {
+
 			for (Material m : LegalHeads) {
 				if (item.getType().equals(m)) {
 					return;
 				}
-			}
-			item.setAmount(0);
+			} item.setAmount(0);
 		}
 
 		// Fix player heads
@@ -335,5 +354,41 @@ public class ItemCheck {
 			return im.getBlockState() instanceof ShulkerBox;
 		}
 		return false;
+	}
+
+	public static boolean updateConfigs() {
+
+		try {
+			Banned.remove(Material.BEDROCK);
+			Banned.remove(Material.END_PORTAL_FRAME);
+			Banned.remove(Material.KNOWLEDGE_BOOK);
+
+			Banned.remove(Material.COMMAND_BLOCK); Banned.remove(Material.CHAIN_COMMAND_BLOCK);
+			Banned.remove(Material.REPEATING_COMMAND_BLOCK); Banned.remove(Material.COMMAND_BLOCK_MINECART);
+
+			Banned.remove(Material.STRUCTURE_VOID); Banned.remove(Material.STRUCTURE_BLOCK);
+
+			if (Config.getValue("item.banned.bedrock").equals("true")) Banned.add(Material.BEDROCK);
+			if (Config.getValue("item.banned.portal_frame").equals("true")) Banned.add(Material.END_PORTAL_FRAME);
+			if (Config.getValue("item.banned.knowledge_book").equals("true")) Banned.add(Material.KNOWLEDGE_BOOK);
+
+			if (Config.getValue("item.banned.command_blocks").equals("true")) {
+				Banned.add(Material.COMMAND_BLOCK);
+				Banned.add(Material.CHAIN_COMMAND_BLOCK);
+				Banned.add(Material.REPEATING_COMMAND_BLOCK);
+				Banned.add(Material.COMMAND_BLOCK_MINECART);
+			}
+
+			if (Config.getValue("item.banned.structure_blocks").equals("true")) {
+				Banned.add(Material.STRUCTURE_VOID);
+				Banned.add(Material.STRUCTURE_BLOCK);
+			}
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }

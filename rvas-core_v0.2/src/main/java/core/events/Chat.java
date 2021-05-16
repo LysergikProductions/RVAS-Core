@@ -19,12 +19,12 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Chat implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
 		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "r",
-		"redeem", "server", "sign", "stats", "suicide", "tdm", "tjm", "tps", "vm", "vote", "w"
+		"redeem", "server", "sign", "stats", "suicide", "tdm", "tjm", "tps", "vm", "vote", "w", "ignore"
 	));
 	
 	private HashMap<UUID, Long> lastChatTimes = new HashMap<>();
@@ -104,8 +104,7 @@ public class Chat implements Listener {
 				} else doSend = true;
 				
 			} catch (Exception ex) {
-				
-				System.out.println(ex);
+				ex.printStackTrace();
 				lastChatTimes.put(player.getUniqueId(), System.currentTimeMillis());
 			}
 		}

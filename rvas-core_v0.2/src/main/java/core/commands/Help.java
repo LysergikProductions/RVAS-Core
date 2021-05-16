@@ -39,20 +39,23 @@ public class Help implements CommandExecutor {
 		switch (page) {
 			case 1:
 				Arrays.asList(
-						"§6/stats help: §7Learn how to hide your PVP stats and more",
-						"§6/sign: §7Sign the item you are holding. *Cannot undo or overwrite",
-						"§6/tjm: §7Toggle join messages",
-						"§6/discord: §7Join the discord.",
-						//"§6/vote: §7Dupe the item in your hand. Only occurs after voting.",
-						"§6/server: §7See current speed limit and other server info"
+					"§6/stats help: §7Learn how to hide your PVP stats and more",
+					"§6/sign: §7Sign the item you are holding. *Cannot undo or overwrite",
+					"§6/discord: §7Join the discord",
+					"§6/vote: §7Dupe the item in your hand. Only occurs after voting",
+					"§6/ignore [player_name]: §7Ignore all messages from given player until next restart"
 						
 				).forEach(message -> sender.spigot().sendMessage(new TextComponent(message)));
 				break;
+
 			case 2:
-				Arrays.asList("§6/vm [player]: §7Vote to mute a player",
+				Arrays.asList(
+					"§6/vm [player]: §7Vote to mute a player",
 					"§6/kit: §7Get a small kit with steak and some starter tools (one-time only)",
 					"§6/msg, /w, /r: §7Message or reply to a player",
-					"§6/kill: §7Take a guess"
+					"§6/kill: §7Take a guess",
+					"§6/server: §7See current speed limit and other server info",
+					"§6/tjm: §7Toggle join messages"
 					
 				).forEach(message -> sender.spigot().sendMessage(new TextComponent(message)));
 				break;

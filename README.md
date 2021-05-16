@@ -20,20 +20,19 @@ _**Doesn't prevent any vanilla exploits** by default_
 
 - Player **Statistics Tracking** (playtime, pvp-kills, etc)
 
-- **Slow Chat** and **Anti-Spam** chat modes that ops can toggle
+- **Slow Chat** and **Anti-Spam** toggleable chat-modes
 
 - **Illegal Items Management**
 
-- **Lag Machine Detection** and Anti Furnace-Chunk-Ban
+- **Lag-Machine Detection** and **Anti-Chunk-Ban**
 
 - Customizable + randomized MOTDs
 
 ##### Commands:
-- `/vm` - _1-hour long, democratic global-chat mute_
-- `/mute temp | permanent` - _(for ops only)_
-- `/admin color | spy | speed` - _show list of fastest moving players, use red ign chat color, etc_
-- `/repair exit | portals | roof | floor` - _precisely repair vital game structures_
-- `/tps`, `/stats`, `/backup`  _and many more!_
+- `/vm` | `/ignore` | `/tjm` - _For players to self-govern their chat experience_
+- `/admin` | `/repair` - _Powerful tools for ops_
+- `/stats` - _Display various player stats_
+- `/backup`,  _and many more!_
 
 ##### @ Server Operators
 For full admin functionality, in `core\config.txt`, please enter your uuid and current ign for the intended in-game master account

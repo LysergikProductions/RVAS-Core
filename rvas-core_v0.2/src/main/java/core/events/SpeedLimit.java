@@ -22,9 +22,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
-public class SpeedLimit implements Listener
-{
-	// default: 10 second grace period
+@SuppressWarnings("SpellCheckingInspection")
+public class SpeedLimit implements Listener {
 	private static final int GRACE_PERIOD = 5;
 
 	private static HashMap<UUID, Location> locs = new HashMap<>();

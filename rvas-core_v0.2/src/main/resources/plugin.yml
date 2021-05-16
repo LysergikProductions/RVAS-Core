@@ -59,3 +59,5 @@ commands:
    desription: get useful information for ops
   global:
     description: do novel global events for all players
+  ignore:
+    description: ignore chat messages

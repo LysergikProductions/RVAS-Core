@@ -8,14 +8,6 @@ import core.tasks.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -27,15 +19,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class Main extends JavaPlugin implements Listener {
-	
 	public static Plugin instance;
-	
+
+	public static final String version = "0.2.1"; public static final int build = 243;
+	public static long worldAge_atStart; public static boolean isNewWorld;
+
 	public static OfflinePlayer Top = null;
 	public DiscordBot DiscordHandler;
-	
-	public static long worldAge_atStart;
-	public static boolean isNewWorld;
 
 	@Override
 	public void onEnable() {
@@ -44,171 +36,190 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] ______________________________");
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] ______________________________");
-		
+
 		System.out.println("forcing default gamemode..");
 		getServer().setDefaultGameMode(GameMode.SURVIVAL);
-		
+
 		System.out.println("[core.main] _____________");
 		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
-		
+
 		try {
 			FileManager.setup();
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured in FileManager.setup()");
 		}
-		
+
 		System.out.println("[core.main] __________________");
 		System.out.println("[core.main] Loading more files");
 		System.out.println("[core.main] __________________");
+
 		try {
 			PlayerMeta.loadDonators();
 			PlayerMeta.loadMuted();
 			PlayerMeta.loadPrisoners();
-			
-		} catch (IOException e) {			
+
+		} catch (IOException e) {
 			System.out.println("[core.main] An error occured loading files..");
 			System.out.println("[core.main] " + e);
 		}
-		
+
 		System.out.println("[core.main] _________________");
 		System.out.println("[core.main] Enabling commands");
 		System.out.println("[core.main] _________________");
-		
+
 		System.out.println("/kit");
 		this.getCommand("kit").setExecutor(new Kit());
-		
+
 		System.out.println("/mute");
 		this.getCommand("mute").setExecutor(new Mute());
-		
+
 		System.out.println("/dupehand");
 		this.getCommand("dupehand").setExecutor(new DupeHand());
-		
+
 		System.out.println("/vm");
 		this.getCommand("vm").setExecutor(new VoteMute());
-		
+
 		System.out.println("/msg");
 		this.getCommand("msg").setExecutor(new Message());
-		
+
 		System.out.println("/r");
 		this.getCommand("r").setExecutor(new Reply());
-		
+
 		System.out.println("/say");
 		this.getCommand("say").setExecutor(new Say());
-		
+
 		System.out.println("/discord");
 		this.getCommand("discord").setExecutor(new Discord());
-		
+
 		System.out.println("/tps");
 		this.getCommand("tps").setExecutor(new Tps());
-		
+
 		System.out.println("/kill");
 		this.getCommand("kill").setExecutor(new Kill());
-		
+
 		System.out.println("/setdonator");
 		this.getCommand("setdonator").setExecutor(new SetDonator());
-		
+
 		System.out.println("/about");
 		this.getCommand("about").setExecutor(new About());
-		
+
 		System.out.println("/vote");
 		this.getCommand("vote").setExecutor(new VoteCmd());
-		
+
 		System.out.println("/restart");
 		this.getCommand("restart").setExecutor(new Restart());
-		
+
 		System.out.println("/sign");
 		this.getCommand("sign").setExecutor(new Sign());
-		
+
 		System.out.println("/admin");
 		this.getCommand("admin").setExecutor(new Admin());
-		
+
 		System.out.println("/stats");
 		this.getCommand("stats").setExecutor(new Stats());
-		
+
 		System.out.println("/redeem");
 		this.getCommand("redeem").setExecutor(new Redeem());
-		
+
 		System.out.println("/tjm");
 		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
-		
+
 		System.out.println("/server");
 		this.getCommand("server").setExecutor(new Server());
-		
+
 		System.out.println("/help");
 		this.getCommand("help").setExecutor(new Help());
-		
+
 		System.out.println("/repair");
 		this.getCommand("repair").setExecutor(new Repair());
-		
+
 		System.out.println("/slowchat");
 		this.getCommand("slowchat").setExecutor(new SlowChat());
-		
+
 		System.out.println("/backup");
 		this.getCommand("backup").setExecutor(new Backup());
-		
+
 		System.out.println("/prison");
 		this.getCommand("prison").setExecutor(new Prison());
-		
+
 		System.out.println("/info");
 		this.getCommand("info").setExecutor(new Info());
 
 		System.out.println("/global");
 		this.getCommand("global").setExecutor(new Global());
-		
+
+		System.out.println("/ignore");
+		this.getCommand("ignore").setExecutor(new Ignore());
+
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");
 		System.out.println("[core.main] _______________________");
-		
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);			
-		
+
+		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
+		} catch (Exception e) { e.printStackTrace(); }
+
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Loading event listeners");
 		System.out.println("[core.main] _______________________");
-		
+
 		PluginManager core_pm = getServer().getPluginManager();
-		ProtocolManager plib_manager = ProtocolLibrary.getProtocolManager();
-		
-		core_pm.registerEvents(new Chat(), this);
-		core_pm.registerEvents(new Connection(), this);
-		
-		core_pm.registerEvents(new PVP(), this);
-		core_pm.registerEvents(new Move(), this);
-		core_pm.registerEvents(new SpawnController(), this);
-		
-		core_pm.registerEvents(new LagManager(), this);
-		core_pm.registerEvents(new SpeedLimit(), this);
-		core_pm.registerEvents(new ItemCheckTriggers(), this);
 
-		core_pm.registerEvents(new BlockListener(), this);
-		core_pm.registerEvents(new ChunkListener(), this);
-		core_pm.registerEvents(new OpListener(), this);
+		try { core_pm.registerEvents(new Chat(), this);
+		} catch (Exception e) { e.printStackTrace(); }
 
-		NoGhost.C2S_UseBlockPackets();
-		NoGhost.C2S_UsePackets();
-		NoGhost.C2S_AnimationPackets();
-		
-		// Disable global wither-spawn sound
-		if (Config.getValue("global.sound.no_wither").equals("true")) {
-			plib_manager.addPacketListener(new PacketAdapter(
-					this, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
-					
-					@Override
-					public void onPacketSending(PacketEvent event) {
-						
-						PacketContainer packetContainer = event.getPacket();
-						
-						if (packetContainer.getIntegers().read(0) == 1023) {
-							packetContainer.getBooleans().write(0, false);
-						}
-					}
-				});
-		}
+		try { core_pm.registerEvents(new Connection(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new PVP(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new Move(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new SpawnController(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new LagManager(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new SpeedLimit(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new ItemCheckTriggers(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new BlockListener(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new ChunkListener(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new OpListener(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try {
+			PacketListener.C2S_AnimationPackets();
+
+			PacketListener.S2C_MapChunkPackets();
+			PacketListener.S2C_WitherSpawnSound();
+
+		} catch (Exception e) { e.printStackTrace(); }
 		
 		System.out.println("[core.main] ..finishing up..");
 		

@@ -98,7 +98,7 @@ public class Server implements CommandExecutor {
 		TextComponent ops_b = new TextComponent("" + Bukkit.getOperators().size());
 		
 		// DEBUG
-		TextComponent restart_a = new TextComponent("Server Restarting: ");
+		TextComponent restart_a = new TextComponent("Server restarting: ");
 		TextComponent restart_b = new TextComponent(Utilities.restarting ? "True" : "False");
 		TextComponent rtrig_a = new TextComponent("Time below threshold: ");
 		TextComponent rtrig_b = new TextComponent("" + ProcessPlaytime.lowTpsCounter);
@@ -106,9 +106,9 @@ public class Server implements CommandExecutor {
 		TextComponent withers_a = new TextComponent("Loaded Withers: ");
 		TextComponent withers_b = new TextComponent("" + witherCount);
 		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
-		TextComponent slowMode_b = new TextComponent(Boolean.toString(Chat.slowChatEnabled));
+		TextComponent slowMode_b = new TextComponent(Chat.slowChatEnabled ? "True" : "False");
 		TextComponent uptime_a = new TextComponent("Server Uptime: ");
-		TextComponent uptime_b = new TextComponent(Utilities.calculateTime(ServerMeta.getUptime()));
+		TextComponent uptime_b = new TextComponent(Utilities.timeToString(ServerMeta.getUptime()));
 		
 		// style individual components //
 		title_sep.setColor(ChatColor.GRAY);
@@ -153,6 +153,7 @@ public class Server implements CommandExecutor {
 		}
 		
 		slowMode_a.setColor(ChatColor.RED); slowMode_a.setBold(true);
+		slowMode_b.setColor(ChatColor.GRAY);
 		uptime_a.setColor(ChatColor.RED); uptime_a.setBold(true);
 		
 		// parse components into 1-line components

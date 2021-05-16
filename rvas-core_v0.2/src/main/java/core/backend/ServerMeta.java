@@ -28,7 +28,7 @@ public class ServerMeta {
 	public static void kickWithDelay(Player p, double delay) {
 		Delays.put(p.getUniqueId(), 0D);
 		InitialDelays.put(p.getUniqueId(), delay);
-		p.kickPlayer("§6You have lost connection to the server.");
+		p.kickPlayer("\u00A76You have lost connection to the server.");
 	}
 	
 	public static void preventReconnect(Player p, double delay) {

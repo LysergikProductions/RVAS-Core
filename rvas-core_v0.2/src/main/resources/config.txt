@@ -93,10 +93,6 @@ movement.kill.roof = false
 // - Instantly kill players under the bedrock floor
 movement.kill.floor = false
 
-// - Use players' movement events to delete existing illegal items from the world
-// can impact performance
-movement.illegals.check = false
-
 // ----------------- //
 // --- GAME MODE --- //
 // ----------------- //
@@ -137,48 +133,6 @@ protect.bedrock.floor = true
 // - Repair (/setblock) bedrock floor (overworld/nether) / roof (nether)
 chunk.load.repair_roof = false
 chunk.load.repair_floor = false
-
-// ---------------------------- //
-// --- ILLEGAL ITEM PATCHES --- //
-// ---------------------------- //
-
-// - Skip illegal checks for ops?
-skip.ops = false
-
-// - Check for illegal items? (false will disable most illegal item checks)
-item.illegal = true
-
-// - Can items be over-stacked?
-item.illegal.stacked = true
-
-// - Are player heads illegal?
-item.illegal.heads = true
-
-// - Enable or disable unbreakable items. false = disabled [default] || true = enabled
-item.illegal.unbreakable = true
-
-// - Enable or disable exclusive enchants. false = disabled [default] || true = enabled
-item.illegal.exclusive = true
-
-// - Enable or disable invalid enchants. false = disabled [default] || true = enabled
-item.illegal.invalid = true
-
-// - Remove these items from player inventories when they join
-item.illegal.onjoin = true
-
-// - Enable or disable aggressive checks. false = disabled || true = enabled [default]
-item.illegal.agro = true
-
-// - Number of players to cache chunks for in agro check mode
-// Set this to a number a little larger than the typical player pop
-item.illegal.agro.player_count = 10
-
-// - Number of chunks per player to cache (currently not used)
-item.illegal.agro.chunk_count = 1024
-
-// - How frequently to flush the cache (currently not used)
-// Set to -1 to disable
-item.illegal.agro.flush_period = 3600
 
 // -------------- //
 // --- VOTING --- //
@@ -290,6 +244,39 @@ motd.force.name = RVAS
 
 // - Discord link. string value. default = tbd
 discord.link = https://discord.gg/RcTJTsMt8p
+
+// ------------------------- //
+// --- ILLEGAL ITEM META --- //
+// ------------------------- //
+
+// - Skip illegal checks for ops?
+skip.ops = false
+
+// - Check for illegal items? (false will disable most illegal item checks)
+item.illegal = true
+
+// - Remove illegal items from player inventories when they join
+item.illegal.onjoin = true
+
+// - Check every InventoryMoveEvent (can affect performance w/many hoppers)
+item.illegal.inv_check = true
+
+// -------------------------------- //
+// --- WHAT IS AN ILLEGAL ITEM? --- //
+// -------------------------------- //
+
+// - true == is illegal
+item.banned.bedrock = false
+item.banned.portal_frame = false
+
+item.banned.knowledge_book = true
+item.banned.player_heads = true
+item.banned.structure_blocks = true
+item.banned.command_blocks = true
+
+item.banned.stacked = true
+item.rebuild.invalid_enchants = true
+item.rebuild.unbreakable = true
 
 // ------------ //
 // --- MISC --- //

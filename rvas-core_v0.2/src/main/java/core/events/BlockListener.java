@@ -24,6 +24,7 @@ package core.events;
  * */
 
 import core.backend.Config;
+import core.backend.ItemCheck;
 import core.backend.Utilities;
 import core.backend.PlayerMeta;
 
@@ -35,6 +36,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -49,8 +51,9 @@ import org.bukkit.Location;
 import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class BlockListener implements Listener {
 
 	static boolean roofProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.roof"));
@@ -70,15 +73,13 @@ public class BlockListener implements Listener {
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 	}
 	
-	public static ArrayList<Material> PlacementBanned = new ArrayList<>();
-	{ // TODO: add config for restricting bedrock and portal-frame placement by adding to this array accordingly
+	public static ArrayList<Material> PlacementBanned = new ArrayList<>(); static {
 		PlacementBanned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
 	}
 	
-	public static ArrayList<Material> LagMats = new ArrayList<>();
-	static {
+	public static ArrayList<Material> LagMats = new ArrayList<>(); static {
 		LagMats.addAll(Arrays.asList(Material.REDSTONE, Material.REDSTONE_WIRE, Material.REDSTONE_BLOCK,
 				Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH, Material.ACTIVATOR_RAIL, Material.POWERED_RAIL,
 				Material.LEVER, Material.PISTON, Material.STICKY_PISTON, Material.REDSTONE_LAMP, Material.GLOWSTONE,
@@ -247,11 +248,20 @@ public class BlockListener implements Listener {
 			}
 		}
 
-		// for anti-rogue-op meta; cannot place shulker boxes in creative mode
+		// destroy illegal items on shulker placement | prevent Ops duping shulkers in creative mode
 		if (mat.contains("SHULKER_BOX")) {
+
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
-					
 				event.setCancelled(true);
+
+				placer.spigot().sendMessage(new TextComponent(
+						ChatColor.RED + "You can only place shulkers in survival mode"));
+			}
+
+			ShulkerBox thisShulk = (ShulkerBox)event.getBlockReplacedState();
+
+			for (ItemStack thisStack: thisShulk.getInventory()) {
+				ItemCheck.IllegalCheck(thisStack, "Placed Shulker", placer);
 			}
 		}
 		
@@ -304,7 +314,7 @@ public class BlockListener implements Listener {
 			return true;
 			
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			return false;
 		}
 	}
