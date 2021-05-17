@@ -54,82 +54,93 @@ public class Stats implements CommandExecutor {
 		
 		// check args
 		if (args.length != 0) {
-			
-			switch (args[0]) {
-				case "top":
-					assert Main.Top != null;
-					ChatPrint.printStats(player, Main.Top);
-					return true;
-					
-				case "leaderboard":
-				case "5":
-					ChatPrint.printLeaders(player);
-					return true;
+			int leaderLimit;
 
-				case "help":
-					HelpPages.helpStats(player);
-					if (!PlayerMeta.isAdmin(player)) Analytics.stats_help++;
-					return true;
-					
-				case "kills":
+			try {
+				leaderLimit = Integer.parseInt(args[0]);
+			} catch (Exception e) {
+				leaderLimit = -1;
+			}
 
-					assert targetSettings != null;
-					targetSettings.show_kills = !targetSettings.show_kills;
-					
-					if (targetSettings.show_kills) {
-						
-						player.spigot().sendMessage(new TextComponent("Your kills are now public."));
-						
-					} else {
-						
-						player.spigot().sendMessage(new TextComponent("Your kills are now hidden."));
-					}
-					
-					return true;
-					
-				case "deaths":
+			if (leaderLimit == -1) {
+				switch (args[0]) {
+					case "top":
+						assert Main.Top != null;
+						ChatPrint.printStats(player, Main.Top);
+						return true;
 
-					assert targetSettings != null;
-					targetSettings.show_deaths = !targetSettings.show_deaths;
-					
-					if (targetSettings.show_deaths) {
-						
-						player.spigot().sendMessage(new TextComponent("Your deaths are now public."));
-						
-					} else {
-						
-						player.spigot().sendMessage(new TextComponent("Your deaths are now hidden."));
-					}
-					
-					return true;
-					
-				case "kd":
+					case "leaderboard":
+						ChatPrint.printLeaders(player, 5);
+						return true;
 
-					assert targetSettings != null;
-					targetSettings.show_kd = !targetSettings.show_kd;
-					
-					if (targetSettings.show_kd) {
-						
-						player.spigot().sendMessage(new TextComponent("Your k/d ratio is now public."));
-						
-					} else {
-						
-						player.spigot().sendMessage(new TextComponent("Your k/d ratio is now hidden."));
-					}
-					
-					return true;
-					
-				case "mc":
-					
-					ChatPrint.printMcStats(player, Bukkit.getOfflinePlayer(player.getUniqueId()));					
-					return true;
-				
-				case "info":
-				case "settings":
-					
-					ChatPrint.printPlayerSettings(player);
-					if (!PlayerMeta.isAdmin(player)) Analytics.stats_info++;
-					return true;
+					case "help":
+						HelpPages.helpStats(player);
+						if (!PlayerMeta.isAdmin(player)) Analytics.stats_help++;
+						return true;
+
+					case "kills":
+
+						assert targetSettings != null;
+						targetSettings.show_kills = !targetSettings.show_kills;
+
+						if (targetSettings.show_kills) {
+
+							player.spigot().sendMessage(new TextComponent("Your kills are now public."));
+
+						} else {
+
+							player.spigot().sendMessage(new TextComponent("Your kills are now hidden."));
+						}
+
+						return true;
+
+					case "deaths":
+
+						assert targetSettings != null;
+						targetSettings.show_deaths = !targetSettings.show_deaths;
+
+						if (targetSettings.show_deaths) {
+
+							player.spigot().sendMessage(new TextComponent("Your deaths are now public."));
+
+						} else {
+
+							player.spigot().sendMessage(new TextComponent("Your deaths are now hidden."));
+						}
+
+						return true;
+
+					case "kd":
+
+						assert targetSettings != null;
+						targetSettings.show_kd = !targetSettings.show_kd;
+
+						if (targetSettings.show_kd) {
+
+							player.spigot().sendMessage(new TextComponent("Your k/d ratio is now public."));
+
+						} else {
+
+							player.spigot().sendMessage(new TextComponent("Your k/d ratio is now hidden."));
+						}
+
+						return true;
+
+					case "mc":
+
+						ChatPrint.printMcStats(player, Bukkit.getOfflinePlayer(player.getUniqueId()));
+						return true;
+
+					case "info":
+					case "settings":
+
+						ChatPrint.printPlayerSettings(player);
+						if (!PlayerMeta.isAdmin(player)) Analytics.stats_info++;
+						return true;
+				}
+			} else { // arg was an integer
+				ChatPrint.printLeaders(player, leaderLimit);
+				return true;
 			}
 
 			// user has submitted a probable username argument

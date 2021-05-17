@@ -7,12 +7,12 @@ import core.tasks.*;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.Listener;
 import org.bukkit.GameMode;
 
 import org.bukkit.plugin.Plugin;
@@ -20,10 +20,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class Main extends JavaPlugin implements Listener {
+public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.2.2"; public static final int build = 249;
+	public static final String version = "0.2.2"; public static final int build = 250;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -69,88 +69,88 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] _________________");
 
 		System.out.println("/kit");
-		this.getCommand("kit").setExecutor(new Kit());
+		Objects.requireNonNull(this.getCommand("kit")).setExecutor(new Kit());
 
 		System.out.println("/mute");
-		this.getCommand("mute").setExecutor(new Mute());
+		Objects.requireNonNull(this.getCommand("mute")).setExecutor(new Mute());
 
 		System.out.println("/dupehand");
-		this.getCommand("dupehand").setExecutor(new DupeHand());
+		Objects.requireNonNull(this.getCommand("dupehand")).setExecutor(new DupeHand());
 
 		System.out.println("/vm");
-		this.getCommand("vm").setExecutor(new VoteMute());
+		Objects.requireNonNull(this.getCommand("vm")).setExecutor(new VoteMute());
 
 		System.out.println("/msg");
-		this.getCommand("msg").setExecutor(new Message());
+		Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
 
 		System.out.println("/r");
-		this.getCommand("r").setExecutor(new Reply());
+		Objects.requireNonNull(this.getCommand("r")).setExecutor(new Reply());
 
 		System.out.println("/say");
-		this.getCommand("say").setExecutor(new Say());
+		Objects.requireNonNull(this.getCommand("say")).setExecutor(new Say());
 
 		System.out.println("/discord");
-		this.getCommand("discord").setExecutor(new Discord());
+		Objects.requireNonNull(this.getCommand("discord")).setExecutor(new Discord());
 
 		System.out.println("/tps");
-		this.getCommand("tps").setExecutor(new Tps());
+		Objects.requireNonNull(this.getCommand("tps")).setExecutor(new Tps());
 
 		System.out.println("/kill");
-		this.getCommand("kill").setExecutor(new Kill());
+		Objects.requireNonNull(this.getCommand("kill")).setExecutor(new Kill());
 
 		System.out.println("/setdonator");
-		this.getCommand("setdonator").setExecutor(new SetDonator());
+		Objects.requireNonNull(this.getCommand("setdonator")).setExecutor(new SetDonator());
 
 		System.out.println("/about");
-		this.getCommand("about").setExecutor(new About());
+		Objects.requireNonNull(this.getCommand("about")).setExecutor(new About());
 
 		System.out.println("/vote");
-		this.getCommand("vote").setExecutor(new VoteCmd());
+		Objects.requireNonNull(this.getCommand("vote")).setExecutor(new VoteCmd());
 
 		System.out.println("/restart");
-		this.getCommand("restart").setExecutor(new Restart());
+		Objects.requireNonNull(this.getCommand("restart")).setExecutor(new Restart());
 
 		System.out.println("/sign");
-		this.getCommand("sign").setExecutor(new Sign());
+		Objects.requireNonNull(this.getCommand("sign")).setExecutor(new Sign());
 
 		System.out.println("/admin");
-		this.getCommand("admin").setExecutor(new Admin());
+		Objects.requireNonNull(this.getCommand("admin")).setExecutor(new Admin());
 
 		System.out.println("/stats");
-		this.getCommand("stats").setExecutor(new Stats());
+		Objects.requireNonNull(this.getCommand("stats")).setExecutor(new Stats());
 
 		System.out.println("/redeem");
-		this.getCommand("redeem").setExecutor(new Redeem());
+		Objects.requireNonNull(this.getCommand("redeem")).setExecutor(new Redeem());
 
 		System.out.println("/tjm");
-		this.getCommand("tjm").setExecutor(new ToggleJoinMessages());
+		Objects.requireNonNull(this.getCommand("tjm")).setExecutor(new ToggleJoinMessages());
 
 		System.out.println("/server");
-		this.getCommand("server").setExecutor(new Server());
+		Objects.requireNonNull(this.getCommand("server")).setExecutor(new Server());
 
 		System.out.println("/help");
-		this.getCommand("help").setExecutor(new Help());
+		Objects.requireNonNull(this.getCommand("help")).setExecutor(new Help());
 
 		System.out.println("/repair");
-		this.getCommand("repair").setExecutor(new Repair());
+		Objects.requireNonNull(this.getCommand("repair")).setExecutor(new Repair());
 
 		System.out.println("/slowchat");
-		this.getCommand("slowchat").setExecutor(new SlowChat());
+		Objects.requireNonNull(this.getCommand("slowchat")).setExecutor(new SlowChat());
 
 		System.out.println("/backup");
-		this.getCommand("backup").setExecutor(new Backup());
+		Objects.requireNonNull(this.getCommand("backup")).setExecutor(new Backup());
 
 		System.out.println("/prison");
-		this.getCommand("prison").setExecutor(new Prison());
+		Objects.requireNonNull(this.getCommand("prison")).setExecutor(new Prison());
 
 		System.out.println("/info");
-		this.getCommand("info").setExecutor(new Info());
+		Objects.requireNonNull(this.getCommand("info")).setExecutor(new Info());
 
 		System.out.println("/global");
-		this.getCommand("global").setExecutor(new Global());
+		Objects.requireNonNull(this.getCommand("global")).setExecutor(new Global());
 
 		System.out.println("/ignore");
-		this.getCommand("ignore").setExecutor(new Ignore());
+		Objects.requireNonNull(this.getCommand("ignore")).setExecutor(new Ignore());
 
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");

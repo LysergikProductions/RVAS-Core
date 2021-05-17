@@ -71,16 +71,18 @@ public class ChatPrint {
 		receiver.spigot().sendMessage(new TextComponent("Placed Obsidian: " + placed_obi));
 	}
 	
-	public static void printLeaders(Player receiver) {
+	public static void printLeaders(Player receiver, int lineLimit) {
+		if (lineLimit > 15) lineLimit = 15;
+		if (lineLimit < 3) lineLimit = 3;
+
+		HashMap<UUID, Double> leaders_0_15 = PlayerMeta.getTopFifteenPlayers();
+		HashMap<UUID, Double> realLeaders_0_15 = PlayerMeta.getTopFifteenPlayers();
 		
-		HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
-		HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
-		
-		for (UUID u : leaders.keySet()) realLeaders.put(u, leaders.get(u));
+		for (UUID u : leaders_0_15.keySet()) realLeaders_0_15.put(u, leaders_0_15.get(u));
 		ArrayList<TextComponent> list = new ArrayList<>();
 
 		int x = 0;
-		for (UUID pid : realLeaders.keySet()) {
+		for (UUID pid : realLeaders_0_15.keySet()) {
 			x++;
 			
 			TextComponent a1 = new TextComponent("#" + x + ": "); a1.setBold(true);
@@ -89,7 +91,7 @@ public class ChatPrint {
 			
 			if (target_name == null) {
 				
-				TextComponent b = new TextComponent("[unknown], " + Utilities.timeToString(realLeaders.get(pid)));
+				TextComponent b = new TextComponent("[unknown], " + Utilities.timeToString(realLeaders_0_15.get(pid)));
 				TextComponent c = new TextComponent(a1, b);
 				
 				c.setColor(ChatColor.GOLD);
@@ -103,7 +105,7 @@ public class ChatPrint {
 				String kd = PVPdata.getStats(offPlayer).kd;
 				
 				TextComponent a2 = new TextComponent(target_name + ", ");
-				TextComponent b = new TextComponent(Utilities.timeToString(realLeaders.get(pid)));
+				TextComponent b = new TextComponent(Utilities.timeToString(realLeaders_0_15.get(pid)));
 				
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
 				ClickEvent shortcut = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/stats " + target_name);
@@ -119,7 +121,7 @@ public class ChatPrint {
 			}
 		}
 		
-		TextComponent top5_head = new TextComponent("--- Top Five Players ---");		
+		TextComponent top5_head = new TextComponent("--- Top Players ---");
 		TextComponent ujoins_a = new TextComponent("Unique Joins: ");
 		TextComponent ujoins_b = new TextComponent("" + PlayerMeta.Playtimes.keySet().size());
 		TextComponent msg = new TextComponent(ujoins_a, ujoins_b);
@@ -128,7 +130,14 @@ public class ChatPrint {
 		msg.setColor(ChatColor.GRAY); msg.setItalic(true);
 		
 		receiver.spigot().sendMessage(top5_head);
-		list.forEach(ln -> receiver.spigot().sendMessage(ln));
+
+		int i = 0;
+		for (TextComponent ln: list) {
+			receiver.spigot().sendMessage(ln);
+			i++;
+
+			if (i >= lineLimit) break;
+		}
 		receiver.spigot().sendMessage(msg);
 	}
 	

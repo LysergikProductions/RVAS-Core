@@ -36,9 +36,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.world.ChunkLoadEvent;
 
-import org.bukkit.World.Environment;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.World.Environment;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
 
@@ -85,8 +85,7 @@ public class ChunkManager implements Listener {
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
 			
-		} else {
-			ChunkManager.newCount++; Analytics.new_chunks++;}
+		} else { ChunkManager.newCount++; Analytics.new_chunks++;}
 	}
 	
 	public static void removeChunkBan(Chunk chunk) {

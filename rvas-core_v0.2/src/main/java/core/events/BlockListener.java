@@ -51,7 +51,6 @@ import org.bukkit.Location;
 import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})

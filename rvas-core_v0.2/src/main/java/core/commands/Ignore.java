@@ -17,13 +17,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class Ignore implements CommandExecutor {
 
-    public static HashMap<UUID, List<UUID>> Ignores = new HashMap<UUID, List<UUID>>();
-
+    public static HashMap<UUID, List<UUID>> Ignores = new HashMap<>();
     private Random r = new Random();
 
     @Override
     @SuppressWarnings("deprecation")
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+
         if (sender instanceof Player) {
             Player player = (Player)sender;
             UUID playerID = player.getUniqueId();
