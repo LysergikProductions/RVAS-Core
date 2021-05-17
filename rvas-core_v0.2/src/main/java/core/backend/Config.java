@@ -22,7 +22,31 @@ public class Config {
 	public static boolean verbose = Boolean.parseBoolean(getValue("verbose"));
 
 	public static void load() throws IOException {
-		Files.readAllLines(Paths.get("plugins/core/config.txt")).stream()
+		Files.readAllLines(Paths.get("plugins/core/configs/config.txt")).stream()
+				.filter(cases -> !cases.startsWith("//"))
+				.filter(cases -> !(cases.length() == 0)).forEach( val -> {
+
+			try {
+				_values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
+			} catch (Exception e) {
+				System.out.println("Failed to store value for " + val.split("=")[0].trim());
+				System.out.println(e.getMessage());
+			}
+		});
+
+		Files.readAllLines(Paths.get("plugins/core/configs/restrictions.txt")).stream()
+				.filter(cases -> !cases.startsWith("//"))
+				.filter(cases -> !(cases.length() == 0)).forEach( val -> {
+
+			try {
+				_values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
+			} catch (Exception e) {
+				System.out.println("Failed to store value for " + val.split("=")[0].trim());
+				System.out.println(e.getMessage());
+			}
+		});
+
+		Files.readAllLines(Paths.get("plugins/core/configs/spawn_controller.txt")).stream()
 				.filter(cases -> !cases.startsWith("//"))
 				.filter(cases -> !(cases.length() == 0)).forEach( val -> {
 

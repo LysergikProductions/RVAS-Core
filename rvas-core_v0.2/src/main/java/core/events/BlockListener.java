@@ -32,7 +32,6 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 import core.commands.Repair;
-import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;

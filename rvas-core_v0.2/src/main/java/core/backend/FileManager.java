@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class FileManager {
 	
 	public static final String plugin_work_path = "plugins/core/";
@@ -21,13 +22,16 @@ public class FileManager {
 
 	public static File muted_user_database;
 	public static File prison_user_database;
-	
+
+	public static File core_server_config;
+	public static File core_restrictions_config;
+	public static File core_spawn_config;
+
 	public static File donor_list;
 	public static File all_donor_codes;
 	public static File used_donor_codes;
 	
 	public static File server_statistics_list;
-	public static File core_server_config;
 	public static File motd_message_list;
 	public static File auto_announce_list;
 
@@ -61,18 +65,24 @@ public class FileManager {
 	}
 	
 	public static void setup() throws IOException {
-		
+
+		// Instantiate File objects \\
 		File plugin_work_directory = new File(plugin_work_path);
-		File backup_directory = new File(plugin_work_path + "backup");
+		File configs_directory = new File(plugin_work_path + "configs");
+
 		File analytics_directory = new File(plugin_work_path + "analytics/");
+		File backup_directory = new File(plugin_work_path + "backup");
 		File donor_code_directory = new File(plugin_work_path + "codes");
-		
+
+		core_server_config = new File(plugin_work_path + "configs/config.txt");
+		core_restrictions_config = new File(plugin_work_path + "configs/restrictions.txt");
+		core_spawn_config = new File(plugin_work_path + "configs/spawn_controller.txt");
+
 		donor_list = new File(plugin_work_path + "donator.db");
 		all_donor_codes = new File(plugin_work_path + "codes/all.db");
 		used_donor_codes = new File(plugin_work_path + "codes/used.db");
 		
 		server_statistics_list = new File(plugin_work_path + "analytics.csv");
-		core_server_config = new File(plugin_work_path + "config.txt");
 		motd_message_list = new File(plugin_work_path + "motds.txt");
 		auto_announce_list = new File(plugin_work_path + "announcements.txt");
 		
@@ -82,9 +92,12 @@ public class FileManager {
 		muted_user_database = new File(plugin_work_path + "muted.db");
 		prison_user_database = new File(plugin_work_path + "prisoners.db");	
 
+		// create directories and files \\
 		if (!plugin_work_directory.exists()) plugin_work_directory.mkdir();
-		if (!backup_directory.exists()) backup_directory.mkdir();
+		if (!configs_directory.exists()) configs_directory.mkdir();
+
 		if (!analytics_directory.exists()) analytics_directory.mkdir();
+		if (!backup_directory.exists()) backup_directory.mkdir();
 		if (!donor_code_directory.exists()) donor_code_directory.mkdir();
 		
 		if (!donor_list.exists()) donor_list.createNewFile();
@@ -102,16 +115,18 @@ public class FileManager {
 		}
 
 		if (!core_server_config.exists()) {
-			InputStream core_server_config_template = (Main.class.getResourceAsStream("/config.txt"));
-			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "config.txt"));
+			InputStream core_server_config_template = (Main.class.getResourceAsStream("/configs/config.txt"));
+			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "/configs/config.txt"));
 		}
 
-		Config.load();
+		if (!core_restrictions_config.exists()) {
+			InputStream core_restrictions_config_template = (Main.class.getResourceAsStream("/configs/restrictions.txt"));
+			Files.copy(core_restrictions_config_template, Paths.get(plugin_work_path + "/configs/restrictions.txt"));
+		}
 
-		if (Integer.parseInt(Config.getValue("config.version")) < Config.version) {
-			core_server_config.delete();
-			InputStream core_server_config_template = (Main.class.getResourceAsStream("/config.txt"));
-			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "config.txt"));
+		if (!core_spawn_config.exists()) {
+			InputStream core_spawn_config_template = (Main.class.getResourceAsStream("/configs/spawn_controller.txt"));
+			Files.copy(core_spawn_config_template, Paths.get(plugin_work_path + "configs/spawn_controller.txt"));
 		}
 		
 		if (!prison_user_database.exists()) prison_user_database.createNewFile();
@@ -119,6 +134,13 @@ public class FileManager {
 		if (!pvpstats_user_database.exists()) pvpstats_user_database.createNewFile();
 		if (!settings_user_database.exists()) settings_user_database.createNewFile();
 
+		// load then check the main config version \\
+		Config.load();
+		if (Integer.parseInt(Config.getValue("config.version")) < Config.version) {
+			core_server_config.delete();
+			InputStream core_server_config_template = (Main.class.getResourceAsStream("/configs/config.txt"));
+			Files.copy(core_server_config_template, Paths.get(plugin_work_path + "/configs/config.txt"));
+		}
 		Config.load();
 		
 		// Store Donor Codes in RAM \\
