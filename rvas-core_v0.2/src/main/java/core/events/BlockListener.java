@@ -32,6 +32,7 @@ import java.util.*;
 import java.text.DecimalFormat;
 
 import core.commands.Repair;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -51,6 +52,7 @@ import org.bukkit.Location;
 import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
@@ -258,10 +260,18 @@ public class BlockListener implements Listener {
 						ChatColor.RED + "You can only place shulkers in survival mode"));
 			}
 
-			ShulkerBox thisShulk = (ShulkerBox)event.getBlockReplacedState();
+			ShulkerBox thisShulk;
+			try {
+				thisShulk = (ShulkerBox)event.getBlockReplacedState();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				thisShulk = null;
+			}
 
-			for (ItemStack thisStack: thisShulk.getInventory()) {
-				ItemCheck.IllegalCheck(thisStack, "Placed Shulker", placer);
+			if (thisShulk != null) {
+				for (ItemStack thisStack: thisShulk.getInventory().getContents()) {
+					ItemCheck.IllegalCheck(thisStack, "Placed Shulker", placer);
+				}
 			}
 		}
 		

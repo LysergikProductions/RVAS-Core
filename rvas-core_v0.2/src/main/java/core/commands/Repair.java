@@ -23,7 +23,7 @@ package core.commands;
  * */
 
 import core.backend.Utilities;
-import core.events.ChunkListener;
+import core.events.ChunkManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -55,7 +55,7 @@ public class Repair implements CommandExecutor {
 
 				y_low = Utilities.getExitFloor(thisWorld.getChunkAt(0, 0));
 				if (y_low < 2) y_low = y_default;
-				else ChunkListener.foundExitPortal = true;
+				else ChunkManager.foundExitPortal = true;
 			}
 		}
 
@@ -65,7 +65,7 @@ public class Repair implements CommandExecutor {
 			
 				case "portals":// - Fix all End-related portals in the sender's current *chunk*
 					
-					ChunkListener.fixEndExit(chunk, y_low);
+					ChunkManager.fixEndExit(chunk, y_low);
 					return true;
 					
 				case "exit":// - Fix entire end exit portal when sender is in The End
@@ -80,25 +80,25 @@ public class Repair implements CommandExecutor {
 					Chunk neg_neg = player.getWorld().getChunkAt(-1, -1);
 					
 					pos_pos.load(false); // <- load (but don't generate) end chunk's
-					ChunkListener.fixEndExit(pos_pos, y_low); // try using onLoad() only, to trigger fixEndExit()
+					ChunkManager.fixEndExit(pos_pos, y_low); // try using onLoad() only, to trigger fixEndExit()
 					
 					pos_neg.load(false);
-					ChunkListener.fixEndExit(pos_neg, y_low);
+					ChunkManager.fixEndExit(pos_neg, y_low);
 					
 					neg_pos.load(false);
-					ChunkListener.fixEndExit(neg_pos, y_low);
+					ChunkManager.fixEndExit(neg_pos, y_low);
 					
 					neg_neg.load(false);
-					ChunkListener.fixEndExit(neg_neg, y_low);
+					ChunkManager.fixEndExit(neg_neg, y_low);
 					
 					return true;
 					
 				case "roof":
-					ChunkListener.repairBedrockROOF(chunk, player);
+					ChunkManager.repairBedrockROOF(chunk, player);
 					return true;
 					
 				case "floor":
-					ChunkListener.repairBedrockFLOOR(chunk, player);
+					ChunkManager.repairBedrockFLOOR(chunk, player);
 					return true;
 			}
 

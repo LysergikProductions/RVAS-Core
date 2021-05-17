@@ -1,7 +1,7 @@
 package core.tasks;
 
-import core.events.Chat;
-import core.events.ChunkListener;
+import core.events.ChatListener;
+import core.events.ChunkManager;
 
 import core.backend.Config;
 import core.backend.Utilities;
@@ -30,7 +30,7 @@ public class ProcessPlaytime extends TimerTask {
 	@Override
 	public void run() {
 
-		int currentNewChunks = ChunkListener.newCount;
+		int currentNewChunks = ChunkManager.newCount;
 		double onlinePlayers = Bukkit.getOnlinePlayers().size();
 		
 		if ((currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
@@ -76,7 +76,7 @@ public class ProcessPlaytime extends TimerTask {
 		if (System.currentTimeMillis() - lastHour >= 3600000) {
 			lastHour = System.currentTimeMillis();
 
-			Chat.violationLevels.clear();
+			ChatListener.violationLevels.clear();
 			VoteMute.clear();
 		}
 

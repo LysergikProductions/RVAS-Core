@@ -23,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
 	public static Plugin instance;
 
-	public static final String version = "0.2.2"; public static final int build = 247;
+	public static final String version = "0.2.2"; public static final int build = 248;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -180,16 +180,16 @@ public class Main extends JavaPlugin implements Listener {
 
 		PluginManager core_pm = getServer().getPluginManager();
 
-		try { core_pm.registerEvents(new Chat(), this);
+		try { core_pm.registerEvents(new ChatListener(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		try { core_pm.registerEvents(new Connection(), this);
+		try { core_pm.registerEvents(new ConnectionManager(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new PVP(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		try { core_pm.registerEvents(new Move(), this);
+		try { core_pm.registerEvents(new MoveListener(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new SpawnController(), this);
@@ -198,7 +198,7 @@ public class Main extends JavaPlugin implements Listener {
 		try { core_pm.registerEvents(new LagManager(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		try { core_pm.registerEvents(new SpeedLimit(), this);
+		try { core_pm.registerEvents(new SpeedLimiter(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new ItemCheckTriggers(), this);
@@ -207,7 +207,7 @@ public class Main extends JavaPlugin implements Listener {
 		try { core_pm.registerEvents(new BlockListener(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		try { core_pm.registerEvents(new ChunkListener(), this);
+		try { core_pm.registerEvents(new ChunkManager(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new OpListener(), this);
@@ -239,7 +239,7 @@ public class Main extends JavaPlugin implements Listener {
 				Material.WITHER_SKELETON_SKULL, Material.DRAGON_HEAD));
 
 		// Enable speed limit
-		SpeedLimit.scheduleSlTask();
+		SpeedLimiter.scheduleSlTask();
 		
 		// Enable discord notifications for this instance
 		DiscordHandler = new DiscordBot();
@@ -332,7 +332,7 @@ public class Main extends JavaPlugin implements Listener {
 		System.out.println("[core.main] Printing session stats");
 		System.out.println("[core.main] ______________________");
 		
-		System.out.println("New Chunks Generated: " + ChunkListener.newCount);
+		System.out.println("New Chunks Generated: " + ChunkManager.newCount);
 		System.out.println("New Unique Players: " + SpawnController.sessionNewPlayers);
 		System.out.println("Total Respawns: " + SpawnController.sessionTotalRespawns);
 		System.out.println("Bedrock Placed: " + BlockListener.placedBedrockCounter);

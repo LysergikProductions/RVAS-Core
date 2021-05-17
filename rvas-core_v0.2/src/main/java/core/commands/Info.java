@@ -25,7 +25,7 @@ package core.commands;
 import core.backend.ServerMeta;
 import core.backend.Utilities;
 
-import core.events.ChunkListener;
+import core.events.ChunkManager;
 import core.events.BlockListener;
 import core.events.SpawnController;
 
@@ -55,7 +55,7 @@ public class Info implements CommandExecutor {
 		
 		player.spigot().sendMessage(head);
 		player.spigot().sendMessage(new TextComponent("Uptime: " + humanUptime));
-		player.spigot().sendMessage(new TextComponent("New Chunks: " + ChunkListener.newCount));
+		player.spigot().sendMessage(new TextComponent("New Chunks: " + ChunkManager.newCount));
 		player.spigot().sendMessage(new TextComponent("New Players: " + SpawnController.sessionNewPlayers));
 		player.spigot().sendMessage(new TextComponent("Total Respawns: " + SpawnController.sessionTotalRespawns));
 		

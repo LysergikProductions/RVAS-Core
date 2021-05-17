@@ -2,7 +2,7 @@ package core.commands;
 
 import core.backend.*;
 
-import core.events.SpeedLimit;
+import core.events.SpeedLimiter;
 import core.tasks.Analytics;
 
 import java.io.IOException;
@@ -87,7 +87,7 @@ public class Admin implements CommandExecutor {
 					
 				case "SPEED":
 					player.spigot().sendMessage(new TextComponent("§6Player speeds:"));
-					List< Pair<Double, String> > speeds = SpeedLimit.getSpeeds();
+					List< Pair<Double, String> > speeds = SpeedLimiter.getSpeeds();
 					
 					for (Pair<Double, String> speedEntry : speeds) {
 						double speed = speedEntry.getLeft();

@@ -22,7 +22,7 @@ package core.commands;
  *
  * */
 
-import core.events.Chat;
+import core.events.ChatListener;
 import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
@@ -43,9 +43,9 @@ public class SlowChat implements CommandExecutor {
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;
 		
-		if (args.length == 0) Chat.slowChatEnabled = !Chat.slowChatEnabled;
+		if (args.length == 0) ChatListener.slowChatEnabled = !ChatListener.slowChatEnabled;
 		
-		if (Chat.slowChatEnabled) msg = "enabled!"; else msg = "disabled!";
+		if (ChatListener.slowChatEnabled) msg = "enabled!"; else msg = "disabled!";
 		
 		player.spigot().sendMessage(new TextComponent("Slow chat is " + msg));
 		

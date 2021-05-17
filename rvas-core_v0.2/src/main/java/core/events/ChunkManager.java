@@ -43,7 +43,7 @@ import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public class ChunkListener implements Listener {
+public class ChunkManager implements Listener {
 
 	static Material br = Material.BEDROCK;
 	static Material portal = Material.END_PORTAL;
@@ -55,18 +55,18 @@ public class ChunkListener implements Listener {
 	public void onLoad(ChunkLoadEvent event) {
 		Analytics.loaded_chunks++;
 
-		Chunk chunk = event.getChunk();
-		Environment dimension = chunk.getWorld().getEnvironment();
-
-		int x = chunk.getX(); int z = chunk.getZ();
-
 		if (!event.isNewChunk()) {
+			Chunk chunk = event.getChunk();
+
 			chunk.setForceLoaded(false); // WARNING: this line will interfere with force-loaded spawn chunks
+			Environment dimension = chunk.getWorld().getEnvironment();
+
+			int x = chunk.getX(); int z = chunk.getZ();
 
 			try {
 				if (!foundExitPortal && dimension.equals(Environment.THE_END)) {
 					if (x == 0 && z == 0) Repair.y_low = Utilities.getExitFloor(chunk);
-					if (Repair.y_low != -1) ChunkListener.foundExitPortal = true;
+					if (Repair.y_low != -1) ChunkManager.foundExitPortal = true;
 					else Repair.y_low = Repair.y_default;
 				}
 
@@ -85,10 +85,11 @@ public class ChunkListener implements Listener {
 			if (Config.getValue("chunk.load.repair_roof").equals("true")) repairBedrockROOF(chunk, null);
 			if (Config.getValue("chunk.load.repair_floor").equals("true")) repairBedrockFLOOR(chunk, null);
 			
-		} else {ChunkListener.newCount++; Analytics.new_chunks++;}
+		} else {
+			ChunkManager.newCount++; Analytics.new_chunks++;}
 	}
 	
-	public static void antiChunkBan(Chunk chunk) {
+	public static void removeChunkBan(Chunk chunk) {
 		int removed_blocks; int total_count;
 
 		try {

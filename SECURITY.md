@@ -1,8 +1,8 @@
 # Security Policy
 
 ## Supported Versions
-0.2.2
-
-## Reporting a Vulnerability
-
-Contact LysergikProductions on Git
+| Version | Supported          |
+| ------- | ------------------ |
+| 0.2.2   | :white_check_mark: |
+| 0.2.1   | :x:                |
+| 0.1.5   | :x:                |

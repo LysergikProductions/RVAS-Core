@@ -1,7 +1,7 @@
 package core.backend;
 
 import core.commands.Ignore;
-import core.events.Chat;
+import core.events.ChatListener;
 import core.objects.PlayerSettings;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -99,7 +99,7 @@ public class PlayerMeta {
 				_ipMutes.remove(getIp(p));
 				saveMuted();
 			}
-			Chat.violationLevels.remove(uuid);
+			ChatListener.violationLevels.remove(uuid);
 			
 		} else if (type.equals(MuteType.TEMPORARY)) {
 			

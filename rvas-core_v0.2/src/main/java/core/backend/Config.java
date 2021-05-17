@@ -43,7 +43,7 @@ public class Config {
 		if (Analytics.updateConfigs() && verbose) System.out.println("Analytics sConfigs Updated!");
 		if (SpawnController.updateConfigs() && verbose) System.out.println("SpawnController sConfigs Updated!");
 		if (ItemCheck.updateConfigs() && verbose) System.out.println("Banned Block sConfigs Updated!");
-		if (Connection.updateConfigs() && verbose) System.out.println("MOTDs Updated!");
+		if (ConnectionManager.updateConfigs() && verbose) System.out.println("MOTDs Updated!");
 		if (AutoAnnouncer.updateConfigs() && verbose) System.out.println("Announcements Updated!");
 
 		System.out.println("Configs updated!");

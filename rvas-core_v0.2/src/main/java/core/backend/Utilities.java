@@ -329,7 +329,7 @@ public class Utilities {
 				thisCmd.contains("/ban") || thisCmd.contains("/attribute") ||
 				thisCmd.contains("/default") || thisCmd.contains("/execute") ||
 				thisCmd.contains("/rl") || thisCmd.contains("/summon") ||
-				thisCmd.contains("/give") || thisCmd.contains("/set") ||
+				thisCmd.contains("/gamerule") || thisCmd.contains("/set") ||
 				thisCmd.contains("/difficulty") || thisCmd.contains("/replace") ||
 				thisCmd.contains("/enchant") || thisCmd.contains("/time") ||
 				thisCmd.contains("/weather") || thisCmd.contains("/schedule") ||
@@ -343,8 +343,7 @@ public class Utilities {
 				thisCmd.contains("/protocol") || thisCmd.contains("/packet") ||
 				thisCmd.contains("/whitelist") || thisCmd.contains("/minecraft") ||
 				thisCmd.contains("/dupe") || thisCmd.contains("/score") ||
-				thisCmd.contains("/tell") || thisCmd.contains("/global") ||
-				thisCmd.contains("/gamerule");
+				thisCmd.contains("/tell") || thisCmd.contains("/global");
 	}
 
 	public static World getWorldByDimension(World.Environment thisEnv) {

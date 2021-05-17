@@ -21,9 +21,8 @@ admin = sinse420
 debug = false
 verbose = false
 
-// - Join Messages
-join.message.firstJoin = "Welcome to real-anarchy. Use /help for commands available to you."
-join.message.everyJoin = "Vote-dupe is now active! Dupe your main-hand using /vote and voting for us!"
+// - Only allow owner to use `/give` | true == disabled for regular ops
+protect.ops.give = true
 
 // - The tps under which the auto-restart timer ticks
 restart.threshold = 7.10
@@ -76,6 +75,10 @@ spawn.prevent.inside = true
 spawn.repair.roof = false
 spawn.repair.floor = true
 
+// - Join Messages
+join.message.firstJoin = "Welcome to real-anarchy. Use /help for commands available to you."
+join.message.everyJoin = "Vote-dupe is now active! Dupe your main-hand using /vote and voting for us!"
+
 // ------------------------ //
 // --- SOUND CONTROLLER --- //
 // ------------------------ //
@@ -93,8 +96,8 @@ movement.kill.roof = false
 // - Instantly kill players under the bedrock floor
 movement.kill.floor = false
 
-// - Also delete chunk bans instead of only preventing the ban itself
-remove.chunk_bans = true
+// - Delete Chunk Bans (players are protected either way)
+remove.chunk_bans = false
 
 // ----------------- //
 // --- GAME MODE --- //

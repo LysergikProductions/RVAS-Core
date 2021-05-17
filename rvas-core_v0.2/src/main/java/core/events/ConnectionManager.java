@@ -28,7 +28,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public class Connection implements Listener {
+public class ConnectionManager implements Listener {
 	
 	public static String serverHostname = "RVAS";
 	public static double lastJoinTime = 0.00;
