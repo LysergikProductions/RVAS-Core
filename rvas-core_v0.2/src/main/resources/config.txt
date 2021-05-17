@@ -93,6 +93,9 @@ movement.kill.roof = false
 // - Instantly kill players under the bedrock floor
 movement.kill.floor = false
 
+// - Also delete chunk bans instead of only preventing the ban itself
+remove.chunk_bans = true
+
 // ----------------- //
 // --- GAME MODE --- //
 // ----------------- //
