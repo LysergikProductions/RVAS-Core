@@ -1,15 +1,12 @@
 package core.commands;
 
-import core.Main;
 import core.backend.*;
-
 import core.events.SpeedLimiter;
 import core.tasks.Analytics;
 
 import java.io.IOException;
 import java.util.*;
 
-import io.ipgeolocation.api.IPGeolocationAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -23,6 +20,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Admin implements CommandExecutor {
 
 	public static List<UUID> Spies = new ArrayList<>();
@@ -32,7 +30,6 @@ public class Admin implements CommandExecutor {
 	public static boolean disableWarnings = false;
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		Player player = (Player) sender;
 		
@@ -79,8 +76,6 @@ public class Admin implements CommandExecutor {
 				case "RELOAD":
 					try {
 						Config.load();
-						Main.GeoIP_api = new IPGeolocationAPI(Config.getValue("IPGeolocationAPI.key"));
-
 						sender.spigot().sendMessage(new TextComponent("§aSuccessfully reloaded."));
 
 					} catch (IOException e) {

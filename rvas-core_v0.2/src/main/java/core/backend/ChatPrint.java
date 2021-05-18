@@ -142,8 +142,6 @@ public class ChatPrint {
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
-		String receiverIP = Utilities.getPlayerIP(receiver);
-
 		Date date = new Date(target.getFirstPlayed());
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 

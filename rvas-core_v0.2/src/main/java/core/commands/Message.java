@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Message implements CommandExecutor {
 
-	public static HashMap<UUID, UUID> Replies = new HashMap();
+	public static HashMap<UUID, UUID> Replies = new HashMap<>();
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {

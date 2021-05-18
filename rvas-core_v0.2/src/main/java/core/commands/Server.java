@@ -30,7 +30,7 @@ import org.bukkit.command.CommandSender;
 
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Server implements CommandExecutor {
 	
 	@Override

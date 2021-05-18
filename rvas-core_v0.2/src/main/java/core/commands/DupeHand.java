@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 // INTERNAL USE ONLY
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class DupeHand implements CommandExecutor {
 
 	@Override

@@ -15,13 +15,13 @@ import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class Ignore implements CommandExecutor {
 
     public static HashMap<UUID, List<UUID>> Ignores = new HashMap<>();
     private Random r = new Random();
 
     @Override
-    @SuppressWarnings("deprecation")
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (sender instanceof Player) {

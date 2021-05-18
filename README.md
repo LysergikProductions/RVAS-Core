@@ -42,9 +42,8 @@ This account will be **exempt** from all command / ability restrictions issued b
 ##### Dependencies
 
 - **Paper/Spigot 1.16.5** build #446 *(or newer)*
-- [ProtocolLib](https://github.com/dmulloy2/ProtocolLib/releases/tag/4.6.0) *(git)*
-- [ArmorEquipEvent](https://github.com/Arnuh/ArmorEquipEvent/releases) *(git)*
-- [IPGeolocation](https://ipgeolocation.io/downloads/ip-geolocation-api-java-1.0.12.jar) *(direct download)*
+- [ProtocolLib](https://github.com/dmulloy2/ProtocolLib/releases/tag/4.6.0)
+- [ArmorEquipEvent](https://github.com/Arnuh/ArmorEquipEvent/releases)
 
 ##### Building from Source using Eclipse
 

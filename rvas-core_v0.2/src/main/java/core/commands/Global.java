@@ -38,6 +38,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class Global implements CommandExecutor {
 
 	public static TextComponent dreamMsg; static {
@@ -46,7 +47,6 @@ public class Global implements CommandExecutor {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
 		Player op = (Player)sender;

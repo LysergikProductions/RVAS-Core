@@ -242,16 +242,6 @@ public class PlayerMeta {
 				.collect(Collectors.toList()).lastIndexOf(p.getUniqueId()) + 1;
 	}
 
-	public static HashMap<UUID, Double> getTopFivePlayers() {
-		HashMap<UUID, Double> out;
-
-		out = Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(6)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
-		out.remove(UUID.fromString(Config.getValue("adminid")));
-		return out;
-	}
-
 	public static HashMap<UUID, Double> getTopFifteenPlayers() {
 		int limit = 15;
 		if (!Config.getValue("admin").equals("")) limit = 16;
