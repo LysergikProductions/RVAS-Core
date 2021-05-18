@@ -1,5 +1,6 @@
 package core.commands;
 
+import core.Main;
 import core.backend.*;
 
 import core.events.SpeedLimiter;
@@ -8,6 +9,7 @@ import core.tasks.Analytics;
 import java.io.IOException;
 import java.util.*;
 
+import io.ipgeolocation.api.IPGeolocationAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -73,10 +75,12 @@ public class Admin implements CommandExecutor {
 						MsgToggle.add(player.getUniqueId());
 					}
 					return true;
-					
+
 				case "RELOAD":
 					try {
 						Config.load();
+						Main.GeoIP_api = new IPGeolocationAPI(Config.getValue("IPGeolocationAPI.key"));
+
 						sender.spigot().sendMessage(new TextComponent("§aSuccessfully reloaded."));
 
 					} catch (IOException e) {

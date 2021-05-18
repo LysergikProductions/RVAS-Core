@@ -54,7 +54,7 @@ public class ConnectionManager implements Listener {
 		}
 		
 		// Get domain name, NOT ip if player is connecting from IP
-		if(!Utilities.validIP(e.getHostname()) && serverHostname.equals("unknown")) {
+		if(!Utilities.validServerIP(e.getHostname()) && serverHostname.equals("unknown")) {
 			serverHostname = e.getHostname().split(":")[0];
 		}
 		

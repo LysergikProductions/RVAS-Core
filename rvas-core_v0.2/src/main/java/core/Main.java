@@ -18,16 +18,19 @@ import org.bukkit.GameMode;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import io.ipgeolocation.api.IPGeolocationAPI;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.2.2"; public static final int build = 250;
+	public static final String version = "0.2.2"; public static final int build = 251;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
 	public DiscordBot DiscordHandler;
+
+	public static IPGeolocationAPI GeoIP_api;
 
 	@Override
 	public void onEnable() {
@@ -62,6 +65,13 @@ public class Main extends JavaPlugin {
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured loading files..");
 			System.out.println("[core.main] " + e);
+		}
+
+		try {
+			GeoIP_api = new IPGeolocationAPI(Config.getValue("IPGeolocationAPI.key"));
+		} catch (Exception e) {
+			System.out.println("[WARN] Failed to initialize IPGeolocationAPI");
+			if (Config.debug) e.printStackTrace();
 		}
 
 		System.out.println("[core.main] _________________");

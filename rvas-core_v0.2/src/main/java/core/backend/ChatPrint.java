@@ -98,7 +98,7 @@ public class ChatPrint {
 				
 				list.add(c);
 				
-			} else {// this leader name != null
+			} else { // this leader name != null
 				
 				int kills = PVPdata.getStats(offPlayer).killTotal;
 				int deaths = PVPdata.getStats(offPlayer).deathTotal;
@@ -142,11 +142,20 @@ public class ChatPrint {
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
-
-		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
+		String receiverIP = Utilities.getPlayerIP(receiver);
 
 		Date date = new Date(target.getFirstPlayed());
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");		
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+
+		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
+		String setTimeZone = targetSettings.timezone;
+
+		try {
+			sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 		String firstPlayed = sdf.format(date);
 		String lastPlayed = sdf.format(new Date(target.getLastPlayed()));
 
@@ -252,6 +261,7 @@ public class ChatPrint {
 		TextComponent showKD_a = new TextComponent("K/D: ");
 		TextComponent showJoinMsgs_a = new TextComponent("All join messages: ");
 		TextComponent showDeathMsgs_a = new TextComponent("All death messages: ");
+		TextComponent currentTimeZone_a = new TextComponent("Timezone: ");
 		
 		showPVP_a.setColor(ChatColor.GOLD);
 		showKills_a.setColor(ChatColor.GOLD);
@@ -259,9 +269,11 @@ public class ChatPrint {
 		showKD_a.setColor(ChatColor.GOLD);
 		showJoinMsgs_a.setColor(ChatColor.GOLD);
 		showDeathMsgs_a.setColor(ChatColor.GOLD);
+		currentTimeZone_a.setColor(ChatColor.GOLD);
 		
 		String spvp; String kill; String die;
 		String kdr; String jMsgs; String dMsgs;
+		String timezone = theseSettings.timezone;
 		
 		if (theseSettings.show_PVPstats) spvp = "Enabled"; else spvp = "Disabled";
 		if (theseSettings.show_kills) kill = "Enabled"; else kill = "Disabled";
@@ -276,6 +288,7 @@ public class ChatPrint {
 		TextComponent showKD_b = new TextComponent("" + kdr);
 		TextComponent showJoinMsgs_b = new TextComponent("" + jMsgs);
 		TextComponent showDeathMsgs_b = new TextComponent("" + dMsgs);
+		TextComponent currentTimeZone_b = new TextComponent("" + timezone);
 		
 		TextComponent showPVP = new TextComponent(showPVP_a, showPVP_b);
 		TextComponent showKills = new TextComponent(showKills_a, showKills_b);
@@ -283,10 +296,12 @@ public class ChatPrint {
 		TextComponent showKD = new TextComponent(showKD_a, showKD_b);
 		TextComponent showJoinMsgs = new TextComponent(showJoinMsgs_a, showJoinMsgs_b);
 		TextComponent showDeathMsgs = new TextComponent(showDeathMsgs_a, showDeathMsgs_b);
+		TextComponent showTimeZone = new TextComponent(currentTimeZone_a, currentTimeZone_b);
 		
 		list.add(showPVP); list.add(showKills); list.add(showDeaths);
 		list.add(showKD); list.add(showJoinMsgs); list.add(showDeathMsgs);
-		
+
+		list.add(showTimeZone);
 		list.forEach(ln -> receiver.spigot().sendMessage(ln));
 	}
 }

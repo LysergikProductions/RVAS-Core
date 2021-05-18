@@ -46,7 +46,6 @@ public class FileManager {
 
 	    if (backed_up) {
 			try (
-
 					InputStream in = new BufferedInputStream(
 							new FileInputStream(thisFile));
 
@@ -122,7 +121,7 @@ public class FileManager {
 					Files.copy(core_spawn_config_template, Paths.get(plugin_work_path + "configs/spawn_controller.txt"));
 				}
 			}
-		} else System.out.println("[WARN] FAILED TO CREATE CONFIGS_DIRECTORY");
+		} else if (!configs_directory.exists()) System.out.println("[WARN] FAILED TO CREATE CONFIGS_DIRECTORY");
 
 		if (!analytics_directory.exists() && analytics_directory.mkdir()) {
 			System.out.println("[INFO] Succesfully created analytics_directory");
@@ -135,7 +134,7 @@ public class FileManager {
 		if (!donor_code_directory.exists() && donor_code_directory.mkdir()) {
 			if (!all_donor_codes.exists()) all_donor_codes.createNewFile();
 			if (!used_donor_codes.exists()) used_donor_codes.createNewFile();
-		} else System.out.println("[WARN] FAILED TO CREATE DONOR_CODE_DIRECTORY");
+		} else if (!donor_code_directory.exists()) System.out.println("[WARN] FAILED TO CREATE DONOR_CODE_DIRECTORY");
 
 		if (!donor_list.exists()) donor_list.createNewFile();
 		if (!auto_announce_list.exists()) auto_announce_list.createNewFile();

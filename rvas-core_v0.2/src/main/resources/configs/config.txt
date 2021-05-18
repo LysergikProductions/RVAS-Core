@@ -10,10 +10,10 @@ config.version = 22
 // ------------------ //
 
 // - !! UUID for the full-access owner's account !! - \\
-adminid = 
+adminid = my-account-user-id-w/the-dashes
 
 // - !! IGN for the full-access owner's account !! - \\
-admin = sinse420
+admin = myAccountInGameName
 
 // - The tps under which the auto-restart timer ticks
 restart.threshold = 7.10

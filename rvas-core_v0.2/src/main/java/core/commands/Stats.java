@@ -7,6 +7,7 @@ import core.tasks.Analytics;
 
 import java.util.*;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
@@ -85,11 +86,11 @@ public class Stats implements CommandExecutor {
 
 						if (targetSettings.show_kills) {
 
-							player.spigot().sendMessage(new TextComponent("Your kills are now public."));
+							player.sendMessage(new TextComponent("Your kills are now public."));
 
 						} else {
 
-							player.spigot().sendMessage(new TextComponent("Your kills are now hidden."));
+							player.sendMessage(new TextComponent("Your kills are now hidden."));
 						}
 
 						return true;
@@ -101,11 +102,11 @@ public class Stats implements CommandExecutor {
 
 						if (targetSettings.show_deaths) {
 
-							player.spigot().sendMessage(new TextComponent("Your deaths are now public."));
+							player.sendMessage(new TextComponent("Your deaths are now public."));
 
 						} else {
 
-							player.spigot().sendMessage(new TextComponent("Your deaths are now hidden."));
+							player.sendMessage(new TextComponent("Your deaths are now hidden."));
 						}
 
 						return true;
@@ -117,12 +118,30 @@ public class Stats implements CommandExecutor {
 
 						if (targetSettings.show_kd) {
 
-							player.spigot().sendMessage(new TextComponent("Your k/d ratio is now public."));
+							player.sendMessage(new TextComponent("Your k/d ratio is now public."));
 
 						} else {
 
-							player.spigot().sendMessage(new TextComponent("Your k/d ratio is now hidden."));
+							player.sendMessage(new TextComponent("Your k/d ratio is now hidden."));
 						}
+
+						return true;
+
+					case "timezone":
+						assert targetSettings != null;
+						// TODO: Give user a clickable message to reach https://garygregory.wordpress.com/2013/06/18/what-are-the-java-timezone-ids/
+
+						if (args.length != 2) {
+							player.sendMessage(ChatColor.GRAY +
+									"Correct Syntax: /stats timezone EST | PST | GMT | etc");
+							return false;
+						}
+
+						String current_tz = targetSettings.timezone;
+						targetSettings.timezone = args[1];
+						player.sendMessage(new TextComponent(
+								"You changed your set timezone from " + current_tz + " to " + targetSettings.timezone)
+						);
 
 						return true;
 

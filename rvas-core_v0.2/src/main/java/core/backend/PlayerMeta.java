@@ -274,7 +274,7 @@ public class PlayerMeta {
 
 	// Handle player settings
 	public static PlayerSettings getNewSettings(OfflinePlayer p) {
-		return new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true);
+		return new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true, "UTC");
 	}
 	
 	public static PlayerSettings getSettings(OfflinePlayer p) {

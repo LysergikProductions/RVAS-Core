@@ -31,6 +31,7 @@ public class PlayerSettings implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public UUID playerid;
+	public String timezone;
 	public boolean show_PVPstats;
 	
 	public boolean show_kills;
@@ -43,24 +44,25 @@ public class PlayerSettings implements Serializable {
 	public PlayerSettings(
 			UUID playerid, boolean show_PVPstats, boolean show_kills,
 			boolean show_deaths, boolean show_kd, boolean show_player_join_messages,
-			boolean show_player_death_messages) {
+			boolean show_player_death_messages, String timezone) {
 		
 		this.playerid = playerid; this.show_PVPstats = show_PVPstats;
 		this.show_kills = show_kills; this.show_deaths = show_deaths;
 		this.show_kd = show_kd; this.show_player_join_messages = show_player_join_messages;
-		this.show_player_death_messages = show_player_death_messages;
+		this.show_player_death_messages = show_player_death_messages; this.timezone = timezone;
 	}
 	
 	@Override
     public String toString() {
 		String out; {
 				out = playerid + ":" + show_PVPstats + ":" + show_kills + ":" + show_deaths + ":" +
-						show_kd + ":" +show_player_join_messages + ":" + show_player_death_messages;
+						show_kd + ":" +show_player_join_messages + ":" + show_player_death_messages +
+						":" + timezone;
 		} return out;
     }
 	
 	public static PlayerSettings fromString(String line) {
-		// Example of intended given line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:true:true:true:true:false:true
+		// Example of intended given line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:true:true:true:true:false:true:PST
 		
 		String[] settings = line.split(":");
 		UUID playerid = UUID.fromString(settings[0]);
@@ -79,15 +81,20 @@ public class PlayerSettings implements Serializable {
 		
 		boolean show_player_join_messages;
 		
-		try {show_player_join_messages = Boolean.parseBoolean(settings[4]);}
+		try {show_player_join_messages = Boolean.parseBoolean(settings[5]);}
 		catch (Exception e) {show_player_join_messages = true;}
 		
 		boolean show_player_death_messages;
 		
-		try {show_player_death_messages = Boolean.parseBoolean(settings[4]);}
+		try {show_player_death_messages = Boolean.parseBoolean(settings[6]);}
 		catch (Exception e) {show_player_death_messages = true;}
 
+		String timezone;
+
+		try {timezone = settings[7];}
+		catch (Exception e) {timezone = "UTC";}
+
 		return new PlayerSettings(playerid, show_PVPstats, show_kills, show_deaths, show_kd,
-				show_player_join_messages, show_player_death_messages);
+				show_player_join_messages, show_player_death_messages, timezone);
 	}
 }

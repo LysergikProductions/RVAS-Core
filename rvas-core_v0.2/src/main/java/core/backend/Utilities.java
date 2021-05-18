@@ -22,10 +22,14 @@ package core.backend;
  *
  * */
 
+import core.Main;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
+import io.ipgeolocation.api.Geolocation;
+import io.ipgeolocation.api.GeolocationParams;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.*;
@@ -160,7 +164,7 @@ public class Utilities {
 		}).start();
 	}
 
-	public static boolean validIP (String ip) {
+	public static boolean validServerIP(String ip) {
 	    try {
 	        if ( ip == null || ip.isEmpty() ) {
 	            return false;
@@ -182,6 +186,14 @@ public class Utilities {
 		} catch (NumberFormatException nfe) {
 	        return false;
 	    }
+	}
+
+	public static String getPlayerIP (Player p) {
+		return Objects.requireNonNull(p.getAddress()).getHostName();
+	}
+
+	public static String getTimezoneByIP(String thisIP) {
+		return null;
 	}
 
 	public static int banBlockCounter(Chunk chunk) {
