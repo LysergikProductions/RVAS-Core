@@ -42,7 +42,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class ChunkManager implements Listener {
 
 	static Material br = Material.BEDROCK;
@@ -257,7 +257,7 @@ public class ChunkManager implements Listener {
 				System.out.println();
 				
 				if (receiver != null) {
-					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
+					receiver.sendMessage(counter + " bedrock blocks replaced!");
 				}
 			}
 		}
@@ -291,7 +291,7 @@ public class ChunkManager implements Listener {
 				System.out.println();
 				
 				if (receiver != null) {
-					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
+					receiver.sendMessage(counter + " bedrock blocks replaced!");
 				}
 			}
 		}

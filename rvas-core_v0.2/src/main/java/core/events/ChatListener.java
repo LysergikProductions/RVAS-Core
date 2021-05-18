@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class ChatListener implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
@@ -99,7 +99,7 @@ public class ChatListener implements Listener {
 				if(lastChatTimes.get(player.getUniqueId()) + Integer.parseInt(Config.getValue("chat.slow.time")) > System.currentTimeMillis()) {
 					
 					doSend = false;
-					player.spigot().sendMessage(msg);
+					player.sendMessage(msg.toLegacyText());
 					
 				} else doSend = true;
 				
@@ -114,7 +114,8 @@ public class ChatListener implements Listener {
 		if (doSend) {
 			String username = e.getPlayer().getName();
 
-			TextComponent finalCom = new TextComponent("§f<" + usernameColor + username + "§f> " + color + finalMessage);
+			TextComponent finalCom = new TextComponent("\u00A7f<" + usernameColor + username +
+					"\u00A7f> " + color + finalMessage);
 			
 			if(Config.getValue("spam.enable").equals("true")) {	
 				boolean censored = false;
@@ -127,7 +128,8 @@ public class ChatListener implements Listener {
 						censored = true;
 						
 						if(violationLevels.containsKey(e.getPlayer().getUniqueId())) {
-							violationLevels.put(e.getPlayer().getUniqueId(), violationLevels.get(e.getPlayer().getUniqueId()) + 1);
+							violationLevels.put(e.getPlayer().getUniqueId(),
+									violationLevels.get(e.getPlayer().getUniqueId()) + 1);
 						}
 						else {
 							violationLevels.put(e.getPlayer().getUniqueId(), 1);
@@ -166,21 +168,21 @@ public class ChatListener implements Listener {
 				if(e.getPlayer().isOp() && Config.getValue("spam.ops").equals("true")) {					
 					if(censored) {
 						
-						e.getPlayer().sendMessage(new TextComponent(
-								"§cYour message was flagged as spam, but since you are an OP, it was not filtered."));
+						e.getPlayer().sendMessage(
+								"\u00A7cYour message was flagged as spam, but since you are an OP, it was not filtered.");
 						censored = false;
 					}
 					violationLevels.remove(e.getPlayer().getUniqueId());
 				}
 			
 				if(censored) {
-					Bukkit.getLogger().log(Level.INFO, "§4<" + username + "> " + finalMessage + " [deleted, vl="
+					Bukkit.getLogger().log(Level.INFO, "\u00A74<" + username + "> " + finalMessage + " [deleted, vl="
 							+ violationLevels.get(e.getPlayer().getUniqueId())+"]");
 					return;
 				}
 			}
 			
-			Bukkit.getLogger().log(Level.INFO, "§f<" + usernameColor + username + "§f> " + color + finalMessage);
+			Bukkit.getLogger().log(Level.INFO, "\u00A7f<" + usernameColor + username + "\u00A7f> " + color + finalMessage);
 			Bukkit.getServer().spigot().broadcast(finalCom);
 		}
 	}
@@ -233,11 +235,11 @@ public class ChatListener implements Listener {
 		
 		if (e.getMessage().split(" ")[0].contains(":") && !e.getPlayer().isOp()) {
 			e.setCancelled(true);
-			e.getPlayer().spigot().sendMessage(new TextComponent("§cUnknown command."));
+			e.getPlayer().sendMessage("\u00A7cUnknown command.");
 			
 		} else if (e.getMessage().split("")[1].contains(Config.getValue("admin")) && !e.getPlayer().isOp()) {
 			e.setCancelled(true);
-			e.getPlayer().spigot().sendMessage(new TextComponent("§cCannot target admin account."));
+			e.getPlayer().sendMessage("\u00A7cCannot target admin account.");
 		}
 		return true;
 	}

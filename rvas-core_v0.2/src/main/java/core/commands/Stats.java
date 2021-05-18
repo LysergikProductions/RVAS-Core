@@ -15,13 +15,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class Stats implements CommandExecutor {
-	
 	public static int sessionUses = 0;
 	
 	@Override
@@ -86,11 +82,11 @@ public class Stats implements CommandExecutor {
 
 						if (targetSettings.show_kills) {
 
-							player.sendMessage(new TextComponent("Your kills are now public."));
+							player.sendMessage("Your kills are now public.");
 
 						} else {
 
-							player.sendMessage(new TextComponent("Your kills are now hidden."));
+							player.sendMessage("Your kills are now hidden.");
 						}
 
 						return true;
@@ -102,11 +98,11 @@ public class Stats implements CommandExecutor {
 
 						if (targetSettings.show_deaths) {
 
-							player.sendMessage(new TextComponent("Your deaths are now public."));
+							player.sendMessage("Your deaths are now public.");
 
 						} else {
 
-							player.sendMessage(new TextComponent("Your deaths are now hidden."));
+							player.sendMessage("Your deaths are now hidden.");
 						}
 
 						return true;
@@ -118,11 +114,11 @@ public class Stats implements CommandExecutor {
 
 						if (targetSettings.show_kd) {
 
-							player.sendMessage(new TextComponent("Your k/d ratio is now public."));
+							player.sendMessage("Your k/d ratio is now public.");
 
 						} else {
 
-							player.sendMessage(new TextComponent("Your k/d ratio is now hidden."));
+							player.sendMessage("Your k/d ratio is now hidden.");
 						}
 
 						return true;
@@ -139,8 +135,8 @@ public class Stats implements CommandExecutor {
 
 						String current_tz = targetSettings.timezone;
 						targetSettings.timezone = args[1];
-						player.sendMessage(new TextComponent(
-								"You changed your set timezone from " + current_tz + " to " + targetSettings.timezone)
+						player.sendMessage(
+								"You changed your set timezone from " + current_tz + " to " + targetSettings.timezone
 						);
 
 						return true;
@@ -163,11 +159,11 @@ public class Stats implements CommandExecutor {
 			}
 
 			// user has submitted a probable username argument
-			OfflinePlayer offline_player = Bukkit.getOfflinePlayer(args[0]);
+			OfflinePlayer offline_player = Bukkit.getServer().getOfflinePlayer(args[0]);
 			
 			if (!offline_player.hasPlayedBefore()) {
 				
-				player.spigot().sendMessage(new TextComponent("This player has never joined."));
+				player.sendMessage("This player has never joined.");
 				return true;
 			}
 			

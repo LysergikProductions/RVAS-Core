@@ -32,11 +32,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class Backup implements CommandExecutor {
 	
 	public static int opBackupCounter = 0;
@@ -50,28 +48,28 @@ public class Backup implements CommandExecutor {
 		opBackupCounter++;
 		
 		if (!PlayerMeta.isAdmin(player) && opBackupCounter > 10) {
-			player.spigot().sendMessage(
-					new TextComponent("Sorry, there have already been at least 10 backups this session."));
+			player.sendMessage(
+					"Sorry, there have already been at least 10 backups this session.");
 			return false;
 		}
 		
 		try {
-			player.spigot().sendMessage(new TextComponent("saving pvpstats.."));
+			player.sendMessage("saving pvpstats..");
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
 			
-			player.spigot().sendMessage(new TextComponent("saving playtimes.."));
+			player.sendMessage("saving playtimes..");
 			FileManager.backupData(FileManager.playtime_user_database, "playtime-backup-", ".db");
 			
-			player.spigot().sendMessage(new TextComponent("saving player-settings.."));
+			player.sendMessage("saving player-settings..");
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
 			
-			player.spigot().sendMessage(new TextComponent("saving muted players.."));
+			player.sendMessage("saving muted players..");
 			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");
 			
-			player.spigot().sendMessage(new TextComponent("saving donators.."));
+			player.sendMessage("saving donators..");
 			FileManager.backupData(FileManager.donor_list, "donator-backup-", ".db");
 			
-			player.spigot().sendMessage(new TextComponent("saving prisoners.."));
+			player.sendMessage("saving prisoners..");
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
 			
 		} catch (IOException e) {
@@ -79,7 +77,7 @@ public class Backup implements CommandExecutor {
 			System.out.println("Could not backup one or more files..");
 			if (Config.debug) e.printStackTrace();
 			
-			player.spigot().sendMessage(new TextComponent("There was an exception while trying to backup one or more files :("));
+			player.sendMessage("There was an exception while trying to backup one or more files :(");
 			return false;
 		}
 		return true;

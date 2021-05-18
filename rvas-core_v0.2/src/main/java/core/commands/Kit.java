@@ -31,16 +31,16 @@ public class Kit implements CommandExecutor {
 		if (Config.getValue("funny.kit").equals("true")) {
 			
 			kickedFromKit.add(player.getUniqueId());
-			player.kickPlayer("§6imagine kits in vanilla survival lol [pog]");
+			player.kickPlayer("\u00A76imagine kits in vanilla survival lol [pog]");
 			
 			if (!PlayerMeta.isMuted(player)) return true;
 			
 			Bukkit.getServer().spigot().broadcast(new TextComponent(
-					"§a" + player.getName() + " got their complimentary starter kit! Get yours by typing /kit."));
+					"\u00A7a" + player.getName() + " got their complimentary starter kit! Get yours by typing /kit."));
 
 		} else {
 			
-			player.spigot().sendMessage(new TextComponent("§cThis command has been disabled by your administrator."));
+			player.sendMessage("\u00A7cThis command has been disabled by your administrator.");
 		}
 		return true;
 	}

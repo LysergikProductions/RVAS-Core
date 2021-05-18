@@ -31,7 +31,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 import org.bukkit.entity.Player;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class HelpPages {
 
 	public static boolean helpGeneral(Player receiver, int page) {
@@ -73,7 +73,7 @@ public class HelpPages {
 		TextComponent leaders = new TextComponent(leaders_a, leaders_b);
 		TextComponent mcstats = new TextComponent(mcstats_a, mcstats_b);
 		
-		receiver.spigot().sendMessage(head);
+		receiver.sendMessage(head.toLegacyText());
 		
 		HoverEvent hover_leaders = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 				new Text("Click on a player in the leaderboard to see their stats quickly"));
@@ -83,7 +83,7 @@ public class HelpPages {
 		ArrayList<TextComponent> list = new ArrayList<>();
 		list.add(self); list.add(leaders); list.add(players); list.add(mcstats); list.add(toggle_info);
 		
-		list.forEach(ln -> receiver.spigot().sendMessage(ln));		
+		list.forEach(ln -> receiver.sendMessage(ln.toLegacyText()));
 		
 		return true;
 	}

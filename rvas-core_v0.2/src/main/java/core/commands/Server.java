@@ -30,7 +30,7 @@ import org.bukkit.command.CommandSender;
 
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class Server implements CommandExecutor {
 	
 	@Override
@@ -192,7 +192,7 @@ public class Server implements CommandExecutor {
 				case "2":
 			
 					Arrays.asList(new TextComponent(""), more_info_head, uptime, ujoins, ops, debug_head, slowMode, restart, rtrig)
-					.forEach(ln -> sender.spigot().sendMessage(ln));
+					.forEach(ln -> sender.sendMessage(ln.toLegacyText()));
 			
 					return true;
 					
@@ -203,7 +203,7 @@ public class Server implements CommandExecutor {
 		
 		// create output structure and send to chat
 		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, withers, player_head, players, donos, laggers, pmutes, moreInfo)
-		.forEach(ln -> sender.spigot().sendMessage(ln));
+		.forEach(ln -> sender.sendMessage(ln.toLegacyText()));
 		
 		return true;
 	}

@@ -37,7 +37,6 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-@SuppressWarnings("deprecation")
 public class Discord implements CommandExecutor {
 
 	@Override
@@ -56,7 +55,7 @@ public class Discord implements CommandExecutor {
 		} else message = new TextComponent("Discord coming soon!");
 
 		message.setColor(ChatColor.GOLD);
-		sender.spigot().sendMessage(message);
+		sender.sendMessage(message.toLegacyText());
 
 		return true;
 	}

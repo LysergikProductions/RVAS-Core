@@ -12,14 +12,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-@SuppressWarnings("deprecation") // OP-only say command
+// OP-only say command
 public class Say implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
 		if (!sender.isOp() && !(sender instanceof ConsoleCommandSender)) {
-			sender.spigot().sendMessage(new TextComponent("§cUnknown command."));
+			sender.sendMessage("\u00A7cUnknown command.");
 			return true;
 		}
 
@@ -29,12 +29,12 @@ public class Say implements CommandExecutor {
 		data[0] = data[0].replace("§", "");
 
 		if (data[0].isEmpty()) {
-			sender.spigot().sendMessage(new TextComponent("§cNo message specified."));
+			sender.sendMessage("\u00A7cNo message specified.");
 			return true;
 		}
 
-		Bukkit.spigot().broadcast(new TextComponent("§d[Server] " + data[0]));
-		System.out.println("§d[Server] " + data[0]);
+		Bukkit.spigot().broadcast(new TextComponent("\u00A7d[Server] " + data[0]));
+		System.out.println("\u00A7d[Server] " + data[0]);
 		return true;
 	}
 }

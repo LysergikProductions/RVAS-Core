@@ -11,11 +11,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class Ignore implements CommandExecutor {
 
     public static HashMap<UUID, List<UUID>> Ignores = new HashMap<>();
@@ -29,21 +26,21 @@ public class Ignore implements CommandExecutor {
             UUID playerID = player.getUniqueId();
 
             if (args.length != 1) {
-                player.sendMessage(new TextComponent("§cIncorrect syntax. Syntax: /ignore [player]"));
+                player.sendMessage("\u00A7cIncorrect syntax. Syntax: /ignore [player]");
                 return true;
             }
 
             Player toIgnore = Bukkit.getServer().getPlayer(args[0]);
 
             if (toIgnore == null) {
-                player.sendMessage(new TextComponent("§cPlayer is not online."));
+                player.sendMessage("\u00A7cPlayer is not online.");
                 return true;
             }
 
             UUID toIgnoreID = toIgnore.getUniqueId();
 
             if (toIgnore.isOp()) {
-                player.sendMessage(new TextComponent("§cYou can't ignore this person."));
+                player.sendMessage("\u00A7cYou can't ignore this person.");
                 return true;
             }
 
@@ -53,17 +50,17 @@ public class Ignore implements CommandExecutor {
                 if(existing.contains(toIgnoreID)) {
 
                     existing.remove(toIgnoreID);
-                    player.sendMessage(new TextComponent("§6No longer ignoring " + toIgnore.getName() +"."));
+                    player.sendMessage("\u00A76No longer ignoring " + toIgnore.getName() +".");
 
                 } else {
                     existing.add(toIgnoreID);
-                    player.sendMessage(new TextComponent("§6Now ignoring "+ toIgnore.getName() +
-                            ". This will persist until the server restarts."));
+                    player.sendMessage("\u00A76Now ignoring "+ toIgnore.getName() +
+                            ". This will persist until the server restarts.");
 
                     int rnd = r.nextInt(10);
                     if(rnd == 5) {
-                        player.sendMessage(new TextComponent("§6§oTip: You can vote to mute people server-wide. Try §n/vm " +
-                                toIgnore.getName() +"§r§6§o."));
+                        player.sendMessage("\u00A76\u00A7oTip: You can vote to mute people server-wide. Try \u00A7n/vm " +
+                                toIgnore.getName() +"\u00A7r\u00A76\u00A7o.");
                     }
                 }
                 Ignores.put(playerID, existing);
@@ -73,18 +70,18 @@ public class Ignore implements CommandExecutor {
                 List<UUID> ignores = new ArrayList<>();
                 ignores.add(toIgnoreID);
                 Ignores.put(playerID, ignores);
-                player.sendMessage(new TextComponent("§6Now ignoring "+ toIgnore.getName() +
-                        ". This will persist until the server restarts."));
+                player.sendMessage("\u00A76Now ignoring "+ toIgnore.getName() +
+                        ". This will persist until the server restarts.");
 
                 int rnd = r.nextInt(10);
                 if (rnd == 5) {
-                    player.sendMessage(new TextComponent("§6§oTip: You can vote to mute people server-wide. Try §n/vm "+
-                            toIgnore.getName() +"§r§6§o."));
+                    player.sendMessage("\u00A76\u00A7oTip: You can vote to mute people server-wide. Try \u00A7n/vm "+
+                            toIgnore.getName() +"\u00A7r\u00A76\u00A7o.");
                 }
                 return true;
             }
         } else {
-            sender.sendMessage(new TextComponent("§cConsole can't run this command."));
+            sender.sendMessage("\u00A7cConsole can't run this command.");
             return true;
         }
     }

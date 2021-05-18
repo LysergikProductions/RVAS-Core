@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -34,7 +32,7 @@ public class SpeedLimiter implements Listener {
 	private static long lastCheck = -1;
 	public static int totalKicks = 0;
 
-	@SuppressWarnings("deprecation") // Speed Monitor
+	// Speed Monitor
 	public static void scheduleSlTask() {
 		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, () -> {
@@ -169,7 +167,8 @@ public class SpeedLimiter implements Listener {
 						Analytics.speed_warns++;
 						
 						// display speed with one decimal
-						player.spigot().sendMessage(new TextComponent("§4Your speed is " + speed + ", speed limit is " + final_limit + ". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));
+						player.sendMessage("\u00A74Your speed is " + speed + ", speed limit is " + final_limit +
+								". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s"));
 					}
 					--grace;
 					gracePeriod.put(player.getUniqueId(), grace);

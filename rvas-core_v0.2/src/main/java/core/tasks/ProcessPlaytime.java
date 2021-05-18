@@ -33,7 +33,7 @@ public class ProcessPlaytime extends TimerTask {
 		int currentNewChunks = ChunkManager.newCount;
 		double onlinePlayers = Bukkit.getOnlinePlayers().size();
 		
-		if ((currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
+		if (onlinePlayers != 0 && (currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
 			System.out.println(
 					"WARN more than 8 chunks per tick per player in last second");
 			Analytics.capture();

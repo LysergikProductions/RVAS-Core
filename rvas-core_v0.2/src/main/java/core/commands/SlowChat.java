@@ -28,13 +28,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class SlowChat implements CommandExecutor {
-	
 	static String msg;
 	
 	@Override
@@ -47,7 +43,7 @@ public class SlowChat implements CommandExecutor {
 		
 		if (ChatListener.slowChatEnabled) msg = "enabled!"; else msg = "disabled!";
 		
-		player.spigot().sendMessage(new TextComponent("Slow chat is " + msg));
+		player.sendMessage("Slow chat is " + msg);
 		
 		return true;
 	}

@@ -36,16 +36,16 @@ public class DupeHand implements CommandExecutor {
 		}
 		
 		if (!PlayerMeta.isOp(sender)) {
-			player.kickPlayer("§6get fucked newfag [pog]");
+			player.kickPlayer("\u00A76imagine kits in anarchy lmao");
 			return true;
 		} else {
 			if (args.length != 1) {
-				sender.spigot().sendMessage(new TextComponent("§cInvalid syntax. Syntax: /dupehand [name]"));
+				sender.spigot().sendMessage(new TextComponent("\u00A7cInvalid syntax. Syntax: /dupehand [name]"));
 				return true;
 			}
 			Player target = Bukkit.getPlayer(args[0]);
 			if (target == null) {
-				sender.spigot().sendMessage(new TextComponent("§cPlayer is not online."));
+				sender.spigot().sendMessage(new TextComponent("\u00A7cPlayer is not online."));
 				return true;
 			}
 

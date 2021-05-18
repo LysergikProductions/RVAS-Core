@@ -38,7 +38,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class Global implements CommandExecutor {
 
 	public static TextComponent dreamMsg; static {
@@ -93,10 +92,9 @@ public class Global implements CommandExecutor {
 						String z = String.valueOf(finalTP.getBlockZ());
 
 						op.chat("/tp " + player_name + " " + x + " " + y + " " + z);
-						p.spigot().sendMessage(dreamMsg);
+						p.sendMessage(dreamMsg.toLegacyText());
 					}
 			}
-		}
-		return true;
+		} return true;
 	}
 }

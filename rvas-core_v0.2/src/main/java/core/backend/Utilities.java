@@ -292,7 +292,7 @@ public class Utilities {
 
 		for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
 			try {
-				if (thisPlayer.isOp()) thisPlayer.spigot().sendMessage(msg);
+				if (thisPlayer.isOp()) thisPlayer.sendMessage(msg.toLegacyText());
 			} catch (Exception e) {return;}
 		}
 

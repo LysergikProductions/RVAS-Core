@@ -41,14 +41,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class ChatPrint {
 	
 	// - PLAYER STATS PAGES - \\
 
 	public static void printMcStats(Player receiver, OfflinePlayer target) {
-		
-		receiver.spigot().sendMessage(new TextComponent(""));
+		receiver.sendMessage("");
 		
 		int gaps_eaten = target.getStatistic(Statistic.USE_ITEM, Material.ENCHANTED_GOLDEN_APPLE);
 		int mined_obi = target.getStatistic(Statistic.MINE_BLOCK, Material.OBSIDIAN);
@@ -62,13 +61,12 @@ public class ChatPrint {
 		title.setColor(ChatColor.GOLD); title.setBold(true);
 		
 		TextComponent head = new TextComponent(sep, title, sep);
-		receiver.spigot().sendMessage(head);
+		receiver.sendMessage(head.toLegacyText());
 		
-		receiver.spigot().sendMessage(new TextComponent("Gaps Eaten: " + gaps_eaten));
-		receiver.spigot().sendMessage(new TextComponent("Mined Ancient Debris: " + mined_ancientDebris));
-
-		receiver.spigot().sendMessage(new TextComponent("Mined Obsidian: " + mined_obi));
-		receiver.spigot().sendMessage(new TextComponent("Placed Obsidian: " + placed_obi));
+		receiver.sendMessage("Gaps Eaten: " + gaps_eaten);
+		receiver.sendMessage("Mined Ancient Debris: " + mined_ancientDebris);
+		receiver.sendMessage("Mined Obsidian: " + mined_obi);
+		receiver.sendMessage("Placed Obsidian: " + placed_obi);
 	}
 	
 	public static void printLeaders(Player receiver, int lineLimit) {
@@ -129,16 +127,16 @@ public class ChatPrint {
 		top5_head.setColor(ChatColor.GOLD); top5_head.setBold(true);
 		msg.setColor(ChatColor.GRAY); msg.setItalic(true);
 		
-		receiver.spigot().sendMessage(top5_head);
+		receiver.sendMessage(top5_head.toLegacyText());
 
 		int i = 0;
 		for (TextComponent ln: list) {
-			receiver.spigot().sendMessage(ln);
+			receiver.sendMessage(ln.toLegacyText());
 			i++;
 
 			if (i >= lineLimit) break;
 		}
-		receiver.spigot().sendMessage(msg);
+		receiver.sendMessage(msg.toLegacyText());
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
@@ -155,7 +153,7 @@ public class ChatPrint {
 		}
 
 		String firstPlayed = sdf.format(date);
-		String lastPlayed = sdf.format(new Date(target.getLastPlayed()));
+		String lastPlayed = sdf.format(new Date(target.getLastSeen()));
 
 		// get all uniquely styleable components
 		TextComponent title_pre = new TextComponent("--- ");
@@ -234,7 +232,7 @@ public class ChatPrint {
 		}
 		
 		// send final message to receiver
-		statsLines.forEach(ln -> receiver.spigot().sendMessage(ln));
+		statsLines.forEach(ln -> receiver.sendMessage(ln.toLegacyText()));
 	}
 	
 	public static void printPlayerSettings(Player receiver) {
@@ -300,6 +298,6 @@ public class ChatPrint {
 		list.add(showKD); list.add(showJoinMsgs); list.add(showDeathMsgs);
 
 		list.add(showTimeZone);
-		list.forEach(ln -> receiver.spigot().sendMessage(ln));
+		list.forEach(ln -> receiver.sendMessage(ln.toLegacyText()));
 	}
 }

@@ -41,7 +41,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class About implements CommandExecutor {
 
 	@Override
@@ -69,7 +68,7 @@ public class About implements CommandExecutor {
 		license.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://www.gnu.org/licenses/agpl-3.0.en.html")));
 		
 		Arrays.asList(new TextComponent(""), build, by, source, license)
-		.forEach(ln -> sender.spigot().sendMessage(ln));
+		.forEach(ln -> sender.sendMessage(ln.toLegacyText()));
 		return true;
 	}
 }

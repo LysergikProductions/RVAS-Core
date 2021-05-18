@@ -32,11 +32,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class ToggleJoinMessages implements CommandExecutor {
 
 	@Override
@@ -57,12 +54,10 @@ public class ToggleJoinMessages implements CommandExecutor {
 		}
 		
 		if (theseSettings.show_player_join_messages) {
-			
-			player.spigot().sendMessage(new TextComponent("§6Enabled join and leave messages."));
+			player.sendMessage("\u00A76Enabled join and leave messages.");
 			
 		} else {
-			
-			player.spigot().sendMessage(new TextComponent("§6Disabled join and leave messages."));
+			player.sendMessage("\u00A76Disabled join and leave messages.");
 		}
 		return true;
 	}

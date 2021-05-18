@@ -66,8 +66,7 @@ public class BlockListener implements Listener {
 	
 	//public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
 	
-	public static ArrayList<Material> BreakBanned = new ArrayList<>();
-	static {
+	public static ArrayList<Material> BreakBanned = new ArrayList<>(); static {
 		BreakBanned.addAll(Arrays.asList(Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK,
 				Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
@@ -254,8 +253,8 @@ public class BlockListener implements Listener {
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
 				event.setCancelled(true);
 
-				placer.spigot().sendMessage(new TextComponent(
-						ChatColor.RED + "You can only place shulkers in survival mode"));
+				placer.sendMessage(new TextComponent(
+						ChatColor.RED + "You can only place shulkers in survival mode").toLegacyText());
 			}
 
 			ShulkerBox thisShulk;
@@ -306,8 +305,9 @@ public class BlockListener implements Listener {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
 			
-			placer.spigot().sendMessage(new TextComponent(
-					"PlaceTime: " + new DecimalFormat("0.000").format((double)duration/1000000.0) + " ms"));
+			placer.sendMessage(new TextComponent(
+					"PlaceTime: " + new DecimalFormat("0.000").format((double)duration/1000000.0) + " ms")
+					.toLegacyText());
 		}
 	}
 	

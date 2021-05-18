@@ -13,11 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class Message implements CommandExecutor {
 
 	public static HashMap<UUID, UUID> Replies = new HashMap<>();
@@ -26,7 +24,7 @@ public class Message implements CommandExecutor {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		
 		if (args.length < 2) {
-			sender.spigot().sendMessage(new TextComponent("§cIncorrect syntax. Syntax: /msg [player] [message]"));
+			sender.sendMessage("\u00A7cIncorrect syntax. Syntax: /msg [player] [message]");
 			return true;
 		}
 
@@ -47,7 +45,7 @@ public class Message implements CommandExecutor {
 		String recvName;
 		// Can't send to offline players
 		if (recv == null) {
-			sender.spigot().sendMessage(new TextComponent("§cPlayer is no longer online."));
+			sender.sendMessage("\u00A7cPlayer is no longer online.");
 			return true;
 		}
 
@@ -73,22 +71,22 @@ public class Message implements CommandExecutor {
 			Player player = (Player) sender;
 
 			if (PlayerMeta.isMuted(player)) {
-				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages."));
+				sender.sendMessage("\u00A7cYou can't send messages.");
 				return true;
 			}
 
 			if (PlayerMeta.isMuted(recv) || (Admin.MsgToggle.contains(recv.getUniqueId()) && !player.isOp())) {
-				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
+				sender.sendMessage("\u00A7cYou can't send messages to this person.");
 				return true;
 			}
 
 			if(PlayerMeta.isIgnoring(player.getUniqueId(), recv.getUniqueId())) {
-				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
+				sender.sendMessage("\u00A7cYou can't send messages to this person.");
 				return true;
 			}
 
 			if(PlayerMeta.isIgnoring(recv.getUniqueId(), player.getUniqueId())) {
-				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
+				sender.sendMessage("\u00A7cYou can't send messages to this person.");
 				return true;
 			}
 		}
@@ -97,14 +95,14 @@ public class Message implements CommandExecutor {
 		// them a copy of this message
 		String finalRecvName = recvName;
 		Bukkit.getOnlinePlayers().forEach(p -> { if (Admin.Spies.contains(p.getUniqueId())) {
-			p.spigot().sendMessage(new TextComponent("§5" + sendName + " to " + finalRecvName + ": " + msg[0]));
+			p.sendMessage("\u00A75" + sendName + " to " + finalRecvName + ": " + msg[0]);
 		}});
 
 		if (!Admin.Spies.contains(recv.getUniqueId())) {
-			recv.spigot().sendMessage(new TextComponent("§dfrom " + sendName + ": " + msg[0]));
+			recv.sendMessage("\u00A7dfrom " + sendName + ": " + msg[0]);
 		}
 		if (sender instanceof Player && !Admin.Spies.contains(((Player) sender).getUniqueId())) {
-			sender.spigot().sendMessage(new TextComponent("§dto " + recvName + ": " + msg[0]));
+			sender.sendMessage("\u00A7dto " + recvName + ": " + msg[0]);
 		}
 		if (sender instanceof Player) {
 			Replies.put(recv.getUniqueId(), ((Player) sender).getUniqueId());
