@@ -41,7 +41,9 @@ This account will be **exempt** from all command / ability restrictions issued b
 
 ##### Dependencies
 
-At this time, only ProtocolLib and ArmorEquipEvent are required for the plugin to run correctly. Use Paper 1.16.5 Build #446 or newer.
+- **Paper/Spigot 1.16.5** build #446 *(or newer)*
+- [ProtocolLib](https://github.com/dmulloy2/ProtocolLib/releases/tag/4.6.0)
+- [ArmorEquipEvent](https://github.com/Arnuh/ArmorEquipEvent/releases)
 
 ##### Building from Source using Eclipse
 

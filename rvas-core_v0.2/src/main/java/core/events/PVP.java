@@ -28,6 +28,7 @@ import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.backend.PVPdata;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.bukkit.event.EventHandler;
@@ -59,14 +60,19 @@ public class PVP implements Listener {
 		
 		if (debug) {
 			try {
-				killerName = killer.getName();
-				killerLoc = killer.getLocation().getX()+", "+killer.getLocation().getY()+", "+killer.getLocation().getZ();
+				killerName = Objects.requireNonNull(killer).getName();
+				killerLoc = killer.getLocation().getX() +
+						", "+killer.getLocation().getY() +
+						", "+killer.getLocation().getZ();
+
 			} catch (Exception ignore) {
 				System.out.println("[core.events.pvp] Killer was null!");
+
 				killerName = "null";
-				killerLoc = killed.getLocation().getX()+", "+killed.getLocation().getY()+", "+killed.getLocation().getZ();
+				killerLoc = killed.getLocation().getX() +
+						", "+killed.getLocation().getY() +
+						", "+killed.getLocation().getZ();
 			}
-			
 			System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
 		}
 

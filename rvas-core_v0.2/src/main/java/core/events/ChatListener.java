@@ -20,7 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public class Chat implements Listener {
+public class ChatListener implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
 		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "r",

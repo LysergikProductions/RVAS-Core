@@ -173,14 +173,14 @@ public class SpawnController implements Listener {
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);
 				Chunk spawnChunk = thisLocation.getChunk();
 
-				if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
-				if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
+				if (Config.getValue("spawn.repair.roof").equals("true")) ChunkManager.repairBedrockROOF(spawnChunk, event.getPlayer());
+				if (Config.getValue("spawn.repair.floor").equals("true")) ChunkManager.repairBedrockFLOOR(spawnChunk, event.getPlayer());
 
 				event.setRespawnLocation(thisLocation);
 				while (!spawnChunk.isLoaded()) spawnChunk.load(true);
 
-				if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
-				if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
+				if (Config.getValue("spawn.repair.roof").equals("true")) ChunkManager.repairBedrockROOF(spawnChunk, event.getPlayer());
+				if (Config.getValue("spawn.repair.floor").equals("true")) ChunkManager.repairBedrockFLOOR(spawnChunk, event.getPlayer());
 
 				return;
 			}
@@ -202,8 +202,8 @@ public class SpawnController implements Listener {
 		
 		//ChunkListener.fixEndExit(spawnChunk);
 		
-		if (Config.getValue("spawn.repair.roof").equals("true")) ChunkListener.repairBedrockROOF(spawnChunk, event.getPlayer());
-		if (Config.getValue("spawn.repair.floor").equals("true")) ChunkListener.repairBedrockFLOOR(spawnChunk, event.getPlayer());
+		if (Config.getValue("spawn.repair.roof").equals("true")) ChunkManager.repairBedrockROOF(spawnChunk, event.getPlayer());
+		if (Config.getValue("spawn.repair.floor").equals("true")) ChunkManager.repairBedrockFLOOR(spawnChunk, event.getPlayer());
 		
 		if (Config.getValue("spawn.prevent.burn").equals("true")) {
 			if (!BannedSpawnFloors.contains(Material.LAVA)) BannedSpawnFloors.add(Material.LAVA);

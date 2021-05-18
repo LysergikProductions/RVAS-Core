@@ -9,8 +9,8 @@ import core.backend.Config;
 import core.tasks.Analytics;
 import core.tasks.LagManager;
 import core.tasks.ProcessPlaytime;
-import core.events.SpeedLimit;
-import core.events.Chat;
+import core.events.SpeedLimiter;
+import core.events.ChatListener;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import org.bukkit.command.CommandSender;
 
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Server implements CommandExecutor {
 	
 	@Override
@@ -82,7 +82,7 @@ public class Server implements CommandExecutor {
 		TextComponent slimit_a = new TextComponent("Current Speed Limit: ");
 		TextComponent slimit_b = new TextComponent(speed_limit + " bps");
 		TextComponent skicks_a = new TextComponent("Speed Limit Kicks: ");
-		TextComponent skicks_b = new TextComponent("" + SpeedLimit.totalKicks);
+		TextComponent skicks_b = new TextComponent("" + SpeedLimiter.totalKicks);
 		TextComponent acr_a = new TextComponent("Anti-Cheat Enabled: ");
 		
 		// PLAYERS
@@ -106,7 +106,7 @@ public class Server implements CommandExecutor {
 		TextComponent withers_a = new TextComponent("Loaded Withers: ");
 		TextComponent withers_b = new TextComponent("" + witherCount);
 		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
-		TextComponent slowMode_b = new TextComponent(Chat.slowChatEnabled ? "True" : "False");
+		TextComponent slowMode_b = new TextComponent(ChatListener.slowChatEnabled ? "True" : "False");
 		TextComponent uptime_a = new TextComponent("Server Uptime: ");
 		TextComponent uptime_b = new TextComponent(Utilities.timeToString(ServerMeta.getUptime()));
 		

@@ -22,6 +22,7 @@ package core.commands;
  * 
  * */
 
+import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.backend.FileManager;
 
@@ -35,7 +36,7 @@ import org.bukkit.command.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Backup implements CommandExecutor {
 	
 	public static int opBackupCounter = 0;
@@ -76,7 +77,7 @@ public class Backup implements CommandExecutor {
 		} catch (IOException e) {
 			
 			System.out.println("Could not backup one or more files..");
-			System.out.println(e);
+			if (Config.debug) e.printStackTrace();
 			
 			player.spigot().sendMessage(new TextComponent("There was an exception while trying to backup one or more files :("));
 			return false;

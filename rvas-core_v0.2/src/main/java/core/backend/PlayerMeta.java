@@ -1,7 +1,7 @@
 package core.backend;
 
 import core.commands.Ignore;
-import core.events.Chat;
+import core.events.ChatListener;
 import core.objects.PlayerSettings;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -99,7 +99,7 @@ public class PlayerMeta {
 				_ipMutes.remove(getIp(p));
 				saveMuted();
 			}
-			Chat.violationLevels.remove(uuid);
+			ChatListener.violationLevels.remove(uuid);
 			
 		} else if (type.equals(MuteType.TEMPORARY)) {
 			
@@ -242,10 +242,12 @@ public class PlayerMeta {
 				.collect(Collectors.toList()).lastIndexOf(p.getUniqueId()) + 1;
 	}
 
-	public static HashMap<UUID, Double> getTopFivePlayers() {
-		HashMap<UUID, Double> out;
+	public static HashMap<UUID, Double> getTopFifteenPlayers() {
+		int limit = 15;
+		if (!Config.getValue("admin").equals("")) limit = 16;
 
-		out = Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(6)
+		HashMap<UUID, Double> out;
+		out = Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(limit)
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
 		out.remove(UUID.fromString(Config.getValue("adminid")));
@@ -262,7 +264,7 @@ public class PlayerMeta {
 
 	// Handle player settings
 	public static PlayerSettings getNewSettings(OfflinePlayer p) {
-		return new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true);
+		return new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true, "UTC");
 	}
 	
 	public static PlayerSettings getSettings(OfflinePlayer p) {

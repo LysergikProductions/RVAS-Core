@@ -31,6 +31,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.comphenix.protocol.wrappers.nbt.NbtBase;
 
@@ -86,21 +87,33 @@ public class PacketListener implements Listener {
 				int chunk_z = thisPacket.getIntegers().read(1);
 
 				List<NbtBase<?>> blockEntityData = thisPacket.getListNbtModifier().read(0);
+				int thisSize = blockEntityData.size();
 
-				if (blockEntityData.size() > 8192) {
-					event.setCancelled(true);
+				if (thisSize > 8192) {
+					event.setCancelled(true); // <- if remainder of block throws exception, players are still protected
 
 					System.out.println(
-							"WARN: Packet MAP_CHUNK contains more than 8192 list entries in getListNbtModifier().read(0)");
-					System.out.println("Calling ChunkListener.antiChunkBan()..");
+							"WARN: Packet MAP_CHUNK contains " + thisSize + " entries in getListNbtModifier().read(0)");
 
-					Chunk thisChunk = thisWorld.getChunkAt(chunk_x, chunk_z);
-					ChunkListener.antiChunkBan(thisChunk);
+					if (Config.getValue("remove.chunk_bans").equals("true")) {
+						System.out.println("Calling ChunkListener.removeChunkBan()..");
 
-					thisChunk.unload(true); int i = 0;
-					while (!thisChunk.isLoaded()) {
-						thisChunk.load(); i++;
-						if (i > 8) break;
+						// count the block entities and remove any discovered chunk bans
+						Chunk thisChunk = thisWorld.getChunkAt(chunk_x, chunk_z);
+						ChunkManager.removeChunkBan(thisChunk);
+
+						// save and reload the chunk
+						thisChunk.unload(true); int i = 0;
+						while (!thisChunk.isLoaded()) {
+							thisChunk.load(); i++;
+							if (i > 2) break;
+						}
+
+					} else { // truncate the list and fix the packet
+						List<NbtBase<?>> truncatedList = new ArrayList<>(blockEntityData.subList(0, 8192));
+
+						thisPacket.getListNbtModifier().write(0, truncatedList);
+						event.setCancelled(false);
 					}
 				}
 			}

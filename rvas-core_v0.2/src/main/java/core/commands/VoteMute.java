@@ -17,7 +17,7 @@ import org.bukkit.command.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class VoteMute implements CommandExecutor {
 	
 	static HashMap<UUID, Integer> _votes = new HashMap<>();

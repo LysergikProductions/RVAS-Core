@@ -258,10 +258,18 @@ public class BlockListener implements Listener {
 						ChatColor.RED + "You can only place shulkers in survival mode"));
 			}
 
-			ShulkerBox thisShulk = (ShulkerBox)event.getBlockReplacedState();
+			ShulkerBox thisShulk;
+			try {
+				thisShulk = (ShulkerBox)event.getBlockReplacedState();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+				thisShulk = null;
+			}
 
-			for (ItemStack thisStack: thisShulk.getInventory()) {
-				ItemCheck.IllegalCheck(thisStack, "Placed Shulker", placer);
+			if (thisShulk != null) {
+				for (ItemStack thisStack: thisShulk.getInventory().getContents()) {
+					ItemCheck.IllegalCheck(thisStack, "Placed Shulker", placer);
+				}
 			}
 		}
 		

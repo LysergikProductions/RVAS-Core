@@ -103,11 +103,12 @@ public class OpListener implements Listener {
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!isAdmin) {
-			if (Utilities.isCmdRestricted(msg)) {
-				
+			if (msg.contains("/give") && Config.getValue("protect.ops.give").equals("true") ||
+					Utilities.isCmdRestricted(msg)) {
+
 				event.setCancelled(true);
 				sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "no"));
-				
+
 			} else if (msg.contains("@a")) {
 				
 				event.setCancelled(true);

@@ -10,7 +10,6 @@ public class OnTick extends TimerTask {
 
 	@Override
 	public void run() {
-
 		VoteMute.processVoteCooldowns();
 		Scheduler.setLastTaskId("tickTasks");
 	}

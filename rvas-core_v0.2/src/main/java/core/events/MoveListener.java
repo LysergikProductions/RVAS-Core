@@ -45,7 +45,7 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public class Move implements Listener {
+public class MoveListener implements Listener {
 
 	static Random r = new Random();
 

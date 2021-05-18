@@ -71,16 +71,18 @@ public class ChatPrint {
 		receiver.spigot().sendMessage(new TextComponent("Placed Obsidian: " + placed_obi));
 	}
 	
-	public static void printLeaders(Player receiver) {
+	public static void printLeaders(Player receiver, int lineLimit) {
+		if (lineLimit > 15) lineLimit = 15;
+		if (lineLimit < 3) lineLimit = 3;
+
+		HashMap<UUID, Double> leaders_0_15 = PlayerMeta.getTopFifteenPlayers();
+		HashMap<UUID, Double> realLeaders_0_15 = PlayerMeta.getTopFifteenPlayers();
 		
-		HashMap<UUID, Double> leaders = PlayerMeta.getTopFivePlayers();
-		HashMap<UUID, Double> realLeaders = PlayerMeta.getTopFivePlayers();
-		
-		for (UUID u : leaders.keySet()) realLeaders.put(u, leaders.get(u));
+		for (UUID u : leaders_0_15.keySet()) realLeaders_0_15.put(u, leaders_0_15.get(u));
 		ArrayList<TextComponent> list = new ArrayList<>();
 
 		int x = 0;
-		for (UUID pid : realLeaders.keySet()) {
+		for (UUID pid : realLeaders_0_15.keySet()) {
 			x++;
 			
 			TextComponent a1 = new TextComponent("#" + x + ": "); a1.setBold(true);
@@ -89,21 +91,21 @@ public class ChatPrint {
 			
 			if (target_name == null) {
 				
-				TextComponent b = new TextComponent("[unknown], " + Utilities.timeToString(realLeaders.get(pid)));
+				TextComponent b = new TextComponent("[unknown], " + Utilities.timeToString(realLeaders_0_15.get(pid)));
 				TextComponent c = new TextComponent(a1, b);
 				
 				c.setColor(ChatColor.GOLD);
 				
 				list.add(c);
 				
-			} else {// this leader name != null
+			} else { // this leader name != null
 				
 				int kills = PVPdata.getStats(offPlayer).killTotal;
 				int deaths = PVPdata.getStats(offPlayer).deathTotal;
 				String kd = PVPdata.getStats(offPlayer).kd;
 				
 				TextComponent a2 = new TextComponent(target_name + ", ");
-				TextComponent b = new TextComponent(Utilities.timeToString(realLeaders.get(pid)));
+				TextComponent b = new TextComponent(Utilities.timeToString(realLeaders_0_15.get(pid)));
 				
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
 				ClickEvent shortcut = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/stats " + target_name);
@@ -119,7 +121,7 @@ public class ChatPrint {
 			}
 		}
 		
-		TextComponent top5_head = new TextComponent("--- Top Five Players ---");		
+		TextComponent top5_head = new TextComponent("--- Top Players ---");
 		TextComponent ujoins_a = new TextComponent("Unique Joins: ");
 		TextComponent ujoins_b = new TextComponent("" + PlayerMeta.Playtimes.keySet().size());
 		TextComponent msg = new TextComponent(ujoins_a, ujoins_b);
@@ -128,16 +130,30 @@ public class ChatPrint {
 		msg.setColor(ChatColor.GRAY); msg.setItalic(true);
 		
 		receiver.spigot().sendMessage(top5_head);
-		list.forEach(ln -> receiver.spigot().sendMessage(ln));
+
+		int i = 0;
+		for (TextComponent ln: list) {
+			receiver.spigot().sendMessage(ln);
+			i++;
+
+			if (i >= lineLimit) break;
+		}
 		receiver.spigot().sendMessage(msg);
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
+		Date date = new Date(target.getFirstPlayed());
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
 		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
+		String setTimeZone = targetSettings.timezone;
 
-		Date date = new Date(target.getFirstPlayed());
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");		
+		try {
+			sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
 		String firstPlayed = sdf.format(date);
 		String lastPlayed = sdf.format(new Date(target.getLastPlayed()));
 
@@ -243,6 +259,7 @@ public class ChatPrint {
 		TextComponent showKD_a = new TextComponent("K/D: ");
 		TextComponent showJoinMsgs_a = new TextComponent("All join messages: ");
 		TextComponent showDeathMsgs_a = new TextComponent("All death messages: ");
+		TextComponent currentTimeZone_a = new TextComponent("Timezone: ");
 		
 		showPVP_a.setColor(ChatColor.GOLD);
 		showKills_a.setColor(ChatColor.GOLD);
@@ -250,9 +267,11 @@ public class ChatPrint {
 		showKD_a.setColor(ChatColor.GOLD);
 		showJoinMsgs_a.setColor(ChatColor.GOLD);
 		showDeathMsgs_a.setColor(ChatColor.GOLD);
+		currentTimeZone_a.setColor(ChatColor.GOLD);
 		
 		String spvp; String kill; String die;
 		String kdr; String jMsgs; String dMsgs;
+		String timezone = theseSettings.timezone;
 		
 		if (theseSettings.show_PVPstats) spvp = "Enabled"; else spvp = "Disabled";
 		if (theseSettings.show_kills) kill = "Enabled"; else kill = "Disabled";
@@ -267,6 +286,7 @@ public class ChatPrint {
 		TextComponent showKD_b = new TextComponent("" + kdr);
 		TextComponent showJoinMsgs_b = new TextComponent("" + jMsgs);
 		TextComponent showDeathMsgs_b = new TextComponent("" + dMsgs);
+		TextComponent currentTimeZone_b = new TextComponent("" + timezone);
 		
 		TextComponent showPVP = new TextComponent(showPVP_a, showPVP_b);
 		TextComponent showKills = new TextComponent(showKills_a, showKills_b);
@@ -274,10 +294,12 @@ public class ChatPrint {
 		TextComponent showKD = new TextComponent(showKD_a, showKD_b);
 		TextComponent showJoinMsgs = new TextComponent(showJoinMsgs_a, showJoinMsgs_b);
 		TextComponent showDeathMsgs = new TextComponent(showDeathMsgs_a, showDeathMsgs_b);
+		TextComponent showTimeZone = new TextComponent(currentTimeZone_a, currentTimeZone_b);
 		
 		list.add(showPVP); list.add(showKills); list.add(showDeaths);
 		list.add(showKD); list.add(showJoinMsgs); list.add(showDeathMsgs);
-		
+
+		list.add(showTimeZone);
 		list.forEach(ln -> receiver.spigot().sendMessage(ln));
 	}
 }

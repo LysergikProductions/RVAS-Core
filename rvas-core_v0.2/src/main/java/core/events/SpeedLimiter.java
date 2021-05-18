@@ -23,15 +23,15 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class SpeedLimit implements Listener {
+public class SpeedLimiter implements Listener {
 	private static final int GRACE_PERIOD = 5;
 
 	private static HashMap<UUID, Location> locs = new HashMap<>();
-	private static List<UUID> tped = new ArrayList<>();
-	private static HashMap<UUID, Integer> gracePeriod = new HashMap<>();
-	private static long lastCheck = -1;
 	private static HashMap<String, Double> speeds = new HashMap<>();
+	private static HashMap<UUID, Integer> gracePeriod = new HashMap<>();
+	private static List<UUID> tped = new ArrayList<>();
 
+	private static long lastCheck = -1;
 	public static int totalKicks = 0;
 
 	@SuppressWarnings("deprecation") // Speed Monitor

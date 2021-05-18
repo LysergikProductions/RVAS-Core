@@ -19,7 +19,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation") // Toggle players being prisoners
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Prison implements CommandExecutor {
 
 	//HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();

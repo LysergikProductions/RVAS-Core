@@ -1,8 +1,7 @@
 package core.commands;
 
 import core.backend.*;
-
-import core.events.SpeedLimit;
+import core.events.SpeedLimiter;
 import core.tasks.Analytics;
 
 import java.io.IOException;
@@ -21,6 +20,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class Admin implements CommandExecutor {
 
 	public static List<UUID> Spies = new ArrayList<>();
@@ -30,7 +30,6 @@ public class Admin implements CommandExecutor {
 	public static boolean disableWarnings = false;
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		Player player = (Player) sender;
 		
@@ -73,7 +72,7 @@ public class Admin implements CommandExecutor {
 						MsgToggle.add(player.getUniqueId());
 					}
 					return true;
-					
+
 				case "RELOAD":
 					try {
 						Config.load();
@@ -87,7 +86,7 @@ public class Admin implements CommandExecutor {
 					
 				case "SPEED":
 					player.spigot().sendMessage(new TextComponent("§6Player speeds:"));
-					List< Pair<Double, String> > speeds = SpeedLimit.getSpeeds();
+					List< Pair<Double, String> > speeds = SpeedLimiter.getSpeeds();
 					
 					for (Pair<Double, String> speedEntry : speeds) {
 						double speed = speedEntry.getLeft();
