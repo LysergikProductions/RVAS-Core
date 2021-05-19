@@ -27,16 +27,16 @@ import core.backend.Config;
 import core.backend.ItemCheck;
 import core.backend.Utilities;
 import core.backend.PlayerMeta;
+import core.commands.AFK;
+import core.commands.Repair;
 
 import java.util.*;
 import java.text.DecimalFormat;
 
-import core.commands.Repair;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.block.ShulkerBox;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -44,6 +44,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import org.bukkit.block.Block;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.Material;
 
 import org.bukkit.Bukkit;

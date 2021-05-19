@@ -25,8 +25,12 @@ package core.events;
 import core.backend.Config;
 import core.backend.PlayerMeta;
 import core.backend.Utilities;
+import core.commands.AFK;
 
 import java.util.*;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -99,7 +103,9 @@ public class MoveListener implements Listener {
 		// Prevent invulnerable end-crystals from breaking spawn chunks
 		// https://github.com/PaperMC/Paper/issues/5404
 
-		if(e.getEntityType().equals(EntityType.ENDER_CRYSTAL)) {
+		EntityType ET = e.getEntityType();
+
+		if (ET.equals(EntityType.ENDER_CRYSTAL)) {
 			EnderCrystal crystal = (EnderCrystal)e.getEntity();
 
 			if (crystal.isShowingBottom() || crystal.isInvulnerable()) {

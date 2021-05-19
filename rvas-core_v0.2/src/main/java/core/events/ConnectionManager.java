@@ -41,7 +41,7 @@ public class ConnectionManager implements Listener {
 		if (lastJoinTime > 0.00 && joinCounter > 16) {
 			if (thisJoinTime - lastJoinTime < 710) {
 
-				e.setKickMessage("§6The server is getting bombarded with connections. Please try again later.");
+				e.setKickMessage("\u00A76The server is getting bombarded with connections. Please try again later.");
 				e.setResult(Result.KICK_OTHER);
 			}
 		}
@@ -61,13 +61,13 @@ public class ConnectionManager implements Listener {
 		// Custom whitelist kick
 		if(Bukkit.hasWhitelist() && !Bukkit.getWhitelistedPlayers().contains(e.getPlayer())
 				&& !e.getPlayer().isOp() && serverHostname.equals("rvas.testing")) {
-			e.setKickMessage("§6The test server is closed right now. Please try again later.");
+			e.setKickMessage("\u00A76The test server is closed right now. Please try again later.");
 			e.setResult(Result.KICK_OTHER);
 			return;
 		}
 		
 		if (!ServerMeta.canReconnect(e.getPlayer())) {
-			e.setKickMessage("§6Connection throttled. Please wait some time before reconnecting.");
+			e.setKickMessage("\u00A76Connection throttled. Please wait some time before reconnecting.");
 			e.setResult(Result.KICK_OTHER);
 		}
 	}
@@ -128,7 +128,7 @@ public class ConnectionManager implements Listener {
 	public void doJoinMessage(MessageType msg, Player player) {
 		if (player.isOp()) return;
 		
-		String messageOut = "§7" + player.getName()
+		String messageOut = "\u00A77" + player.getName()
 				+ ((msg.equals(MessageType.JOIN)) ? " joined the game." : " left the game.");
 		
 		Bukkit.getOnlinePlayers().forEach(player1 ->{

@@ -1,16 +1,15 @@
 package core.commands;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
 
 // OP-only say command
 public class Say implements CommandExecutor {
@@ -26,7 +25,7 @@ public class Say implements CommandExecutor {
 		final String[] data = {""};
 		Arrays.stream(args).forEach(arg -> data[0] += arg + " ");
 		data[0] = data[0].trim();
-		data[0] = data[0].replace("§", "");
+		data[0] = data[0].replace("\u00A7", "");
 
 		if (data[0].isEmpty()) {
 			sender.sendMessage("\u00A7cNo message specified.");

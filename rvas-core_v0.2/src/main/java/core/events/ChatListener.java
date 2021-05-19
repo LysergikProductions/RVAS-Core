@@ -1,30 +1,33 @@
 package core.events;
 
 import core.backend.Config;
+import core.commands.AFK;
+import core.commands.Admin;
 import core.backend.PlayerMeta;
 import core.backend.PlayerMeta.MuteType;
-import core.commands.Admin;
 
 import java.util.*;
 import java.util.logging.Level;
+
+import core.commands.Message;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.event.EventHandler;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class ChatListener implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
-		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "r",
-		"redeem", "server", "sign", "stats", "suicide", "tdm", "tjm", "tps", "vm", "vote", "w", "ignore"
+		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "w", "r",
+		"redeem", "stats", "tdm", "tjm", "tps", "vm", "vote", "ignore", "server", "sign", "afk"
 	));
 	
 	private HashMap<UUID, Long> lastChatTimes = new HashMap<>();
@@ -45,6 +48,17 @@ public class ChatListener implements Listener {
 		if (PlayerMeta.isMuted(player) || (PlayerMeta.MuteAll && !player.isOp()))
 			return;
 
+		// remove AFK statuses
+		UUID playerid = player.getUniqueId();
+		if (AFK._AFKs.contains(playerid)) {
+
+			Message.AFK_warned.remove(playerid);
+			AFK._AFKs.remove(playerid);
+
+			player.sendMessage(new TextComponent(ChatColor.GREEN +
+					"You are no longer AFK!").toLegacyText());
+		}
+
 		// -- CREATE PROPERTIES -- \\
 		
 		boolean doSend = true;
@@ -56,30 +70,30 @@ public class ChatListener implements Listener {
 
 		switch (e.getMessage().charAt(0)) {
 			case '>':
-				color = "§a"; // Greentext
+				color = "\u00A7a"; // Greentext
 				break;
 			case '$':
 				if (PlayerMeta.isDonator(player)) {
-					color = "§6"; // Donator text
+					color = "\u00A76"; // Donator text
 					break;
 				}
 			default:
-				color = "§f"; // Normal text
+				color = "\u00A7f"; // Normal text
 				break;
 		}
 
 		if (PlayerMeta.isDonator(player) && !Admin.UseRedName.contains(player.getUniqueId())) {
-			usernameColor = "§6";
+			usernameColor = "\u00A76";
 		} else if (Admin.UseRedName.contains(player.getUniqueId())) {
-			usernameColor = "§c";
+			usernameColor = "\u00A7c";
 		} else {
-			usernameColor = "§f";
+			usernameColor = "\u00A7f";
 		}
 
 		// -- STRING MODIFICATION -- //
 
 		// Remove section symbols
-		finalMessage = finalMessage.replace('§', ' ');
+		finalMessage = finalMessage.replace('\u00A7', ' ');
 
 		// -- CHECKS -- //
 

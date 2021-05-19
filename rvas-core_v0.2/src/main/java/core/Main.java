@@ -23,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.2.5"; public static final int build = 254;
+	public static final String version = "0.2.5"; public static final int build = 255;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -82,6 +82,9 @@ public class Main extends JavaPlugin {
 
 		System.out.println("/msg");
 		Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
+
+		System.out.println("/w");
+		Objects.requireNonNull(this.getCommand("w")).setExecutor(new Message());
 
 		System.out.println("/r");
 		Objects.requireNonNull(this.getCommand("r")).setExecutor(new Reply());
@@ -151,6 +154,9 @@ public class Main extends JavaPlugin {
 
 		System.out.println("/ignore");
 		Objects.requireNonNull(this.getCommand("ignore")).setExecutor(new Ignore());
+
+		System.out.println("/afk");
+		Objects.requireNonNull(this.getCommand("afk")).setExecutor(new AFK());
 
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");

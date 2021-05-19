@@ -36,23 +36,23 @@ public class Help implements CommandExecutor {
 		switch (page) {
 			case 1:
 				Arrays.asList(
-					"\u00A76/stats help: §7Learn how to hide your PVP stats and more",
-					"\u00A76/sign: §7Sign the item you are holding. *Cannot undo or overwrite",
-					"\u00A76/discord: §7Join the discord",
-					"\u00A76/vote: §7Dupe the item in your hand. Only occurs after voting",
-					"\u00A76/ignore [player_name]: §7Ignore all messages from given player until next restart"
+					"\u00A76/stats help: \u00A77Learn how to hide your PVP stats and more",
+					"\u00A76/sign: \u00A77Sign the item you are holding. *Cannot undo or overwrite",
+					"\u00A76/discord: \u00A77Join the discord",
+					"\u00A76/vote: \u00A77Dupe the item in your hand. Only occurs after voting",
+					"\u00A76/ignore [player_name]: \u00A77Ignore all messages from given player until next restart"
 						
 				).forEach(sender::sendMessage);
 				break;
 
 			case 2:
 				Arrays.asList(
-					"\u00A76/vm [player]: §7Vote to mute a player",
-					"\u00A76/kit: §7Get a small kit with steak and some starter tools (one-time only)",
-					"\u00A76/msg, /w, /r: §7Message or reply to a player",
-					"\u00A76/kill: §7Take a guess",
-					"\u00A76/server: §7See current speed limit and other server info",
-					"\u00A76/tjm: §7Toggle join messages"
+					"\u00A76/vm [player]: \u00A77Vote to mute a player",
+					"\u00A76/kit: \u00A77Get a small kit with steak and some starter tools (one-time only)",
+					"\u00A76/msg, /w, /r: \u00A77Message or reply to a player",
+					"\u00A76/kill: \u00A77Take a guess",
+					"\u00A76/server: \u00A77See current speed limit and other server info",
+					"\u00A76/tjm: \u00A77Toggle join messages"
 					
 				).forEach(sender::sendMessage);
 				break;

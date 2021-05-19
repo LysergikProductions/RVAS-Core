@@ -37,11 +37,13 @@ public class Reply implements CommandExecutor {
 
 		// Get recipient
 		Player recv = Bukkit.getPlayer(Message.Replies.get(p.getUniqueId()));
-		// Name to use [for stealth]
 		String recvName;
-		// Can't send to offline players
+
 		if (recv == null) {
 			sender.sendMessage("\u00A7cPlayer is not online.");
+			return true;
+		} else if (AFK._AFKs.contains(recv.getUniqueId())) {
+			sender.sendMessage("\u00A7cPlayer is currently AFK.");
 			return true;
 		}
 

@@ -68,7 +68,7 @@ public class About implements CommandExecutor {
 		license.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://www.gnu.org/licenses/agpl-3.0.en.html")));
 		
 		Arrays.asList(new TextComponent(""), build, by, source, license)
-		.forEach(ln -> sender.sendMessage(ln.toLegacyText()));
+		.forEach(ln -> sender.sendMessage(ln));
 		return true;
 	}
 }

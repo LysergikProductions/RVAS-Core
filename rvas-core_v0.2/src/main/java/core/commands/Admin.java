@@ -92,7 +92,7 @@ public class Admin implements CommandExecutor {
 						double speed = speedEntry.getLeft();
 						if(speed == 0) continue;
 						String playerName = speedEntry.getRight();
-						String color = "§";
+						String color = "\u00A7";
 						if (speed >= 64.0)
 							color += "c"; // red
 						else if (speed >= 48.0)
@@ -154,7 +154,7 @@ public class Admin implements CommandExecutor {
 		TextComponent ops = new TextComponent(ops_a, ops_b);
 		
 		player.sendMessage("");
-		player.sendMessage("\u00A7csinse420: §7Server Admin, Developer, Founder");
+		player.sendMessage("\u00A7csinse420: \u00A77Server Admin, Developer, Founder");
 		player.sendMessage(ops.toLegacyText());
 		return true;
 	}

@@ -3,9 +3,7 @@ package core.commands;
 import core.tasks.Analytics;
 import core.backend.PlayerMeta;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,38 +16,53 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("SpellCheckingInspection")
 public class Message implements CommandExecutor {
 
+	public static ArrayList<UUID> AFK_warned = new ArrayList<>();
 	public static HashMap<UUID, UUID> Replies = new HashMap<>();
+	//TODO: implement this:
+	//public static HashMap<UUID, List<String>> recentWhispers = new HashMap<>();
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+		Player p; String sendName; UUID pid;
 		
 		if (args.length < 2) {
 			sender.sendMessage("\u00A7cIncorrect syntax. Syntax: /msg [player] [message]");
 			return true;
 		}
 
-		String sendName;
-
 		if (sender instanceof Player) {
-			Player p = ((Player) sender);
+			p = ((Player) sender);
 			sendName = p.getName();
+			pid = p.getUniqueId();
 		} else {
 			sendName = "Console";
+			pid = null;
+		}
+
+		if (!sendName.equals("Console") && !AFK_warned.contains(pid)) {
+			AFK_warned.add(pid);
 		}
 
 		if (sender instanceof Player && !PlayerMeta.isAdmin((Player) sender)) Analytics.msg_cmd++;
 
 		// Get recipient
 		final Player recv = Bukkit.getPlayer(args[0]);
-		// Name to use [for stealth]
-		String recvName;
-		// Can't send to offline players
+
 		if (recv == null) {
 			sender.sendMessage("\u00A7cPlayer is no longer online.");
 			return true;
+
+		} else if (AFK._AFKs.contains(recv.getUniqueId())) {
+			sender.sendMessage("\u00A7cThis player is currently AFK.");
+
+			if (!AFK_warned.contains(recv.getUniqueId())) {
+				recv.sendMessage("\u00A7c" + sendName + " is trying to whisper you, but you are AFK.");
+				AFK_warned.add(recv.getUniqueId());
+			}
+			return true;
 		}
 
-		recvName = recv.getName();
+		String recvName = recv.getName();
 
 		// Concatenate all messages
 		final String[] msg = {""};
@@ -93,9 +106,8 @@ public class Message implements CommandExecutor {
 
 		// Cycle through online players & if they're an admin with spy enabled, send
 		// them a copy of this message
-		String finalRecvName = recvName;
-		Bukkit.getOnlinePlayers().forEach(p -> { if (Admin.Spies.contains(p.getUniqueId())) {
-			p.sendMessage("\u00A75" + sendName + " to " + finalRecvName + ": " + msg[0]);
+		Bukkit.getOnlinePlayers().forEach(thisPlayer -> { if (Admin.Spies.contains(thisPlayer.getUniqueId())) {
+			thisPlayer.sendMessage("\u00A75" + sendName + " to " + recvName + ": " + msg[0]);
 		}});
 
 		if (!Admin.Spies.contains(recv.getUniqueId())) {
@@ -110,7 +122,6 @@ public class Message implements CommandExecutor {
 		if (sender instanceof Player) {
 			Replies.put(((Player) sender).getUniqueId(), recv.getUniqueId());
 		}
-
 		return true;
 	}
 }

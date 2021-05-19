@@ -9,6 +9,9 @@ protect.ops.give = true
 // --- SPEED LIMIT --- //
 // ------------------- //
 
+// - Nether roof specific speed-limit | -1 == disabled
+speedlimit.nether_roof = 25
+
 // - Medium kick speed limit (grace period is 2 seconds)
 speedlimit.medium_kick = 80
 
