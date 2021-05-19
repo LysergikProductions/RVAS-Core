@@ -27,7 +27,6 @@ import core.backend.Config;
 import core.backend.ItemCheck;
 import core.backend.Utilities;
 import core.backend.PlayerMeta;
-import core.commands.AFK;
 import core.commands.Repair;
 
 import java.util.*;
@@ -61,11 +60,10 @@ public class BlockListener implements Listener {
 	static boolean floorProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.floor"));
 	static boolean modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
 	static boolean modeOnBreak = Boolean.parseBoolean(Config.getValue("protect.gamemode.onbreak"));
+	static boolean consumeCreativeBlocks = Boolean.parseBoolean(Config.getValue("consume.creative.blocks"));
 	
 	public static int brokenBedrockCounter = 0;
 	public static int placedBedrockCounter = 0;
-	
-	//public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
 	
 	public static ArrayList<Material> BreakBanned = new ArrayList<>(); static {
 		BreakBanned.addAll(Arrays.asList(Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK,
@@ -200,8 +198,6 @@ public class BlockListener implements Listener {
 		Material blockType = block.getType();
 		String mat = blockType.toString();
 
-		if (!placer.isOp() && modeOnPlace) placer.setGameMode(GameMode.SURVIVAL);
-
 		// prevent lag-prisoners from placing things that can cause lag
 		if (PlayerMeta.isPrisoner(placer)) {
 
@@ -311,6 +307,19 @@ public class BlockListener implements Listener {
 					.toLegacyText());
 		}
 	}
+
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	public static void onCreativePlace(BlockPlaceEvent event) {
+		Player thisPlayer = event.getPlayer();
+
+		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL) ||
+				PlayerMeta.isAdmin(thisPlayer)) return;
+
+		ItemStack usedItemStack = thisPlayer.getActiveItem();
+
+		if (consumeCreativeBlocks && usedItemStack != null) usedItemStack.setAmount(usedItemStack.getAmount()-1);
+		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
+	}
 	
 	public static boolean updateConfigs() {
 		
@@ -319,6 +328,7 @@ public class BlockListener implements Listener {
 			floorProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.floor"));
 			modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
 			modeOnBreak = Boolean.parseBoolean(Config.getValue("protect.gamemode.onbreak"));
+			consumeCreativeBlocks = Boolean.parseBoolean(Config.getValue("consume.creative.blocks"));
 			
 			return true;
 			

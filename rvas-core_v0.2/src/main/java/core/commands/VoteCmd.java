@@ -17,7 +17,7 @@ public class VoteCmd implements CommandExecutor {
 		message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minecraftservers.org/server/612428"));
 		message.setColor(ChatColor.GOLD);
 
-		sender.sendMessage(message.toLegacyText());
+		sender.sendMessage(message);
 		return true;
 	}
 }

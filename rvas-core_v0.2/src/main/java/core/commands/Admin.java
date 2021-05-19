@@ -141,7 +141,7 @@ public class Admin implements CommandExecutor {
 					logSpot.setClickEvent(new ClickEvent(
 							ClickEvent.Action.RUN_COMMAND, "/execute in " + dimension + " run tp @s " + location));
 					
-					sender.sendMessage(logSpot.toLegacyText());
+					sender.sendMessage(logSpot);
 				}
 				return true;
 			}

@@ -141,11 +141,15 @@ public class SpeedLimiter implements Listener {
 				// allow ops to bypass higher tier, but not the base, speed limiters
 				if (player.isOp()) final_limit = 76.00;
 
+				boolean toNetherGrace = false;
+
 				// adjust speed limit for nether roof
 				if (nether_limit < speed_limit &&
 						new_location.getWorld().getEnvironment().equals(World.Environment.NETHER) &&
 						new_location.getY() > 127) {
+
 					final_limit = nether_limit;
+					toNetherGrace = true;
 				}
 				
 				Vector v = new_location.subtract(previous_location).toVector();
@@ -170,7 +174,7 @@ public class SpeedLimiter implements Listener {
 				}
 
 				// medium-kick: set grace period to 2 sec
-				if (speed > medium_kick) {
+				if (speed > medium_kick || toNetherGrace) {
 					
 					if (grace > 2)
 						grace = 2;

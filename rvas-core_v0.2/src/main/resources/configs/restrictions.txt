@@ -5,6 +5,9 @@
 // - Only allow owner to use `/give` | true == disabled for regular ops
 protect.ops.give = true
 
+// - Prevent block duplication in creative mode on block placement
+consume.creative.blocks = true
+
 // ------------------- //
 // --- SPEED LIMIT --- //
 // ------------------- //

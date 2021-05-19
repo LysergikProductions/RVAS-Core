@@ -30,6 +30,7 @@ public class AFK implements CommandExecutor {
 
         } else {
             _AFKs.remove(playerid);
+            Message.AFK_warned.remove(playerid);
             result = new TextComponent(ChatColor.GREEN + "You are no longer AFK!");
         }
 

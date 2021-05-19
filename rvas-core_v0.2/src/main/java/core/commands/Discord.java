@@ -55,7 +55,7 @@ public class Discord implements CommandExecutor {
 		} else message = new TextComponent("Discord coming soon!");
 
 		message.setColor(ChatColor.GOLD);
-		sender.sendMessage(message.toLegacyText());
+		sender.sendMessage(message);
 
 		return true;
 	}

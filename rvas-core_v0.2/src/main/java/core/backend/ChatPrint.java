@@ -140,11 +140,13 @@ public class ChatPrint {
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
+		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
+
 		Date date = new Date(target.getFirstPlayed());
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
-		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
-		String setTimeZone = targetSettings.timezone;
+		String setTimeZone = targetSettings.timezone.trim();
+		if (!setTimeZone.contains("/")) setTimeZone = setTimeZone.toUpperCase();
 
 		try {
 			sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
