@@ -137,11 +137,11 @@ public class Admin implements CommandExecutor {
 					String location = (int)loc.getX() + " " + (int)loc.getY() + " " + (int)loc.getZ();
 
 					TextComponent logSpot = new TextComponent("\u00A76"+args[1] + " logged out at " + location);
-					
+
 					logSpot.setClickEvent(new ClickEvent(
-							ClickEvent.Action.RUN_COMMAND, "/execute in " + dimension + " run tp @s " + location));
+							ClickEvent.Action.RUN_COMMAND, "/ninjatp " + dimension + " " + location));
 					
-					sender.sendMessage(logSpot);
+					sender.spigot().sendMessage(logSpot);
 				}
 				return true;
 			}

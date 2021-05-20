@@ -18,8 +18,53 @@ public class Message implements CommandExecutor {
 
 	public static ArrayList<UUID> AFK_warned = new ArrayList<>();
 	public static HashMap<UUID, UUID> Replies = new HashMap<>();
-	//TODO: implement this:
-	//public static HashMap<UUID, List<String>> recentWhispers = new HashMap<>();
+	public static HashMap<UUID, ArrayList<String>> recentWhispers = new HashMap<>();
+
+	private static void addRecentWhisper(UUID thisUUID, String thisMessage) {
+		String whisp_last; String whisp_1last; String whisp_2last;
+
+		if (!recentWhispers.containsKey(thisUUID)) {
+
+			ArrayList<String> newList = new ArrayList<>(); { newList.add(thisMessage); }
+			recentWhispers.put(thisUUID, newList);
+			return;
+		}
+
+		ArrayList<String> thisList = Message.recentWhispers.get(thisUUID);
+
+		try { whisp_last = thisList.get(0); }
+		catch (Exception ignore) { whisp_last = null; }
+
+		try { whisp_1last = thisList.get(1); }
+		catch (Exception ignore) { whisp_1last = null; }
+
+		try { whisp_2last = thisList.get(2); }
+		catch (Exception ignore) { whisp_2last = null; }
+
+		if (whisp_last == null) {
+			thisList.set(0, thisMessage);
+			return;
+		}
+
+		if (whisp_1last == null && !whisp_last.equals(thisMessage)) {
+
+			thisList.add(1, thisList.get(0));
+			thisList.set(0, thisMessage);
+			return;
+		}
+
+		if (whisp_2last == null && whisp_1last != null && !whisp_1last.equals(whisp_last)) {
+
+			thisList.add(2, thisList.get(1));
+			thisList.set(1, thisList.get(0));
+			thisList.set(0, thisMessage);
+			return;
+		}
+
+		thisList.set(2, whisp_1last);
+		thisList.set(1, whisp_last);
+		thisList.set(0, thisMessage);
+	}
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -110,9 +155,12 @@ public class Message implements CommandExecutor {
 			thisPlayer.sendMessage("\u00A75" + sendName + " to " + recvName + ": " + msg[0]);
 		}});
 
+		// send the whisper
 		if (!Admin.Spies.contains(recv.getUniqueId())) {
 			recv.sendMessage("\u00A7dfrom " + sendName + ": " + msg[0]);
 		}
+		addRecentWhisper(recv.getUniqueId(), sendName + ": " + msg[0]);
+
 		if (sender instanceof Player && !Admin.Spies.contains(((Player) sender).getUniqueId())) {
 			sender.sendMessage("\u00A7dto " + recvName + ": " + msg[0]);
 		}

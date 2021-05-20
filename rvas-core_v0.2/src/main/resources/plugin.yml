@@ -11,6 +11,8 @@ commands:
    description: mute player
   dupehand:
    description: INTERNAL USE ONLY
+  ninjatp:
+    description: INTERNAL USE ONLY
   vm:
    description: vote mute
   msg:
@@ -65,3 +67,5 @@ commands:
     description: ignore chat messages
   afk:
     description: toggle your afk status
+  last:
+    description: show last three whispers you received

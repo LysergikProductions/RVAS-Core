@@ -27,7 +27,7 @@ public class ChatListener implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
 		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "w", "r",
-		"redeem", "stats", "tdm", "tjm", "tps", "vm", "vote", "ignore", "server", "sign", "afk"
+		"redeem", "stats", "tdm", "tjm", "tps", "vm", "vote", "ignore", "server", "sign", "afk", "last"
 	));
 	
 	private HashMap<UUID, Long> lastChatTimes = new HashMap<>();

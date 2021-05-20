@@ -292,7 +292,7 @@ public class Utilities {
 
 		for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
 			try {
-				if (thisPlayer.isOp()) thisPlayer.sendMessage(msg.toLegacyText());
+				if (thisPlayer.isOp()) thisPlayer.sendMessage(msg);
 			} catch (Exception e) {return;}
 		}
 

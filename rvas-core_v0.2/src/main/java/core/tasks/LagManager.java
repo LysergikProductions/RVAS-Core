@@ -90,10 +90,10 @@ public class LagManager implements Listener, Runnable {
 			TextComponent msg = new TextComponent("17+ armor stands at " +
 					spawnLoc.getX() + ", " + spawnLoc.getY() + ", " + spawnLoc.getZ() + " in " + dimension);
 
-			String cmd = "/execute in " + dimension + " run tp @s " +
-					spawnLoc.getX() + " " + spawnLoc.getY() + " " + spawnLoc.getZ();
+			String location = spawnLoc.getX() + " " + spawnLoc.getY() + " " + spawnLoc.getZ();
 
-			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
+			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+					"/ninjatp " + dimension + " " + location));
 
 			if (counter > 16) Utilities.notifyOps(new TextComponent(warn, msg));
 		}

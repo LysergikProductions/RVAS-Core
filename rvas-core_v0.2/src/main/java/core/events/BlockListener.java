@@ -234,10 +234,11 @@ public class BlockListener implements Listener {
 					block.getX() + ", " + block.getY() + ", " + block.getZ() + " in " + env +
 					" by " + placer_name + " with UUID: " + placer.getUniqueId());
 
-			String cmd = "/execute in " + env + " run tp @s " +
-					block.getX() + " " + block.getY() + " " + block.getZ();
+			String location = block.getX() + " " + block.getY() + " " + block.getZ();
+			ClickEvent thisEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+					"/ninjatp " + env + " " + location);
 
-			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
+			msg.setClickEvent(thisEvent);
 
 			if (counter > 256) {
 				Utilities.notifyOps(new TextComponent(warn, msg));
@@ -308,16 +309,19 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOW)
 	public static void onCreativePlace(BlockPlaceEvent event) {
 		Player thisPlayer = event.getPlayer();
 
 		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL) ||
 				PlayerMeta.isAdmin(thisPlayer)) return;
 
-		ItemStack usedItemStack = thisPlayer.getActiveItem();
+		ItemStack usedItemStack = event.getItemInHand();
+		int stackCount = usedItemStack.getAmount();
+		System.out.println("stackCount: " + stackCount); //TODO: <- remove this line
 
-		if (consumeCreativeBlocks && usedItemStack != null) usedItemStack.setAmount(usedItemStack.getAmount()-1);
+		if (consumeCreativeBlocks && !usedItemStack.getType().equals(Material.AIR)) usedItemStack.setAmount(
+				stackCount-1);
 		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
 	}
 	

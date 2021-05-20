@@ -131,7 +131,7 @@ public class ChatPrint {
 
 		int i = 0;
 		for (TextComponent ln: list) {
-			receiver.sendMessage(ln.toLegacyText());
+			receiver.sendMessage(ln);
 			i++;
 
 			if (i >= lineLimit) break;
@@ -140,18 +140,18 @@ public class ChatPrint {
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
-		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
+		PlayerSettings receiverSettings = PlayerMeta.getSettings(receiver);
 
 		Date date = new Date(target.getFirstPlayed());
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
-		String setTimeZone = targetSettings.timezone.trim();
+		String setTimeZone = receiverSettings.timezone.trim();
 		if (!setTimeZone.contains("/")) setTimeZone = setTimeZone.toUpperCase();
 
 		try {
-			sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
+			if (!setTimeZone.equals("")) sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (Config.debug) System.out.println(e.getMessage());
 		}
 
 		String firstPlayed = sdf.format(date);
@@ -222,7 +222,8 @@ public class ChatPrint {
 		ArrayList<TextComponent> statsLines; {
 			statsLines = new ArrayList<>(Arrays.asList(title, joined, lastSeen, rank, playtime));
 		}
-		
+
+		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
 		if (targetSettings.show_PVPstats) {
 			
 			if (targetSettings.show_kills ||

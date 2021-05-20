@@ -1,4 +1,4 @@
-package core.commands;
+package core.backend;
 
 import core.backend.Config;
 import core.backend.PlayerMeta;
@@ -36,7 +36,7 @@ public class DupeHand implements CommandExecutor {
 		}
 		
 		if (!PlayerMeta.isOp(sender)) {
-			player.kickPlayer("\u00A76imagine kits in anarchy lmao");
+			player.kickPlayer("\u00A76errmmmmm no");
 			return true;
 		} else {
 			if (args.length != 1) {

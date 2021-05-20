@@ -203,7 +203,7 @@ public class Server implements CommandExecutor {
 		
 		// create output structure and send to chat
 		Arrays.asList(new TextComponent(""), title, tpsText, slimit, skicks, withers, player_head, players, donos, laggers, pmutes, moreInfo)
-		.forEach(ln -> sender.sendMessage(ln.toLegacyText()));
+		.forEach(ln -> sender.sendMessage(ln));
 		
 		return true;
 	}

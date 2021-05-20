@@ -134,7 +134,7 @@ public class ItemCheck {
 
 			// Rebuild Basic Item Attribs
 			if (item.getItemMeta().hasDisplayName()) newMeta.displayName(item.getItemMeta().displayName());
-			if (item.getItemMeta().hasLore()) newMeta.lore(item.getItemMeta().lore());
+			if (item.getItemMeta().hasLore()) newMeta.setLore(item.getItemMeta().getLore());
 
 			// Rebuild Item Enchants
 			if (item.getItemMeta().hasEnchants()) {
