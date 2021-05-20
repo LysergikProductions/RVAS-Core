@@ -1,31 +1,33 @@
 package core.events;
 
 import core.backend.*;
-import core.commands.Admin;
 import core.commands.Kit;
+import core.commands.Admin;
 import core.objects.PlayerSettings;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.net.InetAddress;
+import java.text.DecimalFormat;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.DecimalFormat;
-import java.util.*;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ConnectionManager implements Listener {
@@ -33,8 +35,38 @@ public class ConnectionManager implements Listener {
 	public static String serverHostname = "RVAS";
 	public static double lastJoinTime = 0.00;
 	public static double thisJoinTime = 0.00;
-	
+
 	@EventHandler
+	public void onPreJoin(AsyncPlayerPreLoginEvent event) {
+		InetAddress thisAddress = event.getAddress();
+
+		String playerName = event.getName();
+		String playerIP = thisAddress.getHostName();
+		UUID playerID = event.getUniqueId();
+
+		boolean isMulti = thisAddress.isMulticastAddress();
+		boolean isLoopback = thisAddress.isLoopbackAddress();
+
+		if (isMulti) {
+			System.out.println("[WARN] MULTI IP " + playerIP +
+					" with name (" + playerName + ") and UUID (" + playerID + ")");
+
+			event.setKickMessage("\u00A76You are using a multi ip. You cannot connect like this.");
+			event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+			return;
+		}
+
+		if (isLoopback) System.out.println("[WARN] LOCAL LOOPBACK IP " + playerIP +
+				" with name (" + playerName + ")");
+		else System.out.println("[INFO] Connection Attempt: " + playerID +
+				" is trying to connect from IP: " + playerIP + " with the name " + playerName);
+
+		//TODO: Get timezone by ip
+		// Store this timezone in the player's sPlayerSettings
+		// If they don't have an entry, getNewSettings() then set timezone
+	}
+
+	@EventHandler (ignoreCancelled = true)
 	public void onConnect(PlayerLoginEvent e) {
 		thisJoinTime = System.currentTimeMillis();
 
@@ -74,7 +106,7 @@ public class ConnectionManager implements Listener {
 
 	public static int joinCounter = 0;
 
-	@EventHandler
+	@EventHandler (ignoreCancelled = true)
 	public void onJoin(PlayerJoinEvent e) {
 		joinCounter++; e.setJoinMessage(null);
 

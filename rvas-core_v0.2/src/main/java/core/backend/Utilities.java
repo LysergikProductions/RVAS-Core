@@ -184,10 +184,6 @@ public class Utilities {
 	    }
 	}
 
-	public static String getPlayerIP (Player p) {
-		return Objects.requireNonNull(p.getAddress()).getHostName();
-	}
-
 	public static int banBlockCounter(Chunk chunk) {
 		int counter = 0;
 

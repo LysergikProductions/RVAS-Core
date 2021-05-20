@@ -12,7 +12,7 @@ commands:
   dupehand:
    description: INTERNAL USE ONLY
   ninjatp:
-    description: INTERNAL USE ONLY
+    description: Requires SuperVanish
   vm:
    description: vote mute
   msg:

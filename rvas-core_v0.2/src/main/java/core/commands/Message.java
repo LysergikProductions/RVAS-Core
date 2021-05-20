@@ -42,7 +42,7 @@ public class Message implements CommandExecutor {
 		catch (Exception ignore) { whisp_2last = null; }
 
 		if (whisp_last == null) {
-			thisList.set(0, thisMessage);
+			thisList.add(0, thisMessage);
 			return;
 		}
 

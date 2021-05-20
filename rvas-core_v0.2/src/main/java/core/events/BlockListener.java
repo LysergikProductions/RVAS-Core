@@ -309,12 +309,13 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
+	@EventHandler(priority = EventPriority.HIGH)
 	public static void onCreativePlace(BlockPlaceEvent event) {
 		Player thisPlayer = event.getPlayer();
 
-		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL) ||
-				PlayerMeta.isAdmin(thisPlayer)) return;
+		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL)) return;
+		System.out.println("INFO HEY ONCREATIVEPLACE OMG");
+		System.out.println("consumeCreativeBlocks = " + consumeCreativeBlocks);
 
 		ItemStack usedItemStack = event.getItemInHand();
 		int stackCount = usedItemStack.getAmount();
@@ -323,6 +324,10 @@ public class BlockListener implements Listener {
 		if (consumeCreativeBlocks && !usedItemStack.getType().equals(Material.AIR)) usedItemStack.setAmount(
 				stackCount-1);
 		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
+
+		stackCount = usedItemStack.getAmount();
+		System.out.println("stackCount is now: " + stackCount); //TODO: <- remove this line
+		System.out.println("done onCreativePlace");
 	}
 	
 	public static boolean updateConfigs() {

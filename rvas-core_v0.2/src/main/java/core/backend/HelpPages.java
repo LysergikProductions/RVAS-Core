@@ -34,7 +34,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 @SuppressWarnings("SpellCheckingInspection")
 public class HelpPages {
 
-	public static boolean helpGeneral(Player receiver, int page) {
+	public static void helpGeneral(Player receiver, int page) {
 
 		int maxPage = 2;
 		page = (page > maxPage) ? maxPage : Math.max(page, 1);
@@ -66,12 +66,10 @@ public class HelpPages {
 				).forEach(receiver::sendMessage);
 				break;
 		}
-		receiver.sendMessage("\u00A76--- Help Page " + page + "/" + receiver + " ---");
-
-		return true;
+		receiver.sendMessage("\u00A76--- Help Page " + page + " ---");
 	}
 
-	public static boolean helpStats(Player receiver) {
+	public static void helpStats(Player receiver) {
 
 		TextComponent head = new TextComponent("--- /stats help ---");
 		head.setColor(ChatColor.BLUE);
@@ -117,7 +115,5 @@ public class HelpPages {
 		list.add(self); list.add(leaders); list.add(players); list.add(mcstats); list.add(toggle_info);
 
 		list.forEach(ln -> receiver.sendMessage(ln.toLegacyText()));
-
-		return true;
 	}
 }
