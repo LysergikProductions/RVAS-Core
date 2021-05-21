@@ -2,7 +2,7 @@ package core.commands.restricted;
 
 /* *
  *
- *  About: Allow ops to vanish at teleport at the same time.
+ *  About: Allow ops to vanish and teleport at the same time.
  *          Teleporting to other dimensions also requires simpler
  *          syntax. Developed primarily for internal use.
  *

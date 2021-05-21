@@ -2,9 +2,9 @@ package core.events;
 
 import core.Main;
 import core.backend.*;
-import core.commands.restricted.Admin;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
+import core.commands.restricted.Admin;
 
 import java.util.ArrayList;
 import java.util.HashMap;

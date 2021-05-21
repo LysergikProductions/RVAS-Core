@@ -140,7 +140,7 @@ public class ChatPrint {
 
 			if (i >= lineLimit) break;
 		}
-		receiver.sendMessage(msg.toLegacyText());
+		receiver.sendMessage(msg);
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
@@ -239,7 +239,7 @@ public class ChatPrint {
 		}
 		
 		// send final message to receiver
-		statsLines.forEach(ln -> receiver.sendMessage(ln.toLegacyText()));
+		statsLines.forEach(receiver::sendMessage);
 	}
 	
 	public static void printPlayerSettings(Player receiver) {
