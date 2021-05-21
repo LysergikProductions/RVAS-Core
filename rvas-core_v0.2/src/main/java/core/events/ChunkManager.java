@@ -26,7 +26,7 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.utils.Chunks;
-import core.backend.utils.Do;
+import core.backend.utils.Util;
 import core.commands.restricted.Repair;
 import core.tasks.Analytics;
 
@@ -117,7 +117,7 @@ public class ChunkManager implements Listener {
 		if (chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
 			if (dragon == null || !dragon.hasBeenPreviouslyKilled()) {
 
-				Do.notifyOps(new TextComponent("Cannot repair portal; dragon has never been killed!"));
+				Util.notifyOps(new TextComponent("Cannot repair portal; dragon has never been killed!"));
 				return;
 			}
 

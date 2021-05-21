@@ -24,7 +24,6 @@ package core.tasks;
  * */
 
 import core.backend.Config;
-import core.backend.utils.Do;
 import core.backend.utils.Util;
 import core.events.ConnectionManager;
 
@@ -95,7 +94,7 @@ public class LagManager implements Listener, Runnable {
 			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 					"/ninjatp " + dimension + " " + location));
 
-			if (counter > 16) Do.notifyOps(new TextComponent(warn, msg));
+			if (counter > 16) Util.notifyOps(new TextComponent(warn, msg));
 		}
 	}
 	

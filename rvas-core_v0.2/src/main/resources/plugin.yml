@@ -70,4 +70,4 @@ commands:
   last:
     description: show last three whispers you received
   fig:
-    description: modify configs stored in ram without restarting the server
+    description: modify plugin configs while in-game

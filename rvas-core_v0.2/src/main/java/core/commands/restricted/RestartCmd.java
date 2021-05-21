@@ -1,7 +1,7 @@
 package core.commands.restricted;
 
 import core.data.PlayerMeta;
-import core.backend.utils.Do;
+import core.backend.utils.Restart;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 // INTERNAL USE ONLY
 
-public class Restart implements CommandExecutor {
+public class RestartCmd implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -19,7 +19,7 @@ public class Restart implements CommandExecutor {
 			sender.sendMessage("\u00A7cYou can't run this.");
 			return true;
 		}
-		Do.restart(args.length != 0);
+		Restart.restart(args.length != 0);
 		return true;
 	}
 }

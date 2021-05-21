@@ -1,7 +1,7 @@
 package core.commands.restricted;
 
 import core.backend.*;
-import core.backend.utils.Do;
+import core.backend.utils.Restart;
 import core.backend.utils.Util;
 import core.data.Aliases;
 import core.data.PlayerMeta;
@@ -84,7 +84,7 @@ public class Admin implements CommandExecutor {
 
 					} catch (IOException e) {
 						sender.sendMessage("\u00A74Failed to reload.");
-						Do.restart();
+						Restart.restart();
 					}
 					return true;
 					

@@ -2,7 +2,7 @@ package core.backend.utils;
 
 /* *
  *
- *  About: Void methods that _do_ stuff
+ *  About: Safely restart the server with either a one minute or five minute countdown
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -22,29 +22,24 @@ package core.backend.utils;
  *
  * */
 
+import org.bukkit.Bukkit;
 import java.util.concurrent.TimeUnit;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.*;
-import org.bukkit.entity.Player;
-
 @SuppressWarnings("deprecation")
-public class Do {
-
-	// restart countdown
+public class Restart {
 	public static boolean restarting = false;
 
-	public static void restart() {
-		restart(false);
-	}
+	// slow == false by default
+	public static void restart() { restart(false); }
 
+	// restart countdown
 	public static void restart(boolean slow) {
 		if (restarting) return;
 		else restarting = true;
 
 		new Thread(() -> {
 			try {
-				
 				if (slow) {
 					Bukkit.getServer().spigot()
 							.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l5 \u00A7r\u00A76minutes."));
@@ -68,6 +63,7 @@ public class Do {
 				TimeUnit.SECONDS.sleep(5);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l10 \u00A7r\u00A76seconds."));
+
 				TimeUnit.SECONDS.sleep(5);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l5 \u00A7r\u00A76seconds."));
@@ -76,35 +72,24 @@ public class Do {
 				TimeUnit.SECONDS.sleep(1);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l4 \u00A7r\u00A76seconds."));
+
 				TimeUnit.SECONDS.sleep(1);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l3 \u00A7r\u00A76seconds."));
+
 				TimeUnit.SECONDS.sleep(1);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l2 \u00A7r\u00A76seconds."));
+
 				TimeUnit.SECONDS.sleep(1);
 				Bukkit.getServer().spigot()
 						.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l1 \u00A7r\u00A76second."));
+
 				TimeUnit.SECONDS.sleep(1);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			} catch (Exception e) { e.printStackTrace(); }
+
 			Bukkit.getServer().spigot().broadcast(new TextComponent("\u00A76Server is restarting."));
 			Bukkit.shutdown();
 		}).start();
-	}
-
-	// sends a message to all online ops and console
-	public static void notifyOps(TextComponent msg) {
-		if (msg == null) return;
-
-		for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
-			try {
-				if (thisPlayer.isOp()) thisPlayer.sendMessage(msg);
-			} catch (Exception e) {return;}
-		}
-
-		System.out.println(msg.getText());
 	}
 }

@@ -4,7 +4,7 @@ import core.backend.Config;
 import core.backend.LagProcessor;
 import core.data.PlayerMeta;
 import core.backend.ServerMeta;
-import core.backend.utils.Do;
+import core.backend.utils.Restart;
 import core.backend.utils.Util;
 
 import core.tasks.Analytics;
@@ -99,7 +99,7 @@ public class Server implements CommandExecutor {
 		
 		// DEBUG
 		TextComponent restart_a = new TextComponent("Server restarting: ");
-		TextComponent restart_b = new TextComponent(Do.restarting ? "True" : "False");
+		TextComponent restart_b = new TextComponent(Restart.restarting ? "True" : "False");
 		TextComponent rtrig_a = new TextComponent("Time below threshold: ");
 		TextComponent rtrig_b = new TextComponent("" + ProcessPlaytime.lowTpsCounter);
 		TextComponent rtrig_c = new TextComponent("ms (600000ms required to restart)");

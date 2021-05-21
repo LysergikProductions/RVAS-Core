@@ -217,20 +217,43 @@ public class ConnectionManager implements Listener {
 		int rnd = r.nextInt(allMotds.size());
 		String tps = new DecimalFormat("0.00").format(LagProcessor.getTPS());
 
-		final String msg = "\u00A73\u00A7l        RVA-Survival 1.16.5 \u00A7r\u00A77 |  TPS: " + tps +
-				"           \u00A7r\u00A76\u00A7o" + allMotds.get(rnd);
+		final String msg1 = "\u00A73\u00A7lRVA-Survival 1.16.5 \u00A7r\u00A77 |  TPS: " + tps;
+		final String msg2 = "\u00A7r\u00A76\u00A7o" + allMotds.get(rnd);
 
-		e.setMotd(msg);
+		e.setMotd(center(msg1) + msg2);
 
 		if(serverHostname.equals("test")) {
 			if(Bukkit.hasWhitelist()) {
 				e.setMotd("\u00A79rvas test \u00A77| \u00A74closed \u00A77| \u00A79TPS: " + tps);
 			}
-			else {
-				e.setMotd("\u00A79rvas test \u00A77| \u00A7aopen \u00A77| \u00A79TPS: " + tps);
-			}
+			else e.setMotd("\u00A79rvas test \u00A77| \u00A7aopen \u00A77| \u00A79TPS: " + tps);
 		}
-		e.setMaxPlayers(13);
+		e.setMaxPlayers(420);
+	}
+
+	private static String center(String ln) {
+		StringBuilder whiteSpace = new StringBuilder();
+
+		// trim and truncate strings
+		String trimmed = ln.trim();
+		int charTotal = trimmed.length();
+
+		final String trunc;
+		if (charTotal >= 60) trunc = trimmed.substring(0, 60);
+		else trunc = trimmed;
+
+		// count missing whitespace
+		int diff = 60 - charTotal;
+		int half = diff / 2;
+
+		int i = 1;
+		while (i <= half) { i++; whiteSpace.append(" "); }
+
+		// add the whitespace and make the tail end a bit longer
+		StringBuilder out = new StringBuilder(whiteSpace + trunc + whiteSpace);
+		while (out.length() < 62) out.append(" ");
+
+		return out.toString();
 	}
 
 	public static boolean updateConfigs() {

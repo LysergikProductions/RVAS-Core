@@ -241,7 +241,7 @@ public class BlockListener implements Listener {
 			msg.setClickEvent(thisEvent);
 
 			if (counter > 256) {
-				Do.notifyOps(new TextComponent(warn, msg));
+				Util.notifyOps(new TextComponent(warn, msg));
 			}
 		}
 

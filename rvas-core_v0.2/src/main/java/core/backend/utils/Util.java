@@ -22,15 +22,30 @@ package core.backend.utils;
  *
  * */
 
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class Util {
 
+    // sends a message to all online ops and console
+    public static void notifyOps(TextComponent msg) {
+        if (msg == null) return;
+
+        for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
+            try {
+                if (thisPlayer.isOp()) thisPlayer.sendMessage(msg);
+            } catch (Exception e) {return;}
+        }
+
+        System.out.println(msg.getText());
+    }
+
+    // converts sum seconds into human-readable string
     public static String timeToString(double seconds) {
 
         long hours;
-
         long days = (long) (seconds / 86400);
         long daysRem = (long) (seconds % 86400);
 
