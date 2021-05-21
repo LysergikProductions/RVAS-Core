@@ -1,7 +1,7 @@
 package core.commands;
 
 import core.backend.LagProcessor;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
 import java.text.DecimalFormat;

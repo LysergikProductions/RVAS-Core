@@ -25,8 +25,8 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.ItemCheck;
-import core.backend.Utilities;
-import core.backend.PlayerMeta;
+import core.backend.utils.*;
+import core.data.PlayerMeta;
 import core.commands.Repair;
 
 import java.util.*;
@@ -44,6 +44,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.ShulkerBox;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 
 import org.bukkit.Bukkit;
@@ -51,7 +52,6 @@ import org.bukkit.Location;
 import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class BlockListener implements Listener {
@@ -193,7 +193,7 @@ public class BlockListener implements Listener {
 		
 		Block block = event.getBlockPlaced();
 		Location block_loc = block.getLocation();
-		String env = Utilities.getDimensionName(block_loc);
+		String env = Util.getDimensionName(block_loc);
 
 		Material blockType = block.getType();
 		String mat = blockType.toString();
@@ -223,7 +223,7 @@ public class BlockListener implements Listener {
 
 			for (Material thisMat: LagMats) {
 				if (thisMat != Material.GRAVEL) {
-					counter += Utilities.blockCounter(block.getChunk(), thisMat);
+					counter += Chunks.blockCounter(block.getChunk(), thisMat);
 				}
 			}
 
@@ -241,7 +241,7 @@ public class BlockListener implements Listener {
 			msg.setClickEvent(thisEvent);
 
 			if (counter > 256) {
-				Utilities.notifyOps(new TextComponent(warn, msg));
+				Do.notifyOps(new TextComponent(warn, msg));
 			}
 		}
 

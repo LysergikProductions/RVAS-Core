@@ -1,7 +1,7 @@
 package core.commands;
 
 import core.backend.ItemCheck;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
 import java.math.BigInteger;

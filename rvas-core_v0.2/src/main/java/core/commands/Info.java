@@ -23,7 +23,7 @@ package core.commands;
  * */
 
 import core.backend.ServerMeta;
-import core.backend.Utilities;
+import core.backend.utils.Util;
 
 import core.events.ChunkManager;
 import core.events.BlockListener;
@@ -36,7 +36,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
 import org.jetbrains.annotations.NotNull;
 
 public class Info implements CommandExecutor {
@@ -47,7 +46,7 @@ public class Info implements CommandExecutor {
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;
 			
-		String humanUptime = Utilities.timeToString(ServerMeta.getUptime());
+		String humanUptime = Util.timeToString(ServerMeta.getUptime());
 		
 		TextComponent head = new TextComponent("--- Session Stats ---");
 		head.setColor(ChatColor.GOLD); head.setBold(true);

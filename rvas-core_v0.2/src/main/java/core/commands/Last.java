@@ -22,7 +22,7 @@ package core.commands;
  *
  * */
 
-import core.backend.Reversed;
+import core.backend.utils.Reversed;
 
 import java.util.UUID;
 import org.bukkit.entity.Player;

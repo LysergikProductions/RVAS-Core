@@ -1,8 +1,8 @@
 package core.commands;
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
-import core.backend.PlayerMeta.MuteType;
+import core.data.PlayerMeta;
+import core.data.PlayerMeta.MuteType;
 import core.tasks.Analytics;
 
 import java.util.*;

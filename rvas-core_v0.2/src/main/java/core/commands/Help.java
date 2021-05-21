@@ -2,7 +2,7 @@ package core.commands;
 
 import core.backend.HelpPages;
 import core.tasks.Analytics;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 
 import org.bukkit.entity.Player;
 

@@ -1,7 +1,6 @@
 package core.backend;
 
-import core.backend.Config;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 
 import java.util.*;
 import java.util.stream.IntStream;

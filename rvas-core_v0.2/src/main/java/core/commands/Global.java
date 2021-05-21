@@ -22,8 +22,8 @@ package core.commands;
  * 
  * */
 
-import core.backend.PlayerMeta;
-import core.backend.Utilities;
+import core.data.PlayerMeta;
+import core.backend.utils.Util;
 import core.events.SpawnController;
 
 import net.md_5.bungee.api.ChatColor;
@@ -66,8 +66,8 @@ public class Global implements CommandExecutor {
 							int range_max = (int)player_loc.getX() + 16;
 							int range_min = (int)player_loc.getX() - 16;
 
-							player_loc.setX(player_loc.getX() + Utilities.getRandomNumber(range_min, range_max));
-							player_loc.setZ(player_loc.getZ() + Utilities.getRandomNumber(range_min, range_max));
+							player_loc.setX(player_loc.getX() + Util.getRandomNumber(range_min, range_max));
+							player_loc.setZ(player_loc.getZ() + Util.getRandomNumber(range_min, range_max));
 							
 							p.getWorld().spigot().strikeLightning(player_loc, false);
 						}

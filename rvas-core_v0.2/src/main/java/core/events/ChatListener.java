@@ -3,8 +3,8 @@ package core.events;
 import core.backend.Config;
 import core.commands.AFK;
 import core.commands.Admin;
-import core.backend.PlayerMeta;
-import core.backend.PlayerMeta.MuteType;
+import core.data.PlayerMeta;
+import core.data.PlayerMeta.MuteType;
 
 import java.util.*;
 import java.util.logging.Level;

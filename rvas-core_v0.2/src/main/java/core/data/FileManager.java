@@ -1,7 +1,8 @@
-package core.backend;
+package core.data;
 
 import core.Main;
-import core.objects.*;
+import core.data.objects.*;
+import core.backend.Config;
 
 import java.io.*;
 import java.nio.file.Files;

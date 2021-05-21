@@ -1,7 +1,7 @@
 package core.commands;
 
-import core.backend.PlayerMeta;
-import core.backend.Utilities;
+import core.data.PlayerMeta;
+import core.backend.utils.Do;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +19,7 @@ public class Restart implements CommandExecutor {
 			sender.sendMessage("\u00A7cYou can't run this.");
 			return true;
 		}
-		Utilities.restart(args.length != 0);
+		Do.restart(args.length != 0);
 		return true;
 	}
 }

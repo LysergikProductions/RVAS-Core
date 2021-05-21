@@ -1,10 +1,11 @@
 package core.commands;
 
-import core.backend.LagProcessor;
-import core.backend.PlayerMeta;
-import core.backend.ServerMeta;
-import core.backend.Utilities;
 import core.backend.Config;
+import core.backend.LagProcessor;
+import core.data.PlayerMeta;
+import core.backend.ServerMeta;
+import core.backend.utils.Do;
+import core.backend.utils.Util;
 
 import core.tasks.Analytics;
 import core.tasks.LagManager;
@@ -12,8 +13,8 @@ import core.tasks.ProcessPlaytime;
 import core.events.SpeedLimiter;
 import core.events.ChatListener;
 
-import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.text.DecimalFormat;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,7 +28,6 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -99,7 +99,7 @@ public class Server implements CommandExecutor {
 		
 		// DEBUG
 		TextComponent restart_a = new TextComponent("Server restarting: ");
-		TextComponent restart_b = new TextComponent(Utilities.restarting ? "True" : "False");
+		TextComponent restart_b = new TextComponent(Do.restarting ? "True" : "False");
 		TextComponent rtrig_a = new TextComponent("Time below threshold: ");
 		TextComponent rtrig_b = new TextComponent("" + ProcessPlaytime.lowTpsCounter);
 		TextComponent rtrig_c = new TextComponent("ms (600000ms required to restart)");
@@ -108,7 +108,7 @@ public class Server implements CommandExecutor {
 		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
 		TextComponent slowMode_b = new TextComponent(ChatListener.slowChatEnabled ? "True" : "False");
 		TextComponent uptime_a = new TextComponent("Server Uptime: ");
-		TextComponent uptime_b = new TextComponent(Utilities.timeToString(ServerMeta.getUptime()));
+		TextComponent uptime_b = new TextComponent(Util.timeToString(ServerMeta.getUptime()));
 		
 		// style individual components //
 		title_sep.setColor(ChatColor.GRAY);

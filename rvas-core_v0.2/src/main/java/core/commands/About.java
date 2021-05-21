@@ -25,7 +25,7 @@ package core.commands;
 
 import core.Main;
 import core.tasks.Analytics;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 
 import java.util.Arrays;
 

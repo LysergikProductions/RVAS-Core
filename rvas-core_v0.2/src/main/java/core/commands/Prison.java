@@ -1,7 +1,7 @@
 package core.commands;
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 //import core.events.SpawnController;
 
 import java.util.*;

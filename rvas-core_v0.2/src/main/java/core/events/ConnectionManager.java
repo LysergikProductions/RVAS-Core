@@ -1,9 +1,11 @@
 package core.events;
 
 import core.backend.*;
+import core.backend.utils.Util;
 import core.commands.Kit;
 import core.commands.Admin;
-import core.objects.PlayerSettings;
+import core.data.PlayerMeta;
+import core.data.objects.PlayerSettings;
 
 import java.util.*;
 import java.io.IOException;
@@ -86,7 +88,7 @@ public class ConnectionManager implements Listener {
 		}
 		
 		// Get domain name, NOT ip if player is connecting from IP
-		if(!Utilities.validServerIP(e.getHostname()) && serverHostname.equals("unknown")) {
+		if(!Util.validServerIP(e.getHostname()) && serverHostname.equals("unknown")) {
 			serverHostname = e.getHostname().split(":")[0];
 		}
 		

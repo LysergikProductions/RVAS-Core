@@ -23,8 +23,8 @@ package core.commands;
  * */
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
-import core.backend.FileManager;
+import core.data.PlayerMeta;
+import core.data.FileManager;
 
 import java.io.IOException;
 import org.bukkit.entity.Player;

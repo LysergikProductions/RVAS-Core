@@ -1,4 +1,4 @@
-package core.backend;
+package core.data;
 
 /* *
  * 
@@ -22,7 +22,7 @@ package core.backend;
  * 
  * */
 
-import core.objects.PVPstats;
+import core.data.objects.PVPstats;
 
 import java.util.*;
 import java.io.*;

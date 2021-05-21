@@ -22,11 +22,10 @@ package core.commands;
  * 
  * */
 
-import core.backend.Utilities;
 import core.events.ChunkManager;
+import core.backend.utils.Chunks;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
@@ -47,10 +46,10 @@ public class Repair implements CommandExecutor {
 		
 		if (!player.isOp()) return false;
 
-		for (World thisWorld: Bukkit.getServer().getWorlds()) {
-			if (thisWorld.getEnvironment().equals(World.Environment.THE_END)) {
+		for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
+			if (thisWorld.getEnvironment().equals(org.bukkit.World.Environment.THE_END)) {
 
-				y_low = Utilities.getExitFloor(thisWorld.getChunkAt(0, 0));
+				y_low = Chunks.getExitFloor(thisWorld.getChunkAt(0, 0));
 				if (y_low < 2) y_low = y_default;
 				else ChunkManager.foundExitPortal = true;
 			}

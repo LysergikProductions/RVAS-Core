@@ -22,8 +22,8 @@ package core.commands;
  * 
  * */
 
-import core.backend.PlayerMeta;
-import core.objects.PlayerSettings;
+import core.data.PlayerMeta;
+import core.data.objects.PlayerSettings;
 import core.tasks.Analytics;
 
 import org.bukkit.entity.Player;

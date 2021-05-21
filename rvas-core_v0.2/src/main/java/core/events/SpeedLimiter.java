@@ -3,6 +3,7 @@ package core.events;
 import core.Main;
 import core.backend.*;
 import core.commands.Admin;
+import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
 import java.util.ArrayList;

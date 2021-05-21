@@ -2,7 +2,8 @@ package core.commands;
 
 import core.Main;
 import core.backend.*;
-import core.objects.*;
+import core.data.PlayerMeta;
+import core.data.objects.*;
 import core.tasks.Analytics;
 
 import java.util.*;

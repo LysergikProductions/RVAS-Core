@@ -1,6 +1,6 @@
 package core.commands;
 
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

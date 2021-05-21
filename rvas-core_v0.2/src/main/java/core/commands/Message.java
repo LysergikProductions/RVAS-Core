@@ -1,7 +1,7 @@
 package core.commands;
 
 import core.tasks.Analytics;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 
 import java.util.*;
 

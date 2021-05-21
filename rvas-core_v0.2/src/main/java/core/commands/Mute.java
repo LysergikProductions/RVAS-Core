@@ -1,7 +1,7 @@
 package core.commands;
 
-import core.backend.PlayerMeta;
-import core.backend.PlayerMeta.MuteType;
+import core.data.PlayerMeta;
+import core.data.PlayerMeta.MuteType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -2,15 +2,14 @@ package core.tasks;
 
 import core.events.ChatListener;
 import core.events.ChunkManager;
+import core.commands.VoteMute;
 
 import core.backend.Config;
-import core.backend.Utilities;
+import core.backend.utils.Do;
 import core.backend.Scheduler;
 import core.backend.LagProcessor;
-
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 import core.backend.ServerMeta;
-import core.commands.VoteMute;
 
 import java.util.TimerTask;
 import org.bukkit.Bukkit;
@@ -85,7 +84,7 @@ public class ProcessPlaytime extends TimerTask {
 		if (currentTPS < rThreshold) {
 			lowTpsCounter += sinceLast;
 			if (lowTpsCounter >= 300000) {
-				Utilities.restart(true);
+				Do.restart(true);
 			}
 		}
 

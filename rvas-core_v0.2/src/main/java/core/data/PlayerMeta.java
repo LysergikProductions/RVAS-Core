@@ -1,8 +1,9 @@
-package core.backend;
+package core.data;
 
+import core.backend.Config;
 import core.commands.Ignore;
 import core.events.ChatListener;
-import core.objects.PlayerSettings;
+import core.data.objects.PlayerSettings;
 
 import net.md_5.bungee.api.chat.TextComponent;
 

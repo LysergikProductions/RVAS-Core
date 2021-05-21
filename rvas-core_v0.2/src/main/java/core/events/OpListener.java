@@ -24,13 +24,13 @@ package core.events;
  * 
  * */
 
-import core.backend.PlayerMeta;
 import core.backend.Config;
-import core.backend.Utilities;
-import core.backend.Aliases;
+import core.data.Aliases;
+import core.data.PlayerMeta;
+import core.backend.utils.Util;
+import core.backend.utils.Chunks;
 
 import java.util.*;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -96,7 +96,7 @@ public class OpListener implements Listener {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) {
-				int removed_items = Utilities.clearChunkItems(sender.getLocation().getChunk());
+				int removed_items = Chunks.clearChunkItems(sender.getLocation().getChunk());
 				sender.sendMessage("Removed " + removed_items + " item stacks.");
 			}
 		}
@@ -104,7 +104,7 @@ public class OpListener implements Listener {
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!isAdmin) {
 			if (msg.contains("/give") && Config.getValue("protect.ops.give").equals("true") ||
-					Utilities.isCmdRestricted(msg)) {
+					Util.isCmdRestricted(msg)) {
 
 				event.setCancelled(true);
 				sender.sendMessage(new TextComponent(ChatColor.RED + "no").toLegacyText());

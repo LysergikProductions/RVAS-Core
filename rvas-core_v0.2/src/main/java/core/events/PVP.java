@@ -4,7 +4,7 @@ package core.events;
  * 
  *  About: Listen for PVP related events to do various things,
  *  	primarily incrementing PVP related stats hash maps
- *  	stored in core.backend.PlayerMeta
+ *  	stored in core.data.PlayerMeta
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -25,8 +25,8 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
-import core.backend.PVPdata;
+import core.data.PlayerMeta;
+import core.data.PVPdata;
 
 import java.util.Objects;
 import java.util.UUID;

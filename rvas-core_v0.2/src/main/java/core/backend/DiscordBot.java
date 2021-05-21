@@ -1,23 +1,27 @@
 package core.backend;
 
+import core.backend.utils.Util;
+
+import java.util.*;
+import java.text.DecimalFormat;
+import java.util.function.Consumer;
+
+import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.User;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
+
+import discord4j.rest.util.Color;
+import discord4j.rest.entity.RestChannel;
 import discord4j.core.event.domain.guild.GuildCreateEvent;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import discord4j.core.object.entity.Message;
-import discord4j.core.object.entity.User;
-import discord4j.rest.entity.RestChannel;
-import discord4j.rest.util.Color;
+
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import java.text.DecimalFormat;
-import java.util.*;
-import java.util.function.Consumer;
 
 public class DiscordBot implements Listener {
 
@@ -69,7 +73,7 @@ public class DiscordBot implements Listener {
 													.addField("Current Player Count",
 															new DecimalFormat("##").format(Bukkit.getOnlinePlayers().size()) + "/13",
 															true)
-													.addField("Server Up Time", Utilities.timeToString(ServerMeta.getUptime()), true)
+													.addField("Server Up Time", Util.timeToString(ServerMeta.getUptime()), true)
 									))).subscribe();
 
 			//!facts commands
@@ -94,7 +98,7 @@ public class DiscordBot implements Listener {
 											.addField("Current Player Count",
 													new DecimalFormat("##").format(Bukkit.getOnlinePlayers().size()) + "/20",
 													true)
-											.addField("Server Up Time", Utilities.timeToString(ServerMeta.getUptime()), true);
+											.addField("Server Up Time", Util.timeToString(ServerMeta.getUptime()), true);
 								}
 						))).subscribe();
 		});

@@ -24,20 +24,20 @@ package core.tasks;
  * */
 
 import core.backend.Config;
-import core.backend.Utilities;
-
+import core.backend.utils.Do;
+import core.backend.utils.Util;
 import core.events.ConnectionManager;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.*;
 
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
 public class LagManager implements Listener, Runnable {
@@ -74,7 +74,7 @@ public class LagManager implements Listener, Runnable {
 		}
 
 		Location spawnLoc = e.getLocation();
-		String dimension = Utilities.getDimensionName(spawnLoc);
+		String dimension = Util.getDimensionName(spawnLoc);
 		EntityType thisType = e.getEntity().getType();
 
 		if (thisType.equals(EntityType.ARMOR_STAND)) {
@@ -95,7 +95,7 @@ public class LagManager implements Listener, Runnable {
 			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 					"/ninjatp " + dimension + " " + location));
 
-			if (counter > 16) Utilities.notifyOps(new TextComponent(warn, msg));
+			if (counter > 16) Do.notifyOps(new TextComponent(warn, msg));
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class LagManager implements Listener, Runnable {
 		
 		String skullMsg;
 		
-		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+		for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
 			
 			skulls_world = 0;
 			
@@ -130,7 +130,7 @@ public class LagManager implements Listener, Runnable {
 	public static int getWithers() {
 		int counter = 0;
 
-		for (World thisWorld: Bukkit.getServer().getWorlds()) {
+		for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
 			
 			if (Config.debug && Config.verbose) System.out.println("Counting withers in: " + thisWorld.getName());
 			

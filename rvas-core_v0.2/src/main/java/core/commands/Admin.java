@@ -1,11 +1,15 @@
 package core.commands;
 
 import core.backend.*;
+import core.backend.utils.Do;
+import core.backend.utils.Util;
+import core.data.Aliases;
+import core.data.PlayerMeta;
 import core.events.SpeedLimiter;
 import core.tasks.Analytics;
 
-import java.io.IOException;
 import java.util.*;
+import java.io.IOException;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -80,7 +84,7 @@ public class Admin implements CommandExecutor {
 
 					} catch (IOException e) {
 						sender.sendMessage("\u00A74Failed to reload.");
-						Utilities.restart();
+						Do.restart();
 					}
 					return true;
 					
@@ -133,7 +137,7 @@ public class Admin implements CommandExecutor {
 					sender.sendMessage("\u00A76No logout spot logged for " + args[1]);
 				} else {
 					
-					String dimension = Utilities.getDimensionName(loc);
+					String dimension = Util.getDimensionName(loc);
 					String location = (int)loc.getX() + " " + (int)loc.getY() + " " + (int)loc.getZ();
 
 					TextComponent logSpot = new TextComponent("\u00A76"+args[1] + " logged out at " + location);
