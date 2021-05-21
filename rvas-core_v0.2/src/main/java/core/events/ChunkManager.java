@@ -27,7 +27,7 @@ package core.events;
 import core.backend.Config;
 import core.backend.utils.Chunks;
 import core.backend.utils.Do;
-import core.commands.Repair;
+import core.commands.restricted.Repair;
 import core.tasks.Analytics;
 
 import net.md_5.bungee.api.chat.TextComponent;

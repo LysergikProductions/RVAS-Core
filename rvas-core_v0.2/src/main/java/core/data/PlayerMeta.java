@@ -3,7 +3,7 @@ package core.data;
 import core.backend.Config;
 import core.commands.Ignore;
 import core.events.ChatListener;
-import core.data.objects.PlayerSettings;
+import core.data.objects.SettingsContainer;
 
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -31,7 +31,7 @@ public class PlayerMeta {
 	
 	public static HashMap<UUID, String> _prisonerList = new HashMap<>();
 	public static HashMap<UUID, Double> Playtimes = new HashMap<>();
-	public static Map <UUID, PlayerSettings> sPlayerSettings = new HashMap<>();
+	public static Map <UUID, SettingsContainer> sPlayerSettings = new HashMap<>();
 
 	public static boolean MuteAll = false;
 
@@ -263,37 +263,6 @@ public class PlayerMeta {
 		Files.write(Paths.get("plugins/core/playtime.db"), String.join("\n", list).getBytes());
 	}
 
-	// Handle player settings
-	public static PlayerSettings getNewSettings(OfflinePlayer p) {
-		return new PlayerSettings(p.getUniqueId(), true, true, true, true, true, true, "UTC");
-	}
-	
-	public static PlayerSettings getSettings(OfflinePlayer p) {
-		PlayerSettings settings = sPlayerSettings.get(p.getUniqueId());
-		
-		if (settings != null && sPlayerSettings.containsKey(p.getUniqueId())) {
-			
-			return settings;
-			
-		} else return getNewSettings(p);
-	}
-	
-	public static void writePlayerSettings() throws IOException {
-		
-		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/player_settings.txt"));
-		
-		for (PlayerSettings object: sPlayerSettings.values()) {
-			try {
-				w.write(object.toString() + "\n");
-				w.flush();
-				
-			  } catch (IOException e) {
-				  throw new UncheckedIOException(e);
-			  }
-		}
-		w.close();
-	}
-	
 	// --- OTHER -- \\
 	public enum MuteType {
 		TEMPORARY, PERMANENT, IP, NONE

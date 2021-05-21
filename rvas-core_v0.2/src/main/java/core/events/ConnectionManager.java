@@ -3,9 +3,10 @@ package core.events;
 import core.backend.*;
 import core.backend.utils.Util;
 import core.commands.Kit;
-import core.commands.Admin;
+import core.commands.restricted.Admin;
 import core.data.PlayerMeta;
-import core.data.objects.PlayerSettings;
+import core.data.SettingsManager;
+import core.data.objects.SettingsContainer;
 
 import java.util.*;
 import java.io.IOException;
@@ -169,9 +170,9 @@ public class ConnectionManager implements Listener {
 			
 			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(player1.getUniqueId());
 			
-			if (PlayerMeta.getSettings(offPlayer).show_player_join_messages) {player1.sendMessage(messageOut);}
+			if (SettingsManager.getSettings(offPlayer).show_player_join_messages) {player1.sendMessage(messageOut);}
 			else {
-				PlayerSettings newSettings = PlayerMeta.getNewSettings(offPlayer);
+				SettingsContainer newSettings = SettingsManager.getNewSettings(offPlayer);
 				PlayerMeta.sPlayerSettings.put(newSettings.playerid, newSettings);
 			}
 		});

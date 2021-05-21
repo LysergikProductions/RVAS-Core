@@ -1,5 +1,6 @@
 package core.commands;
 
+import core.commands.restricted.Admin;
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
 

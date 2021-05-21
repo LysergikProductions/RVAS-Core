@@ -1,4 +1,4 @@
-package core.commands;
+package core.commands.restricted;
 
 import java.util.Arrays;
 

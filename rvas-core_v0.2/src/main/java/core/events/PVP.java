@@ -26,18 +26,18 @@ package core.events;
 
 import core.backend.Config;
 import core.data.PlayerMeta;
-import core.data.PVPdata;
+import core.data.StatsManager;
 
-import java.util.Objects;
 import java.util.UUID;
+import java.util.Objects;
 
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Bukkit;
 
 public class PVP implements Listener {
 	
@@ -78,8 +78,8 @@ public class PVP implements Listener {
 
 		// increment appropriate stats, do nothing if this was not a PVP kill
 		if (killer != null) {
-			PVPdata.incKillTotal(killer, 1);
-			PVPdata.incDeathTotal(killed, 1);
+			StatsManager.incKillTotal(killer, 1);
+			StatsManager.incDeathTotal(killed, 1);
 		} else return;
 
 		// check if victim was in the spawn region on death
@@ -108,7 +108,7 @@ public class PVP implements Listener {
 			if (victim_playtime < 3600.0) {
 
 				if (debug) System.out.println(killedName + " was also a new player!");
-				PVPdata.incSpawnKill(killer, 1);
+				StatsManager.incSpawnKill(killer, 1);
 			}
 		}
 	}

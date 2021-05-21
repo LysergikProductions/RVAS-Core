@@ -27,7 +27,7 @@ import core.backend.Config;
 import core.backend.ItemCheck;
 import core.backend.utils.*;
 import core.data.PlayerMeta;
-import core.commands.Repair;
+import core.commands.restricted.Repair;
 
 import java.util.*;
 import java.text.DecimalFormat;
@@ -313,21 +313,19 @@ public class BlockListener implements Listener {
 	public static void onCreativePlace(BlockPlaceEvent event) {
 		Player thisPlayer = event.getPlayer();
 
-		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL)) return;
-		System.out.println("INFO HEY ONCREATIVEPLACE OMG");
-		System.out.println("consumeCreativeBlocks = " + consumeCreativeBlocks);
+		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL) ||
+				PlayerMeta.isAdmin(thisPlayer)) return;
 
-		ItemStack usedItemStack = event.getItemInHand();
-		int stackCount = usedItemStack.getAmount();
-		System.out.println("stackCount: " + stackCount); //TODO: <- remove this line
+		int stackCount = event.getItemInHand().getAmount();
 
-		if (consumeCreativeBlocks && !usedItemStack.getType().equals(Material.AIR)) usedItemStack.setAmount(
-				stackCount-1);
+		ItemStack realStack = thisPlayer.getActiveItem();
+		if (consumeCreativeBlocks) {
+			// TODO: figure out why these don't work:
+			// Objects.requireNonNull(realStack).setAmount(stackCount-1);
+			// usedItemStack.setAmount(stackCount-1);
+		}
+
 		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
-
-		stackCount = usedItemStack.getAmount();
-		System.out.println("stackCount is now: " + stackCount); //TODO: <- remove this line
-		System.out.println("done onCreativePlace");
 	}
 	
 	public static boolean updateConfigs() {

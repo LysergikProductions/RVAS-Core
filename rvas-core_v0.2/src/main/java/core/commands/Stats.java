@@ -3,6 +3,7 @@ package core.commands;
 import core.Main;
 import core.backend.*;
 import core.data.PlayerMeta;
+import core.data.SettingsManager;
 import core.data.objects.*;
 import core.tasks.Analytics;
 
@@ -41,10 +42,10 @@ public class Stats implements CommandExecutor {
 		
 		if (!PlayerMeta.isAdmin(player)) Analytics.stats_total++;
 		
-		PlayerSettings targetSettings = PlayerMeta.sPlayerSettings.get(playerid);
+		SettingsContainer targetSettings = PlayerMeta.sPlayerSettings.get(playerid);
 		if (targetSettings == null) {
 			
-			PlayerSettings newSettings = PlayerMeta.getNewSettings(Bukkit.getOfflinePlayer(playerid));
+			SettingsContainer newSettings = SettingsManager.getNewSettings(Bukkit.getOfflinePlayer(playerid));
 			PlayerMeta.sPlayerSettings.put(playerid, newSettings);
 		}
 		

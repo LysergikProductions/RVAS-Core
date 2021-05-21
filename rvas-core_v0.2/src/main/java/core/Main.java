@@ -5,6 +5,7 @@ import core.events.*;
 import core.tasks.*;
 import core.backend.*;
 import core.commands.*;
+import core.commands.restricted.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.2.5"; public static final int build = 259;
+	public static final String version = "0.2.5"; public static final int build = 260;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -164,6 +165,9 @@ public class Main extends JavaPlugin {
 
 		System.out.println("/last");
 		Objects.requireNonNull(this.getCommand("last")).setExecutor(new Last());
+
+		System.out.println("/fig");
+		Objects.requireNonNull(this.getCommand("fig")).setExecutor(new ConfigCmd());
 
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");
@@ -324,8 +328,8 @@ public class Main extends JavaPlugin {
 			PlayerMeta.savePrisoners();
 			
 			PlayerMeta.writePlaytime();
-			PlayerMeta.writePlayerSettings();
-			PVPdata.writePVPStats();
+			SettingsManager.writePlayerSettings();
+			StatsManager.writePVPStats();
 			
 		} catch (IOException ex) {
 			System.out.println("[core.main] WARNING - Failed to write one or more files.");

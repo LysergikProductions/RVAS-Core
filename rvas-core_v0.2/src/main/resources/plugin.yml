@@ -69,3 +69,5 @@ commands:
     description: toggle your afk status
   last:
     description: show last three whispers you received
+  fig:
+    description: modify configs stored in ram without restarting the server

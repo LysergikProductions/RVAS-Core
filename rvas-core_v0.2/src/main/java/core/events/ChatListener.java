@@ -2,7 +2,7 @@ package core.events;
 
 import core.backend.Config;
 import core.commands.AFK;
-import core.commands.Admin;
+import core.commands.restricted.Admin;
 import core.data.PlayerMeta;
 import core.data.PlayerMeta.MuteType;
 

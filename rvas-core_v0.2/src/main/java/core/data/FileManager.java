@@ -195,8 +195,8 @@ public class FileManager {
 			Files.readAllLines(pvpstats_user_database.toPath()).forEach(line -> {
 				System.out.println("Reading pvpstats.txt, line = " + line);
 				
-				PVPstats stats = PVPstats.fromString(line);
-				PVPdata.sPVPStats.put(stats.playerid, stats);
+				StatsContainer stats = StatsContainer.fromString(line);
+				StatsManager.sPVPStats.put(stats.playerid, stats);
 			});
 		} catch (Exception e) {
 			System.out.println("Exception while reading pvpstats.txt : " + e);
@@ -209,7 +209,7 @@ public class FileManager {
 			Files.readAllLines(settings_user_database.toPath()).forEach(line -> {
 				System.out.println("Reading player_settings.txt, line = " + line);
 				
-				PlayerSettings settings = PlayerSettings.fromString(line);
+				SettingsContainer settings = SettingsContainer.fromString(line);
 				PlayerMeta.sPlayerSettings.put(settings.playerid, settings);
 			});
 		} catch (Exception e) {

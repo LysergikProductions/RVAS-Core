@@ -1,4 +1,4 @@
-package core.backend;
+package core.commands.restricted;
 
 import org.bukkit.entity.Player;
 

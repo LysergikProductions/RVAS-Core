@@ -23,7 +23,8 @@ package core.commands;
  * */
 
 import core.data.PlayerMeta;
-import core.data.objects.PlayerSettings;
+import core.data.SettingsManager;
+import core.data.objects.SettingsContainer;
 import core.tasks.Analytics;
 
 import org.bukkit.entity.Player;
@@ -41,13 +42,13 @@ public class ToggleJoinMessages implements CommandExecutor {
 		Player player = (Player) sender;
 		if (!PlayerMeta.isAdmin(player)) Analytics.tjm_cmd++;
 		
-		PlayerSettings theseSettings = PlayerMeta.sPlayerSettings.get(player.getUniqueId());
+		SettingsContainer theseSettings = PlayerMeta.sPlayerSettings.get(player.getUniqueId());
 		
 		if (theseSettings != null) {
 			theseSettings.show_player_join_messages = !theseSettings.show_player_join_messages;
 			
 		} else {
-			theseSettings = PlayerMeta.getNewSettings(Bukkit.getOfflinePlayer(player.getUniqueId()));
+			theseSettings = SettingsManager.getNewSettings(Bukkit.getOfflinePlayer(player.getUniqueId()));
 			
 			theseSettings.show_player_join_messages = false; // default is true, so this cmd should set setting of new users of cmd to false
 			PlayerMeta.sPlayerSettings.put(theseSettings.playerid, theseSettings);

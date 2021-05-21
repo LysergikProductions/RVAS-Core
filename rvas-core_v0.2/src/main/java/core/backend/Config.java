@@ -72,4 +72,12 @@ public class Config {
 
 		System.out.println("Configs updated!");
 	}
+
+	public static void modifyConfig(String thisConfig, String thisValue) {
+		_values.put(thisConfig, thisValue);
+	}
+
+	public static boolean isRealConfig(String thisConfig) {
+		return _values.containsKey(thisConfig);
+	}
 }

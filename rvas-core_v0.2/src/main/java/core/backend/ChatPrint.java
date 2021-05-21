@@ -23,8 +23,9 @@ package core.backend;
  * 
  * */
 
-import core.data.PVPdata;
+import core.data.StatsManager;
 import core.data.PlayerMeta;
+import core.data.SettingsManager;
 import core.data.objects.*;
 import core.backend.utils.Util;
 
@@ -101,9 +102,9 @@ public class ChatPrint {
 				
 			} else { // this leader name != null
 				
-				int kills = PVPdata.getStats(offPlayer).killTotal;
-				int deaths = PVPdata.getStats(offPlayer).deathTotal;
-				String kd = PVPdata.getStats(offPlayer).kd;
+				int kills = StatsManager.getStats(offPlayer).killTotal;
+				int deaths = StatsManager.getStats(offPlayer).deathTotal;
+				String kd = StatsManager.getStats(offPlayer).kd;
 				
 				TextComponent a2 = new TextComponent(target_name + ", ");
 				TextComponent b = new TextComponent(Util.timeToString(realLeaders_0_15.get(pid)));
@@ -143,7 +144,7 @@ public class ChatPrint {
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
-		PlayerSettings receiverSettings = PlayerMeta.getSettings(receiver);
+		SettingsContainer receiverSettings = SettingsManager.getSettings(receiver);
 
 		Date date = new Date(target.getFirstPlayed());
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -178,11 +179,11 @@ public class ChatPrint {
 		Text playtime_hover = new Text(new DecimalFormat("0.00").format(hours) + " hours");
 		
 		TextComponent tkills_a = new TextComponent("PVP Kills: ");
-		TextComponent tkills_b = new TextComponent("" + PVPdata.getStats(target).killTotal);
+		TextComponent tkills_b = new TextComponent("" + StatsManager.getStats(target).killTotal);
 		TextComponent tdeaths_a = new TextComponent("PVP Deaths: ");
-		TextComponent tdeaths_b = new TextComponent("" + PVPdata.getStats(target).deathTotal);
+		TextComponent tdeaths_b = new TextComponent("" + StatsManager.getStats(target).deathTotal);
 		
-		String spawnKills = String.valueOf(PVPdata.getStats(target).spawnKills);
+		String spawnKills = String.valueOf(StatsManager.getStats(target).spawnKills);
 		HoverEvent hover_killDetail = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Spawn Kills: " + spawnKills));
 		HoverEvent hover_showHours = new HoverEvent(HoverEvent.Action.SHOW_TEXT, playtime_hover);
 		
@@ -214,9 +215,9 @@ public class ChatPrint {
 		TextComponent kd;
 		
 		try {
-			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(PVPdata.getStats(target).kd)));
+			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(StatsManager.getStats(target).kd)));
 		} catch (NumberFormatException e) {
-			kd = new TextComponent("K/D: " + PVPdata.getStats(target).kd);
+			kd = new TextComponent("K/D: " + StatsManager.getStats(target).kd);
 		}
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
@@ -226,7 +227,7 @@ public class ChatPrint {
 			statsLines = new ArrayList<>(Arrays.asList(title, joined, lastSeen, rank, playtime));
 		}
 
-		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
+		SettingsContainer targetSettings = SettingsManager.getSettings(target);
 		if (targetSettings.show_PVPstats) {
 			
 			if (targetSettings.show_kills ||
@@ -245,7 +246,7 @@ public class ChatPrint {
 		
 		OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(receiver.getUniqueId());
 		
-		PlayerSettings theseSettings = PlayerMeta.getSettings(offPlayer);
+		SettingsContainer theseSettings = SettingsManager.getSettings(offPlayer);
 		ArrayList<TextComponent> list = new ArrayList<>();
 		
 		TextComponent sep = new TextComponent("---");

@@ -1,12 +1,12 @@
-package core.commands;
+package core.commands.restricted;
 
 import core.backend.*;
 import core.backend.utils.Do;
 import core.backend.utils.Util;
 import core.data.Aliases;
 import core.data.PlayerMeta;
-import core.events.SpeedLimiter;
 import core.tasks.Analytics;
+import core.events.SpeedLimiter;
 
 import java.util.*;
 import java.io.IOException;
@@ -148,6 +148,32 @@ public class Admin implements CommandExecutor {
 					sender.spigot().sendMessage(logSpot);
 				}
 				return true;
+			} else if (args[0].equalsIgnoreCase("debug")) {
+				if (args[1].equalsIgnoreCase("normal")) {
+					Config.debug = true;
+					Config.verbose = false;
+
+					player.sendMessage("Config.debug is now true");
+					player.sendMessage("Config.verbose is now false");
+
+				} else if (args[1].equalsIgnoreCase("verbose")) {
+					Config.debug = true;
+					Config.verbose = true;
+
+					player.sendMessage("Config.debug is now true");
+					player.sendMessage("Config.verbose is now true");
+
+				} else if (args[1].equalsIgnoreCase("off")) {
+					Config.debug = false;
+					Config.verbose = false;
+
+					player.sendMessage("Config.debug is now false");
+					player.sendMessage("Config.verbose is now false");
+
+				} else {
+					Config.debug = !Config.debug;
+					player.sendMessage("Config.debug is now " + Config.debug);
+				}
 			}
 		}
 		
