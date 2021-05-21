@@ -2,6 +2,7 @@ package core.backend;
 
 import java.util.*;
 
+import core.data.PlayerMeta;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.ShulkerBox;
@@ -11,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.PotionType;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings({"SpellCheckingInspection"})
 public class ItemCheck {
 
 	public static ArrayList<Material> Banned = new ArrayList<>(), Special = new ArrayList<>(), LegalHeads = new ArrayList<>();
@@ -133,7 +134,7 @@ public class ItemCheck {
 			ItemMeta newMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
 
 			// Rebuild Basic Item Attribs
-			if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(item.getItemMeta().getDisplayName());
+			if (item.getItemMeta().hasDisplayName()) newMeta.displayName(item.getItemMeta().displayName());
 			if (item.getItemMeta().hasLore()) newMeta.setLore(item.getItemMeta().getLore());
 
 			// Rebuild Item Enchants
@@ -221,8 +222,8 @@ public class ItemCheck {
 				newMeta.addStoredEnchant(e, meta.getStoredEnchantLevel(e), false);
 			}
 
-			if (meta.hasDisplayName()) newMeta.setDisplayName(meta.getDisplayName());
-			if (meta.hasLore()) newMeta.setLore(meta.getLore());
+			if (meta.hasDisplayName()) newMeta.displayName(meta.displayName());
+			if (meta.hasLore()) newMeta.lore(meta.lore());
 
 			item.setItemMeta(newMeta);
 			return;

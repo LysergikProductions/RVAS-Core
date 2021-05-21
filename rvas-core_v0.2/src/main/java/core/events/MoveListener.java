@@ -23,28 +23,25 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
+import core.backend.utils.Util;
 
 import java.util.*;
-
-import core.backend.Utilities;
-import net.md_5.bungee.api.chat.TextComponent;
-
-import org.bukkit.event.EventPriority;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.World;
+
 import org.bukkit.World.Environment;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class MoveListener implements Listener {
 
 	static Random r = new Random();
@@ -84,14 +81,14 @@ public class MoveListener implements Listener {
 			int randomNumber = r.nextInt(9);
 			
 			if (randomNumber == 5 || randomNumber == 6) {
-				player.spigot().sendMessage(new TextComponent("§cThis is what you get!"));
+				player.sendMessage("\u00A7cThis is what you get!");
 				event.setCancelled(true);
 				return;
 			}
 
 			randomNumber = r.nextInt(250);
 			if (randomNumber == 21) {
-				player.kickPlayer("§6lmao -tries to move-");
+				player.kickPlayer("\u00A76lmao -tries to move-");
 			}
 		}
 	}
@@ -101,7 +98,9 @@ public class MoveListener implements Listener {
 		// Prevent invulnerable end-crystals from breaking spawn chunks
 		// https://github.com/PaperMC/Paper/issues/5404
 
-		if(e.getEntityType().equals(EntityType.ENDER_CRYSTAL)) {
+		EntityType ET = e.getEntityType();
+
+		if (ET.equals(EntityType.ENDER_CRYSTAL)) {
 			EnderCrystal crystal = (EnderCrystal)e.getEntity();
 
 			if (crystal.isShowingBottom() || crystal.isInvulnerable()) {
@@ -110,7 +109,7 @@ public class MoveListener implements Listener {
 				if (portalFrom.equals(Environment.THE_END)) {
 					e.setCancelled(true);
 
-					World overworld = Utilities.getWorldByDimension(Environment.NORMAL);
+					org.bukkit.World overworld = Util.getWorldByDimension(Environment.NORMAL);
 					if (overworld == null) {
 						System.out.println("WARN couldn't find NORMAL dimension onEntityPortal()");
 						return;

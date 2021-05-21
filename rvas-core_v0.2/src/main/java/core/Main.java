@@ -1,9 +1,11 @@
 package core;
 
-import core.backend.*;
-import core.commands.*;
+import core.data.*;
 import core.events.*;
 import core.tasks.*;
+import core.backend.*;
+import core.commands.*;
+import core.commands.restricted.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.2.2"; public static final int build = 252;
+	public static final String version = "0.2.5"; public static final int build = 262;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -77,11 +79,17 @@ public class Main extends JavaPlugin {
 		System.out.println("/dupehand");
 		Objects.requireNonNull(this.getCommand("dupehand")).setExecutor(new DupeHand());
 
+		System.out.println("/ninjatp");
+		Objects.requireNonNull(this.getCommand("ninjatp")).setExecutor(new NinjaTP());
+
 		System.out.println("/vm");
 		Objects.requireNonNull(this.getCommand("vm")).setExecutor(new VoteMute());
 
 		System.out.println("/msg");
 		Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
+
+		System.out.println("/w");
+		Objects.requireNonNull(this.getCommand("w")).setExecutor(new Message());
 
 		System.out.println("/r");
 		Objects.requireNonNull(this.getCommand("r")).setExecutor(new Reply());
@@ -108,7 +116,7 @@ public class Main extends JavaPlugin {
 		Objects.requireNonNull(this.getCommand("vote")).setExecutor(new VoteCmd());
 
 		System.out.println("/restart");
-		Objects.requireNonNull(this.getCommand("restart")).setExecutor(new Restart());
+		Objects.requireNonNull(this.getCommand("restart")).setExecutor(new RestartCmd());
 
 		System.out.println("/sign");
 		Objects.requireNonNull(this.getCommand("sign")).setExecutor(new Sign());
@@ -151,6 +159,15 @@ public class Main extends JavaPlugin {
 
 		System.out.println("/ignore");
 		Objects.requireNonNull(this.getCommand("ignore")).setExecutor(new Ignore());
+
+		System.out.println("/afk");
+		Objects.requireNonNull(this.getCommand("afk")).setExecutor(new AFK());
+
+		System.out.println("/last");
+		Objects.requireNonNull(this.getCommand("last")).setExecutor(new Last());
+
+		System.out.println("/fig");
+		Objects.requireNonNull(this.getCommand("fig")).setExecutor(new ConfigCmd());
 
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");
@@ -311,8 +328,8 @@ public class Main extends JavaPlugin {
 			PlayerMeta.savePrisoners();
 			
 			PlayerMeta.writePlaytime();
-			PlayerMeta.writePlayerSettings();
-			PVPdata.writePVPStats();
+			SettingsManager.writePlayerSettings();
+			StatsManager.writePVPStats();
 			
 		} catch (IOException ex) {
 			System.out.println("[core.main] WARNING - Failed to write one or more files.");

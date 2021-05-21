@@ -1,8 +1,8 @@
-package core.commands;
+package core.commands.restricted;
 
 /* *
  *
- *  About: A command for players to get the Discord invite URL
+ *  About: A command for ops to toggle the configured per-user chat cool-down
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -22,41 +22,29 @@ package core.commands;
  *
  * */
 
-import core.backend.Config;
-import core.data.PlayerMeta;
-import core.tasks.Analytics;
-
+import core.events.ChatListener;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-
-public class Discord implements CommandExecutor {
-
+public class SlowChat implements CommandExecutor {
+	static String msg;
+	
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		Player player = (Player) sender;
 		
-		if (!PlayerMeta.isAdmin(player)) Analytics.discord_cmd++;
-		String link = Config.getValue("discord.link");
-
-		TextComponent message;
-		if (!link.equals("tbd") && !link.equals("")) {
-
-			message = new TextComponent("Click this message to join the Discord.");
-			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
-
-		} else message = new TextComponent("Discord coming soon!");
-
-		message.setColor(ChatColor.GOLD);
-		sender.sendMessage(message);
-
+		Player player = (Player) sender;
+		if (!player.isOp()) return false;
+		
+		if (args.length == 0) ChatListener.slowChatEnabled = !ChatListener.slowChatEnabled;
+		
+		if (ChatListener.slowChatEnabled) msg = "enabled!"; else msg = "disabled!";
+		
+		player.sendMessage("Slow chat is " + msg);
+		
 		return true;
 	}
 }

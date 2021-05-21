@@ -24,7 +24,7 @@ package core.tasks;
  * */
 
 import core.backend.Config;
-import core.backend.FileManager;
+import core.data.FileManager;
 import core.backend.LagProcessor;
 
 import java.io.*;

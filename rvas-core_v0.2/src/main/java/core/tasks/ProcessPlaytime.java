@@ -1,16 +1,15 @@
 package core.tasks;
 
+import core.data.PlayerMeta;
+import core.commands.VoteMute;
 import core.events.ChatListener;
 import core.events.ChunkManager;
 
 import core.backend.Config;
-import core.backend.Utilities;
 import core.backend.Scheduler;
-import core.backend.LagProcessor;
-
-import core.backend.PlayerMeta;
 import core.backend.ServerMeta;
-import core.commands.VoteMute;
+import core.backend.utils.Restart;
+import core.backend.LagProcessor;
 
 import java.util.TimerTask;
 import org.bukkit.Bukkit;
@@ -33,7 +32,7 @@ public class ProcessPlaytime extends TimerTask {
 		int currentNewChunks = ChunkManager.newCount;
 		double onlinePlayers = Bukkit.getOnlinePlayers().size();
 		
-		if ((currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
+		if (onlinePlayers != 0 && (currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
 			System.out.println(
 					"WARN more than 8 chunks per tick per player in last second");
 			Analytics.capture();
@@ -85,7 +84,7 @@ public class ProcessPlaytime extends TimerTask {
 		if (currentTPS < rThreshold) {
 			lowTpsCounter += sinceLast;
 			if (lowTpsCounter >= 300000) {
-				Utilities.restart(true);
+				Restart.restart(true);
 			}
 		}
 

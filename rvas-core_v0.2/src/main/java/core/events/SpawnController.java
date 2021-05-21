@@ -24,17 +24,11 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.backend.Utilities;
+import core.backend.utils.Util;
 import core.tasks.Analytics;
 
 import java.util.*;
 import net.md_5.bungee.api.chat.TextComponent;
-
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -44,6 +38,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
+
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class SpawnController implements Listener {
 	
@@ -81,8 +81,8 @@ public class SpawnController implements Listener {
 		while (!valid_spawn_location) {
 			
 			// get random x, z co-coordinates within range; refer to the *center* of blocks
-			double tryLocation_x = Math.rint(Utilities.getRandomNumber((int)min_x, (int)max_x)) + 0.5;
-			double tryLocation_z = Math.rint(Utilities.getRandomNumber((int)min_z, (int)max_z)) + 0.5;
+			double tryLocation_x = Math.rint(Util.getRandomNumber((int)min_x, (int)max_x)) + 0.5;
+			double tryLocation_z = Math.rint(Util.getRandomNumber((int)min_z, (int)max_z)) + 0.5;
 			
 			if (Config.debug) System.out.println("RVAS: Validating spawn coordinates: " +
 					tryLocation_x + ", " + tryLocation_z);

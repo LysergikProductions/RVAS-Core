@@ -1,4 +1,4 @@
-package core.objects;
+package core.data.objects;
 
 /* *
  * 
@@ -27,7 +27,7 @@ import java.util.UUID;
 import java.io.Serializable;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class PlayerSettings implements Serializable {
+public class SettingsContainer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public UUID playerid;
@@ -41,7 +41,7 @@ public class PlayerSettings implements Serializable {
 	public boolean show_player_join_messages;
 	public boolean show_player_death_messages;
 	
-	public PlayerSettings(
+	public SettingsContainer(
 			UUID playerid, boolean show_PVPstats, boolean show_kills,
 			boolean show_deaths, boolean show_kd, boolean show_player_join_messages,
 			boolean show_player_death_messages, String timezone) {
@@ -61,7 +61,7 @@ public class PlayerSettings implements Serializable {
 		} return out;
     }
 	
-	public static PlayerSettings fromString(String line) {
+	public static SettingsContainer fromString(String line) {
 		// Example of intended given line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:true:true:true:true:false:true:PST
 		
 		String[] settings = line.split(":");
@@ -94,7 +94,7 @@ public class PlayerSettings implements Serializable {
 		try {timezone = settings[7];}
 		catch (Exception e) {timezone = "UTC";}
 
-		return new PlayerSettings(playerid, show_PVPstats, show_kills, show_deaths, show_kd,
+		return new SettingsContainer(playerid, show_PVPstats, show_kills, show_deaths, show_kd,
 				show_player_join_messages, show_player_death_messages, timezone);
 	}
 }

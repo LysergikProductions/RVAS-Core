@@ -1,7 +1,7 @@
 package core.commands;
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 //import core.events.SpawnController;
 
 import java.util.*;
@@ -19,7 +19,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class Prison implements CommandExecutor {
 
 	//HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
@@ -30,11 +30,11 @@ public class Prison implements CommandExecutor {
 		Player player = (Player) sender;
 		
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
-			sender.spigot().sendMessage(new TextComponent("§cYou can't run this."));
+			sender.sendMessage("\u00A7cYou can't run this.");
 			return true;
 		}
 		if (args.length != 1) {
-			sender.spigot().sendMessage(new TextComponent("§cInvalid syntax. Syntax: /prison [name]"));
+			sender.sendMessage("\u00A7cInvalid syntax. Syntax: /prison [name]");
 			return true;
 		}
 
@@ -104,7 +104,7 @@ public class Prison implements CommandExecutor {
 		Player thisPlayer = Bukkit.getPlayer(args[0]);
 		
 		if (thisPlayer == null) {
-			sender.spigot().sendMessage(new TextComponent("§cPlayer is not online."));
+			sender.sendMessage("\u00A7cPlayer is not online.");
 			return true;
 			
 		} else if (PlayerMeta.isAdmin(thisPlayer) || thisPlayer.isOp()) return false;
@@ -113,7 +113,7 @@ public class Prison implements CommandExecutor {
 			PlayerMeta.togglePrisoner(thisPlayer);
 		} catch (Exception e) {
 			if (Config.debug) e.printStackTrace();
-			player.spigot().sendMessage(new TextComponent("Failed to toggle LagPrisoner :/"));
+			player.sendMessage("Failed to toggle LagPrisoner :/");
 			return false;
 		}
 
@@ -121,9 +121,9 @@ public class Prison implements CommandExecutor {
 			
 			Arrays.asList(
 
-					"§6" + thisPlayer.getName() + " was caught lagging the server!", "§6IP: " +
+					"\u00A76" + thisPlayer.getName() + " was caught lagging the server!", "\u00A76IP: " +
 							Objects.requireNonNull(thisPlayer.getAddress()).toString().split(":")[0].replace("/", ""),
-					"§6COORDS: " + Math.round(thisPlayer.getLocation().getX()) + ", "
+					"\u00A76COORDS: " + Math.round(thisPlayer.getLocation().getX()) + ", "
 					+ Math.round(thisPlayer.getLocation().getY()) + ", "
 					+ Math.round(thisPlayer.getLocation().getZ())
 

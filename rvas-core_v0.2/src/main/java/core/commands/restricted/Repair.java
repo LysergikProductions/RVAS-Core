@@ -1,4 +1,4 @@
-package core.commands;
+package core.commands.restricted;
 
 /* *
  * 
@@ -22,22 +22,19 @@ package core.commands;
  * 
  * */
 
-import core.backend.Utilities;
 import core.events.ChunkManager;
+import core.backend.utils.Chunks;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class Repair implements CommandExecutor {
 	public static int y_default = 62;
 	public static int y_low;
@@ -53,7 +50,7 @@ public class Repair implements CommandExecutor {
 		for (World thisWorld: Bukkit.getServer().getWorlds()) {
 			if (thisWorld.getEnvironment().equals(World.Environment.THE_END)) {
 
-				y_low = Utilities.getExitFloor(thisWorld.getChunkAt(0, 0));
+				y_low = Chunks.getExitFloor(thisWorld.getChunkAt(0, 0));
 				if (y_low < 2) y_low = y_default;
 				else ChunkManager.foundExitPortal = true;
 			}
@@ -103,11 +100,11 @@ public class Repair implements CommandExecutor {
 			}
 
 			// user has submitted an unexpected argument/s
-			player.spigot().sendMessage(new TextComponent("Check your spelling!"));
+			player.sendMessage("Check your spelling!");
 
 		} else { // user supplied no arguments
 			
-			player.spigot().sendMessage(new TextComponent("You must include what to repair!"));
+			player.sendMessage("You must include what to repair!");
 		}
 		return true;
 	}

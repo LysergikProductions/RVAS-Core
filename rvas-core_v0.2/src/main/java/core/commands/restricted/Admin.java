@@ -1,11 +1,15 @@
-package core.commands;
+package core.commands.restricted;
 
 import core.backend.*;
-import core.events.SpeedLimiter;
+import core.backend.utils.Restart;
+import core.backend.utils.Util;
+import core.data.Aliases;
+import core.data.PlayerMeta;
 import core.tasks.Analytics;
+import core.events.SpeedLimiter;
 
-import java.io.IOException;
 import java.util.*;
+import java.io.IOException;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -20,7 +24,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class Admin implements CommandExecutor {
 
 	public static List<UUID> Spies = new ArrayList<>();
@@ -38,37 +42,37 @@ public class Admin implements CommandExecutor {
 		if (args.length == 1) {
 			if (!PlayerMeta.isOp(sender)) {
 				
-				sender.sendMessage(new TextComponent("§cYou can't use this."));
+				sender.sendMessage(new TextComponent("\u00A7cYou can't use this.").toLegacyText());
 				return true;
 			}
 			
 			switch (args[0].toUpperCase()) {
 				case "COLOR":
 					if (UseRedName.contains(player.getUniqueId())) {
-						player.spigot().sendMessage(new TextComponent("§6Disabled red name."));
+						player.sendMessage("\u00A76Disabled red name.");
 						UseRedName.remove(player.getUniqueId());
 					} else {
-						player.spigot().sendMessage(new TextComponent("§6Enabled red name."));
+						player.sendMessage("\u00A76Enabled red name.");
 						UseRedName.add(player.getUniqueId());
 					}
 					return true;
 					
 				case "SPY":
 					if (Spies.contains(player.getUniqueId())) {
-						player.spigot().sendMessage(new TextComponent("§6Disabled spying on player messages."));
+						player.sendMessage("\u00A76Disabled spying on player messages.");
 						Spies.remove(player.getUniqueId());
 					} else {
-						player.spigot().sendMessage(new TextComponent("§6Enabled spying on player messages."));
+						player.sendMessage("\u00A76Enabled spying on player messages.");
 						Spies.add(player.getUniqueId());
 					}
 					return true;
 					
 				case "MSGTOGGLE":
 					if (MsgToggle.contains(player.getUniqueId())) {
-						player.spigot().sendMessage(new TextComponent("§6Enabled recieving player messages."));
+						player.sendMessage("\u00A76Enabled recieving player messages.");
 						MsgToggle.remove(player.getUniqueId());
 					} else {
-						player.spigot().sendMessage(new TextComponent("§6Disabled recieving player messages."));
+						player.sendMessage("\u00A76Disabled recieving player messages.");
 						MsgToggle.add(player.getUniqueId());
 					}
 					return true;
@@ -76,42 +80,42 @@ public class Admin implements CommandExecutor {
 				case "RELOAD":
 					try {
 						Config.load();
-						sender.spigot().sendMessage(new TextComponent("§aSuccessfully reloaded."));
+						sender.sendMessage("\u00A7aSuccessfully reloaded.");
 
 					} catch (IOException e) {
-						sender.spigot().sendMessage(new TextComponent("§4Failed to reload."));
-						Utilities.restart();
+						sender.sendMessage("\u00A74Failed to reload.");
+						Restart.restart();
 					}
 					return true;
 					
 				case "SPEED":
-					player.spigot().sendMessage(new TextComponent("§6Player speeds:"));
+					player.sendMessage("\u00A76Player speeds:");
 					List< Pair<Double, String> > speeds = SpeedLimiter.getSpeeds();
 					
 					for (Pair<Double, String> speedEntry : speeds) {
 						double speed = speedEntry.getLeft();
 						if(speed == 0) continue;
 						String playerName = speedEntry.getRight();
-						String color = "§";
+						String color = "\u00A7";
 						if (speed >= 64.0)
 							color += "c"; // red
 						else if (speed >= 48.0)
 							color += "e"; // yellow
 						else
 							color += "a"; // green
-						player.spigot().sendMessage(new TextComponent(color
-								+ String.format("%4.1f: %s", speed, playerName)));
+						player.sendMessage(new TextComponent(color
+								+ String.format("%4.1f: %s", speed, playerName)).toLegacyText());
 					}
-					player.spigot().sendMessage(new TextComponent("§6End of speed list."));
+					player.sendMessage("\u00A76End of speed list.");
 					return true;
 					
 				case "AGRO":
 					disableWarnings = !disableWarnings;
 					if(disableWarnings) {
-						sender.spigot().sendMessage(new TextComponent("§6Enabled aggressive speed limit."));
+						sender.sendMessage("\u00A76Enabled aggressive speed limit.");
 					}
 					else {
-						sender.spigot().sendMessage(new TextComponent("§6Disabled aggressive speed limit."));
+						sender.sendMessage("\u00A76Disabled aggressive speed limit.");
 					}
 					return true;
 
@@ -130,20 +134,46 @@ public class Admin implements CommandExecutor {
 				Location loc = LogOutSpots.get(args[1]);
 				
 				if (loc == null) {
-					sender.sendMessage(new TextComponent("§6No logout spot logged for " + args[1]));
+					sender.sendMessage("\u00A76No logout spot logged for " + args[1]);
 				} else {
 					
-					String dimension = Utilities.getDimensionName(loc);
+					String dimension = Util.getDimensionName(loc);
 					String location = (int)loc.getX() + " " + (int)loc.getY() + " " + (int)loc.getZ();
 
-					TextComponent logSpot = new TextComponent("§6"+args[1] + " logged out at " + location);
-					
+					TextComponent logSpot = new TextComponent("\u00A76"+args[1] + " logged out at " + location);
+
 					logSpot.setClickEvent(new ClickEvent(
-							ClickEvent.Action.RUN_COMMAND, "/execute in " + dimension + " run tp @s " + location));
+							ClickEvent.Action.RUN_COMMAND, "/ninjatp " + dimension + " " + location));
 					
-					sender.sendMessage(logSpot);
+					sender.spigot().sendMessage(logSpot);
 				}
 				return true;
+			} else if (args[0].equalsIgnoreCase("debug")) {
+				if (args[1].equalsIgnoreCase("normal")) {
+					Config.debug = true;
+					Config.verbose = false;
+
+					player.sendMessage("Config.debug is now true");
+					player.sendMessage("Config.verbose is now false");
+
+				} else if (args[1].equalsIgnoreCase("verbose")) {
+					Config.debug = true;
+					Config.verbose = true;
+
+					player.sendMessage("Config.debug is now true");
+					player.sendMessage("Config.verbose is now true");
+
+				} else if (args[1].equalsIgnoreCase("off")) {
+					Config.debug = false;
+					Config.verbose = false;
+
+					player.sendMessage("Config.debug is now false");
+					player.sendMessage("Config.verbose is now false");
+
+				} else {
+					Config.debug = !Config.debug;
+					player.sendMessage("Config.debug is now " + Config.debug);
+				}
 			}
 		}
 		
@@ -153,9 +183,9 @@ public class Admin implements CommandExecutor {
 		ops_a.setColor(ChatColor.RED); ops_b.setColor(ChatColor.GRAY);
 		TextComponent ops = new TextComponent(ops_a, ops_b);
 		
-		player.spigot().sendMessage(new TextComponent(""));
-		player.spigot().sendMessage(new TextComponent("§csinse420: §7Server Admin, Developer, Founder"));
-		player.spigot().sendMessage(ops);
+		player.sendMessage("");
+		player.sendMessage("\u00A7csinse420: \u00A77Server Admin, Developer, Founder");
+		player.sendMessage(ops.toLegacyText());
 		return true;
 	}
 }

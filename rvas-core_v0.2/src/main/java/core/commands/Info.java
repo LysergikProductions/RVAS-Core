@@ -23,7 +23,7 @@ package core.commands;
  * */
 
 import core.backend.ServerMeta;
-import core.backend.Utilities;
+import core.backend.utils.Util;
 
 import core.events.ChunkManager;
 import core.events.BlockListener;
@@ -36,10 +36,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class Info implements CommandExecutor {
 	
 	@Override
@@ -48,19 +46,19 @@ public class Info implements CommandExecutor {
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;
 			
-		String humanUptime = Utilities.timeToString(ServerMeta.getUptime());
+		String humanUptime = Util.timeToString(ServerMeta.getUptime());
 		
 		TextComponent head = new TextComponent("--- Session Stats ---");
 		head.setColor(ChatColor.GOLD); head.setBold(true);
 		
-		player.spigot().sendMessage(head);
-		player.spigot().sendMessage(new TextComponent("Uptime: " + humanUptime));
-		player.spigot().sendMessage(new TextComponent("New Chunks: " + ChunkManager.newCount));
-		player.spigot().sendMessage(new TextComponent("New Players: " + SpawnController.sessionNewPlayers));
-		player.spigot().sendMessage(new TextComponent("Total Respawns: " + SpawnController.sessionTotalRespawns));
+		player.sendMessage(head.toLegacyText());
+		player.sendMessage("Uptime: " + humanUptime);
+		player.sendMessage("New Chunks: " + ChunkManager.newCount);
+		player.sendMessage("New Players: " + SpawnController.sessionNewPlayers);
+		player.sendMessage("Total Respawns: " + SpawnController.sessionTotalRespawns);
 		
-		player.spigot().sendMessage(new TextComponent("Bedrock Placed: " + BlockListener.placedBedrockCounter));
-		player.spigot().sendMessage(new TextComponent("Bedrock Broken: " + BlockListener.brokenBedrockCounter));
+		player.sendMessage("Bedrock Placed: " + BlockListener.placedBedrockCounter);
+		player.sendMessage("Bedrock Broken: " + BlockListener.brokenBedrockCounter);
 		// TODO : add total BlockPlaceEvent's and BlockBreakEvent's
 		
 		return true;

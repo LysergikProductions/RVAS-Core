@@ -2,27 +2,36 @@ package core.commands;
 
 import core.Main;
 import core.backend.*;
-import core.objects.*;
+import core.data.PlayerMeta;
+import core.data.SettingsManager;
+import core.data.objects.*;
 import core.tasks.Analytics;
 
 import java.util.*;
 
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class Stats implements CommandExecutor {
-	
 	public static int sessionUses = 0;
+
+	public static TextComponent allTimezoneIDs = new TextComponent(
+			ChatColor.AQUA + "Click here to see all timezone IDs!"); static {
+				allTimezoneIDs.setItalic(true);
+				allTimezoneIDs.setClickEvent(new ClickEvent(
+						ClickEvent.Action.OPEN_URL,
+						"https://garygregory.wordpress.com/2013/06/18/what-are-the-java-timezone-ids/"));
+	}
 	
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -33,10 +42,10 @@ public class Stats implements CommandExecutor {
 		
 		if (!PlayerMeta.isAdmin(player)) Analytics.stats_total++;
 		
-		PlayerSettings targetSettings = PlayerMeta.sPlayerSettings.get(playerid);
+		SettingsContainer targetSettings = PlayerMeta.sPlayerSettings.get(playerid);
 		if (targetSettings == null) {
 			
-			PlayerSettings newSettings = PlayerMeta.getNewSettings(Bukkit.getOfflinePlayer(playerid));
+			SettingsContainer newSettings = SettingsManager.getNewSettings(Bukkit.getOfflinePlayer(playerid));
 			PlayerMeta.sPlayerSettings.put(playerid, newSettings);
 		}
 		
@@ -66,83 +75,82 @@ public class Stats implements CommandExecutor {
 			if (leaderLimit == -1) {
 				switch (args[0]) {
 					case "top":
+
 						assert Main.Top != null;
 						ChatPrint.printStats(player, Main.Top);
 						return true;
 
+					case "lb":
 					case "leaderboard":
+					case "leaderboards":
+
 						ChatPrint.printLeaders(player, 5);
 						return true;
 
 					case "help":
+
 						HelpPages.helpStats(player);
 						if (!PlayerMeta.isAdmin(player)) Analytics.stats_help++;
 						return true;
 
+					case "kill":
 					case "kills":
 
 						assert targetSettings != null;
 						targetSettings.show_kills = !targetSettings.show_kills;
 
 						if (targetSettings.show_kills) {
-
-							player.sendMessage(new TextComponent("Your kills are now public."));
+							player.sendMessage("Your kills are now public.");
 
 						} else {
-
-							player.sendMessage(new TextComponent("Your kills are now hidden."));
+							player.sendMessage("Your kills are now hidden.");
 						}
-
 						return true;
 
+					case "death":
 					case "deaths":
 
 						assert targetSettings != null;
 						targetSettings.show_deaths = !targetSettings.show_deaths;
 
 						if (targetSettings.show_deaths) {
-
-							player.sendMessage(new TextComponent("Your deaths are now public."));
+							player.sendMessage("Your deaths are now public.");
 
 						} else {
-
-							player.sendMessage(new TextComponent("Your deaths are now hidden."));
+							player.sendMessage("Your deaths are now hidden.");
 						}
-
 						return true;
 
 					case "kd":
+					case "k/d":
 
 						assert targetSettings != null;
 						targetSettings.show_kd = !targetSettings.show_kd;
 
 						if (targetSettings.show_kd) {
-
-							player.sendMessage(new TextComponent("Your k/d ratio is now public."));
+							player.sendMessage("Your k/d ratio is now public.");
 
 						} else {
-
-							player.sendMessage(new TextComponent("Your k/d ratio is now hidden."));
+							player.sendMessage("Your k/d ratio is now hidden.");
 						}
-
 						return true;
 
+					case "tz":
 					case "timezone":
-						assert targetSettings != null;
-						// TODO: Give user a clickable message to reach https://garygregory.wordpress.com/2013/06/18/what-are-the-java-timezone-ids/
 
 						if (args.length != 2) {
 							player.sendMessage(ChatColor.GRAY +
-									"Correct Syntax: /stats timezone EST | PST | GMT | etc");
+									"Correct Syntax: /stats timezone EST | America/Phoenix | GMT | etc");
+							player.sendMessage(allTimezoneIDs);
 							return false;
 						}
 
-						String current_tz = targetSettings.timezone;
+						String current_tz = Objects.requireNonNull(targetSettings).timezone;
 						targetSettings.timezone = args[1];
-						player.sendMessage(new TextComponent(
-								"You changed your set timezone from " + current_tz + " to " + targetSettings.timezone)
-						);
 
+						player.sendMessage(
+								"You changed your set timezone from " + current_tz + " to " + targetSettings.timezone
+						);
 						return true;
 
 					case "mc":
@@ -151,6 +159,7 @@ public class Stats implements CommandExecutor {
 						return true;
 
 					case "info":
+					case "setting":
 					case "settings":
 
 						ChatPrint.printPlayerSettings(player);
@@ -163,11 +172,11 @@ public class Stats implements CommandExecutor {
 			}
 
 			// user has submitted a probable username argument
-			OfflinePlayer offline_player = Bukkit.getOfflinePlayer(args[0]);
+			OfflinePlayer offline_player = Bukkit.getServer().getOfflinePlayer(args[0]);
 			
 			if (!offline_player.hasPlayedBefore()) {
 				
-				player.spigot().sendMessage(new TextComponent("This player has never joined."));
+				player.sendMessage("This player has never joined.");
 				return true;
 			}
 			

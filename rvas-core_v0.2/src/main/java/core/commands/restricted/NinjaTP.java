@@ -1,8 +1,10 @@
-package core.commands;
+package core.commands.restricted;
 
 /* *
  *
- *  About: A command for ops to toggle the configured per-user chat cool-down
+ *  About: Allow ops to vanish and teleport at the same time.
+ *          Teleporting to other dimensions also requires simpler
+ *          syntax. Developed primarily for internal use.
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -22,33 +24,27 @@ package core.commands;
  *
  * */
 
-import core.events.ChatListener;
 import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
-public class SlowChat implements CommandExecutor {
-	
-	static String msg;
-	
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		
-		Player player = (Player) sender;
-		if (!player.isOp()) return false;
-		
-		if (args.length == 0) ChatListener.slowChatEnabled = !ChatListener.slowChatEnabled;
-		
-		if (ChatListener.slowChatEnabled) msg = "enabled!"; else msg = "disabled!";
-		
-		player.spigot().sendMessage(new TextComponent("Slow chat is " + msg));
-		
-		return true;
-	}
+public class NinjaTP implements CommandExecutor {
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        Player player = (Player)sender;
+
+        String dimension = args[0].trim();
+        String loc =  args[1].trim() + " " + args[2].trim() + " " + args[3].trim();
+
+        String tp_cmd = "/execute in " + dimension + " run tp @p[name=" + player.getName() + "] " + loc;
+
+        player.chat("/sv on"); // <- requires SuperVanish plugin
+        player.chat(tp_cmd); // <- tp command-sender to the location
+
+        return true;
+    }
 }

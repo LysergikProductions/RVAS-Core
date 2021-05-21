@@ -1,8 +1,8 @@
-package core.backend;
+package core.data;
 
 /* *
  * 
- *  About: Manages / stores data for PVPstats objects in RAM
+ *  About: Stores and mutates `StatsContainer` objects in memory
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -22,7 +22,7 @@ package core.backend;
  * 
  * */
 
-import core.objects.PVPstats;
+import core.data.objects.StatsContainer;
 
 import java.util.*;
 import java.io.*;
@@ -31,19 +31,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class PVPdata {
+public class StatsManager {
 	
-	public static Map <UUID, PVPstats> sPVPStats = new HashMap<>();
+	public static Map <UUID, StatsContainer> sPVPStats = new HashMap<>();
 	
 	public static void incKillTotal(Player p, int inc) {
 		if (sPVPStats.containsKey(p.getUniqueId())) {
 			
-			PVPstats stats = sPVPStats.get(p.getUniqueId());
+			StatsContainer stats = sPVPStats.get(p.getUniqueId());
 			stats.killTotal += inc;
 			
 		} else {
 			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "null", 0);
+			StatsContainer stats = new StatsContainer(p.getUniqueId(), 1, 0, "null", 0);
 			sPVPStats.put(p.getUniqueId(), stats);
 		}
 	}
@@ -51,12 +51,12 @@ public class PVPdata {
 	public static void incDeathTotal(Player p, int inc) {
 		if (sPVPStats.containsKey(p.getUniqueId())) {
 			
-			PVPstats stats = sPVPStats.get(p.getUniqueId());
+			StatsContainer stats = sPVPStats.get(p.getUniqueId());
 			stats.deathTotal += inc;
 			
 		} else {
 			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 0, 1, "0.00", 0);
+			StatsContainer stats = new StatsContainer(p.getUniqueId(), 0, 1, "0.00", 0);
 			sPVPStats.put(p.getUniqueId(), stats);
 		}
 	}
@@ -64,22 +64,22 @@ public class PVPdata {
 	public static void incSpawnKill (Player p, int inc) {
 		if (sPVPStats.containsKey(p.getUniqueId())) {
 			
-			PVPstats stats = sPVPStats.get(p.getUniqueId());
+			StatsContainer stats = sPVPStats.get(p.getUniqueId());
 			stats.spawnKills += inc;
 			
 		} else {
 			
-			PVPstats stats = new PVPstats(p.getUniqueId(), 1, 0, "0.00", 0);
+			StatsContainer stats = new StatsContainer(p.getUniqueId(), 1, 0, "0.00", 0);
 			sPVPStats.put(p.getUniqueId(), stats);
 		}
 	}
 	
-	public static PVPstats getNewStats(OfflinePlayer p) {
-		return new PVPstats(p.getUniqueId(), 0, 0, "null", 0);
+	public static StatsContainer getNewStats(OfflinePlayer p) {
+		return new StatsContainer(p.getUniqueId(), 0, 0, "null", 0);
 	}
 	
-	public static PVPstats getStats(OfflinePlayer p) {
-		PVPstats stats = sPVPStats.get(p.getUniqueId());
+	public static StatsContainer getStats(OfflinePlayer p) {
+		StatsContainer stats = sPVPStats.get(p.getUniqueId());
 		
 		if (stats != null && sPVPStats.containsKey(p.getUniqueId())) {
 			
@@ -96,7 +96,7 @@ public class PVPdata {
 			
 		} else {
 			
-			PVPstats new_stats = getNewStats(p);
+			StatsContainer new_stats = getNewStats(p);
 			sPVPStats.put(p.getUniqueId(), new_stats);
 			
 			return new_stats;
@@ -107,7 +107,7 @@ public class PVPdata {
 		
 		BufferedWriter w = new BufferedWriter(new FileWriter("plugins/core/pvpstats.txt"));
 		
-		for (PVPstats object: sPVPStats.values()) {
+		for (StatsContainer object: sPVPStats.values()) {
 			try {
 				w.write(object.toString() + "\n");
 				w.flush();

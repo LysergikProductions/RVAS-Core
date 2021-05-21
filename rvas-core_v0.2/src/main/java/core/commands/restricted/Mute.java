@@ -1,7 +1,7 @@
-package core.commands;
+package core.commands.restricted;
 
-import core.backend.PlayerMeta;
-import core.backend.PlayerMeta.MuteType;
+import core.data.PlayerMeta;
+import core.data.PlayerMeta.MuteType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -48,7 +48,7 @@ public class Mute implements CommandExecutor {
 			if (args[1] != null) toMute = Bukkit.getPlayer(args[1]);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("/mute probably entered incorrectly..");
-			sender.spigot().sendMessage(new TextComponent("Syntax: /mute [type] [player]"));
+			sender.sendMessage("Syntax: /mute [type] [player]");
 		} catch (NullPointerException e) {
 			System.out.println("/mute target is null");
 		} catch (Exception e) {
@@ -67,7 +67,7 @@ public class Mute implements CommandExecutor {
 		switch (mode.toUpperCase()) {
 			case "PERM":
 				if(PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("\u00A7cPlayer is already muted."));
+					sender.sendMessage("\u00A7cPlayer is already muted.");
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
@@ -78,7 +78,7 @@ public class Mute implements CommandExecutor {
 
 			case "TEMP":
 				if(PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("\u00A7cPlayer is already muted."));
+					sender.sendMessage("\u00A7cPlayer is already muted.");
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
@@ -89,7 +89,7 @@ public class Mute implements CommandExecutor {
 
 			case "NONE":
 				if(!PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("\u00A7cPlayer isn't muted."));
+					sender.sendMessage("\u00A7cPlayer isn't muted.");
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(
@@ -100,7 +100,7 @@ public class Mute implements CommandExecutor {
 
 			case "IP":
 				if(PlayerMeta.isMuted(toMute)) {
-					sender.spigot().sendMessage(new TextComponent("\u00A7cIP is already muted."));
+					sender.sendMessage("\u00A7cIP is already muted.");
 					break;
 				}
 				Bukkit.getServer().spigot().broadcast(new TextComponent(

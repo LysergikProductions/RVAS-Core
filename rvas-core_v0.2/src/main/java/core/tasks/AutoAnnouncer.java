@@ -31,9 +31,9 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import org.bukkit.Bukkit;
-
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.ChatColor;
+
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;

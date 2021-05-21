@@ -2,7 +2,7 @@ package core.commands;
 
 /* *
  *
- *  About: A command for players to get the Discord invite URL
+ *  About: Displays last three whispers the command-sender received
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -22,41 +22,30 @@ package core.commands;
  *
  * */
 
-import core.backend.Config;
-import core.data.PlayerMeta;
-import core.tasks.Analytics;
+import core.backend.utils.Reversed;
 
+import java.util.UUID;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+public class Last implements CommandExecutor {
 
-public class Discord implements CommandExecutor {
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        Player player = (Player)sender; UUID playerid;
+        playerid = player.getUniqueId();
 
-	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		Player player = (Player) sender;
-		
-		if (!PlayerMeta.isAdmin(player)) Analytics.discord_cmd++;
-		String link = Config.getValue("discord.link");
-
-		TextComponent message;
-		if (!link.equals("tbd") && !link.equals("")) {
-
-			message = new TextComponent("Click this message to join the Discord.");
-			message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
-
-		} else message = new TextComponent("Discord coming soon!");
-
-		message.setColor(ChatColor.GOLD);
-		sender.sendMessage(message);
-
-		return true;
-	}
+        if (!Message.recentWhispers.containsKey(playerid)) player.sendMessage(
+                "\u00A76You don't have any recent whispers!");
+        else {
+            for (String thisWhisper: Reversed.reverse(Message.recentWhispers.get(playerid))) {
+                player.sendMessage("\u00A75" + thisWhisper);
+            }
+        }
+        return true;
+    }
 }

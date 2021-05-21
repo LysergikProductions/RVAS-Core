@@ -25,18 +25,17 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.ItemCheck;
-import core.backend.Utilities;
-import core.backend.PlayerMeta;
+import core.backend.utils.*;
+import core.data.PlayerMeta;
+import core.commands.restricted.Repair;
 
 import java.util.*;
 import java.text.DecimalFormat;
 
-import core.commands.Repair;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import org.bukkit.block.ShulkerBox;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -44,6 +43,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import org.bukkit.block.Block;
+import org.bukkit.block.ShulkerBox;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
 
 import org.bukkit.Bukkit;
@@ -51,7 +52,6 @@ import org.bukkit.Location;
 import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class BlockListener implements Listener {
@@ -60,14 +60,12 @@ public class BlockListener implements Listener {
 	static boolean floorProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.floor"));
 	static boolean modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
 	static boolean modeOnBreak = Boolean.parseBoolean(Config.getValue("protect.gamemode.onbreak"));
+	static boolean consumeCreativeBlocks = Boolean.parseBoolean(Config.getValue("consume.creative.blocks"));
 	
 	public static int brokenBedrockCounter = 0;
 	public static int placedBedrockCounter = 0;
 	
-	//public static ArrayList<Location> ExitPortalBlocks = new ArrayList<>();
-	
-	public static ArrayList<Material> BreakBanned = new ArrayList<>();
-	static {
+	public static ArrayList<Material> BreakBanned = new ArrayList<>(); static {
 		BreakBanned.addAll(Arrays.asList(Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK,
 				Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
 				Material.WATER, Material.LAVA, Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID));
@@ -195,12 +193,10 @@ public class BlockListener implements Listener {
 		
 		Block block = event.getBlockPlaced();
 		Location block_loc = block.getLocation();
-		String env = Utilities.getDimensionName(block_loc);
+		String env = Util.getDimensionName(block_loc);
 
 		Material blockType = block.getType();
 		String mat = blockType.toString();
-
-		if (!placer.isOp() && modeOnPlace) placer.setGameMode(GameMode.SURVIVAL);
 
 		// prevent lag-prisoners from placing things that can cause lag
 		if (PlayerMeta.isPrisoner(placer)) {
@@ -227,7 +223,7 @@ public class BlockListener implements Listener {
 
 			for (Material thisMat: LagMats) {
 				if (thisMat != Material.GRAVEL) {
-					counter += Utilities.blockCounter(block.getChunk(), thisMat);
+					counter += Chunks.blockCounter(block.getChunk(), thisMat);
 				}
 			}
 
@@ -238,13 +234,14 @@ public class BlockListener implements Listener {
 					block.getX() + ", " + block.getY() + ", " + block.getZ() + " in " + env +
 					" by " + placer_name + " with UUID: " + placer.getUniqueId());
 
-			String cmd = "/execute in " + env + " run tp @s " +
-					block.getX() + " " + block.getY() + " " + block.getZ();
+			String location = block.getX() + " " + block.getY() + " " + block.getZ();
+			ClickEvent thisEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+					"/ninjatp " + env + " " + location);
 
-			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, cmd));
+			msg.setClickEvent(thisEvent);
 
 			if (counter > 256) {
-				Utilities.notifyOps(new TextComponent(warn, msg));
+				Util.notifyOps(new TextComponent(warn, msg));
 			}
 		}
 
@@ -254,8 +251,8 @@ public class BlockListener implements Listener {
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
 				event.setCancelled(true);
 
-				placer.spigot().sendMessage(new TextComponent(
-						ChatColor.RED + "You can only place shulkers in survival mode"));
+				placer.sendMessage(new TextComponent(
+						ChatColor.RED + "You can only place shulkers in survival mode").toLegacyText());
 			}
 
 			ShulkerBox thisShulk;
@@ -306,9 +303,29 @@ public class BlockListener implements Listener {
 			long endTime = System.nanoTime();
 			long duration = (endTime - startTime);
 			
-			placer.spigot().sendMessage(new TextComponent(
-					"PlaceTime: " + new DecimalFormat("0.000").format((double)duration/1000000.0) + " ms"));
+			placer.sendMessage(new TextComponent(
+					"PlaceTime: " + new DecimalFormat("0.000").format((double)duration/1000000.0) + " ms")
+					.toLegacyText());
 		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public static void onCreativePlace(BlockPlaceEvent event) {
+		Player thisPlayer = event.getPlayer();
+
+		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL) ||
+				PlayerMeta.isAdmin(thisPlayer)) return;
+
+		int stackCount = event.getItemInHand().getAmount();
+
+		ItemStack realStack = thisPlayer.getActiveItem();
+		if (consumeCreativeBlocks) {
+			// TODO: figure out why these don't work:
+			// Objects.requireNonNull(realStack).setAmount(stackCount-1);
+			// usedItemStack.setAmount(stackCount-1);
+		}
+
+		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
 	}
 	
 	public static boolean updateConfigs() {
@@ -318,6 +335,7 @@ public class BlockListener implements Listener {
 			floorProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.floor"));
 			modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
 			modeOnBreak = Boolean.parseBoolean(Config.getValue("protect.gamemode.onbreak"));
+			consumeCreativeBlocks = Boolean.parseBoolean(Config.getValue("consume.creative.blocks"));
 			
 			return true;
 			

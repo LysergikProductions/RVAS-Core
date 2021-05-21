@@ -1,4 +1,4 @@
-package core.objects;
+package core.data.objects;
 
 /* *
  * 
@@ -32,7 +32,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class PVPstats implements Serializable {
+public class StatsContainer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public UUID playerid; public int killTotal;
@@ -41,7 +41,7 @@ public class PVPstats implements Serializable {
 	
 	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
 	
-	public PVPstats(UUID playerid, int killTotal, int deathTotal, String kd, int spawnKills) {
+	public StatsContainer(UUID playerid, int killTotal, int deathTotal, String kd, int spawnKills) {
 
 		this.playerid = playerid; this.killTotal = killTotal; this.deathTotal = deathTotal;
 		this.kd = kd; this.spawnKills = spawnKills;
@@ -52,7 +52,7 @@ public class PVPstats implements Serializable {
 		return playerid + ":" + killTotal + ":" + deathTotal + ":" + kd + ":" + spawnKills;
     }
 	
-	public static PVPstats fromString(String line) {
+	public static StatsContainer fromString(String line) {
 		// Example of intended given line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:4:0:Unkillable!:2
 		
 		String[] stats = line.split(":");
@@ -86,6 +86,6 @@ public class PVPstats implements Serializable {
 		try {spawnKills = Integer.parseInt(stats[4]);} catch (Exception e) {spawnKills = 0;}
 		if (debug) System.out.println("Parsed spawn kills: " + spawnKills);
 
-		return new PVPstats(playerid, killTotal, deathTotal, kd, spawnKills);
+		return new StatsContainer(playerid, killTotal, deathTotal, kd, spawnKills);
 	}
 }

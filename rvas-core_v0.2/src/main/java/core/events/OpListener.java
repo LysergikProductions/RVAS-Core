@@ -24,13 +24,13 @@ package core.events;
  * 
  * */
 
-import core.backend.PlayerMeta;
 import core.backend.Config;
-import core.backend.Utilities;
-import core.backend.Aliases;
+import core.data.Aliases;
+import core.data.PlayerMeta;
+import core.backend.utils.Util;
+import core.backend.utils.Chunks;
 
 import java.util.*;
-
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -47,7 +47,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
 	
 	// currently not in use
@@ -96,28 +96,28 @@ public class OpListener implements Listener {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) {
-				int removed_items = Utilities.clearChunkItems(sender.getLocation().getChunk());
-				sender.spigot().sendMessage(new TextComponent("Removed " + removed_items + " item stacks."));
+				int removed_items = Chunks.clearChunkItems(sender.getLocation().getChunk());
+				sender.sendMessage("Removed " + removed_items + " item stacks.");
 			}
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!isAdmin) {
 			if (msg.contains("/give") && Config.getValue("protect.ops.give").equals("true") ||
-					Utilities.isCmdRestricted(msg)) {
+					Util.isCmdRestricted(msg)) {
 
 				event.setCancelled(true);
-				sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "no"));
+				sender.sendMessage(new TextComponent(ChatColor.RED + "no").toLegacyText());
 
 			} else if (msg.contains("@a")) {
 				
 				event.setCancelled(true);
-				sender.spigot().sendMessage(new TextComponent("You cannot target everyone!"));
+				sender.sendMessage(new TextComponent(ChatColor.RED + "You cannot target everyone!").toLegacyText());
 				
 			} else if (msg.contains(admin_name)) {
 				
 				event.setCancelled(true);
-				sender.spigot().sendMessage(new TextComponent("You cannot target " + admin_name));
+				sender.sendMessage(new TextComponent(ChatColor.RED + "You cannot target " + admin_name).toLegacyText());
 			}
 
 		// 32k commands for testing anti-illegals; owner only
@@ -127,7 +127,7 @@ public class OpListener implements Listener {
 			if (!sender.isOp()) return; // <- fallback security layer
 
 			if (!msg.contains("=") || msg.endsWith("=")) {
-				sender.spigot().sendMessage(new TextComponent("Syntax: /op sauce=[type]"));
+				sender.sendMessage("Syntax: /op sauce=[type]");
 
 			} else {
 				String[] args = msg.split("=");
@@ -156,7 +156,7 @@ public class OpListener implements Listener {
 					sender.chat(Aliases.feather_32k);
 
 				} else {
-					sender.spigot().sendMessage(new TextComponent(ChatColor.RED + "Invalid Argument: " + thisArg));
+					sender.sendMessage(new TextComponent(ChatColor.RED + "Invalid Argument: " + thisArg).toLegacyText());
 				}
 			}
 		}

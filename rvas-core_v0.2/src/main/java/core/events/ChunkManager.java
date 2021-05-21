@@ -25,8 +25,9 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.backend.Utilities;
-import core.commands.Repair;
+import core.backend.utils.Chunks;
+import core.backend.utils.Util;
+import core.commands.restricted.Repair;
 import core.tasks.Analytics;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -42,7 +43,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class ChunkManager implements Listener {
 
 	static Material br = Material.BEDROCK;
@@ -65,7 +66,7 @@ public class ChunkManager implements Listener {
 
 			try {
 				if (!foundExitPortal && dimension.equals(Environment.THE_END)) {
-					if (x == 0 && z == 0) Repair.y_low = Utilities.getExitFloor(chunk);
+					if (x == 0 && z == 0) Repair.y_low = Chunks.getExitFloor(chunk);
 					if (Repair.y_low != -1) ChunkManager.foundExitPortal = true;
 					else Repair.y_low = Repair.y_default;
 				}
@@ -92,7 +93,7 @@ public class ChunkManager implements Listener {
 		int removed_blocks; int total_count;
 
 		try {
-			total_count = Utilities.banBlockCounter(chunk);
+			total_count = Chunks.banBlockCounter(chunk);
 		} catch (Exception e) {
 			e.printStackTrace();
 			total_count = 0;
@@ -102,7 +103,7 @@ public class ChunkManager implements Listener {
 		if (total_count > 8192) {
 			
 			System.out.println("WARN: TOO MANY BAN BLOCKS. Removing 90% of them..");
-			removed_blocks = Utilities.banBlockRemover(chunk, (int)Math.rint((double)total_count * 0.9));
+			removed_blocks = Chunks.banBlockRemover(chunk, (int)Math.rint((double)total_count * 0.9));
 
 			if (Config.debug) System.out.println("Removed " + removed_blocks + " chunk-banning blocks");
 		}
@@ -116,7 +117,7 @@ public class ChunkManager implements Listener {
 		if (chunk.getWorld().getEnvironment().equals(Environment.THE_END)) {
 			if (dragon == null || !dragon.hasBeenPreviouslyKilled()) {
 
-				Utilities.notifyOps(new TextComponent("Cannot repair portal; dragon has never been killed!"));
+				Util.notifyOps(new TextComponent("Cannot repair portal; dragon has never been killed!"));
 				return;
 			}
 
@@ -257,7 +258,7 @@ public class ChunkManager implements Listener {
 				System.out.println();
 				
 				if (receiver != null) {
-					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
+					receiver.sendMessage(counter + " bedrock blocks replaced!");
 				}
 			}
 		}
@@ -291,7 +292,7 @@ public class ChunkManager implements Listener {
 				System.out.println();
 				
 				if (receiver != null) {
-					receiver.spigot().sendMessage(new TextComponent(counter + " bedrock blocks replaced!"));
+					receiver.sendMessage(counter + " bedrock blocks replaced!");
 				}
 			}
 		}

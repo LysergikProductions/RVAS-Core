@@ -1,11 +1,10 @@
 package core.commands;
 
+import core.commands.restricted.Admin;
 import core.tasks.Analytics;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,45 +12,103 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class Message implements CommandExecutor {
 
+	public static ArrayList<UUID> AFK_warned = new ArrayList<>();
 	public static HashMap<UUID, UUID> Replies = new HashMap<>();
+	public static HashMap<UUID, ArrayList<String>> recentWhispers = new HashMap<>();
+
+	private static void addRecentWhisper(UUID thisUUID, String thisMessage) {
+		String whisp_last; String whisp_1last; String whisp_2last;
+
+		if (!recentWhispers.containsKey(thisUUID)) {
+
+			ArrayList<String> newList = new ArrayList<>(); { newList.add(thisMessage); }
+			recentWhispers.put(thisUUID, newList);
+			return;
+		}
+
+		ArrayList<String> thisList = Message.recentWhispers.get(thisUUID);
+
+		try { whisp_last = thisList.get(0); }
+		catch (Exception ignore) { whisp_last = null; }
+
+		try { whisp_1last = thisList.get(1); }
+		catch (Exception ignore) { whisp_1last = null; }
+
+		try { whisp_2last = thisList.get(2); }
+		catch (Exception ignore) { whisp_2last = null; }
+
+		if (whisp_last == null) {
+			thisList.add(0, thisMessage);
+			return;
+		}
+
+		if (whisp_1last == null && !whisp_last.equals(thisMessage)) {
+
+			thisList.add(1, thisList.get(0));
+			thisList.set(0, thisMessage);
+			return;
+		}
+
+		if (whisp_2last == null && whisp_1last != null && !whisp_1last.equals(whisp_last)) {
+
+			thisList.add(2, thisList.get(1));
+			thisList.set(1, thisList.get(0));
+			thisList.set(0, thisMessage);
+			return;
+		}
+
+		thisList.set(2, whisp_1last);
+		thisList.set(1, whisp_last);
+		thisList.set(0, thisMessage);
+	}
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+		Player p; String sendName; UUID pid;
 		
 		if (args.length < 2) {
-			sender.spigot().sendMessage(new TextComponent("§cIncorrect syntax. Syntax: /msg [player] [message]"));
+			sender.sendMessage("\u00A7cIncorrect syntax. Syntax: /msg [player] [message]");
 			return true;
 		}
 
-		String sendName;
-
 		if (sender instanceof Player) {
-			Player p = ((Player) sender);
+			p = ((Player) sender);
 			sendName = p.getName();
+			pid = p.getUniqueId();
 		} else {
 			sendName = "Console";
+			pid = null;
+		}
+
+		if (!sendName.equals("Console") && !AFK_warned.contains(pid)) {
+			AFK_warned.add(pid);
 		}
 
 		if (sender instanceof Player && !PlayerMeta.isAdmin((Player) sender)) Analytics.msg_cmd++;
 
 		// Get recipient
 		final Player recv = Bukkit.getPlayer(args[0]);
-		// Name to use [for stealth]
-		String recvName;
-		// Can't send to offline players
+
 		if (recv == null) {
-			sender.spigot().sendMessage(new TextComponent("§cPlayer is no longer online."));
+			sender.sendMessage("\u00A7cPlayer is no longer online.");
+			return true;
+
+		} else if (AFK._AFKs.contains(recv.getUniqueId())) {
+			sender.sendMessage("\u00A7cThis player is currently AFK.");
+
+			if (!AFK_warned.contains(recv.getUniqueId())) {
+				recv.sendMessage("\u00A7c" + sendName + " is trying to whisper you, but you are AFK.");
+				AFK_warned.add(recv.getUniqueId());
+			}
 			return true;
 		}
 
-		recvName = recv.getName();
+		String recvName = recv.getName();
 
 		// Concatenate all messages
 		final String[] msg = {""};
@@ -73,38 +130,40 @@ public class Message implements CommandExecutor {
 			Player player = (Player) sender;
 
 			if (PlayerMeta.isMuted(player)) {
-				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages."));
+				sender.sendMessage("\u00A7cYou can't send messages.");
 				return true;
 			}
 
 			if (PlayerMeta.isMuted(recv) || (Admin.MsgToggle.contains(recv.getUniqueId()) && !player.isOp())) {
-				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
+				sender.sendMessage("\u00A7cYou can't send messages to this person.");
 				return true;
 			}
 
 			if(PlayerMeta.isIgnoring(player.getUniqueId(), recv.getUniqueId())) {
-				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
+				sender.sendMessage("\u00A7cYou can't send messages to this person.");
 				return true;
 			}
 
 			if(PlayerMeta.isIgnoring(recv.getUniqueId(), player.getUniqueId())) {
-				sender.spigot().sendMessage(new TextComponent("§cYou can't send messages to this person."));
+				sender.sendMessage("\u00A7cYou can't send messages to this person.");
 				return true;
 			}
 		}
 
 		// Cycle through online players & if they're an admin with spy enabled, send
 		// them a copy of this message
-		String finalRecvName = recvName;
-		Bukkit.getOnlinePlayers().forEach(p -> { if (Admin.Spies.contains(p.getUniqueId())) {
-			p.spigot().sendMessage(new TextComponent("§5" + sendName + " to " + finalRecvName + ": " + msg[0]));
+		Bukkit.getOnlinePlayers().forEach(thisPlayer -> { if (Admin.Spies.contains(thisPlayer.getUniqueId())) {
+			thisPlayer.sendMessage("\u00A75" + sendName + " to " + recvName + ": " + msg[0]);
 		}});
 
+		// send the whisper
 		if (!Admin.Spies.contains(recv.getUniqueId())) {
-			recv.spigot().sendMessage(new TextComponent("§dfrom " + sendName + ": " + msg[0]));
+			recv.sendMessage("\u00A7dfrom " + sendName + ": " + msg[0]);
 		}
+		addRecentWhisper(recv.getUniqueId(), sendName + ": " + msg[0]);
+
 		if (sender instanceof Player && !Admin.Spies.contains(((Player) sender).getUniqueId())) {
-			sender.spigot().sendMessage(new TextComponent("§dto " + recvName + ": " + msg[0]));
+			sender.sendMessage("\u00A7dto " + recvName + ": " + msg[0]);
 		}
 		if (sender instanceof Player) {
 			Replies.put(recv.getUniqueId(), ((Player) sender).getUniqueId());
@@ -112,7 +171,6 @@ public class Message implements CommandExecutor {
 		if (sender instanceof Player) {
 			Replies.put(((Player) sender).getUniqueId(), recv.getUniqueId());
 		}
-
 		return true;
 	}
 }

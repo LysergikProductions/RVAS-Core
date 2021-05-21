@@ -11,10 +11,14 @@ commands:
    description: mute player
   dupehand:
    description: INTERNAL USE ONLY
+  ninjatp:
+    description: Requires SuperVanish
   vm:
    description: vote mute
   msg:
-   description: message
+   description: private message
+  w:
+   description: private message
   r:
    description: reply
   tps:
@@ -61,3 +65,9 @@ commands:
     description: do novel global events for all players
   ignore:
     description: ignore chat messages
+  afk:
+    description: toggle your afk status
+  last:
+    description: show last three whispers you received
+  fig:
+    description: modify plugin configs while in-game

@@ -1,30 +1,33 @@
 package core.events;
 
 import core.backend.Config;
-import core.backend.PlayerMeta;
-import core.backend.PlayerMeta.MuteType;
-import core.commands.Admin;
+import core.commands.AFK;
+import core.commands.restricted.Admin;
+import core.data.PlayerMeta;
+import core.data.PlayerMeta.MuteType;
 
 import java.util.*;
 import java.util.logging.Level;
+
+import core.commands.Message;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
-
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerCommandSendEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
+
+@SuppressWarnings("SpellCheckingInspection")
 public class ChatListener implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
-		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "r",
-		"redeem", "server", "sign", "stats", "suicide", "tdm", "tjm", "tps", "vm", "vote", "w", "ignore"
+		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "w", "r",
+		"redeem", "stats", "tdm", "tjm", "tps", "vm", "vote", "ignore", "server", "sign", "afk", "last"
 	));
 	
 	private HashMap<UUID, Long> lastChatTimes = new HashMap<>();
@@ -45,6 +48,17 @@ public class ChatListener implements Listener {
 		if (PlayerMeta.isMuted(player) || (PlayerMeta.MuteAll && !player.isOp()))
 			return;
 
+		// remove AFK statuses
+		UUID playerid = player.getUniqueId();
+		if (AFK._AFKs.contains(playerid)) {
+
+			Message.AFK_warned.remove(playerid);
+			AFK._AFKs.remove(playerid);
+
+			player.sendMessage(new TextComponent(ChatColor.GREEN +
+					"You are no longer AFK!").toLegacyText());
+		}
+
 		// -- CREATE PROPERTIES -- \\
 		
 		boolean doSend = true;
@@ -56,30 +70,30 @@ public class ChatListener implements Listener {
 
 		switch (e.getMessage().charAt(0)) {
 			case '>':
-				color = "§a"; // Greentext
+				color = "\u00A7a"; // Greentext
 				break;
 			case '$':
 				if (PlayerMeta.isDonator(player)) {
-					color = "§6"; // Donator text
+					color = "\u00A76"; // Donator text
 					break;
 				}
 			default:
-				color = "§f"; // Normal text
+				color = "\u00A7f"; // Normal text
 				break;
 		}
 
 		if (PlayerMeta.isDonator(player) && !Admin.UseRedName.contains(player.getUniqueId())) {
-			usernameColor = "§6";
+			usernameColor = "\u00A76";
 		} else if (Admin.UseRedName.contains(player.getUniqueId())) {
-			usernameColor = "§c";
+			usernameColor = "\u00A7c";
 		} else {
-			usernameColor = "§f";
+			usernameColor = "\u00A7f";
 		}
 
 		// -- STRING MODIFICATION -- //
 
 		// Remove section symbols
-		finalMessage = finalMessage.replace('§', ' ');
+		finalMessage = finalMessage.replace('\u00A7', ' ');
 
 		// -- CHECKS -- //
 
@@ -99,7 +113,7 @@ public class ChatListener implements Listener {
 				if(lastChatTimes.get(player.getUniqueId()) + Integer.parseInt(Config.getValue("chat.slow.time")) > System.currentTimeMillis()) {
 					
 					doSend = false;
-					player.spigot().sendMessage(msg);
+					player.sendMessage(msg.toLegacyText());
 					
 				} else doSend = true;
 				
@@ -114,7 +128,8 @@ public class ChatListener implements Listener {
 		if (doSend) {
 			String username = e.getPlayer().getName();
 
-			TextComponent finalCom = new TextComponent("§f<" + usernameColor + username + "§f> " + color + finalMessage);
+			TextComponent finalCom = new TextComponent("\u00A7f<" + usernameColor + username +
+					"\u00A7f> " + color + finalMessage);
 			
 			if(Config.getValue("spam.enable").equals("true")) {	
 				boolean censored = false;
@@ -127,7 +142,8 @@ public class ChatListener implements Listener {
 						censored = true;
 						
 						if(violationLevels.containsKey(e.getPlayer().getUniqueId())) {
-							violationLevels.put(e.getPlayer().getUniqueId(), violationLevels.get(e.getPlayer().getUniqueId()) + 1);
+							violationLevels.put(e.getPlayer().getUniqueId(),
+									violationLevels.get(e.getPlayer().getUniqueId()) + 1);
 						}
 						else {
 							violationLevels.put(e.getPlayer().getUniqueId(), 1);
@@ -166,21 +182,21 @@ public class ChatListener implements Listener {
 				if(e.getPlayer().isOp() && Config.getValue("spam.ops").equals("true")) {					
 					if(censored) {
 						
-						e.getPlayer().sendMessage(new TextComponent(
-								"§cYour message was flagged as spam, but since you are an OP, it was not filtered."));
+						e.getPlayer().sendMessage(
+								"\u00A7cYour message was flagged as spam, but since you are an OP, it was not filtered.");
 						censored = false;
 					}
 					violationLevels.remove(e.getPlayer().getUniqueId());
 				}
 			
 				if(censored) {
-					Bukkit.getLogger().log(Level.INFO, "§4<" + username + "> " + finalMessage + " [deleted, vl="
+					Bukkit.getLogger().log(Level.INFO, "\u00A74<" + username + "> " + finalMessage + " [deleted, vl="
 							+ violationLevels.get(e.getPlayer().getUniqueId())+"]");
 					return;
 				}
 			}
 			
-			Bukkit.getLogger().log(Level.INFO, "§f<" + usernameColor + username + "§f> " + color + finalMessage);
+			Bukkit.getLogger().log(Level.INFO, "\u00A7f<" + usernameColor + username + "\u00A7f> " + color + finalMessage);
 			Bukkit.getServer().spigot().broadcast(finalCom);
 		}
 	}
@@ -233,11 +249,11 @@ public class ChatListener implements Listener {
 		
 		if (e.getMessage().split(" ")[0].contains(":") && !e.getPlayer().isOp()) {
 			e.setCancelled(true);
-			e.getPlayer().spigot().sendMessage(new TextComponent("§cUnknown command."));
+			e.getPlayer().sendMessage("\u00A7cUnknown command.");
 			
 		} else if (e.getMessage().split("")[1].contains(Config.getValue("admin")) && !e.getPlayer().isOp()) {
 			e.setCancelled(true);
-			e.getPlayer().spigot().sendMessage(new TextComponent("§cCannot target admin account."));
+			e.getPlayer().sendMessage("\u00A7cCannot target admin account.");
 		}
 		return true;
 	}

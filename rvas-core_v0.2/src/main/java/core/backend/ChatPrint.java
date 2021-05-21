@@ -23,7 +23,11 @@ package core.backend;
  * 
  * */
 
-import core.objects.*;
+import core.data.StatsManager;
+import core.data.PlayerMeta;
+import core.data.SettingsManager;
+import core.data.objects.*;
+import core.backend.utils.Util;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -41,14 +45,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class ChatPrint {
 	
 	// - PLAYER STATS PAGES - \\
 
 	public static void printMcStats(Player receiver, OfflinePlayer target) {
-		
-		receiver.spigot().sendMessage(new TextComponent(""));
+		receiver.sendMessage("");
 		
 		int gaps_eaten = target.getStatistic(Statistic.USE_ITEM, Material.ENCHANTED_GOLDEN_APPLE);
 		int mined_obi = target.getStatistic(Statistic.MINE_BLOCK, Material.OBSIDIAN);
@@ -62,13 +65,12 @@ public class ChatPrint {
 		title.setColor(ChatColor.GOLD); title.setBold(true);
 		
 		TextComponent head = new TextComponent(sep, title, sep);
-		receiver.spigot().sendMessage(head);
+		receiver.sendMessage(head.toLegacyText());
 		
-		receiver.spigot().sendMessage(new TextComponent("Gaps Eaten: " + gaps_eaten));
-		receiver.spigot().sendMessage(new TextComponent("Mined Ancient Debris: " + mined_ancientDebris));
-
-		receiver.spigot().sendMessage(new TextComponent("Mined Obsidian: " + mined_obi));
-		receiver.spigot().sendMessage(new TextComponent("Placed Obsidian: " + placed_obi));
+		receiver.sendMessage("Gaps Eaten: " + gaps_eaten);
+		receiver.sendMessage("Mined Ancient Debris: " + mined_ancientDebris);
+		receiver.sendMessage("Mined Obsidian: " + mined_obi);
+		receiver.sendMessage("Placed Obsidian: " + placed_obi);
 	}
 	
 	public static void printLeaders(Player receiver, int lineLimit) {
@@ -91,7 +93,7 @@ public class ChatPrint {
 			
 			if (target_name == null) {
 				
-				TextComponent b = new TextComponent("[unknown], " + Utilities.timeToString(realLeaders_0_15.get(pid)));
+				TextComponent b = new TextComponent("[unknown], " + Util.timeToString(realLeaders_0_15.get(pid)));
 				TextComponent c = new TextComponent(a1, b);
 				
 				c.setColor(ChatColor.GOLD);
@@ -100,12 +102,12 @@ public class ChatPrint {
 				
 			} else { // this leader name != null
 				
-				int kills = PVPdata.getStats(offPlayer).killTotal;
-				int deaths = PVPdata.getStats(offPlayer).deathTotal;
-				String kd = PVPdata.getStats(offPlayer).kd;
+				int kills = StatsManager.getStats(offPlayer).killTotal;
+				int deaths = StatsManager.getStats(offPlayer).deathTotal;
+				String kd = StatsManager.getStats(offPlayer).kd;
 				
 				TextComponent a2 = new TextComponent(target_name + ", ");
-				TextComponent b = new TextComponent(Utilities.timeToString(realLeaders_0_15.get(pid)));
+				TextComponent b = new TextComponent(Util.timeToString(realLeaders_0_15.get(pid)));
 				
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
 				ClickEvent shortcut = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/stats " + target_name);
@@ -129,33 +131,35 @@ public class ChatPrint {
 		top5_head.setColor(ChatColor.GOLD); top5_head.setBold(true);
 		msg.setColor(ChatColor.GRAY); msg.setItalic(true);
 		
-		receiver.spigot().sendMessage(top5_head);
+		receiver.sendMessage(top5_head.toLegacyText());
 
 		int i = 0;
 		for (TextComponent ln: list) {
-			receiver.spigot().sendMessage(ln);
+			receiver.sendMessage(ln);
 			i++;
 
 			if (i >= lineLimit) break;
 		}
-		receiver.spigot().sendMessage(msg);
+		receiver.sendMessage(msg);
 	}
 	
 	public static void printStats(Player receiver, OfflinePlayer target) {
+		SettingsContainer receiverSettings = SettingsManager.getSettings(receiver);
+
 		Date date = new Date(target.getFirstPlayed());
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
-		PlayerSettings targetSettings = PlayerMeta.getSettings(target);
-		String setTimeZone = targetSettings.timezone;
+		String setTimeZone = receiverSettings.timezone.trim();
+		if (!setTimeZone.contains("/")) setTimeZone = setTimeZone.toUpperCase();
 
 		try {
-			sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
+			if (!setTimeZone.equals("")) sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			if (Config.debug) System.out.println(e.getMessage());
 		}
 
 		String firstPlayed = sdf.format(date);
-		String lastPlayed = sdf.format(new Date(target.getLastPlayed()));
+		String lastPlayed = sdf.format(new Date(target.getLastSeen()));
 
 		// get all uniquely styleable components
 		TextComponent title_pre = new TextComponent("--- ");
@@ -169,17 +173,17 @@ public class ChatPrint {
 		TextComponent rank_a = new TextComponent("Ranking: ");
 		TextComponent rank_b = new TextComponent("" + PlayerMeta.getRank(target));
 		TextComponent playtime_a = new TextComponent("Time played: ");
-		TextComponent playtime_b = new TextComponent(Utilities.timeToString(PlayerMeta.getPlaytime(target)));
+		TextComponent playtime_b = new TextComponent(Util.timeToString(PlayerMeta.getPlaytime(target)));
 
 		double hours = PlayerMeta.getPlaytime(target) / 3600;
 		Text playtime_hover = new Text(new DecimalFormat("0.00").format(hours) + " hours");
 		
 		TextComponent tkills_a = new TextComponent("PVP Kills: ");
-		TextComponent tkills_b = new TextComponent("" + PVPdata.getStats(target).killTotal);
+		TextComponent tkills_b = new TextComponent("" + StatsManager.getStats(target).killTotal);
 		TextComponent tdeaths_a = new TextComponent("PVP Deaths: ");
-		TextComponent tdeaths_b = new TextComponent("" + PVPdata.getStats(target).deathTotal);
+		TextComponent tdeaths_b = new TextComponent("" + StatsManager.getStats(target).deathTotal);
 		
-		String spawnKills = String.valueOf(PVPdata.getStats(target).spawnKills);
+		String spawnKills = String.valueOf(StatsManager.getStats(target).spawnKills);
 		HoverEvent hover_killDetail = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Spawn Kills: " + spawnKills));
 		HoverEvent hover_showHours = new HoverEvent(HoverEvent.Action.SHOW_TEXT, playtime_hover);
 		
@@ -211,9 +215,9 @@ public class ChatPrint {
 		TextComponent kd;
 		
 		try {
-			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(PVPdata.getStats(target).kd)));
+			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(StatsManager.getStats(target).kd)));
 		} catch (NumberFormatException e) {
-			kd = new TextComponent("K/D: " + PVPdata.getStats(target).kd);
+			kd = new TextComponent("K/D: " + StatsManager.getStats(target).kd);
 		}
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
@@ -222,7 +226,8 @@ public class ChatPrint {
 		ArrayList<TextComponent> statsLines; {
 			statsLines = new ArrayList<>(Arrays.asList(title, joined, lastSeen, rank, playtime));
 		}
-		
+
+		SettingsContainer targetSettings = SettingsManager.getSettings(target);
 		if (targetSettings.show_PVPstats) {
 			
 			if (targetSettings.show_kills ||
@@ -234,14 +239,14 @@ public class ChatPrint {
 		}
 		
 		// send final message to receiver
-		statsLines.forEach(ln -> receiver.spigot().sendMessage(ln));
+		statsLines.forEach(receiver::sendMessage);
 	}
 	
 	public static void printPlayerSettings(Player receiver) {
 		
 		OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(receiver.getUniqueId());
 		
-		PlayerSettings theseSettings = PlayerMeta.getSettings(offPlayer);
+		SettingsContainer theseSettings = SettingsManager.getSettings(offPlayer);
 		ArrayList<TextComponent> list = new ArrayList<>();
 		
 		TextComponent sep = new TextComponent("---");
@@ -300,6 +305,6 @@ public class ChatPrint {
 		list.add(showKD); list.add(showJoinMsgs); list.add(showDeathMsgs);
 
 		list.add(showTimeZone);
-		list.forEach(ln -> receiver.spigot().sendMessage(ln));
+		list.forEach(ln -> receiver.sendMessage(ln.toLegacyText()));
 	}
 }

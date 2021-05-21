@@ -1,7 +1,7 @@
 package core.commands;
 
 import core.backend.LagProcessor;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
 import java.text.DecimalFormat;
@@ -16,7 +16,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class Tps implements CommandExecutor {
 
 	@Override
@@ -30,7 +29,7 @@ public class Tps implements CommandExecutor {
 		if (!new IntRange(1, 20).containsInteger(tps)) {
 			TextComponent component = new TextComponent(
 					"TPS is either extremely low or still processing. Try again later.");
-			sender.spigot().sendMessage(component);
+			sender.sendMessage(component.toLegacyText());
 
 		} else {
 			String message_formatted_ticks_per_second = new DecimalFormat("0.000").format(tps);
@@ -66,8 +65,7 @@ public class Tps implements CommandExecutor {
 					msg.setColor(ChatColor.LIGHT_PURPLE);
 					break;
 			}
-			sender.spigot().sendMessage(msg);
-		}
-		return true;
+			sender.sendMessage(msg.toLegacyText());
+		} return true;
 	}
 }

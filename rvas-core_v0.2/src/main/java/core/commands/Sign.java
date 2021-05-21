@@ -1,7 +1,7 @@
 package core.commands;
 
 import core.backend.ItemCheck;
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
 import java.math.BigInteger;
@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.lang.WordUtils;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,9 +23,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import org.apache.commons.lang.WordUtils;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class Sign implements CommandExecutor {
 
 	@Override
@@ -45,14 +43,13 @@ public class Sign implements CommandExecutor {
 		if (!thisStack.getType().equals(Material.AIR)) {
 			ItemStack item = p.getInventory().getItemInMainHand();
 			if (sign(item, p)) {
-				p.spigot()
-						.sendMessage(new TextComponent(
-								"§a§i" + WordUtils.capitalizeFully(item.getType().toString().replaceAll("_", " "))
-										+ "§r§a was successfully signed."));
+				p.sendMessage("\u00A7a\u00A7i" +
+						WordUtils.capitalizeFully(item.getType().toString().replaceAll("_", " ")) +
+						"\u00A7r\u00A7a was successfully signed.");
 				return true;
 			}
 		}
-		p.spigot().sendMessage(new TextComponent("§cYou cannot sign this item."));
+		p.sendMessage("\u00A7cYou cannot sign this item.");
 		return true;
 	}
 
@@ -92,11 +89,11 @@ public class Sign implements CommandExecutor {
 		}
 
 		DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
-		String verifier = "§f§oThis item is signed.";
-		String date = "§fat: " + dateTimeInstance.format(Calendar.getInstance().getTime());
-		String signer = "§fby: " + p.getName();
-		String coords = "§fin: " + xi + " " + yi + " " + zi;
-		String verify = "§fverify: " + hashtext;
+		String verifier = "\u00A7f\u00A7oThis item is signed.";
+		String date = "\u00A7fat: " + dateTimeInstance.format(Calendar.getInstance().getTime());
+		String signer = "\u00A7fby: " + p.getName();
+		String coords = "\u00A7fin: " + xi + " " + yi + " " + zi;
+		String verify = "\u00A7fverify: " + hashtext;
 
 		ItemMeta im;
 

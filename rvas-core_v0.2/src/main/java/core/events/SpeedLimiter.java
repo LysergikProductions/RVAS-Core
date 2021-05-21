@@ -2,8 +2,9 @@ package core.events;
 
 import core.Main;
 import core.backend.*;
-import core.commands.Admin;
+import core.data.PlayerMeta;
 import core.tasks.Analytics;
+import core.commands.restricted.Admin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,16 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.event.EventHandler;
+import org.bukkit.World;
+import org.bukkit.util.Vector;
+
 import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.util.Vector;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class SpeedLimiter implements Listener {
@@ -34,7 +35,7 @@ public class SpeedLimiter implements Listener {
 	private static long lastCheck = -1;
 	public static int totalKicks = 0;
 
-	@SuppressWarnings("deprecation") // Speed Monitor
+	// Speed Monitor
 	public static void scheduleSlTask() {
 		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, () -> {
@@ -43,23 +44,24 @@ public class SpeedLimiter implements Listener {
 				lastCheck = System.currentTimeMillis();
 				return;
 			}
-			
-			// set speeds for each tier
+
 			double tier1 = Double.parseDouble(Config.getValue("speedlimit.tier_one"));
 			double tier2 = Double.parseDouble(Config.getValue("speedlimit.tier_two"));
 			double tier3 = Double.parseDouble(Config.getValue("speedlimit.tier_three"));
 			double tier4 = Double.parseDouble(Config.getValue("speedlimit.tier_four"));
 			double tier5 = Double.parseDouble(Config.getValue("speedlimit.tier_five"));
+			double thatNetherLimit = Double.parseDouble(Config.getValue("speedlimit.nether_roof"));
 			/*
-				default tier1 = 76.0;
-				default tier2 = 48.0;
-				default tier3 = 32.0;
-				default tier4 = 26.0;
-				default tier5 = 20.0;
+				default tier1 = 76.0
+				default tier2 = 48.0
+				default tier3 = 32.0
+				default tier4 = 26.0
+				default tier5 = 20.0
+				default thatNetherLimit = 25.0
 			*/
 			double medium_kick = Integer.parseInt(Config.getValue("speedlimit.medium_kick"));
 			double hard_kick = Integer.parseInt(Config.getValue("speedlimit.hard_kick"));
-			final double speed_limit;
+			final double speed_limit; final double nether_limit;
 
 			long now = System.currentTimeMillis();
 			double duration = (now - lastCheck) / 1000.0;
@@ -79,15 +81,29 @@ public class SpeedLimiter implements Listener {
 			} else if (tps < 10.0 && tps >= 7.0) {
 				speed_limit = tier4;
 				
-			} else if (tps < 7) {
+			} else if (tps < 7.0) {
 				speed_limit = tier5;
+
 			} else {
 				speed_limit = tier1;
 			}
 
-			speeds.clear();
+			if (thatNetherLimit == -1) {
+				nether_limit = 8192.0;
 
-			Bukkit.getOnlinePlayers().stream().filter(player -> !PlayerMeta.isAdmin(player)).forEach(player -> {
+			} else if (thatNetherLimit > 8192) {
+				nether_limit = 8192.0;
+
+			} else if (thatNetherLimit < 5) {
+				nether_limit = 5.0;
+
+			} else {
+				nether_limit = thatNetherLimit;
+			}
+
+			speeds.clear();
+			Bukkit.getOnlinePlayers().stream().filter(player ->
+					!PlayerMeta.isAdmin(player)).forEach(player -> {
 				
 				double final_limit = speed_limit;
 				
@@ -125,6 +141,17 @@ public class SpeedLimiter implements Listener {
 				
 				// allow ops to bypass higher tier, but not the base, speed limiters
 				if (player.isOp()) final_limit = 76.00;
+
+				boolean toNetherGrace = false;
+
+				// adjust speed limit for nether roof
+				if (nether_limit < speed_limit &&
+						new_location.getWorld().getEnvironment().equals(World.Environment.NETHER) &&
+						new_location.getY() > 127) {
+
+					final_limit = nether_limit;
+					toNetherGrace = true;
+				}
 				
 				Vector v = new_location.subtract(previous_location).toVector();
 				double speed = Math.round(v.length() / duration * 10.0) / 10.0;
@@ -148,7 +175,7 @@ public class SpeedLimiter implements Listener {
 				}
 
 				// medium-kick: set grace period to 2 sec
-				if (speed > medium_kick) {
+				if (speed > medium_kick || toNetherGrace) {
 					
 					if (grace > 2)
 						grace = 2;
@@ -169,7 +196,8 @@ public class SpeedLimiter implements Listener {
 						Analytics.speed_warns++;
 						
 						// display speed with one decimal
-						player.spigot().sendMessage(new TextComponent("§4Your speed is " + speed + ", speed limit is " + final_limit + ". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));
+						player.sendMessage("\u00A74Your speed is " + speed + ", speed limit is " + final_limit +
+								". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s"));
 					}
 					--grace;
 					gracePeriod.put(player.getUniqueId(), grace);

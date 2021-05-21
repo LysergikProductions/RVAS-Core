@@ -1,6 +1,6 @@
-package core.commands;
+package core.commands.restricted;
 
-import core.backend.PlayerMeta;
+import core.data.PlayerMeta;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,27 +13,27 @@ import org.bukkit.command.ConsoleCommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@SuppressWarnings("SpellCheckingInspection")
 public class SetDonator implements CommandExecutor {
 
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
-			sender.spigot().sendMessage(new TextComponent("§cYou can't run this."));
+			sender.sendMessage("\u00A7cYou can't run this.");
 			return true;
 		}
 		if (args.length != 1) {
-			sender.spigot().sendMessage(new TextComponent("§cInvalid syntax. Syntax: /setdonator [name]"));
+			sender.sendMessage("\u00A7cInvalid syntax. Syntax: /setdonator [name]");
 			return true;
 		}
 		Player donator = Bukkit.getPlayer(args[0]);
 		if (donator == null) {
-			sender.spigot().sendMessage(new TextComponent("§cPlayer is not online."));
+			sender.sendMessage("\u00A7cPlayer is not online.");
 			return true;
 		}
 		PlayerMeta.setDonator(donator, !PlayerMeta.isDonator(donator));
 		if (PlayerMeta.isDonator(donator)) {
 			Bukkit.getServer().spigot()
-					.broadcast(new TextComponent("§6" + donator.getName() + " just donated to the server!"));
+					.broadcast(new TextComponent("\u00A76" + donator.getName() + " just donated to the server!"));
 		}
 		return true;
 	}

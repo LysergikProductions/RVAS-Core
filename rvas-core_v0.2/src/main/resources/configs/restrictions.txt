@@ -5,9 +5,15 @@
 // - Only allow owner to use `/give` | true == disabled for regular ops
 protect.ops.give = true
 
+// - Prevent block duplication in creative mode on block placement
+consume.creative.blocks = true
+
 // ------------------- //
 // --- SPEED LIMIT --- //
 // ------------------- //
+
+// - Nether roof specific speed-limit | -1 == disabled
+speedlimit.nether_roof = 25
 
 // - Medium kick speed limit (grace period is 2 seconds)
 speedlimit.medium_kick = 80
