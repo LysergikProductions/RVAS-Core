@@ -35,6 +35,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -126,25 +127,29 @@ public class Chunks {
         return -1;
     }
 
-    // clears a 3x3 chunk grid around the provided chunk
-    public static int clearChunkItems(Chunk chunk) {
-
+    private static Map<String, Chunk> getChunk3x3(Chunk chunk) {
         @NotNull World world = chunk.getWorld();
 
-        Map<String, Chunk> chunks = new HashMap<>();{
-            chunks.put("C", chunk);
-            chunks.put("N", world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
-            chunks.put("NE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() - 1));
-            chunks.put("E", world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
-            chunks.put("SE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() + 1));
-            chunks.put("S", world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
-            chunks.put("SW", world.getChunkAt(chunk.getX() - 1, chunk.getZ() + 1));
-            chunks.put("W", world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
-            chunks.put("NW", world.getChunkAt(chunk.getX() - 1, chunk.getZ() - 1));
+        Map<String, Chunk> out = new HashMap<>();{
+            out.put("C", chunk);
+            out.put("N", world.getChunkAt(chunk.getX(), chunk.getZ() - 1));
+            out.put("NE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() - 1));
+            out.put("E", world.getChunkAt(chunk.getX() + 1, chunk.getZ()));
+            out.put("SE", world.getChunkAt(chunk.getX() + 1, chunk.getZ() + 1));
+            out.put("S", world.getChunkAt(chunk.getX(), chunk.getZ() + 1));
+            out.put("SW", world.getChunkAt(chunk.getX() - 1, chunk.getZ() + 1));
+            out.put("W", world.getChunkAt(chunk.getX() - 1, chunk.getZ()));
+            out.put("NW", world.getChunkAt(chunk.getX() - 1, chunk.getZ() - 1));
         }
+        return out;
+    }
+
+    // clears a 3x3 chunk grid around the provided chunk
+    public static int clearChunkItems(Chunk chunk) {
+        Map<String, Chunk> chunks_3x3 = getChunk3x3(chunk);
 
         int counter = 0;
-        for (Chunk thisChunk: chunks.values()) {
+        for (Chunk thisChunk: chunks_3x3.values()) {
             for (Entity entity: thisChunk.getEntities()) {
                 if (entity.getType().equals(EntityType.DROPPED_ITEM)) {
 
@@ -154,6 +159,19 @@ public class Chunks {
             }
         }
         return counter;
+    }
+
+    // TODO: make sure to change to counting lag blocks and not ban blocks
+    public static int countChunkLagBlocks(Player thisPlayer) {
+
+        Chunk playerChunk = thisPlayer.getChunk();
+        Map<String, Chunk> chunks_3x3 = getChunk3x3(playerChunk);
+
+        int count = 0;
+        for (Chunk thisChunk: chunks_3x3.values()) {
+            count += banBlockCounter(thisChunk);
+        }
+        return count;
     }
 
     @Deprecated

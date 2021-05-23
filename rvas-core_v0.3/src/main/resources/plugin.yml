@@ -71,3 +71,5 @@ commands:
     description: show last three whispers you received
   fig:
     description: modify plugin configs while in-game
+  check:
+    description: for ops to check for lag blocks near players
