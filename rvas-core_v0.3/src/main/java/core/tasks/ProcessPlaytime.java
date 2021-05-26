@@ -12,8 +12,12 @@ import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.LagProcessor;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.TimerTask;
+
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 // Playtime processor (every 20 ticks)
 public class ProcessPlaytime extends TimerTask {
@@ -27,8 +31,14 @@ public class ProcessPlaytime extends TimerTask {
 	private static int lastNewChunks = 0;
 	private static double lastTPS = 0.00;
 
+	public static HashMap<Player, Double> syncedKicks = new HashMap<>();
+
 	@Override
 	public void run() {
+		for (Map.Entry thisPlayer: syncedKicks.entrySet()) {
+			ServerMeta.kickWithDelay((Player)thisPlayer.getKey(), (Double)thisPlayer.getValue());
+			syncedKicks.remove((Player)thisPlayer.getKey());
+		}
 
 		int currentNewChunks = ChunkManager.newCount;
 		double onlinePlayers = Bukkit.getOnlinePlayers().size();

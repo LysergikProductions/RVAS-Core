@@ -1,9 +1,9 @@
 package core.events;
 
-import core.Main;
 import core.backend.*;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
+import core.tasks.ProcessPlaytime;
 import core.commands.restricted.Admin;
 
 import java.util.ArrayList;
@@ -38,10 +38,7 @@ public class SpeedLimiter implements Listener {
 	public static double currentSpeedLimit = 96;
 
 	// Speed Monitor
-	public static void scheduleSlTask() {
-		
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, () -> {
-
+	public static void speedCheck() {
 			if (lastCheck < 0) {
 				lastCheck = System.currentTimeMillis();
 				return;
@@ -159,11 +156,11 @@ public class SpeedLimiter implements Listener {
 				
 				Vector v = new_location.subtract(previous_location).toVector();
 				double speed = Math.round(v.length() / duration * 10.0) / 10.0;
+				Double rc_delay = Double.parseDouble(Config.getValue("speedlimit.rc_delay"));
 				
 				if (speed > final_limit+ 1 && (Config.getValue("speedlimit.agro").equals("true") || Admin.disableWarnings)) {
-					
-					ServerMeta.kickWithDelay(player,
-							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
+
+					ProcessPlaytime.syncedKicks.putIfAbsent(player, rc_delay);
 					totalKicks++; Analytics.speed_kicks++;
 					return;
 				}
@@ -172,8 +169,7 @@ public class SpeedLimiter implements Listener {
 				if (speed > hard_kick) {
 					
 					gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
-					ServerMeta.kickWithDelay(player,
-							Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
+					ProcessPlaytime.syncedKicks.putIfAbsent(player, rc_delay);
 					totalKicks++; Analytics.speed_kicks++;
 					return;
 				}
@@ -191,8 +187,7 @@ public class SpeedLimiter implements Listener {
 					if (grace == 0) {
 						
 						gracePeriod.put(player.getUniqueId(), GRACE_PERIOD);
-						ServerMeta.kickWithDelay(player,
-								Double.parseDouble(Config.getValue("speedlimit.rc_delay")));
+						ProcessPlaytime.syncedKicks.putIfAbsent(player, rc_delay);
 						totalKicks++; Analytics.speed_kicks++;
 						return;
 						
@@ -215,24 +210,16 @@ public class SpeedLimiter implements Listener {
 				locs.put(player.getUniqueId(), player.getLocation().clone());
 				speeds.put(player.getName(), speed);
 			});
-		}, 20L, 20L);
-	}
+		}
 
 	@EventHandler
-	public void onTeleport(PlayerTeleportEvent e)
-	{
-		tped.add(e.getPlayer().getUniqueId());
-	}
+	public void onTeleport(PlayerTeleportEvent e) { tped.add(e.getPlayer().getUniqueId()); }
 
 	@EventHandler
-	public void onDeath(PlayerRespawnEvent e)
-	{
-		tped.add(e.getPlayer().getUniqueId());
-	}
+	public void onDeath(PlayerRespawnEvent e) { tped.add(e.getPlayer().getUniqueId()); }
 
 	@EventHandler
-	public void onLeave(PlayerQuitEvent e)
-	{
+	public void onLeave(PlayerQuitEvent e) {
 		tped.remove(e.getPlayer().getUniqueId());
 		locs.remove(e.getPlayer().getUniqueId());
 	}

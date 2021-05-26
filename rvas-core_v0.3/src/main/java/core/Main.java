@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.0"; public static final int build = 266;
+	public static final String version = "0.3.0"; public static final int build = 267;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -197,6 +197,9 @@ public class Main extends JavaPlugin {
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		} catch (Exception e) { e.printStackTrace(); }
 
+		try { new SpeedFinder().start();
+		} catch (Exception e) { e.printStackTrace(); }
+
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Loading event listeners");
 		System.out.println("[core.main] _______________________");
@@ -262,7 +265,7 @@ public class Main extends JavaPlugin {
 				Material.WITHER_SKELETON_SKULL, Material.DRAGON_HEAD));
 
 		// Enable speed limit
-		SpeedLimiter.scheduleSlTask();
+		SpeedLimiter.speedCheck();
 		
 		// Enable discord notifications for this instance
 		DiscordHandler = new DiscordBot();
