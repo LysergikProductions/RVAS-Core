@@ -45,6 +45,7 @@ import org.bukkit.entity.Player;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class ChunkManager implements Listener {
+	final static int TE_limiter = 16384;
 
 	static Material br = Material.BEDROCK;
 	static Material portal = Material.END_PORTAL;
@@ -100,7 +101,7 @@ public class ChunkManager implements Listener {
 		}
 		
 		// limit count to 2 sub-chunks worth of ban blocks per chunk
-		if (total_count > 8192) {
+		if (total_count > TE_limiter) {
 			
 			System.out.println("WARN: TOO MANY BAN BLOCKS. Removing 90% of them..");
 			removed_blocks = Chunks.banBlockRemover(chunk, (int)Math.rint((double)total_count * 0.9));

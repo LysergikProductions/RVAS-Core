@@ -59,6 +59,7 @@ public class Check implements CommandExecutor {
                     Objects.requireNonNull(Bukkit.getPlayer((UUID)thisEntry.getKey()))
                             .getName() + " | " + thisEntry.getValue() + " lag blocks");
         }
+        player.sendMessage("End of list..");
         return true;
     }
 }

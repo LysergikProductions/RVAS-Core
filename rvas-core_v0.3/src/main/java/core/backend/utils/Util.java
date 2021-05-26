@@ -164,4 +164,13 @@ public class Util {
     public static int getRandomNumber(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
     }
+
+    //This code is contributed by Surendra_Gangwar (in-ellipsoid point-check)
+    public static int isInEllipse(int h, int k, int x, int y, int a, int b) {
+        // h, k are center point | x, y are co-ords to check | a, b are ellipse radii
+        int p = ((int)Math.pow((x - h), 2) / (int)Math.pow(a, 2))
+                + ((int)Math.pow((y - k), 2) / (int)Math.pow(b, 2));
+
+        return p;
+    }
 }

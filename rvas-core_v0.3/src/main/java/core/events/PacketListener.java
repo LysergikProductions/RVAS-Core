@@ -89,14 +89,15 @@ public class PacketListener implements Listener {
 				List<NbtBase<?>> blockEntityData = thisPacket.getListNbtModifier().read(0);
 				int thisSize = blockEntityData.size();
 
-				if (thisSize > 8192) {
+				// limit BE list size in Map_Chunk packets
+				if (thisSize > ChunkManager.TE_limiter) {
 					event.setCancelled(true); // <- if remainder of block throws exception, players are still protected
 
 					System.out.println(
 							"WARN: Packet MAP_CHUNK contains " + thisSize + " entries in getListNbtModifier().read(0)");
 
 					if (Config.getValue("remove.chunk_bans").equals("true")) {
-						System.out.println("Calling ChunkListener.removeChunkBan()..");
+						System.out.println("Calling ChunkManager.removeChunkBan()..");
 
 						// count the block entities and remove any discovered chunk bans
 						Chunk thisChunk = thisWorld.getChunkAt(chunk_x, chunk_z);
@@ -110,7 +111,8 @@ public class PacketListener implements Listener {
 						}
 
 					} else { // truncate the list and fix the packet
-						List<NbtBase<?>> truncatedList = new ArrayList<>(blockEntityData.subList(0, 8192));
+						List<NbtBase<?>> truncatedList = new ArrayList<>(
+								blockEntityData.subList(0, ChunkManager.TE_limiter));
 
 						thisPacket.getListNbtModifier().write(0, truncatedList);
 						event.setCancelled(false);
