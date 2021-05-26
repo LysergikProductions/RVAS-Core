@@ -35,6 +35,8 @@ public class SpeedLimiter implements Listener {
 	private static long lastCheck = -1;
 	public static int totalKicks = 0;
 
+	public static double currentSpeedLimit = 96;
+
 	// Speed Monitor
 	public static void scheduleSlTask() {
 		
@@ -87,6 +89,8 @@ public class SpeedLimiter implements Listener {
 			} else {
 				speed_limit = tier1;
 			}
+
+			currentSpeedLimit = speed_limit;
 
 			if (thatNetherLimit == -1) {
 				nether_limit = 8192.0;

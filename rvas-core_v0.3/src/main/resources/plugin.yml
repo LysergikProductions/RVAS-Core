@@ -73,3 +73,5 @@ commands:
     description: modify plugin configs while in-game
   check:
     description: for ops to check for lag blocks near players
+  speeds:
+    description: open player-speeds GUI

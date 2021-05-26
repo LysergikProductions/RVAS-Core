@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.0"; public static final int build = 265;
+	public static final String version = "0.3.0"; public static final int build = 266;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -171,6 +171,9 @@ public class Main extends JavaPlugin {
 
 		System.out.println("/check");
 		Objects.requireNonNull(this.getCommand("check")).setExecutor(new Check());
+
+		System.out.println("/speeds");
+		Objects.requireNonNull(this.getCommand("speeds")).setExecutor(new Speeds());
 
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");

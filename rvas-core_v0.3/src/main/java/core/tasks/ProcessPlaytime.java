@@ -2,6 +2,7 @@ package core.tasks;
 
 import core.data.PlayerMeta;
 import core.commands.VoteMute;
+import core.commands.restricted.Speeds;
 import core.events.ChatListener;
 import core.events.ChunkManager;
 
@@ -99,5 +100,8 @@ public class ProcessPlaytime extends TimerTask {
 
 		// Log this
 		Scheduler.setLastTaskId("oneSecondTasks");
+
+		// updateSpeedsGUI
+		Speeds.updateGUI();
 	}
 }

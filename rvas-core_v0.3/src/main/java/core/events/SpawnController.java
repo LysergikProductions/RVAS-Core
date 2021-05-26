@@ -248,7 +248,7 @@ public class SpawnController implements Listener {
 		}
 		
 		// find then set a random spawn location if the player doesn't have a set spawn
-		if (Config.getValue("spawn.random").equals("true")) {			
+		if (Config.getValue("spawn.random").equals("true")) {
 			if (!event.isBedSpawn() && !event.isAnchorSpawn()) {
 
 				if (Config.getValue("spawn.circular").equals("true")) thisLocation = getRandomEllipseSpawn(thisWorld, thisLocation);
@@ -332,6 +332,9 @@ public class SpawnController implements Listener {
 			config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
 			config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
 			config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+
+			config_radius_x = Double.parseDouble(Config.getValue("spawn.radius.X"));
+			config_radius_z = Double.parseDouble(Config.getValue("spawn.radius.Z"));
 
 			return true;
 
