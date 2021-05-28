@@ -41,13 +41,10 @@ import org.bukkit.OfflinePlayer;
 
 public class PVP implements Listener {
 	
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	static boolean verbose = Boolean.parseBoolean(Config.getValue("verbose"));
-	
 	@EventHandler
 	public void onKill(PlayerDeathEvent event) {
 		
-		if (debug && verbose) System.out.println("[core.events.pvp] onKill has been called");
+		if (Config.debug && Config.verbose) System.out.println("[core.events.pvp] onKill has been called");
 		
 		Player killed = event.getEntity();
 		UUID killedID = killed.getUniqueId();
@@ -58,7 +55,7 @@ public class PVP implements Listener {
 
 		String killedName = killed.getName();
 		
-		if (debug) {
+		if (Config.debug) {
 			try {
 				killerName = Objects.requireNonNull(killer).getName();
 				killerLoc = killer.getLocation().getX() +
@@ -103,11 +100,11 @@ public class PVP implements Listener {
 		if (Double.isNaN(config_min_z)) min_z = -420.0; else min_z = config_min_z;
 
 		if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {
-			if (debug) System.out.println(killedName + " was killed in the spawn region!");
+			if (Config.debug) System.out.println(killedName + " was killed in the spawn region!");
 
 			if (victim_playtime < 3600.0) {
 
-				if (debug) System.out.println(killedName + " was also a new player!");
+				if (Config.debug) System.out.println(killedName + " was also a new player!");
 				StatsManager.incSpawnKill(killer, 1);
 			}
 		}

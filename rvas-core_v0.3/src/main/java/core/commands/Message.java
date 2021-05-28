@@ -6,6 +6,8 @@ import core.data.PlayerMeta;
 
 import java.util.*;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -82,6 +84,7 @@ public class Message implements CommandExecutor {
 			pid = p.getUniqueId();
 		} else {
 			sendName = "Console";
+			p = null;
 			pid = null;
 		}
 
@@ -90,6 +93,16 @@ public class Message implements CommandExecutor {
 		}
 
 		if (sender instanceof Player && !PlayerMeta.isAdmin((Player) sender)) Analytics.msg_cmd++;
+
+		// remove AFK statuses
+		if (AFK._AFKs.contains(pid)) {
+
+			Message.AFK_warned.remove(pid);
+			AFK._AFKs.remove(pid);
+
+			if (p != null) p.sendMessage(new TextComponent(ChatColor.GREEN +
+					"You are no longer AFK!").toLegacyText());
+		}
 
 		// Get recipient
 		final Player recv = Bukkit.getPlayer(args[0]);

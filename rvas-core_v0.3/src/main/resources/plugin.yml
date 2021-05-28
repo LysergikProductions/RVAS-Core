@@ -62,7 +62,7 @@ commands:
   info:
    desription: get useful information for ops
   global:
-    description: do novel global events for all players
+    description: execute novel global events for all players
   ignore:
     description: ignore chat messages
   afk:

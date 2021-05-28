@@ -5,7 +5,10 @@ import core.commands.restricted.Admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -41,6 +44,17 @@ public class Local implements CommandExecutor {
         if (PlayerMeta.isMuted(sender)) {
             sender.sendMessage("\u00A7cYou can't send messages.");
             return true;
+        }
+
+        // remove AFK statuses
+        UUID pid = sender.getUniqueId();
+        if (AFK._AFKs.contains(pid)) {
+
+            Message.AFK_warned.remove(pid);
+            AFK._AFKs.remove(pid);
+
+            sender.sendMessage(new TextComponent(ChatColor.GREEN +
+                    "You are no longer AFK!").toLegacyText());
         }
 
         Location senderLoc = sender.getLocation();

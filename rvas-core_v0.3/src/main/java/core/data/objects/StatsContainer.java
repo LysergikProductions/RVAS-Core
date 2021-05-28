@@ -39,8 +39,6 @@ public class StatsContainer implements Serializable {
 	public int deathTotal; public String kd;
 	public int spawnKills;
 	
-	static boolean debug = Boolean.parseBoolean(Config.getValue("debug"));
-	
 	public StatsContainer(UUID playerid, int killTotal, int deathTotal, String kd, int spawnKills) {
 
 		this.playerid = playerid; this.killTotal = killTotal; this.deathTotal = deathTotal;
@@ -62,7 +60,7 @@ public class StatsContainer implements Serializable {
 		OfflinePlayer player = Bukkit.getOfflinePlayer(playerid);
 		String player_name = player.getName();
 		
-		if (debug) {
+		if (Config.debug) {
 			System.out.println("Parsed ign: " + player_name);
 			System.out.println("Parsed id: " + playerid);
 		}
@@ -70,21 +68,21 @@ public class StatsContainer implements Serializable {
 		int killTotal;
 		
 		try {killTotal = Integer.parseInt(stats[1]);} catch (Exception e) {killTotal = 0;}
-		if (debug) System.out.println("Parsed kills: " + killTotal);
+		if (Config.debug) System.out.println("Parsed kills: " + killTotal);
 		
 		int deathTotal;
 		
 		try {deathTotal = Integer.parseInt(stats[2]);} catch (Exception e) {deathTotal = 0;}
-		if (debug) System.out.println("Parsed deaths: " + deathTotal);
+		if (Config.debug) System.out.println("Parsed deaths: " + deathTotal);
 		
 		String kd;
 		
 		try {kd = stats[3];} catch (Exception e) {kd = "null";}
-		if (debug) System.out.println("Parsed k/d: " + kd);
+		if (Config.debug) System.out.println("Parsed k/d: " + kd);
 		
 		int spawnKills;		
 		try {spawnKills = Integer.parseInt(stats[4]);} catch (Exception e) {spawnKills = 0;}
-		if (debug) System.out.println("Parsed spawn kills: " + spawnKills);
+		if (Config.debug) System.out.println("Parsed spawn kills: " + spawnKills);
 
 		return new StatsContainer(playerid, killTotal, deathTotal, kd, spawnKills);
 	}

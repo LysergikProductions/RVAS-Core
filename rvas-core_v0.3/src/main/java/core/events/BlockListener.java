@@ -298,6 +298,12 @@ public class BlockListener implements Listener {
 				System.out.println("WARN: " + placer_name + " just placed bedrock at " + block_loc);
 			}
 		}
+
+		if (Config.getValue("item.banned.player_heads").equals("true")) {
+			if (blockType.equals(Material.PLAYER_HEAD) || blockType.equals(Material.PLAYER_WALL_HEAD)) {
+				event.setCancelled(true);
+			}
+		}
 		
 		if (Config.debug && Config.verbose) {
 			long endTime = System.nanoTime();

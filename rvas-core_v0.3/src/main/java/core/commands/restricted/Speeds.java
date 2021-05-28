@@ -8,6 +8,7 @@ import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class Speeds implements CommandExecutor {
 
-    static Player thisPlayer = null;
-    static Inventory speedGUI; static {
+    private static Player thisPlayer = null;
+    public static Inventory speedGUI; static {
         speedGUI = Bukkit.createInventory(thisPlayer, 54, ChatColor.RED + "Speeds List");
     }
 
