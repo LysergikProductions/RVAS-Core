@@ -1,4 +1,4 @@
-# RVAS-Core v0.2
+# RVAS-Core v0.3
 The core plugin behind RVAS (Real Vanilla Anarchy Survival)
 
 The main goal is to give server operators everything they need to get started with their own *anarchy-style* minecraft server

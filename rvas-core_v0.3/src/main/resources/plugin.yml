@@ -1,0 +1,81 @@
+main: core.Main
+name: core
+version: 0.3
+api-version: 1.16
+depend: [ ProtocolLib ]
+author: sinse420
+commands:
+  kit:
+   description: funny command
+  mute:
+   description: mute player
+  dupehand:
+   description: INTERNAL USE ONLY
+  ninjatp:
+    description: Requires SuperVanish
+  vm:
+   description: vote mute
+  msg:
+   description: private message
+  w:
+   description: private message
+  r:
+   description: reply
+  tps:
+   description: tps
+  say:
+   description: say
+  discord:
+   description: discord
+  kill:
+   description: kill
+  setdonator:
+   description: sd
+  about:
+   description: about
+  vote:
+   description: vote
+  restart:
+   description: restart
+  sign:
+   description: sign
+  admin:
+   description: admin
+  stats:
+   description: stats
+  redeem:
+   description: redeem
+  prison:
+   description: RVAS lag-prisoners
+  tjm:
+   description: tjm
+  server:
+   description: server
+  help:
+   desription: help
+  repair:
+   desription: repair structures
+  slowchat:
+   desription: toggle slow chat
+  backup:
+   desription: backup RVAS-core managed data
+  info:
+   desription: get useful information for ops
+  global:
+    description: do novel global events for all players
+  ignore:
+    description: ignore chat messages
+  afk:
+    description: toggle your afk status
+  last:
+    description: show last three whispers you received
+  fig:
+    description: modify plugin configs while in-game
+  check:
+    description: for ops to check for lag blocks near players
+  speeds:
+    description: open player-speeds GUI
+  local:
+    description: send messages to player in render distance
+  l:
+    description: send messages to player in render distance
