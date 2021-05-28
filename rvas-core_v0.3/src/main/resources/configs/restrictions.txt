@@ -63,14 +63,14 @@ protect.banned.place.ops = true
 // --- BLOCK BREAK PATCHES --- //
 // --------------------------- //
 
-// - Protect bedrock floor (overworld/nether) / roof (nether)
+// - Protect bedrock floor (overworld/nether) / roof (nether) from creative-mode players
 //** DOES NOT PREVENT VANILLA BLOCK BREAK EXPLOITS**//
 // You can enable and disable those exploits in the paper.yml config-file on your server ("allow-permanent-block-break-exploits")
 
 protect.bedrock.roof = true
 protect.bedrock.floor = true
 
-// - Repair (/setblock) bedrock floor (overworld/nether) / roof (nether)
+// - Repair (/setblock) bedrock floor (overworld/nether) / roof (nether) when loading chunks
 chunk.load.repair_roof = false
 chunk.load.repair_floor = false
 

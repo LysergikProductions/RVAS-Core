@@ -64,7 +64,7 @@ vote.heal = false
 // - Enable vote muting. false = disabled || true = enabled [default]
 mute.enabled = true
 
-// - Percent of population that needs to vote before a mute is ordered. Default: 40
+// - Percent of population that needs to vote to mute a player for ~1 hour
 mute.pop = 51
 
 // - Enable voting by already-muted persons. false = disabled || true = enabled [default]

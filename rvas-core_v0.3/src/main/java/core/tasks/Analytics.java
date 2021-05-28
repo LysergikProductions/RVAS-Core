@@ -38,31 +38,18 @@ import org.bukkit.Bukkit;
 public class Analytics extends TimerTask {
 	
 	// connection trackers
-	public static int total_joins = 0;
-	public static int new_players = 0;
+	public static int total_joins, new_players, speed_kicks = 0;
 	
 	// performance trackers
-	public static int new_chunks = 0;
-	public static int loaded_chunks = 0;
-	public static int speed_warns = 0;
-	public static int speed_kicks = 0;
-	public static int wither_spawns = 0;
-	public static int failed_wither_spawns = 0;
-	public static int removed_skulls = 0;
+	public static int new_chunks, loaded_chunks, speed_warns,
+			wither_spawns, failed_wither_spawns, removed_skulls = 0;
 	
 	// commands trackers
-	public static int about_cmd = 0; public static int admin_cmd = 0;
-	public static int discord_cmd = 0; public static int help_cmd = 0;
-	public static int kill_cmd = 0; public static int kit_cmd = 0;
+	public static int about_cmd, admin_cmd, discord_cmd, help_cmd,
+			kill_cmd, kit_cmd, w_cmd, r_cmd, msg_cmd, local_cmd,
+			server_cmd, sign_cmd, tjm_cmd, tps_cmd, vm_cmd,
+			stats_total, stats_help, stats_info = 0;
 
-	public static int w_cmd = 0; public static int r_cmd = 0;
-	public static int msg_cmd = 0; public static int server_cmd = 0;
-	public static int sign_cmd = 0;
-	
-	public static int stats_total = 0; public static int tjm_cmd = 0;
-	public static int stats_help = 0; public static int tps_cmd = 0;
-	public static int stats_info = 0; public static int vm_cmd = 0;
-	
 	public static String performance_work_path = FileManager.plugin_work_path
 			+ "analytics/RVAS_Analytics-performance.csv";
 	public static String commands_work_path = FileManager.plugin_work_path
@@ -94,21 +81,10 @@ public class Analytics extends TimerTask {
 		sb.append("\"/msg\","); sb.append("\"/server\",");
 		sb.append("\"/sign\","); sb.append("\"Overall /stats\",");
 		sb.append("\"/stats help\","); sb.append("\"/stats info\",");
-		sb.append("\"/tjm\","); sb.append("\"/tps\","); sb.append("\"/vm\"");
+		sb.append("\"/tjm\","); sb.append("\"/tps\",");
+		sb.append("\"/vm\""); sb.append("\"/local\"");
 		
 		CSV_cmdHeader = sb.toString();
-	}
-
-	public static String CSV_illHeader; static {
-		StringBuilder sb = new StringBuilder(128);
-
-		sb.append("\"Date\","); sb.append("\"Name\",");
-		sb.append("\"UUID\","); sb.append("\"IP\",");
-		sb.append("\"Speed Kicks\","); sb.append("\"LagBLock Overload\",");
-		sb.append("\"Imprisoned\","); sb.append("\"VM Muted\",");
-		sb.append("\"Temp Muted\","); sb.append("\"Perm Muted\",");
-
-		CSV_illHeader = sb.toString();
 	}
 
 	public static boolean doAnalytics = Boolean.parseBoolean(Config.getValue("analytics.enabled"));
@@ -125,7 +101,7 @@ public class Analytics extends TimerTask {
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");		
 		String current_date = formatter.format(date);
 		
-		File performanceFile; File commandsFile;
+		File performanceFile, commandsFile;
 		
 		try {			
 			performanceFile = new File(performance_work_path);
@@ -160,7 +136,8 @@ public class Analytics extends TimerTask {
 				current_date,
 				about_cmd, admin_cmd, discord_cmd, help_cmd, kill_cmd,
 				kit_cmd, w_cmd, r_cmd, msg_cmd, server_cmd, sign_cmd,
-				stats_total, stats_help, stats_info, tjm_cmd, tps_cmd, vm_cmd
+				stats_total, stats_help, stats_info, tjm_cmd, tps_cmd,
+				vm_cmd, local_cmd
 			);
 		
 		// append data to file
@@ -178,7 +155,7 @@ public class Analytics extends TimerTask {
 		about_cmd = 0; admin_cmd = 0; discord_cmd = 0; help_cmd = 0;
 		kill_cmd = 0; kit_cmd = 0; w_cmd = 0; r_cmd = 0; msg_cmd = 0;
 		server_cmd = 0; sign_cmd = 0; stats_total = 0; stats_help = 0;
-		stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0;
+		stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0; local_cmd = 0;
 		
 		if (Config.debug && Config.verbose) System.out.println("[core.tasks.analytics] Analytics updated!");
 	}
@@ -215,8 +192,8 @@ public class Analytics extends TimerTask {
 			String date,
 			int about_cmd, int admin_cmd, int discord_cmd, int help_cmd, int kill_cmd,
 			int kit_cmd, int w_cmd, int r_cmd, int msg_cmd, int server_cmd, int sign_cmd,
-			int stats_total, int stats_help, int stats_info, int tjm_cmd, int tps_cmd, int vm_cmd
-			) {
+			int stats_total, int stats_help, int stats_info, int tjm_cmd, int tps_cmd, int vm_cmd,
+			int local_cmd) {
 		
 		StringBuilder sb = new StringBuilder(128);
 		
@@ -237,7 +214,8 @@ public class Analytics extends TimerTask {
 		sb.append(String.valueOf(stats_info) + ',');
 		sb.append(String.valueOf(tjm_cmd) + ',');
 		sb.append(String.valueOf(tps_cmd) + ',');
-		sb.append(vm_cmd);
+		sb.append(String.valueOf(vm_cmd) + ',');
+		sb.append(local_cmd);
 		
 		return sb.toString();
 	}
@@ -251,16 +229,13 @@ public class Analytics extends TimerTask {
 			w.write(thisLine + "\n");
 			w.close();
 			
-		  } catch (IOException e) {
-			  throw new UncheckedIOException(e);
-		  }
+		  } catch (IOException e) { throw new UncheckedIOException(e); }
 	}
 
 	public static boolean updateConfigs() {
 
 		try {
 			doAnalytics = Boolean.parseBoolean(Config.getValue("analytics.enabled"));
-
 			return true;
 
 		} catch (Exception e) {

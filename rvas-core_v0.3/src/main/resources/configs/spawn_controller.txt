@@ -3,7 +3,7 @@
 // ########################################## //
 
 // - Join Messages
-join.message.firstJoin = "Welcome to real-anarchy. Use /help for commands available to you."
+join.message.firstJoin = "Welcome to the freest Anarchy server! Use /help for commands available to you."
 join.message.everyJoin = "Vote-dupe is now active! Dupe your main-hand using /vote and voting for us!"
 
 // - Define a rectangular area for spawn
@@ -12,7 +12,7 @@ spawn.max.Z = 420.0
 spawn.min.X = -420.0
 spawn.min.Z = -420.0
 
-// - Define a circular area for spawn (COMING SOON!)
+// - Define a circular area for spawn
 spawn.radius.X = 420.0
 spawn.radius.Z = 420.0
 
@@ -30,7 +30,7 @@ spawn.random = true
 // - Random-spawn on first join
 spawn.random.join = true
 
-// - Use circular Spawn Region? (COMING SOON!)
+// - Use circular Spawn Region?
 spawn.circular = false
 
 // - Prevent players spawning in water

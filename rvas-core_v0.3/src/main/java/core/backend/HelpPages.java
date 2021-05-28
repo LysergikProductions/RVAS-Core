@@ -24,6 +24,7 @@ package core.backend;
 
 import java.util.*;
 
+import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
@@ -35,20 +36,37 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class HelpPages {
 
 	public static void helpGeneral(Player receiver, int page) {
-
 		int maxPage = 2;
-		page = (page > maxPage) ? maxPage : Math.max(page, 1);
 
-		receiver.sendMessage("\u00A76--- Help Page " + page + "/" + maxPage + " ---");
+		page = (page > maxPage) ? maxPage : Math.max(page, 1);
+		int nextPageInt = page + 1; int prevPageInt = page - 1;
+
+		ClickEvent prevPage, nextPage; TextComponent finalFooter;
+		TextComponent footer = new TextComponent(" Help Page " + page + "/" + maxPage + " ");
+
+		prevPage = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/help " + prevPageInt);
+		nextPage = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/help " + nextPageInt);
+
+		TextComponent prev = new TextComponent(ChatColor.DARK_AQUA + "<<");
+		TextComponent next = new TextComponent(ChatColor.DARK_AQUA + ">>");
+
+		if (prevPageInt >= 1) prev.setClickEvent(prevPage);
+		if (nextPageInt <= maxPage) next.setClickEvent(nextPage);
+		finalFooter = new TextComponent(prev, footer, next);
+
+		receiver.sendMessage("");
+		receiver.sendMessage(finalFooter);
+
 		switch (page) {
 			case 1:
 				Arrays.asList(
-						"\u00A76/stats help: \u00A77Learn how to hide your PVP stats and more",
 						"\u00A76/sign: \u00A77Sign the item you are holding. *Cannot undo or overwrite",
 						"\u00A76/discord: \u00A77Join the discord",
 						"\u00A76/vote: \u00A77Dupe the item in your hand. Only occurs after voting",
-						"\u00A76/afk: \u00A77Prevent whispers and tell the whisperer you are AFK",
-						"\u00A76/last: \u00A77Show the last three whispers you've received"
+						"\u00A76/local: \u00A77Send a message only to players in your render distance",
+						"\u00A76/afk: \u00A77Block whispers and tell the whisperer that you are AFK",
+						"\u00A76/last: \u00A77Show the last three whispers you've received",
+						"\u00A76/stats help: \u00A77Learn how to hide your PVP stats and more"
 
 				).forEach(receiver::sendMessage);
 				break;
@@ -66,33 +84,31 @@ public class HelpPages {
 				).forEach(receiver::sendMessage);
 				break;
 		}
-		receiver.sendMessage("\u00A76--- Help Page " + page + " ---");
+		receiver.sendMessage(finalFooter);
 	}
 
 	public static void helpStats(Player receiver) {
+		receiver.sendMessage("");
 
-		TextComponent head = new TextComponent("--- /stats help ---");
-		head.setColor(ChatColor.BLUE);
+		TextComponent head = new TextComponent(
+				ChatColor.DARK_AQUA + "<<" +
+						ChatColor.WHITE + " /stats help " +
+								ChatColor.DARK_AQUA + ">>");
 
 		TextComponent self_a = new TextComponent("/stats");
 		TextComponent players_a = new TextComponent("/stats [player name]");
 		TextComponent leaders_a = new TextComponent("/stats 5");
 		TextComponent mcstats_a = new TextComponent("/stats mc");
 
-		TextComponent self_b = new TextComponent(" : Shows you your stats");
-		TextComponent players_b = new TextComponent(" : Shows the stats for that player");
-		TextComponent leaders_b = new TextComponent(" : Shows the top 5 players (by play-time)");
-		TextComponent mcstats_b = new TextComponent(" : Shows you some of your MC-tracked world-stats");
+		TextComponent self_b = new TextComponent(ChatColor.GRAY + " : Shows you your stats");
+		TextComponent players_b = new TextComponent(ChatColor.GRAY + " : Shows the stats for that player");
+		TextComponent leaders_b = new TextComponent(ChatColor.GRAY + " : Shows the top 5 players (by play-time)");
+		TextComponent mcstats_b = new TextComponent(ChatColor.GRAY + " : Shows you some of your MC-tracked world-stats");
 
 		TextComponent toggle_info = new TextComponent(
 				"Use /stats kills | deaths | kd, to toggle hiding them from public view!");
 
-		toggle_info.setColor(ChatColor.GOLD); toggle_info.setItalic(true);
-
-		self_b.setColor(ChatColor.GRAY);
-		players_b.setColor(ChatColor.GRAY);
-		leaders_b.setColor(ChatColor.GRAY);
-		mcstats_b.setColor(ChatColor.GRAY);
+		toggle_info.setColor(ChatColor.DARK_AQUA); toggle_info.setItalic(true);
 
 		self_a.setItalic(true);
 		players_a.setItalic(true);

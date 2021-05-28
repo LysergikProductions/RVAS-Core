@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Predicate;
 
+import core.events.BlockListener;
 import org.bukkit.World;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -190,7 +191,6 @@ public class Chunks {
         return counter;
     }
 
-    // TODO: make sure to change to counting lag blocks and not ban blocks
     public static int countChunkLagBlocks(Player thisPlayer) {
 
         Chunk playerChunk = thisPlayer.getChunk();
@@ -199,6 +199,12 @@ public class Chunks {
         int count = 0;
         for (Chunk thisChunk: chunks_3x3.values()) {
             count += banBlockCounter(thisChunk);
+
+            for (Material thisMat: BlockListener.LagMats) {
+                if (thisMat != Material.GRAVEL) {
+                    count += Chunks.blockCounter(thisChunk, thisMat);
+                }
+            }
         }
         return count;
     }

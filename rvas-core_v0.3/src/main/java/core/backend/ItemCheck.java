@@ -134,7 +134,9 @@ public class ItemCheck {
 			ItemMeta newMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
 
 			// Rebuild Basic Item Attribs
-			if (item.getItemMeta().hasDisplayName()) newMeta.displayName(item.getItemMeta().displayName());
+			if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(
+					Objects.requireNonNull(item.getItemMeta().displayName()).toString());
+
 			if (item.getItemMeta().hasLore()) newMeta.setLore(item.getItemMeta().getLore());
 
 			// Rebuild Item Enchants
