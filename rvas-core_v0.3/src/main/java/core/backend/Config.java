@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class Config {
-	public static int version = 22;
+	public static int version = 42;
 
 	private static HashMap<String, String> _values = new HashMap<>();
 	public static String getValue(String key)

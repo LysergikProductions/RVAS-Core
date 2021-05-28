@@ -22,7 +22,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
-@SuppressWarnings("SpellCheckingInspection")
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ChatListener implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(

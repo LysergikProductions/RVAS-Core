@@ -70,7 +70,7 @@ public class PacketListener implements Listener {
 		});
 	}
 
-	// listen for PacketPLayOutMapChunk packets to prevent chunk-bans in already loaded chunks
+	// listen for PacketPLayOutMapChunk packets to prevent chunk-bans
 	public static void S2C_MapChunkPackets() {
 
 		PacketManager.addPacketListener(new PacketAdapter(

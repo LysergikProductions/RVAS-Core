@@ -49,6 +49,7 @@ public class Local implements CommandExecutor {
         // Get recipients in-range
         ArrayList<Player> receivers = new ArrayList<>();
         for (Player thisPlayer: sender.getServer().getOnlinePlayers()) {
+            if (thisPlayer.getWorld() != sender.getWorld()) continue;
 
             Location thisLoc = thisPlayer.getLocation();
             thisLoc.setY(0);

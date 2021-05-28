@@ -39,6 +39,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class LagManager implements Listener, Runnable {
 	
 	// clear skulls every 1200 server-ticks (~ 60 to 120 seconds)

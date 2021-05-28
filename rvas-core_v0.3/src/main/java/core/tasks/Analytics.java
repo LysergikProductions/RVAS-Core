@@ -82,7 +82,7 @@ public class Analytics extends TimerTask {
 		sb.append("\"/sign\","); sb.append("\"Overall /stats\",");
 		sb.append("\"/stats help\","); sb.append("\"/stats info\",");
 		sb.append("\"/tjm\","); sb.append("\"/tps\",");
-		sb.append("\"/vm\""); sb.append("\"/local\"");
+		sb.append("\"/vm\","); sb.append("\"/local\"");
 		
 		CSV_cmdHeader = sb.toString();
 	}

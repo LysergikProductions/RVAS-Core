@@ -3,14 +3,14 @@
 // ########################################### //
 
 // Internal use only. Do not change or you'll break the entire thing.
-config.version = 22
+config.version = 42
 
 // ------------------ //
 // --- IMPORTANT  --- //
 // ------------------ //
 
 // - !! UUID for the full-access owner's account !! - \\
-adminid = my-account-user-id-w/the-dashes
+adminid = my-full-account-user-id-with-dashes
 
 // - !! IGN for the full-access owner's account !! - \\
 admin = myAccountInGameName

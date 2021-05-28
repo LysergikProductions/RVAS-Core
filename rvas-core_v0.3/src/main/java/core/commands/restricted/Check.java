@@ -45,7 +45,7 @@ public class Check implements CommandExecutor {
         if (!player.isOp()) { player.sendMessage("You can't use this!"); return false; }
 
         for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
-            int thisCount = 0;
+            int thisCount;
 
             if (!thisPlayer.isOp()) {
                 thisCount = Chunks.countChunkLagBlocks(thisPlayer);

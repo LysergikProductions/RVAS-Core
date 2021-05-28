@@ -157,9 +157,11 @@ public class FileManager {
 		// Load then check the main config version \\
 		Config.load();
 		if (Integer.parseInt(Config.getValue("config.version")) < Config.version) {
+			InputStream core_server_config_template;
 
-			core_server_config.delete();
-			InputStream core_server_config_template = (Main.class.getResourceAsStream("/configs/config.txt"));
+			if (core_server_config.delete()) {
+				core_server_config_template = (Main.class.getResourceAsStream("/configs/config.txt"));
+			} else core_server_config_template = null;
 
 			if (core_server_config_template != null) {
 				Files.copy(core_server_config_template, Paths.get(plugin_work_path + "/configs/config.txt"));
