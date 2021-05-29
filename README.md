@@ -1,3 +1,5 @@
+<a href="https://minecraft-mp.com/server-s287184" target="_blank"><img src="https://minecraft-mp.com/banner-287184.png" border="0"></a>
+
 # RVAS-Core v0.3
 The core plugin behind RVAS (Real Vanilla Anarchy Survival)
 
