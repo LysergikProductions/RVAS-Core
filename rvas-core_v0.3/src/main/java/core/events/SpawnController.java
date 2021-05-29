@@ -314,7 +314,7 @@ public class SpawnController implements Listener {
 			if (!playedBefore) {
 				sessionNewPlayers++; Analytics.new_players++;
 
-				System.out.println(joiner_name + "is playing for the first time!");
+				System.out.println(joiner_name + " is playing for the first time!");
 				Util.notifyOps(new TextComponent(joiner_name + " is a brand new uuid!"));
 				
 				thisLocation = getRandomSpawn(thisWorld, thisLocation);

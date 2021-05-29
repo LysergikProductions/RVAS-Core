@@ -60,16 +60,12 @@ public class Chunks {
                                 thisMat.equals(Material.ENCHANTING_TABLE) ||
                                 thisMat.equals(Material.BEE_NEST) ||
                                 thisMat.equals(Material.BEEHIVE) ||
-                                thisMat.toString().endsWith("SIGN") ||
                                 thisMat.equals(Material.TRAPPED_CHEST) ||
                                 thisMat.equals(Material.BREWING_STAND) ||
                                 thisMat.equals(Material.DROPPER) ||
                                 thisMat.equals(Material.DISPENSER) ||
                                 thisMat.equals(Material.HOPPER) ||
-                                thisMat.equals(Material.BEACON) ||
                                 thisMat.equals(Material.DAYLIGHT_DETECTOR) ||
-                                thisMat.equals(Material.CAULDRON) ||
-                                thisMat.equals(Material.CONDUIT) ||
                                 thisMat.equals(Material.BELL) ||
                                 thisMat.equals(Material.LECTERN)) {
 

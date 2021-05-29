@@ -48,6 +48,9 @@ protect.gamemode.onbreak = true
 // - Enable vote reward (duplicate item stack in player's main hand)
 vote.enable = true
 
+// - The URL users can click on when they use the `/vote` command
+vote.url = https://minecraft-mp.com/server/287184/vote/
+
 // - Enable or disable manual execution of vote reward
 vote.debug = false
 

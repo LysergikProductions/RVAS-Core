@@ -52,6 +52,7 @@ public class Check implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (!(commandSender instanceof Player)) return false;
 
         thisPlayer = (Player)commandSender;
         if (!thisPlayer.isOp()) { thisPlayer.sendMessage("You can't use this!"); return false; }

@@ -135,7 +135,7 @@ public class ItemCheck {
 
 			// Rebuild Basic Item Attribs
 			if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(
-					Objects.requireNonNull(item.getItemMeta().displayName()).toString());
+					Objects.requireNonNull(item.getItemMeta().getDisplayName()));
 
 			if (item.getItemMeta().hasLore()) newMeta.setLore(item.getItemMeta().getLore());
 
