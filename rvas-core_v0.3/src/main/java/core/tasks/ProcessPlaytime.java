@@ -1,10 +1,11 @@
 package core.tasks;
 
-import core.data.PlayerMeta;
 import core.commands.VoteMute;
+import core.commands.restricted.Check;
 import core.commands.restricted.Speeds;
 import core.events.ChatListener;
 import core.events.ChunkManager;
+import core.data.PlayerMeta;
 
 import core.backend.Config;
 import core.backend.Scheduler;
@@ -17,11 +18,9 @@ import org.bukkit.Bukkit;
 
 // Playtime processor (every 20 ticks)
 public class ProcessPlaytime extends TimerTask {
-	
 	public static long lowTpsCounter = 0;
-	
-	private static long lastTime = 0;
-	private static long lastHour = 0;
+
+	private static long lastTime, lastHour = 0;
 	private static long timeTillReset = 3600000;
 
 	private static int lastNewChunks = 0;
@@ -101,7 +100,8 @@ public class ProcessPlaytime extends TimerTask {
 		// Log this
 		Scheduler.setLastTaskId("oneSecondTasks");
 
-		// updateSpeedsGUI
+		// updateGUIs
 		Speeds.updateGUI();
+		Check.updateGUI();
 	}
 }

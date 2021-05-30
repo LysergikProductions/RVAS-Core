@@ -25,10 +25,12 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.data.Aliases;
-import core.data.PlayerMeta;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
+import core.data.Aliases;
+import core.data.PlayerMeta;
+import core.commands.restricted.Speeds;
+import core.commands.restricted.Check;
 
 import java.util.*;
 import net.md_5.bungee.api.ChatColor;
@@ -187,5 +189,22 @@ public class OpListener implements Listener {
 				}
 			}
 		}
+	}
+
+	// prevent moving GUI items into player inventories
+	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onInventoryClick(InventoryClickEvent event) {
+
+		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
+		else if (event.getClickedInventory() == Check.lagCheckGUI) event.setCancelled(true);
+	}
+
+	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onInventoryMove(InventoryMoveItemEvent event) {
+
+		if (event.getInitiator() == Speeds.speedGUI) event.setCancelled(true);
+		else if (event.getDestination() == Speeds.speedGUI) event.setCancelled(true);
+		else if (event.getInitiator() == Check.lagCheckGUI) event.setCancelled(true);
+		else if (event.getDestination() == Check.lagCheckGUI) event.setCancelled(true);
 	}
 }

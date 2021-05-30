@@ -41,11 +41,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.ShulkerBox;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.Material;
+//import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -254,20 +255,6 @@ public class BlockListener implements Listener {
 				placer.sendMessage(new TextComponent(
 						ChatColor.RED + "You can only place shulkers in survival mode").toLegacyText());
 			}
-
-			ShulkerBox thisShulk;
-			try {
-				thisShulk = (ShulkerBox)event.getBlockReplacedState();
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				thisShulk = null;
-			}
-
-			if (thisShulk != null) {
-				for (ItemStack thisStack: thisShulk.getInventory().getContents()) {
-					ItemCheck.IllegalCheck(thisStack, "Placed Shulker", placer);
-				}
-			}
 		}
 		
 		// anti roof-placement
@@ -298,6 +285,12 @@ public class BlockListener implements Listener {
 				System.out.println("WARN: " + placer_name + " just placed bedrock at " + block_loc);
 			}
 		}
+
+		if (Config.getValue("item.banned.player_heads").equals("true")) {
+			if (blockType.equals(Material.PLAYER_HEAD) || blockType.equals(Material.PLAYER_WALL_HEAD)) {
+				event.setCancelled(true);
+			}
+		}
 		
 		if (Config.debug && Config.verbose) {
 			long endTime = System.nanoTime();
@@ -309,6 +302,14 @@ public class BlockListener implements Listener {
 		}
 	}
 
+	// Check items moved from shulker boxes for legality
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public static void onInventoryMove(InventoryMoveItemEvent event) {
+		if (event.getSource() instanceof ShulkerBox || event.getInitiator() instanceof ShulkerBox) {
+			ItemCheck.IllegalCheck(event.getItem(), "Placed Shulker", null);
+		}
+	}
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public static void onCreativePlace(BlockPlaceEvent event) {
 		Player thisPlayer = event.getPlayer();
@@ -316,14 +317,14 @@ public class BlockListener implements Listener {
 		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL) ||
 				PlayerMeta.isAdmin(thisPlayer)) return;
 
-		int stackCount = event.getItemInHand().getAmount();
+		/*int stackCount = event.getItemInHand().getAmount();
 
 		ItemStack realStack = thisPlayer.getActiveItem();
 		if (consumeCreativeBlocks) {
 			// TODO: figure out why these don't work:
 			// Objects.requireNonNull(realStack).setAmount(stackCount-1);
 			// usedItemStack.setAmount(stackCount-1);
-		}
+		}*/
 
 		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
 	}

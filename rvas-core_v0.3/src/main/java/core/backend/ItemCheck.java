@@ -1,18 +1,21 @@
 package core.backend;
 
+import core.data.PlayerMeta;
 import java.util.*;
 
-import core.data.PlayerMeta;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.ShulkerBox;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.block.EnderChest;
+import org.bukkit.block.ShulkerBox;
+
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionType;
 
-@SuppressWarnings({"SpellCheckingInspection"})
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ItemCheck {
 
 	public static ArrayList<Material> Banned = new ArrayList<>(), Special = new ArrayList<>(), LegalHeads = new ArrayList<>();
@@ -134,8 +137,12 @@ public class ItemCheck {
 			ItemMeta newMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
 
 			// Rebuild Basic Item Attribs
-			if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(
-					Objects.requireNonNull(item.getItemMeta().displayName()).toString());
+			if (item instanceof EnderChest) {
+				newMeta.setDisplayName("Ender Chest");
+			} else {
+				if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(
+						Objects.requireNonNull(item.getItemMeta().getDisplayName()));
+			}
 
 			if (item.getItemMeta().hasLore()) newMeta.setLore(item.getItemMeta().getLore());
 

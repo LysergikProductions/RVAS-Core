@@ -1,5 +1,6 @@
 package core.commands;
 
+import core.backend.Config;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +15,7 @@ public class VoteCmd implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
 		TextComponent message = new TextComponent("Click this message to vote.");
-		message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://minecraftservers.org/server/612428"));
+		message.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Config.getValue("vote.url")));
 		message.setColor(ChatColor.GOLD);
 
 		sender.sendMessage(message);

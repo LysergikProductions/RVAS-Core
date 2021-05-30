@@ -5,9 +5,14 @@ import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
 import java.util.Arrays;
-import org.bukkit.entity.Player;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,19 +27,30 @@ public class Reply implements CommandExecutor {
 		String sendName = p.getName();
 
 		if (args.length < 1) {
-			sender.sendMessage("\u00A7cIncorrect syntax. Syntax: /r [message]");
+			p.sendMessage("\u00A7cIncorrect syntax. Syntax: /r [message]");
 			return true;
 		}
 		if (!Message.Replies.containsKey(p.getUniqueId())) {
-			sender.sendMessage("\u00A7cNobody to reply to.");
+			p.sendMessage("\u00A7cNobody to reply to.");
 			return true;
 		}
 		if (Message.Replies.get(p.getUniqueId()) == null) {
-			sender.sendMessage("\u00A7cCan't reply to Console.");
+			p.sendMessage("\u00A7cCan't reply to Console.");
 			return true;
 		}
 		
 		if (!PlayerMeta.isAdmin(p)) Analytics.r_cmd++;
+
+		// remove AFK statuses
+		UUID pid = p.getUniqueId();
+		if (AFK._AFKs.contains(pid)) {
+
+			Message.AFK_warned.remove(pid);
+			AFK._AFKs.remove(pid);
+
+			p.sendMessage(new TextComponent(ChatColor.GREEN +
+					"You are no longer AFK!").toLegacyText());
+		}
 
 		// Get recipient
 		Player recv = Bukkit.getPlayer(Message.Replies.get(p.getUniqueId()));

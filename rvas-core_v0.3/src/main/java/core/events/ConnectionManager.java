@@ -194,7 +194,7 @@ public class ConnectionManager implements Listener {
 
 	private static final String[] motds = {
 		"⛏ i'm not high, we're high"  , "⛏ vanilla exploits rejoice!" , "⛏ needs more carpet" ,
-		"⛏ imagine imagining..", "⛏ now with less fat!", "⛏ what is sleep?"
+		"⛏ imagine imagining..", "⛏ what is sleep?"
 	};
 
 	private Random r = new Random();
