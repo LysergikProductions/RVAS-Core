@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.1"; public static final int build = 274;
+	public static final String version = "0.3.1"; public static final int build = 275;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -200,8 +200,7 @@ public class Main extends JavaPlugin {
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		// TODO: reset to 15000L
-		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 40L, 40L);
+		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		} catch (Exception e) { e.printStackTrace(); }
 
 		System.out.println("[core.main] _______________________");

@@ -15,7 +15,7 @@ import org.bukkit.block.ShulkerBox;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionType;
 
-@SuppressWarnings({"SpellCheckingInspection"})
+@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ItemCheck {
 
 	public static ArrayList<Material> Banned = new ArrayList<>(), Special = new ArrayList<>(), LegalHeads = new ArrayList<>();

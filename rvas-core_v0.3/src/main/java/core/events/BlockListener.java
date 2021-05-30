@@ -46,7 +46,7 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.ShulkerBox;
-import org.bukkit.inventory.ItemStack;
+//import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -317,14 +317,14 @@ public class BlockListener implements Listener {
 		if (thisPlayer.getGameMode().equals(GameMode.SURVIVAL) ||
 				PlayerMeta.isAdmin(thisPlayer)) return;
 
-		int stackCount = event.getItemInHand().getAmount();
+		/*int stackCount = event.getItemInHand().getAmount();
 
 		ItemStack realStack = thisPlayer.getActiveItem();
 		if (consumeCreativeBlocks) {
 			// TODO: figure out why these don't work:
 			// Objects.requireNonNull(realStack).setAmount(stackCount-1);
 			// usedItemStack.setAmount(stackCount-1);
-		}
+		}*/
 
 		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
 	}

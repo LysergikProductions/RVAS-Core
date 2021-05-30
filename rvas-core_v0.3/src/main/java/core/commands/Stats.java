@@ -22,6 +22,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class Stats implements CommandExecutor {
 	public static int sessionUses = 0;
 
