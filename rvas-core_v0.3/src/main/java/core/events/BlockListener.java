@@ -36,16 +36,20 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import org.bukkit.block.ShulkerBox;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import org.bukkit.block.Block;
-import org.bukkit.block.ShulkerBox;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Container;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -254,20 +258,6 @@ public class BlockListener implements Listener {
 				placer.sendMessage(new TextComponent(
 						ChatColor.RED + "You can only place shulkers in survival mode").toLegacyText());
 			}
-
-			ShulkerBox thisShulk;
-			try {
-				thisShulk = (ShulkerBox)event.getBlockReplacedState();
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-				thisShulk = null;
-			}
-
-			if (thisShulk != null) {
-				for (ItemStack thisStack: thisShulk.getInventory().getContents()) {
-					ItemCheck.IllegalCheck(thisStack, "Placed Shulker", placer);
-				}
-			}
 		}
 		
 		// anti roof-placement
@@ -312,6 +302,14 @@ public class BlockListener implements Listener {
 			placer.sendMessage(new TextComponent(
 					"PlaceTime: " + new DecimalFormat("0.000").format((double)duration/1000000.0) + " ms")
 					.toLegacyText());
+		}
+	}
+
+	// Check items moved from shulker boxes for legality
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public static void onInventoryMove(InventoryMoveItemEvent event) {
+		if (event.getSource() instanceof ShulkerBox || event.getInitiator() instanceof ShulkerBox) {
+			ItemCheck.IllegalCheck(event.getItem(), "Placed Shulker", null);
 		}
 	}
 

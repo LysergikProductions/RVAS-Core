@@ -5,6 +5,7 @@ import java.util.*;
 import core.data.PlayerMeta;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.EnderChest;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -134,8 +135,12 @@ public class ItemCheck {
 			ItemMeta newMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
 
 			// Rebuild Basic Item Attribs
-			if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(
-					Objects.requireNonNull(item.getItemMeta().getDisplayName()));
+			if (item instanceof EnderChest) {
+				newMeta.setDisplayName("Ender Chest");
+			} else {
+				if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(
+						Objects.requireNonNull(item.getItemMeta().getDisplayName()));
+			}
 
 			if (item.getItemMeta().hasLore()) newMeta.setLore(item.getItemMeta().getLore());
 
