@@ -1,16 +1,18 @@
 package core.backend;
 
+import core.data.PlayerMeta;
 import java.util.*;
 
-import core.data.PlayerMeta;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.EnderChest;
-import org.bukkit.block.ShulkerBox;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.block.EnderChest;
+import org.bukkit.block.ShulkerBox;
+
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionType;
 
 @SuppressWarnings({"SpellCheckingInspection"})

@@ -26,9 +26,9 @@ package core.tasks;
 import core.backend.Scheduler;
 import core.backend.Config;
 
+import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -40,7 +40,8 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 
 @SuppressWarnings("deprecation")
 public class AutoAnnouncer extends TimerTask {
-	
+
+	String lastAnnouncement = "";
 	private final Random r = new Random();
 
 	static List<String> announcements; static {
@@ -70,23 +71,34 @@ public class AutoAnnouncer extends TimerTask {
 
 		int size = announcements.size();
 		int rnd = r.nextInt(size+1);
-		final String msg;
-		final TextComponent sourceMsg = source;
+		String tryMsg;
 
 		if (rnd == size || size == 0) {
-			Bukkit.spigot().broadcast(sourceMsg);
-			return;
+			tryMsg = "default";
+		} else try {
+			tryMsg = announcements.get(rnd);
+		} catch (IndexOutOfBoundsException ignore) {
+			tryMsg = "default";
+		}
 
-		} else {
-			try {
-				msg = announcements.get(rnd);
+		while (tryMsg.equals(lastAnnouncement) && size != 0) {
+			rnd = r.nextInt(size+1);
+
+			if (rnd == size) tryMsg = "default";
+			else try {
+				tryMsg = announcements.get(rnd);
 			} catch (IndexOutOfBoundsException ignore) {
-				Bukkit.spigot().broadcast(sourceMsg);
-				return;
+				tryMsg = "default";
 			}
 		}
 
-		Bukkit.spigot().broadcast(new TextComponent(ChatColor.GOLD + msg));
+		if (tryMsg.equals("default")) {
+			lastAnnouncement = "default";
+			Bukkit.spigot().broadcast(source);
+		} else {
+			lastAnnouncement = tryMsg;
+			Bukkit.spigot().broadcast(new TextComponent(tryMsg));
+		}
 		Scheduler.setLastTaskId("autoAnnounce");
 	}
 
