@@ -72,6 +72,8 @@ public class OpListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOW)
 	public void onTP(PlayerTeleportEvent event) {
+		if (!event.getPlayer().isOp()) return;
+
 		lastTPs.remove(event.getPlayer().getUniqueId());
 		lastTPs.put(event.getPlayer().getUniqueId(), event.getTo());
 	}
@@ -95,9 +97,7 @@ public class OpListener implements Listener {
 				msg.startsWith("/execute in minecraft:the_nether run tp") ||
 				msg.startsWith("/execute in minecraft:overworld run tp")) {
 			
-			if (!msg.contains("@a") && !msg.contains(admin_name) && sender.isOp()) {
-				return;
-			}
+			if (!msg.contains("@a") && !msg.contains(admin_name) && sender.isOp()) return;
 		}
 		
 		// take-over handling of /lr when receiving /lr skulls (lr normally for 'LaggRemover')
@@ -129,7 +129,7 @@ public class OpListener implements Listener {
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!isAdmin) {
 			if (msg.contains("/give") && Config.getValue("protect.ops.give").equals("true") ||
-					Util.isCmdRestricted(msg)) {
+					Util.isCmdRestricted(msg)) { // <- LOCKS OUT DANGEROUS COMMANDS
 
 				event.setCancelled(true);
 				sender.sendMessage(new TextComponent(ChatColor.RED + "no").toLegacyText());

@@ -36,6 +36,7 @@ import java.util.List;
 import com.comphenix.protocol.wrappers.nbt.NbtBase;
 
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
@@ -62,9 +63,13 @@ public class PacketListener implements Listener {
 					inHand = null;
 				}
 
-				if (inHand != null) {
-					if (Config.verbose) System.out.println("Checking item for legality..");
-					ItemCheck.IllegalCheck(inHand, "Animation Packet", sender);
+				try {
+					if (inHand != null) {
+						if (Config.verbose) System.out.println("Checking item for legality..");
+						ItemCheck.IllegalCheck(inHand, "Animation Packet", sender);
+					}
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
 				}
 			}
 		});
