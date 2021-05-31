@@ -97,7 +97,7 @@ public class AutoAnnouncer extends TimerTask {
 			Bukkit.spigot().broadcast(source);
 		} else {
 			lastAnnouncement = tryMsg;
-			Bukkit.spigot().broadcast(new TextComponent(tryMsg));
+			Bukkit.spigot().broadcast(new TextComponent(ChatColor.GOLD + tryMsg));
 		}
 		Scheduler.setLastTaskId("autoAnnounce");
 	}

@@ -38,6 +38,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
@@ -48,9 +50,12 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
+
+	static HashMap<UUID, Location> lastTPs = new HashMap<>();
 	
 	// currently not in use
 	public static ArrayList<String> OwnerCommands = new ArrayList<>(); static {
@@ -66,6 +71,12 @@ public class OpListener implements Listener {
 
 	public static boolean isSauceInitialized = false;
 
+	@EventHandler(priority = EventPriority.LOW)
+	public void onTP(PlayerTeleportEvent event) {
+		lastTPs.remove(event.getPlayer().getUniqueId());
+		lastTPs.put(event.getPlayer().getUniqueId(), event.getTo());
+	}
+
 	// this happens *before* the OP Lock plugin will see the command
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
@@ -80,7 +91,10 @@ public class OpListener implements Listener {
 		if (
 				msg.startsWith("/execute in the_end run tp") ||
 				msg.startsWith("/execute in the_nether run tp") ||
-				msg.startsWith("/execute in overworld run tp")) {
+				msg.startsWith("/execute in overworld run tp") ||
+				msg.startsWith("/execute in minecraft:the_end run tp") ||
+				msg.startsWith("/execute in minecraft:the_nether run tp") ||
+				msg.startsWith("/execute in minecraft:overworld run tp")) {
 			
 			if (!msg.contains("@a") && !msg.contains(admin_name) && sender.isOp()) {
 				return;
@@ -101,6 +115,16 @@ public class OpListener implements Listener {
 				int removed_items = Chunks.clearChunkItems(sender.getLocation().getChunk());
 				sender.sendMessage("Removed " + removed_items + " item stacks.");
 			}
+		}
+
+		if (msg.startsWith("/tp back")) {
+			event.setCancelled(true);
+
+			Location lastLoc = lastTPs.get(sender.getUniqueId());
+			String dim = Util.getDimensionName(lastLoc);
+			String loc = lastLoc.getBlockX() + " " + lastLoc.getBlockY() + " " + lastLoc.getBlockZ();
+
+			sender.chat("/execute in " + dim + " run tp @s " + loc);
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
