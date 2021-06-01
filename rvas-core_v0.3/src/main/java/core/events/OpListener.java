@@ -25,6 +25,7 @@ package core.events;
  * */
 
 import core.backend.Config;
+import core.backend.Pair;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
 import core.data.Aliases;
@@ -42,11 +43,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
-
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -54,19 +55,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 @SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
 
-	static HashMap<UUID, Location> lastTPs = new HashMap<>();
-	
-	// currently not in use
-	public static ArrayList<String> OwnerCommands = new ArrayList<>(); static {
-		OwnerCommands.addAll(Arrays.asList(
-				"/op", "/deop", "/ban", "/attribute", "/default", "/execute", "/rl",
-				"/summon", "/give", "/set", "/difficulty", "/replace", "/enchant",
-				"/function", "/bukkit", "/time", "/weather", "/schedule", "/clone",
-				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
-				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
-				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
-				"/restart", "/worldb", "/gamerule", "/score", "/tell", "/dupe", "/global"));
-	}
+	static Map<UUID, Pair<Location, Location>> lastTPs = new HashMap<>();
+	static HashMap<UUID, ArrayList<Location>> savedTPs = new HashMap<>();
 
 	public static boolean isSauceInitialized = false;
 
@@ -75,7 +65,7 @@ public class OpListener implements Listener {
 		if (!event.getPlayer().isOp()) return;
 
 		lastTPs.remove(event.getPlayer().getUniqueId());
-		lastTPs.put(event.getPlayer().getUniqueId(), event.getTo());
+		lastTPs.put(event.getPlayer().getUniqueId(), new Pair<>(event.getFrom(), event.getTo()));
 	}
 
 	// this happens *before* the OP Lock plugin will see the command
@@ -119,7 +109,7 @@ public class OpListener implements Listener {
 		if (msg.startsWith("/tp back")) {
 			event.setCancelled(true);
 
-			Location lastLoc = lastTPs.get(sender.getUniqueId());
+			Location lastLoc = lastTPs.get(sender.getUniqueId()).getRight();
 			String dim = Util.getDimensionName(lastLoc);
 			String loc = lastLoc.getBlockX() + " " + lastLoc.getBlockY() + " " + lastLoc.getBlockZ();
 
@@ -217,12 +207,10 @@ public class OpListener implements Listener {
 	// prevent moving GUI items into player inventories
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
-
 		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
-		else if (event.getClickedInventory() == Check.lagCheckGUI) event.setCancelled(true);
 	}
 
-	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler (priority = EventPriority.HIGH)
 	public void onInventoryMove(InventoryMoveItemEvent event) {
 
 		if (event.getInitiator() == Speeds.speedGUI) event.setCancelled(true);
@@ -230,4 +218,16 @@ public class OpListener implements Listener {
 		else if (event.getInitiator() == Check.lagCheckGUI) event.setCancelled(true);
 		else if (event.getDestination() == Check.lagCheckGUI) event.setCancelled(true);
 	}
+
+	@Deprecated
+	public static ArrayList<String> OwnerCommands = new ArrayList<>();/* static {
+		OwnerCommands.addAll(Arrays.asList(
+				"/op", "/deop", "/ban", "/attribute", "/default", "/execute", "/rl",
+				"/summon", "/give", "/set", "/difficulty", "/replace", "/enchant",
+				"/function", "/bukkit", "/time", "/weather", "/schedule", "/clone",
+				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
+				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
+				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
+				"/restart", "/worldb", "/gamerule", "/score", "/tell", "/dupe", "/global"));
+	}*/
 }

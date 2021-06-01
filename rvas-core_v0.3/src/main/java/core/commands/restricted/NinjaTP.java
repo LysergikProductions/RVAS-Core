@@ -37,14 +37,21 @@ public class NinjaTP implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         Player player = (Player)sender;
 
-        String dimension = args[0].trim();
-        String loc =  args[1].trim() + " " + args[2].trim() + " " + args[3].trim();
+        if (args.length == 4) {
+            String dimension = args[0].trim();
+            String loc =  args[1].trim() + " " + args[2].trim() + " " + args[3].trim();
 
-        String tp_cmd = "/execute in " + dimension + " run tp @p[name=" + player.getName() + "] " + loc;
+            String tp_cmd = "/execute in " + dimension + " run tp @p[name=" + player.getName() + "] " + loc;
 
-        player.chat("/sv on"); // <- requires SuperVanish plugin
-        player.chat(tp_cmd); // <- tp command-sender to the location
+            player.chat("/sv on"); // <- requires SuperVanish plugin
+            player.chat(tp_cmd); // <- tp command-sender to the location
 
+        } else if (args.length == 1) {
+            String tp_cmd = "/tp " + args[0].trim();
+
+            player.chat("/sv on"); // <- requires SuperVanish plugin
+            player.chat(tp_cmd); // <- tp command-sender to the location
+        }
         return true;
     }
 }

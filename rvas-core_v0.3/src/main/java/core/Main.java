@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.2"; public static final int build = 280;
+	public static final String version = "0.3.2"; public static final int build = 281;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -240,6 +240,9 @@ public class Main extends JavaPlugin {
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new OpListener(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { core_pm.registerEvents(new Check(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try {
