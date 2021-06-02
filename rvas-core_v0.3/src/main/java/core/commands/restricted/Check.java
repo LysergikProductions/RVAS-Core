@@ -23,6 +23,7 @@ package core.commands.restricted;
  *
  * */
 
+import core.data.PlayerMeta;
 import core.data.objects.Pair;
 import core.backend.utils.Chunks;
 
@@ -47,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 public class Check implements CommandExecutor, Listener {
 
     public static Map<UUID, Pair<Integer, Location>> lagList = new HashMap<>();
+    public static Map<Player, Integer> sortedLagList = new HashMap<>();
 
     private static Player checker = null;
     public static Inventory lagCheckGUI;
@@ -82,19 +84,24 @@ public class Check implements CommandExecutor, Listener {
 
                 if (thisCount > 192) {
                     lagList.putIfAbsent(thisPlayer.getUniqueId(), new Pair<>(thisCount, thisPlayer.getLocation()));
-
-                    String thisName = thisPlayer.getName();
-                    ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
-
-                    ItemMeta thisHeadMeta = newHead.getItemMeta();
-                    thisHeadMeta.setDisplayName(thisName);
-
-                    List<String> lore = Collections.singletonList("\u00A7c" + thisCount);
-                    thisHeadMeta.setLore(lore);
-                    newHead.setItemMeta(thisHeadMeta);
-                    lagCheckGUI.addItem(newHead);
+                    sortedLagList.putIfAbsent(thisPlayer, thisCount);
                 }
             }
+        }
+
+        sortedLagList = PlayerMeta.sortLagMap(sortedLagList);
+        for (Player thisPlayer: sortedLagList.keySet()) {
+
+            String thisName = thisPlayer.getName();
+            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
+
+            ItemMeta thisHeadMeta = newHead.getItemMeta();
+            thisHeadMeta.setDisplayName(thisName);
+
+            List<String> lore = Collections.singletonList("\u00A7c" + sortedLagList.get(thisPlayer));
+            thisHeadMeta.setLore(lore);
+            newHead.setItemMeta(thisHeadMeta);
+            lagCheckGUI.addItem(newHead);
         }
     }
 

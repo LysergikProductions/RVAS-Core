@@ -2,6 +2,7 @@ package core.data;
 
 import core.backend.Config;
 import core.commands.Ignore;
+import core.data.objects.Pair;
 import core.events.ChatListener;
 import core.data.objects.SettingsContainer;
 
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
@@ -252,6 +254,24 @@ public class PlayerMeta {
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
 		out.remove(UUID.fromString(Config.getValue("adminid")));
+		return out;
+	}
+
+	public static  Map<Player, Integer> sortLagMap(Map<Player,Integer> thisMap) {
+		Map<Player, Integer> out;
+
+		out = thisMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(thisMap.size())
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+		return out;
+	}
+
+	public static  Map<Player, Double> sortSpeedMap(Map<Player,Double> thisMap) {
+		Map<Player, Double> out;
+
+		out = thisMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(thisMap.size())
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
 		return out;
 	}
 

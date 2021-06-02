@@ -28,6 +28,8 @@ public class Speeds implements CommandExecutor {
         speedGUI = Bukkit.createInventory(thisPlayer, 54, ChatColor.RED + "Speeds List");
     }
 
+    public static Map<Player, Double> sortedSpeedsList = new HashMap<>();
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
@@ -57,19 +59,24 @@ public class Speeds implements CommandExecutor {
             if(speed == 0) continue;
 
             String thisName = speedEntry.getRight();
-            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
+            if (speed >= SpeedLimiter.currentSpeedLimit * 0.4) {
+                sortedSpeedsList.putIfAbsent(Bukkit.getPlayer(thisName), speedEntry.getLeft());
+            }
+        }
 
+        for (Player thisPlayer: sortedSpeedsList.keySet()) {
+            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
             ItemMeta thisHeadMeta = newHead.getItemMeta();
-            thisHeadMeta.setDisplayName(thisName);
+            thisHeadMeta.setDisplayName(thisPlayer.getName());
 
             String color = "\u00A7";
-            if (speed >= SpeedLimiter.currentSpeedLimit * 0.4) {
-                color += "c"; // red
-                List<String> lore = Collections.singletonList(color + String.format("%4.1f", speed));
-                thisHeadMeta.setLore(lore);
-                newHead.setItemMeta(thisHeadMeta);
-                speedGUI.addItem(newHead);
-            }
+            color += "c"; // red
+            List<String> lore = Collections
+                    .singletonList(color + String.format("%4.1f", sortedSpeedsList.get(thisPlayer)));
+
+            thisHeadMeta.setLore(lore);
+            newHead.setItemMeta(thisHeadMeta);
+            speedGUI.addItem(newHead);
         }
     }
 }
