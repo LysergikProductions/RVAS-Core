@@ -24,12 +24,12 @@ package core.events;
  * 
  * */
 
-import core.backend.Config;
-import core.backend.Pair;
-import core.backend.utils.Util;
-import core.backend.utils.Chunks;
 import core.data.Aliases;
 import core.data.PlayerMeta;
+import core.data.objects.Pair;
+import core.backend.Config;
+import core.backend.utils.Util;
+import core.backend.utils.Chunks;
 import core.commands.restricted.Speeds;
 import core.commands.restricted.Check;
 
@@ -122,7 +122,8 @@ public class OpListener implements Listener {
 
 			try { thisIndexInt = Integer.parseInt(thisIndexStr);
 			} catch (Exception ignore) {
-				sender.sendMessage("Please use a number from 0 to 9 to identify the location");
+				sender.sendMessage(new TextComponent(
+						ChatColor.RED + "Oops, " + thisIndexStr + " is not a number lol").toLegacyText());
 				thisIndexInt = null;
 			}
 
@@ -134,7 +135,10 @@ public class OpListener implements Listener {
 
 				sender.sendMessage(new TextComponent(
 						ChatColor.GREEN + "Successfully saved location #" + thisIndexInt).toLegacyText());
-			}
+
+			} else sender.sendMessage(new TextComponent(
+					ChatColor.RED + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
+
 		} else if (msg.startsWith("/tp:")) {
 			event.setCancelled(true);
 
@@ -163,7 +167,9 @@ public class OpListener implements Listener {
 				String loc = tpLoc.getBlockX() + " " + tpLoc.getBlockY() + " " + tpLoc.getBlockZ();
 
 				sender.chat("/execute in " + dim + " run tp @s " + loc);
-			}
+
+			} else sender.sendMessage(new TextComponent(
+					ChatColor.RED + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)

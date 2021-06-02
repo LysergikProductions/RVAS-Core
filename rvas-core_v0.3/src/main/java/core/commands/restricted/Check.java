@@ -23,12 +23,11 @@ package core.commands.restricted;
  *
  * */
 
-import core.backend.Pair;
+import core.data.objects.Pair;
 import core.backend.utils.Chunks;
 
 import java.util.*;
 import org.bukkit.*;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 
 import org.bukkit.event.Listener;

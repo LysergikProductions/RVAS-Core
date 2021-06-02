@@ -1,6 +1,6 @@
 package core.commands.restricted;
 
-import core.backend.Pair;
+import core.data.objects.Pair;
 import core.events.SpeedLimiter;
 
 import java.util.*;

@@ -4,6 +4,7 @@ import core.backend.*;
 import core.backend.utils.Restart;
 import core.backend.utils.Util;
 import core.data.Aliases;
+import core.data.objects.Pair;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
 import core.events.SpeedLimiter;
@@ -90,7 +91,7 @@ public class Admin implements CommandExecutor {
 					
 				case "SPEED":
 					player.sendMessage("\u00A76Player speeds:");
-					List< Pair<Double, String> > speeds = SpeedLimiter.getSpeeds();
+					List<Pair<Double, String>> speeds = SpeedLimiter.getSpeeds();
 					
 					for (Pair<Double, String> speedEntry : speeds) {
 						double speed = speedEntry.getLeft();

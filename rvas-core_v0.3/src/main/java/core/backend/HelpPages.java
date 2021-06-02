@@ -98,12 +98,12 @@ public class HelpPages {
 
 		TextComponent self_a = new TextComponent("/stats");
 		TextComponent players_a = new TextComponent("/stats [player name]");
-		TextComponent leaders_a = new TextComponent("/stats 5");
+		TextComponent leaders_a = new TextComponent("/stats [3-15]");
 		TextComponent mcstats_a = new TextComponent("/stats mc");
 
 		TextComponent self_b = new TextComponent(ChatColor.GRAY + " : Shows you your stats");
 		TextComponent players_b = new TextComponent(ChatColor.GRAY + " : Shows the stats for that player");
-		TextComponent leaders_b = new TextComponent(ChatColor.GRAY + " : Shows the top 5 players (by play-time)");
+		TextComponent leaders_b = new TextComponent(ChatColor.GRAY + " : Shows the top 3-15 players (by play-time)");
 		TextComponent mcstats_b = new TextComponent(ChatColor.GRAY + " : Shows you some of your MC-tracked world-stats");
 
 		TextComponent toggle_info = new TextComponent(
