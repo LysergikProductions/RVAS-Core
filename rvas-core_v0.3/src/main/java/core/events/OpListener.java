@@ -95,9 +95,8 @@ public class OpListener implements Listener {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) sender.chat("/kill @e[type=minecraft:wither_skull]");
-		}
-		
-		if (msg.startsWith("/lr items")) {
+
+		} else if (msg.startsWith("/lr items")) {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) {
@@ -114,6 +113,57 @@ public class OpListener implements Listener {
 			String loc = lastLoc.getBlockX() + " " + lastLoc.getBlockY() + " " + lastLoc.getBlockZ();
 
 			sender.chat("/execute in " + dim + " run tp @s " + loc);
+
+		} else  if (msg.startsWith("/tp:save ")) {
+			event.setCancelled(true);
+
+			String thisIndexStr = msg.split(" ")[1];
+			Integer thisIndexInt;
+
+			try { thisIndexInt = Integer.parseInt(thisIndexStr);
+			} catch (Exception ignore) {
+				sender.sendMessage("Please use a number from 0 to 9 to identify the location");
+				thisIndexInt = null;
+			}
+
+			if (thisIndexInt != null && thisIndexInt >= 0 && thisIndexInt <= 9) {
+				ArrayList<Location> newList = savedTPs.getOrDefault(sender.getUniqueId(), new ArrayList<>());
+
+				newList.add(thisIndexInt, sender.getLocation());
+				savedTPs.put(sender.getUniqueId(), newList);
+
+				sender.sendMessage(new TextComponent(
+						ChatColor.GREEN + "Successfully saved location #" + thisIndexInt).toLegacyText());
+			}
+		} else if (msg.startsWith("/tp:")) {
+			event.setCancelled(true);
+
+			String thisIndexStr = msg.split(":")[1];
+			Integer thisIndexInt;
+
+			try { thisIndexInt = Integer.parseInt(thisIndexStr);
+			} catch (Exception ignore) {
+				sender.sendMessage(new TextComponent(
+						ChatColor.RED + "Please use a number from 0 to 9 to choose a location").toLegacyText());
+				thisIndexInt = null;
+			}
+
+			if (thisIndexInt != null && thisIndexInt >= 0 && thisIndexInt <= 9) {
+				Location tpLoc;
+
+				try {
+					tpLoc = savedTPs.get(sender.getUniqueId()).get(thisIndexInt);
+				} catch (Exception ignore) {
+					sender.sendMessage(new TextComponent(
+							ChatColor.RED + "There is no saved TP at that index").toLegacyText());
+					return;
+				}
+
+				String dim = Util.getDimensionName(tpLoc);
+				String loc = tpLoc.getBlockX() + " " + tpLoc.getBlockY() + " " + tpLoc.getBlockZ();
+
+				sender.chat("/execute in " + dim + " run tp @s " + loc);
+			}
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)

@@ -117,7 +117,7 @@ public class Prison implements CommandExecutor {
 			return false;
 		}
 
-		if (PlayerMeta.isPrisoner(thisPlayer)) {
+		if (PlayerMeta.isPrisoner(thisPlayer) && !thisPlayer.isOp()) {
 			
 			Arrays.asList(
 
