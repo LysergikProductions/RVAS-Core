@@ -24,14 +24,16 @@ package core.events;
  * 
  * */
 
-import core.data.Aliases;
-import core.data.PlayerMeta;
-import core.data.objects.Pair;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
 import core.commands.restricted.Speeds;
 import core.commands.restricted.Check;
+
+import core.data.Aliases;
+import core.data.PlayerMeta;
+import core.data.ThemeManager;
+import core.data.objects.Pair;
 
 import java.util.*;
 import net.md_5.bungee.api.ChatColor;
@@ -55,6 +57,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 @SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
 
+	static ChatColor secondary, successColor, failColor;
 	static Map<UUID, Pair<Location, Location>> lastTPs = new HashMap<>();
 	static HashMap<UUID, ArrayList<Location>> savedTPs = new HashMap<>();
 
@@ -71,6 +74,10 @@ public class OpListener implements Listener {
 	// this happens *before* the OP Lock plugin will see the command
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
+
+		secondary = ThemeManager.currentTheme.getSecondary();
+		successColor = ThemeManager.currentTheme.getSucceed();
+		failColor = ThemeManager.currentTheme.getFail();
 		
 		Player sender = event.getPlayer();
 		String admin_name = Config.getValue("admin");
@@ -101,7 +108,7 @@ public class OpListener implements Listener {
 			event.setCancelled(true);
 			if (sender.isOp()) {
 				int removed_items = Chunks.clearChunkItems(sender.getLocation().getChunk());
-				sender.sendMessage("Removed " + removed_items + " item stacks.");
+				sender.sendMessage(secondary + "Removed " + removed_items + " item stacks.");
 			}
 		}
 
@@ -123,7 +130,7 @@ public class OpListener implements Listener {
 			try { thisIndexInt = Integer.parseInt(thisIndexStr);
 			} catch (Exception ignore) {
 				sender.sendMessage(new TextComponent(
-						ChatColor.RED + "Oops, " + thisIndexStr + " is not a number lol").toLegacyText());
+						failColor + "Oops, " + thisIndexStr + " is not a number lol").toLegacyText());
 				thisIndexInt = null;
 			}
 
@@ -134,10 +141,10 @@ public class OpListener implements Listener {
 				savedTPs.put(sender.getUniqueId(), newList);
 
 				sender.sendMessage(new TextComponent(
-						ChatColor.GREEN + "Successfully saved location #" + thisIndexInt).toLegacyText());
+						successColor + "Successfully saved location #" + thisIndexInt).toLegacyText());
 
 			} else sender.sendMessage(new TextComponent(
-					ChatColor.RED + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
+					failColor + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
 
 		} else if (msg.startsWith("/tp:")) {
 			event.setCancelled(true);
@@ -148,7 +155,7 @@ public class OpListener implements Listener {
 			try { thisIndexInt = Integer.parseInt(thisIndexStr);
 			} catch (Exception ignore) {
 				sender.sendMessage(new TextComponent(
-						ChatColor.RED + "Please use a number from 0 to 9 to choose a location").toLegacyText());
+						failColor + "Please use a number from 0 to 9 to choose a location").toLegacyText());
 				thisIndexInt = null;
 			}
 
@@ -159,7 +166,7 @@ public class OpListener implements Listener {
 					tpLoc = savedTPs.get(sender.getUniqueId()).get(thisIndexInt);
 				} catch (Exception ignore) {
 					sender.sendMessage(new TextComponent(
-							ChatColor.RED + "There is no saved TP at that index").toLegacyText());
+							failColor + "There is no saved TP at that index").toLegacyText());
 					return;
 				}
 
@@ -169,7 +176,7 @@ public class OpListener implements Listener {
 				sender.chat("/execute in " + dim + " run tp @s " + loc);
 
 			} else sender.sendMessage(new TextComponent(
-					ChatColor.RED + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
+					failColor + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
@@ -178,17 +185,17 @@ public class OpListener implements Listener {
 					Util.isCmdRestricted(msg)) { // <- LOCKS OUT DANGEROUS COMMANDS
 
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatColor.RED + "no").toLegacyText());
+				sender.sendMessage(new TextComponent(failColor + "no").toLegacyText());
 
 			} else if (msg.contains("@a")) {
 				
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatColor.RED + "You cannot target everyone!").toLegacyText());
+				sender.sendMessage(new TextComponent(failColor + "You cannot target everyone!").toLegacyText());
 				
 			} else if (msg.contains(admin_name)) {
 				
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatColor.RED + "You cannot target " + admin_name).toLegacyText());
+				sender.sendMessage(new TextComponent(failColor + "You cannot target " + admin_name).toLegacyText());
 			}
 
 		// 32k commands for testing anti-illegals; owner only
@@ -227,7 +234,7 @@ public class OpListener implements Listener {
 					sender.chat(Aliases.feather_32k);
 
 				} else {
-					sender.sendMessage(new TextComponent(ChatColor.RED + "Invalid Argument: " + thisArg).toLegacyText());
+					sender.sendMessage(new TextComponent(failColor + "Invalid Argument: " + thisArg).toLegacyText());
 				}
 			}
 		}

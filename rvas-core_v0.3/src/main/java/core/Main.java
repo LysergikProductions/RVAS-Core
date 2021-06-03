@@ -1,6 +1,7 @@
 package core;
 
 import core.data.*;
+import core.data.objects.Theme;
 import core.events.*;
 import core.tasks.*;
 import core.backend.*;
@@ -25,7 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.2"; public static final int build = 284;
+	public static final String version = "0.3.2"; public static final int build = 285;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -46,11 +47,13 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
 
-		try {
-			FileManager.setup();
+		try { FileManager.setup();
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured in FileManager.setup()");
 		}
+
+		try { ThemeManager.load();
+		} catch (Exception e) { e.printStackTrace(); }
 
 		System.out.println("[core.main] __________________");
 		System.out.println("[core.main] Loading more files");
@@ -301,7 +304,7 @@ public class Main extends JavaPlugin {
 				break; // <- only check first normal dimension found
 			}
 		}
-		
+
 		System.out.println("[core.main] ________________________________");
 		System.out.println("[core.main] -- Finished loading RVAS-Core --");
 		System.out.println("[core.main] ________________________________");

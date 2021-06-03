@@ -22,18 +22,26 @@ package core.backend;
  * 
  * */
 
-import java.util.*;
+import core.data.ThemeManager;
 
-import net.md_5.bungee.api.chat.ClickEvent;
+import java.util.*;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class HelpPages {
+
+	static ChatColor titleColor = ThemeManager.currentTheme.getHelp_title();
+	static ChatColor descColor = ThemeManager.currentTheme.getDesc();
+	static ChatColor cmdColor = ThemeManager.currentTheme.getCmd();
+	static ChatColor controlsColor = ThemeManager.currentTheme.getControls();
+	static ChatColor primary = ThemeManager.currentTheme.getPrimary();
 
 	public static void helpGeneral(Player receiver, int page) {
 		int maxPage = 2;
@@ -47,8 +55,8 @@ public class HelpPages {
 		prevPage = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/help " + prevPageInt);
 		nextPage = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/help " + nextPageInt);
 
-		TextComponent prev = new TextComponent(ChatColor.DARK_AQUA + "<<");
-		TextComponent next = new TextComponent(ChatColor.DARK_AQUA + ">>");
+		TextComponent prev = new TextComponent(controlsColor + "<<");
+		TextComponent next = new TextComponent(controlsColor + ">>");
 
 		if (prevPageInt >= 1) prev.setClickEvent(prevPage);
 		if (nextPageInt <= maxPage) next.setClickEvent(nextPage);
@@ -92,29 +100,26 @@ public class HelpPages {
 		receiver.sendMessage("");
 
 		TextComponent head = new TextComponent(
-				ChatColor.DARK_AQUA + "<<" +
-						ChatColor.WHITE + " /stats help " +
-								ChatColor.DARK_AQUA + ">>");
+				controlsColor + "<<" +
+						titleColor + " /stats help " +
+						controlsColor + ">>");
 
-		TextComponent self_a = new TextComponent("/stats");
-		TextComponent players_a = new TextComponent("/stats [player name]");
-		TextComponent leaders_a = new TextComponent("/stats [3-15]");
-		TextComponent mcstats_a = new TextComponent("/stats mc");
+		TextComponent self_a = new TextComponent(cmdColor + "/stats");
+		TextComponent players_a = new TextComponent(cmdColor + "/stats [player name]");
+		TextComponent leaders_a = new TextComponent(cmdColor + "/stats [3-15]");
+		TextComponent mcstats_a = new TextComponent(cmdColor + "/stats mc");
 
-		TextComponent self_b = new TextComponent(ChatColor.GRAY + " : Shows you your stats");
-		TextComponent players_b = new TextComponent(ChatColor.GRAY + " : Shows the stats for that player");
-		TextComponent leaders_b = new TextComponent(ChatColor.GRAY + " : Shows the top 3-15 players (by play-time)");
-		TextComponent mcstats_b = new TextComponent(ChatColor.GRAY + " : Shows you some of your MC-tracked world-stats");
+		TextComponent self_b = new TextComponent(descColor + " : Shows you your stats");
+		TextComponent players_b = new TextComponent(descColor + " : Shows the stats for that player");
+		TextComponent leaders_b = new TextComponent(descColor + " : Shows the top 3-15 players (by play-time)");
+		TextComponent mcstats_b = new TextComponent(descColor + " : Shows you some of your MC-tracked world-stats");
 
 		TextComponent toggle_info = new TextComponent(
-				"Use /stats kills | deaths | kd, to toggle hiding them from public view!");
+				primary + "Use /stats kills | deaths | kd, to toggle hiding them from public view!");
 
-		toggle_info.setColor(ChatColor.DARK_AQUA); toggle_info.setItalic(true);
-
-		self_a.setItalic(true);
-		players_a.setItalic(true);
-		leaders_a.setItalic(true);
-		mcstats_a.setItalic(true);
+		toggle_info.setItalic(true);
+		self_a.setItalic(true); players_a.setItalic(true);
+		leaders_a.setItalic(true); mcstats_a.setItalic(true);
 
 		TextComponent self = new TextComponent(self_a, self_b);
 		TextComponent players = new TextComponent(players_a, players_b);
