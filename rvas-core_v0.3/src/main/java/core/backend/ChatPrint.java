@@ -23,13 +23,11 @@ package core.backend;
  * 
  * */
 
-import core.data.StatsManager;
-import core.data.PlayerMeta;
-import core.data.SettingsManager;
-import core.data.ThemeManager;
+import core.data.*;
 import core.data.objects.*;
 import core.backend.utils.Util;
 
+import java.io.IOException;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
@@ -49,11 +47,25 @@ import org.bukkit.Statistic;
 @SuppressWarnings("SpellCheckingInspection")
 public class ChatPrint {
 
-	static ChatColor primary = ThemeManager.currentTheme.getPrimary();
-	static ChatColor tertiary = ThemeManager.currentTheme.getTertiary();
-	static ChatColor clear = ThemeManager.currentTheme.getClear();
-	static ChatColor faded = ThemeManager.currentTheme.getFaded();
-	
+	public static ChatColor primary, secondary, tertiary, clear, faded,
+			succeed, fail, help_title, desc, cmd, controls;
+
+	public static void loadColors() {
+		primary = ThemeManager.currentTheme.getPrimary();
+		secondary = ThemeManager.currentTheme.getSecondary();
+		tertiary = ThemeManager.currentTheme.getTertiary();
+
+		clear = ThemeManager.currentTheme.getClear();
+		faded = ThemeManager.currentTheme.getFaded();
+		succeed = ThemeManager.currentTheme.getSucceed();
+		fail = ThemeManager.currentTheme.getFail();
+
+		help_title = ThemeManager.currentTheme.getHelp_title();
+		desc = ThemeManager.currentTheme.getDesc();
+		cmd = ThemeManager.currentTheme.getCmd();
+		controls = ThemeManager.currentTheme.getControls();
+	}
+
 	// - PLAYER STATS PAGES - \\
 
 	public static void printMcStats(Player receiver, OfflinePlayer target) {

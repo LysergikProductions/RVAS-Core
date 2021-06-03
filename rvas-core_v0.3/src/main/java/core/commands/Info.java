@@ -22,6 +22,7 @@ package core.commands;
  * 
  * */
 
+import core.backend.ChatPrint;
 import core.backend.ServerMeta;
 import core.backend.utils.Util;
 
@@ -30,7 +31,6 @@ import core.events.BlockListener;
 import core.events.SpawnController;
 
 import org.bukkit.entity.Player;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
@@ -49,7 +49,7 @@ public class Info implements CommandExecutor {
 		String humanUptime = Util.timeToString(ServerMeta.getUptime());
 		
 		TextComponent head = new TextComponent("--- Session Stats ---");
-		head.setColor(ChatColor.GOLD); head.setBold(true);
+		head.setColor(ChatPrint.primary); head.setBold(true);
 		
 		player.sendMessage(head.toLegacyText());
 		player.sendMessage("Uptime: " + humanUptime);

@@ -26,7 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.2"; public static final int build = 285;
+	public static final String version = "0.3.2"; public static final int build = 286;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -54,6 +54,12 @@ public class Main extends JavaPlugin {
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
+
+		try { ChatPrint.loadColors();
+		} catch (Exception ignore) {
+			ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
+			ChatPrint.loadColors();
+		}
 
 		System.out.println("[core.main] __________________");
 		System.out.println("[core.main] Loading more files");
@@ -257,7 +263,7 @@ public class Main extends JavaPlugin {
 		} catch (Exception e) { e.printStackTrace(); }
 		
 		System.out.println("[core.main] ..finishing up..");
-		
+
 		// Define banned & special blocks
 		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,

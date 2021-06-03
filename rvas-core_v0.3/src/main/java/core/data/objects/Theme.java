@@ -23,7 +23,7 @@ public class Theme {
     }
 
     public ChatColor getHelp_title() {
-        return help_title;
+        return ChatColor.getByChar(help_title.toString().charAt(1));
     }
 
     public void setHelp_title(ChatColor help_title) {
@@ -31,7 +31,7 @@ public class Theme {
     }
 
     public ChatColor getCmd() {
-        return cmd;
+        return ChatColor.getByChar(cmd.toString().charAt(1));
     }
 
     public void setCmd(ChatColor cmd) {
@@ -39,7 +39,7 @@ public class Theme {
     }
 
     public ChatColor getDesc() {
-        return desc;
+        return ChatColor.getByChar(desc.toString().charAt(1));
     }
 
     public void setDesc(ChatColor desc) {
@@ -47,7 +47,7 @@ public class Theme {
     }
 
     public ChatColor getControls() {
-        return controls;
+        return ChatColor.getByChar(controls.toString().charAt(1));
     }
 
     public void setControls(ChatColor controls) {
@@ -55,7 +55,7 @@ public class Theme {
     }
 
     public ChatColor getSucceed() {
-        return succeed;
+        return ChatColor.getByChar(succeed.toString().charAt(1));
     }
 
     public void setSucceed(ChatColor succeed) {
@@ -71,7 +71,7 @@ public class Theme {
     }
 
     public ChatColor getPrimary() {
-        return primary;
+        return ChatColor.getByChar(primary.toString().charAt(1));
     }
 
     public void setPrimary(ChatColor primary) {
@@ -79,7 +79,7 @@ public class Theme {
     }
 
     public ChatColor getSecondary() {
-        return secondary;
+        return ChatColor.getByChar(secondary.toString().charAt(1));
     }
 
     public void setSecondary(ChatColor secondary) {
@@ -87,7 +87,7 @@ public class Theme {
     }
 
     public ChatColor getTertiary() {
-        return tertiary;
+        return ChatColor.getByChar(tertiary.toString().charAt(1));
     }
 
     public void setTertiary(ChatColor tertiary) {
@@ -95,7 +95,7 @@ public class Theme {
     }
 
     public ChatColor getClear() {
-        return clear;
+        return ChatColor.getByChar(clear.toString().charAt(1));
     }
 
     public void setClear(ChatColor clear) {
@@ -103,7 +103,7 @@ public class Theme {
     }
 
     public ChatColor getFaded() {
-        return faded;
+        return ChatColor.getByChar(faded.toString().charAt(1));
     }
 
     public void setFaded(ChatColor faded) {

@@ -1,5 +1,6 @@
 package core.commands.restricted;
 
+import core.backend.ChatPrint;
 import core.data.objects.Pair;
 import core.events.SpeedLimiter;
 
@@ -12,8 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import org.bukkit.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
@@ -25,7 +24,7 @@ public class Speeds implements CommandExecutor {
 
     private static Player thisPlayer = null;
     public static Inventory speedGUI; static {
-        speedGUI = Bukkit.createInventory(thisPlayer, 54, ChatColor.RED + "Speeds List");
+        speedGUI = Bukkit.createInventory(thisPlayer, 54, ChatPrint.fail + "Speeds List");
     }
 
     public static Map<Player, Double> sortedSpeedsList = new HashMap<>();
@@ -40,7 +39,7 @@ public class Speeds implements CommandExecutor {
 
         Player sender = (Player) commandSender;
         if (!sender.isOp()) {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "no").toLegacyText());
+            sender.sendMessage(new TextComponent(ChatPrint.fail + "no").toLegacyText());
             return false;
 
         } else thisPlayer = sender;

@@ -26,19 +26,19 @@ public class ThemeManager {
     public static Theme createDefaultTheme() {
         Map<String, ChatColor> thisMap = new HashMap<>();
 
-        thisMap.putIfAbsent("primary", ChatColor.GOLD);
-        thisMap.putIfAbsent("secondary", ChatColor.DARK_AQUA);
-        thisMap.putIfAbsent("tertiary", ChatColor.BLUE);
+        thisMap.put("primary", ChatColor.GOLD);
+        thisMap.put("secondary", ChatColor.DARK_AQUA);
+        thisMap.put("tertiary", ChatColor.BLUE);
 
-        thisMap.putIfAbsent("clear", ChatColor.WHITE);
-        thisMap.putIfAbsent("faded", ChatColor.GRAY);
-        thisMap.putIfAbsent("succeed", ChatColor.GREEN);
-        thisMap.putIfAbsent("fail", ChatColor.RED);
+        thisMap.put("clear", ChatColor.WHITE);
+        thisMap.put("faded", ChatColor.GRAY);
+        thisMap.put("succeed", ChatColor.GREEN);
+        thisMap.put("fail", ChatColor.RED);
 
-        thisMap.putIfAbsent("help_title", ChatColor.WHITE);
-        thisMap.putIfAbsent("desc", ChatColor.GRAY);
-        thisMap.putIfAbsent("cmd", ChatColor.GOLD);
-        thisMap.putIfAbsent("controls", ChatColor.AQUA);
+        thisMap.put("help_title", ChatColor.WHITE);
+        thisMap.put("desc", ChatColor.GRAY);
+        thisMap.put("cmd", ChatColor.GOLD);
+        thisMap.put("controls", ChatColor.AQUA);
 
         return new Theme(thisMap);
     }
@@ -59,8 +59,11 @@ public class ThemeManager {
         Map<String, ChatColor> themeBuilder = new HashMap<>();
 
         themeBuilder.put("primary", thisTheme.getPrimary());
+        System.out.println(themeBuilder.get("primary"));
         themeBuilder.put("secondary", thisTheme.getSecondary());
+        System.out.println(themeBuilder.get("secondary"));
         themeBuilder.put("tertiary", thisTheme.getTertiary());
+        System.out.println(themeBuilder.get("tertiary"));
 
         themeBuilder.put("clear", thisTheme.getClear());
         themeBuilder.put("faded", thisTheme.getFaded());

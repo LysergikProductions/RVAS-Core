@@ -181,7 +181,7 @@ public class Admin implements CommandExecutor {
 		TextComponent ops_a = new TextComponent("OP Accounts: ");
 		TextComponent ops_b = new TextComponent("" + Bukkit.getOperators().size());
 		
-		ops_a.setColor(ChatColor.RED); ops_b.setColor(ChatColor.GRAY);
+		ops_a.setColor(ChatPrint.fail); ops_b.setColor(ChatPrint.desc);
 		TextComponent ops = new TextComponent(ops_a, ops_b);
 		
 		player.sendMessage("");

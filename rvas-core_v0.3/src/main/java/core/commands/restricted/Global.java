@@ -22,16 +22,16 @@ package core.commands.restricted;
  * 
  * */
 
+import core.backend.ChatPrint;
 import core.data.PlayerMeta;
 import core.backend.utils.Util;
 import core.events.SpawnController;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,7 +42,7 @@ public class Global implements CommandExecutor {
 
 	public static TextComponent dreamMsg; static {
 		dreamMsg = new TextComponent("You wake up, confused.. was that a dream?");
-		dreamMsg.setColor(ChatColor.GRAY);
+		dreamMsg.setColor(ChatPrint.faded);
 	}
 
 	@Override

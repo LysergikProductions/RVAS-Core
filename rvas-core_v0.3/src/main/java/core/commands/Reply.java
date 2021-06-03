@@ -1,5 +1,6 @@
 package core.commands;
 
+import core.backend.ChatPrint;
 import core.commands.restricted.Admin;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
@@ -48,7 +49,7 @@ public class Reply implements CommandExecutor {
 			Message.AFK_warned.remove(pid);
 			AFK._AFKs.remove(pid);
 
-			p.sendMessage(new TextComponent(ChatColor.GREEN +
+			p.sendMessage(new TextComponent(ChatPrint.succeed +
 					"You are no longer AFK!").toLegacyText());
 		}
 

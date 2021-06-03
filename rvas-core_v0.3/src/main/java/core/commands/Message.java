@@ -1,15 +1,15 @@
 package core.commands;
 
+import core.backend.ChatPrint;
 import core.commands.restricted.Admin;
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
 
 import java.util.*;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -100,7 +100,7 @@ public class Message implements CommandExecutor {
 			Message.AFK_warned.remove(pid);
 			AFK._AFKs.remove(pid);
 
-			if (p != null) p.sendMessage(new TextComponent(ChatColor.GREEN +
+			if (p != null) p.sendMessage(new TextComponent(ChatPrint.succeed +
 					"You are no longer AFK!").toLegacyText());
 		}
 

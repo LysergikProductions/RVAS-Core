@@ -1,6 +1,8 @@
 package core.commands;
 
+import core.backend.ChatPrint;
 import core.backend.HelpPages;
+import core.data.ThemeManager;
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
 
@@ -15,6 +17,13 @@ public class Help implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+
+		try { ChatPrint.loadColors();
+		} catch (Exception ignore) {
+			ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
+			ChatPrint.loadColors();
+		}
+
 		Player player = (Player)sender;
 
 		if (!PlayerMeta.isAdmin(player)) Analytics.help_cmd++;

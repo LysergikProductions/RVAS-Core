@@ -4,6 +4,7 @@ import core.Main;
 import core.backend.*;
 import core.data.PlayerMeta;
 import core.data.SettingsManager;
+import core.data.ThemeManager;
 import core.data.objects.*;
 import core.tasks.Analytics;
 
@@ -27,7 +28,7 @@ public class Stats implements CommandExecutor {
 	public static int sessionUses = 0;
 
 	public static TextComponent allTimezoneIDs = new TextComponent(
-			ChatColor.AQUA + "Click here to see all timezone IDs!"); static {
+			ChatPrint.controls + "Click here to see all timezone IDs!"); static {
 				allTimezoneIDs.setItalic(true);
 				allTimezoneIDs.setClickEvent(new ClickEvent(
 						ClickEvent.Action.OPEN_URL,
@@ -37,6 +38,12 @@ public class Stats implements CommandExecutor {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		sessionUses++;
+
+		try { ChatPrint.loadColors();
+		} catch (Exception ignore) {
+			ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
+			ChatPrint.loadColors();
+		}
 		
 		Player player = (Player) sender;
 		UUID playerid = player.getUniqueId();
@@ -140,7 +147,7 @@ public class Stats implements CommandExecutor {
 					case "timezone":
 
 						if (args.length != 2) {
-							player.sendMessage(ChatColor.GRAY +
+							player.sendMessage(ChatPrint.desc +
 									"Correct Syntax: /stats timezone EST | America/Phoenix | GMT | etc");
 							player.sendMessage(allTimezoneIDs);
 							return false;

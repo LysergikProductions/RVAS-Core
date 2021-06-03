@@ -23,6 +23,7 @@ package core.commands.restricted;
  *
  * */
 
+import core.backend.ChatPrint;
 import core.data.PlayerMeta;
 import core.data.objects.Pair;
 import core.backend.utils.Chunks;
@@ -54,7 +55,7 @@ public class Check implements CommandExecutor, Listener {
     public static Inventory lagCheckGUI;
 
     static {
-        lagCheckGUI = Bukkit.createInventory(checker, 54, ChatColor.RED + "Occupied Laggy Chunks");
+        lagCheckGUI = Bukkit.createInventory(checker, 54, ChatPrint.fail + "Occupied Laggy Chunks");
     }
 
     @Override

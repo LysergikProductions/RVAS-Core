@@ -4,6 +4,7 @@ import core.backend.*;
 import core.backend.utils.Util;
 import core.commands.Kit;
 import core.commands.restricted.Admin;
+
 import core.data.PlayerMeta;
 import core.data.SettingsManager;
 import core.data.objects.SettingsContainer;
@@ -20,7 +21,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.event.Listener;
@@ -146,8 +146,8 @@ public class ConnectionManager implements Listener {
 		String everyMsg = Config.getValue("join.message.everyJoin").replace('"', ' ').trim();
 		String firstMsg = Config.getValue("join.message.firstJoin").replace('"', ' ').trim();
 
-		TextComponent everyComp = new TextComponent(everyMsg); everyComp.setColor(ChatColor.BLUE);
-		TextComponent firstComp = new TextComponent(firstMsg); firstComp.setColor(ChatColor.BLUE);
+		TextComponent everyComp = new TextComponent(everyMsg); everyComp.setColor(ChatPrint.tertiary);
+		TextComponent firstComp = new TextComponent(firstMsg); firstComp.setColor(ChatPrint.tertiary);
 
 		if (thisPlayer.hasPlayedBefore()) {
 			if (!everyMsg.equals("")) thisPlayer.spigot().sendMessage(everyComp);
