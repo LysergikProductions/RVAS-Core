@@ -1,6 +1,7 @@
 package core.commands.restricted;
 
 import core.backend.ChatPrint;
+import core.data.PlayerMeta;
 import core.data.objects.Pair;
 import core.events.SpeedLimiter;
 
@@ -63,6 +64,7 @@ public class Speeds implements CommandExecutor {
             }
         }
 
+        sortedSpeedsList = PlayerMeta.sortSpeedMap(sortedSpeedsList);
         for (Player thisPlayer: sortedSpeedsList.keySet()) {
             ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
             ItemMeta thisHeadMeta = newHead.getItemMeta();

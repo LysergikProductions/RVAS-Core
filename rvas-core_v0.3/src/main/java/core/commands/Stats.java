@@ -4,7 +4,6 @@ import core.Main;
 import core.backend.*;
 import core.data.PlayerMeta;
 import core.data.SettingsManager;
-import core.data.ThemeManager;
 import core.data.objects.*;
 import core.tasks.Analytics;
 
@@ -13,8 +12,6 @@ import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
-
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 
@@ -38,12 +35,6 @@ public class Stats implements CommandExecutor {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		sessionUses++;
-
-		try { ChatPrint.loadColors();
-		} catch (Exception ignore) {
-			ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
-			ChatPrint.loadColors();
-		}
 		
 		Player player = (Player) sender;
 		UUID playerid = player.getUniqueId();

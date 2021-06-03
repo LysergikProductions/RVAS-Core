@@ -59,16 +59,18 @@ public class ThemeManager {
         Map<String, ChatColor> themeBuilder = new HashMap<>();
 
         themeBuilder.put("primary", thisTheme.getPrimary());
-        System.out.println(themeBuilder.get("primary"));
         themeBuilder.put("secondary", thisTheme.getSecondary());
-        System.out.println(themeBuilder.get("secondary"));
         themeBuilder.put("tertiary", thisTheme.getTertiary());
-        System.out.println(themeBuilder.get("tertiary"));
 
         themeBuilder.put("clear", thisTheme.getClear());
         themeBuilder.put("faded", thisTheme.getFaded());
         themeBuilder.put("succeed", thisTheme.getSucceed());
         themeBuilder.put("fail", thisTheme.getFail());
+
+        themeBuilder.put("help_title", thisTheme.getHelp_title());
+        themeBuilder.put("desc", thisTheme.getDesc());
+        themeBuilder.put("cmd", thisTheme.getCmd());
+        themeBuilder.put("controls", thisTheme.getControls());
 
         return new Theme(themeBuilder);
     }

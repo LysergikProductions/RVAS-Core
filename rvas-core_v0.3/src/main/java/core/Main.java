@@ -1,7 +1,6 @@
 package core;
 
 import core.data.*;
-import core.data.objects.Theme;
 import core.events.*;
 import core.tasks.*;
 import core.backend.*;
@@ -26,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.2"; public static final int build = 286;
+	public static final String version = "0.3.2"; public static final int build = 287;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
