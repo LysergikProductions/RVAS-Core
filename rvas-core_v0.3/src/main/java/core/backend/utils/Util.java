@@ -22,9 +22,9 @@ package core.backend.utils;
  *
  * */
 
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class Util {

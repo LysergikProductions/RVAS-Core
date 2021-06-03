@@ -30,6 +30,8 @@ _**Doesn't prevent any vanilla exploits** by default_
 
 - Customizable + randomized MOTDs
 
+- Customizable Themes!
+
 ##### Commands:
 - `/vm` | `/ignore` | `/tjm` - _For players to self-govern their chat experience_
 - `/admin` | `/repair` - _Powerful tools for ops_

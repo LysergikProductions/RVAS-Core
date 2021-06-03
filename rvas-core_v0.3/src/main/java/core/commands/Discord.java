@@ -28,14 +28,13 @@ import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
 public class Discord implements CommandExecutor {
 

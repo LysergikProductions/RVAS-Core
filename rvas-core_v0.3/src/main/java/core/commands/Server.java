@@ -3,7 +3,6 @@ package core.commands;
 import core.backend.ChatPrint;
 import core.backend.Config;
 import core.backend.LagProcessor;
-import core.data.PlayerMeta;
 import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.utils.Util;
@@ -11,16 +10,15 @@ import core.backend.utils.Util;
 import core.tasks.Analytics;
 import core.tasks.LagManager;
 import core.tasks.ProcessPlaytime;
+import core.data.PlayerMeta;
 import core.events.SpeedLimiter;
 import core.events.ChatListener;
 
 import java.util.Arrays;
 import java.text.DecimalFormat;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;

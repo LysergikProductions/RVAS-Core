@@ -28,8 +28,8 @@ import core.backend.Config;
 import java.util.UUID;
 import java.io.Serializable;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class StatsContainer implements Serializable {

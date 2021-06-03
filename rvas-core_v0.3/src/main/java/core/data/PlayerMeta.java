@@ -2,7 +2,6 @@ package core.data;
 
 import core.backend.Config;
 import core.commands.Ignore;
-import core.data.objects.Pair;
 import core.events.ChatListener;
 import core.data.objects.SettingsContainer;
 
@@ -14,7 +13,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
@@ -44,16 +42,10 @@ public class PlayerMeta {
 
 	public static void setDonator(Player p, boolean status) {
 
-		if (status) {
-			if (!_donatorList.contains(p.getUniqueId())) {
-				_donatorList.add(p.getUniqueId());
-			}
-		} else {
-			_donatorList.remove(p.getUniqueId());
-		}
+		if (status && !_donatorList.contains(p.getUniqueId())) _donatorList.add(p.getUniqueId());
+		else _donatorList.remove(p.getUniqueId());
 
-		try {
-			saveDonators();
+		try { saveDonators();
 		} catch (IOException e) {
 			System.out.println("[core.backend.playermeta] Failed to save donators.");
 		}
@@ -66,10 +58,7 @@ public class PlayerMeta {
 		if(_permanentMutes.contains(p.getUniqueId())) { return true; }
 		
 		if(_ipMutes.contains(getIp(p))) {
-			if(!_permanentMutes.contains(p.getUniqueId())) {
-				
-				setMuteType(p, MuteType.PERMANENT);
-			}
+			if(!_permanentMutes.contains(p.getUniqueId())) setMuteType(p, MuteType.PERMANENT);
 			return true; 
 		}
 		return false;
@@ -115,10 +104,9 @@ public class PlayerMeta {
 		} else if (type.equals(MuteType.PERMANENT)) {
 			
 			muteType = "permanently ";
-
 			_temporaryMutes.remove(uuid);
-			if (!_permanentMutes.contains(uuid)) _permanentMutes.add(uuid);
 
+			if (!_permanentMutes.contains(uuid)) _permanentMutes.add(uuid);
 			saveMuted();
 			
 		} else if (type.equals(MuteType.IP)) {
@@ -146,15 +134,13 @@ public class PlayerMeta {
 		if (!_prisonerList.containsKey(p.getUniqueId())) {
 			_prisonerList.put(p.getUniqueId(), Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
 		} else {
-			try {
-				_prisonerList.remove(p.getUniqueId());
+			try { _prisonerList.remove(p.getUniqueId());
 			} catch (Exception e) {
 				throw new Exception(e);
 			}
 		}	
 		
-		try {
-			savePrisoners();
+		try { savePrisoners();
 		} catch (IOException e) {
 			System.out.println("[core.backend.playermeta] Failed to save lag priosners.");
 		}
@@ -195,13 +181,9 @@ public class PlayerMeta {
 		
 		List<String> lines = Files.readAllLines(Paths.get("plugins/core/muted.db"));
 		
-		for(String line : lines) {
-			try {
-				_permanentMutes.add(UUID.fromString(line));
-			}
-			catch(IllegalArgumentException e) {
-				_ipMutes.add(line);
-			}
+		for (String line : lines) {
+			try { _permanentMutes.add(UUID.fromString(line));
+			} catch(IllegalArgumentException e) { _ipMutes.add(line); }
 		}
 	}
 
@@ -229,9 +211,7 @@ public class PlayerMeta {
 			value += msToAdd / 1000;
 			Playtimes.put(p.getUniqueId(), value);
 
-		} else {
-			Playtimes.put(p.getUniqueId(), msToAdd / 1000);
-		}
+		} else Playtimes.put(p.getUniqueId(), msToAdd / 1000);
 	}
 
 	public static double getPlaytime(OfflinePlayer p) {
@@ -253,7 +233,8 @@ public class PlayerMeta {
 		out = Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(limit)
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-		out.remove(UUID.fromString(Config.getValue("adminid")));
+		try { out.remove(UUID.fromString(Config.getValue("adminid")));
+		} catch (Exception ignore) {}
 		return out;
 	}
 
@@ -289,7 +270,6 @@ public class PlayerMeta {
 	}
 
 	public static boolean isOp(CommandSender sender) {
-		
 		return (sender instanceof Player) ? sender.isOp() : sender instanceof ConsoleCommandSender;
 	}
 	
@@ -300,8 +280,7 @@ public class PlayerMeta {
 		String admin_name = Config.getValue("admin");
 		UUID admin_id;
 		
-		try {
-			admin_id = UUID.fromString(Config.getValue("adminid"));
+		try { admin_id = UUID.fromString(Config.getValue("adminid"));
 		} catch (Exception e) {return false;}
 
 		return admin_name.equals(target_name) && admin_id.equals(target_id);
@@ -326,7 +305,6 @@ public class PlayerMeta {
 
 				return MuteType.IP;
 			}
-		}
-		return MuteType.NONE;
+		} return MuteType.NONE;
 	}
 }
