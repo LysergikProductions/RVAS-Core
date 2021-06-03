@@ -1,16 +1,16 @@
 package core.events;
 
+import core.backend.ChatPrint;
 import core.backend.Config;
 import core.commands.AFK;
+import core.commands.Message;
 import core.commands.restricted.Admin;
+
 import core.data.PlayerMeta;
 import core.data.PlayerMeta.MuteType;
 
 import java.util.*;
 import java.util.logging.Level;
-
-import core.commands.Message;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
@@ -55,7 +55,7 @@ public class ChatListener implements Listener {
 			Message.AFK_warned.remove(playerid);
 			AFK._AFKs.remove(playerid);
 
-			player.sendMessage(new TextComponent(ChatColor.GREEN +
+			player.sendMessage(new TextComponent(ChatPrint.succeed +
 					"You are no longer AFK!").toLegacyText());
 		}
 
@@ -108,7 +108,7 @@ public class ChatListener implements Listener {
 						"Slow chat is currently enabled. You can chat once every " +
 						Integer.parseInt(Config.getValue("chat.slow.time")) / 1000 + " seconds");
 				
-				msg.setColor(ChatColor.RED);
+				msg.setColor(ChatPrint.fail);
 				
 				if(lastChatTimes.get(player.getUniqueId()) + Integer.parseInt(Config.getValue("chat.slow.time")) > System.currentTimeMillis()) {
 					

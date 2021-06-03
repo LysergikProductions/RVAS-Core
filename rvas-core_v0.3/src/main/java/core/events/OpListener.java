@@ -27,10 +27,13 @@ package core.events;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
-import core.data.Aliases;
-import core.data.PlayerMeta;
 import core.commands.restricted.Speeds;
 import core.commands.restricted.Check;
+
+import core.data.Aliases;
+import core.data.PlayerMeta;
+import core.data.ThemeManager;
+import core.data.objects.Pair;
 
 import java.util.*;
 import net.md_5.bungee.api.ChatColor;
@@ -38,37 +41,43 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.inventory.*;
-
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
 @SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
-	
-	// currently not in use
-	public static ArrayList<String> OwnerCommands = new ArrayList<>(); static {
-		OwnerCommands.addAll(Arrays.asList(
-				"/op", "/deop", "/ban", "/attribute", "/default", "/execute", "/rl",
-				"/summon", "/give", "/set", "/difficulty", "/replace", "/enchant",
-				"/function", "/bukkit", "/time", "/weather", "/schedule", "/clone",
-				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
-				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
-				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
-				"/restart", "/worldb", "/gamerule", "/score", "/tell", "/dupe", "/global"));
-	}
+
+	static ChatColor secondary, successColor, failColor;
+	static Map<UUID, Pair<Location, Location>> lastTPs = new HashMap<>();
+	static HashMap<UUID, ArrayList<Location>> savedTPs = new HashMap<>();
 
 	public static boolean isSauceInitialized = false;
+
+	@EventHandler(priority = EventPriority.LOW)
+	public void onTP(PlayerTeleportEvent event) {
+		if (!event.getPlayer().isOp()) return;
+
+		lastTPs.remove(event.getPlayer().getUniqueId());
+		lastTPs.put(event.getPlayer().getUniqueId(), new Pair<>(event.getFrom(), event.getTo()));
+	}
 
 	// this happens *before* the OP Lock plugin will see the command
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
+
+		secondary = ThemeManager.currentTheme.getSecondary();
+		successColor = ThemeManager.currentTheme.getSucceed();
+		failColor = ThemeManager.currentTheme.getFail();
 		
 		Player sender = event.getPlayer();
 		String admin_name = Config.getValue("admin");
@@ -80,11 +89,12 @@ public class OpListener implements Listener {
 		if (
 				msg.startsWith("/execute in the_end run tp") ||
 				msg.startsWith("/execute in the_nether run tp") ||
-				msg.startsWith("/execute in overworld run tp")) {
+				msg.startsWith("/execute in overworld run tp") ||
+				msg.startsWith("/execute in minecraft:the_end run tp") ||
+				msg.startsWith("/execute in minecraft:the_nether run tp") ||
+				msg.startsWith("/execute in minecraft:overworld run tp")) {
 			
-			if (!msg.contains("@a") && !msg.contains(admin_name) && sender.isOp()) {
-				return;
-			}
+			if (!msg.contains("@a") && !msg.contains(admin_name) && sender.isOp()) return;
 		}
 		
 		// take-over handling of /lr when receiving /lr skulls (lr normally for 'LaggRemover')
@@ -92,34 +102,100 @@ public class OpListener implements Listener {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) sender.chat("/kill @e[type=minecraft:wither_skull]");
-		}
-		
-		if (msg.startsWith("/lr items")) {
+
+		} else if (msg.startsWith("/lr items")) {
 			
 			event.setCancelled(true);
 			if (sender.isOp()) {
 				int removed_items = Chunks.clearChunkItems(sender.getLocation().getChunk());
-				sender.sendMessage("Removed " + removed_items + " item stacks.");
+				sender.sendMessage(secondary + "Removed " + removed_items + " item stacks.");
 			}
+		}
+
+		if (msg.startsWith("/tp back")) {
+			event.setCancelled(true);
+
+			Location lastLoc = lastTPs.get(sender.getUniqueId()).getRight();
+			String dim = Util.getDimensionName(lastLoc);
+			String loc = lastLoc.getBlockX() + " " + lastLoc.getBlockY() + " " + lastLoc.getBlockZ();
+
+			sender.chat("/execute in " + dim + " run tp @s " + loc);
+
+		} else  if (msg.startsWith("/tp:save ")) {
+			event.setCancelled(true);
+
+			String thisIndexStr = msg.split(" ")[1];
+			Integer thisIndexInt;
+
+			try { thisIndexInt = Integer.parseInt(thisIndexStr);
+			} catch (Exception ignore) {
+				sender.sendMessage(new TextComponent(
+						failColor + "Oops, " + thisIndexStr + " is not a number lol").toLegacyText());
+				thisIndexInt = null;
+			}
+
+			if (thisIndexInt != null && thisIndexInt >= 0 && thisIndexInt <= 9) {
+				ArrayList<Location> newList = savedTPs.getOrDefault(sender.getUniqueId(), new ArrayList<>());
+
+				newList.add(thisIndexInt, sender.getLocation());
+				savedTPs.put(sender.getUniqueId(), newList);
+
+				sender.sendMessage(new TextComponent(
+						successColor + "Successfully saved location #" + thisIndexInt).toLegacyText());
+
+			} else sender.sendMessage(new TextComponent(
+					failColor + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
+
+		} else if (msg.startsWith("/tp:")) {
+			event.setCancelled(true);
+
+			String thisIndexStr = msg.split(":")[1];
+			Integer thisIndexInt;
+
+			try { thisIndexInt = Integer.parseInt(thisIndexStr);
+			} catch (Exception ignore) {
+				sender.sendMessage(new TextComponent(
+						failColor + "Please use a number from 0 to 9 to choose a location").toLegacyText());
+				thisIndexInt = null;
+			}
+
+			if (thisIndexInt != null && thisIndexInt >= 0 && thisIndexInt <= 9) {
+				Location tpLoc;
+
+				try {
+					tpLoc = savedTPs.get(sender.getUniqueId()).get(thisIndexInt);
+				} catch (Exception ignore) {
+					sender.sendMessage(new TextComponent(
+							failColor + "There is no saved TP at that index").toLegacyText());
+					return;
+				}
+
+				String dim = Util.getDimensionName(tpLoc);
+				String loc = tpLoc.getBlockX() + " " + tpLoc.getBlockY() + " " + tpLoc.getBlockZ();
+
+				sender.chat("/execute in " + dim + " run tp @s " + loc);
+
+			} else sender.sendMessage(new TextComponent(
+					failColor + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!isAdmin) {
 			if (msg.contains("/give") && Config.getValue("protect.ops.give").equals("true") ||
-					Util.isCmdRestricted(msg)) {
+					Util.isCmdRestricted(msg)) { // <- LOCKS OUT DANGEROUS COMMANDS
 
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatColor.RED + "no").toLegacyText());
+				sender.sendMessage(new TextComponent(failColor + "no").toLegacyText());
 
 			} else if (msg.contains("@a")) {
 				
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatColor.RED + "You cannot target everyone!").toLegacyText());
+				sender.sendMessage(new TextComponent(failColor + "You cannot target everyone!").toLegacyText());
 				
 			} else if (msg.contains(admin_name)) {
 				
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatColor.RED + "You cannot target " + admin_name).toLegacyText());
+				sender.sendMessage(new TextComponent(failColor + "You cannot target " + admin_name).toLegacyText());
 			}
 
 		// 32k commands for testing anti-illegals; owner only
@@ -158,7 +234,7 @@ public class OpListener implements Listener {
 					sender.chat(Aliases.feather_32k);
 
 				} else {
-					sender.sendMessage(new TextComponent(ChatColor.RED + "Invalid Argument: " + thisArg).toLegacyText());
+					sender.sendMessage(new TextComponent(failColor + "Invalid Argument: " + thisArg).toLegacyText());
 				}
 			}
 		}
@@ -194,12 +270,10 @@ public class OpListener implements Listener {
 	// prevent moving GUI items into player inventories
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
-
 		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
-		else if (event.getClickedInventory() == Check.lagCheckGUI) event.setCancelled(true);
 	}
 
-	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler (priority = EventPriority.HIGH)
 	public void onInventoryMove(InventoryMoveItemEvent event) {
 
 		if (event.getInitiator() == Speeds.speedGUI) event.setCancelled(true);
@@ -207,4 +281,16 @@ public class OpListener implements Listener {
 		else if (event.getInitiator() == Check.lagCheckGUI) event.setCancelled(true);
 		else if (event.getDestination() == Check.lagCheckGUI) event.setCancelled(true);
 	}
+
+	@Deprecated
+	public static ArrayList<String> OwnerCommands = new ArrayList<>();/* static {
+		OwnerCommands.addAll(Arrays.asList(
+				"/op", "/deop", "/ban", "/attribute", "/default", "/execute", "/rl",
+				"/summon", "/give", "/set", "/difficulty", "/replace", "/enchant",
+				"/function", "/bukkit", "/time", "/weather", "/schedule", "/clone",
+				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
+				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
+				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
+				"/restart", "/worldb", "/gamerule", "/score", "/tell", "/dupe", "/global"));
+	}*/
 }

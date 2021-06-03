@@ -23,12 +23,11 @@ package core.backend;
  * 
  * */
 
-import core.data.StatsManager;
-import core.data.PlayerMeta;
-import core.data.SettingsManager;
+import core.data.*;
 import core.data.objects.*;
 import core.backend.utils.Util;
 
+import java.io.IOException;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
@@ -47,7 +46,26 @@ import org.bukkit.Statistic;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class ChatPrint {
-	
+
+	public static ChatColor primary, secondary, tertiary, clear, faded,
+			succeed, fail, help_title, desc, cmd, controls;
+
+	public static void loadColors() {
+		primary = ThemeManager.currentTheme.getPrimary();
+		secondary = ThemeManager.currentTheme.getSecondary();
+		tertiary = ThemeManager.currentTheme.getTertiary();
+
+		clear = ThemeManager.currentTheme.getClear();
+		faded = ThemeManager.currentTheme.getFaded();
+		succeed = ThemeManager.currentTheme.getSucceed();
+		fail = ThemeManager.currentTheme.getFail();
+
+		help_title = ThemeManager.currentTheme.getHelp_title();
+		desc = ThemeManager.currentTheme.getDesc();
+		cmd = ThemeManager.currentTheme.getCmd();
+		controls = ThemeManager.currentTheme.getControls();
+	}
+
 	// - PLAYER STATS PAGES - \\
 
 	public static void printMcStats(Player receiver, OfflinePlayer target) {
@@ -58,22 +76,21 @@ public class ChatPrint {
 		int mined_ancientDebris = target.getStatistic(Statistic.MINE_BLOCK, Material.ANCIENT_DEBRIS);
 		int placed_obi = target.getStatistic(Statistic.USE_ITEM, Material.OBSIDIAN);
 		
-		TextComponent sep = new TextComponent("---");
-		TextComponent title = new TextComponent(" " + target.getName() + "'s MC-Stats ");
-		
-		sep.setColor(ChatColor.GRAY);
-		title.setColor(ChatColor.GOLD); title.setBold(true);
-		
+		TextComponent sep = new TextComponent(faded + "---");
+		TextComponent title = new TextComponent(primary + " " + target.getName() + "'s MC-Stats ");
+
+		title.setBold(true);
 		TextComponent head = new TextComponent(sep, title, sep);
 		receiver.sendMessage(head.toLegacyText());
 		
-		receiver.sendMessage("Gaps Eaten: " + gaps_eaten);
-		receiver.sendMessage("Mined Ancient Debris: " + mined_ancientDebris);
-		receiver.sendMessage("Mined Obsidian: " + mined_obi);
-		receiver.sendMessage("Placed Obsidian: " + placed_obi);
+		receiver.sendMessage(new TextComponent(clear + "Gaps Eaten: " + gaps_eaten).toLegacyText());
+		receiver.sendMessage(new TextComponent(clear + "Mined Ancient Debris: " + mined_ancientDebris).toLegacyText());
+		receiver.sendMessage(new TextComponent(clear + "Mined Obsidian: " + mined_obi).toLegacyText());
+		receiver.sendMessage(new TextComponent(clear + "Placed Obsidian: " + placed_obi).toLegacyText());
 	}
 	
 	public static void printLeaders(Player receiver, int lineLimit) {
+
 		if (lineLimit > 15) lineLimit = 15;
 		if (lineLimit < 3) lineLimit = 3;
 
@@ -87,7 +104,9 @@ public class ChatPrint {
 		for (UUID pid : realLeaders_0_15.keySet()) {
 			x++;
 			
-			TextComponent a1 = new TextComponent("#" + x + ": "); a1.setBold(true);
+			TextComponent a1 = new TextComponent("#" + x + ": ");
+			a1.setBold(true);
+
 			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(pid);
 			String target_name = offPlayer.getName();
 			
@@ -96,8 +115,7 @@ public class ChatPrint {
 				TextComponent b = new TextComponent("[unknown], " + Util.timeToString(realLeaders_0_15.get(pid)));
 				TextComponent c = new TextComponent(a1, b);
 				
-				c.setColor(ChatColor.GOLD);
-				
+				c.setColor(primary);
 				list.add(c);
 				
 			} else { // this leader name != null
@@ -106,30 +124,29 @@ public class ChatPrint {
 				int deaths = StatsManager.getStats(offPlayer).deathTotal;
 				String kd = StatsManager.getStats(offPlayer).kd;
 				
-				TextComponent a2 = new TextComponent(target_name + ", ");
+				TextComponent a2 = new TextComponent(primary + target_name + ", ");
 				TextComponent b = new TextComponent(Util.timeToString(realLeaders_0_15.get(pid)));
 				
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
 				ClickEvent shortcut = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/stats " + target_name);
-				
-				a2.setColor(ChatColor.GOLD);
+
 				b.setItalic(true);
 				b.setHoverEvent(hoverStats);
 				
 				TextComponent c = new TextComponent(a1, a2, b);
-				
 				c.setClickEvent(shortcut);
+
 				list.add(c);
 			}
 		}
 		
-		TextComponent top5_head = new TextComponent("--- Top Players ---");
+		TextComponent top5_head = new TextComponent(primary + "--- Top Players ---");
 		TextComponent ujoins_a = new TextComponent("Unique Joins: ");
 		TextComponent ujoins_b = new TextComponent("" + PlayerMeta.Playtimes.keySet().size());
 		TextComponent msg = new TextComponent(ujoins_a, ujoins_b);
 
-		top5_head.setColor(ChatColor.GOLD); top5_head.setBold(true);
-		msg.setColor(ChatColor.GRAY); msg.setItalic(true);
+		top5_head.setBold(true);
+		msg.setColor(faded); msg.setItalic(true);
 		
 		receiver.sendMessage(top5_head.toLegacyText());
 
@@ -166,21 +183,21 @@ public class ChatPrint {
 		TextComponent title_name = new TextComponent(target.getName());
 		TextComponent title_suf = new TextComponent("'s Statistics ---");
 		
-		TextComponent joined_a = new TextComponent("Joined: ");
+		TextComponent joined_a = new TextComponent(tertiary + "Joined: ");
 		TextComponent joined_b = new TextComponent(firstPlayed);
-		TextComponent lastSeen_a = new TextComponent("Last seen: ");
+		TextComponent lastSeen_a = new TextComponent(tertiary + "Last seen: ");
 		TextComponent lastSeen_b = new TextComponent(lastPlayed);
-		TextComponent rank_a = new TextComponent("Ranking: ");
+		TextComponent rank_a = new TextComponent(tertiary + "Ranking: ");
 		TextComponent rank_b = new TextComponent("" + PlayerMeta.getRank(target));
-		TextComponent playtime_a = new TextComponent("Time played: ");
+		TextComponent playtime_a = new TextComponent(tertiary + "Time played: ");
 		TextComponent playtime_b = new TextComponent(Util.timeToString(PlayerMeta.getPlaytime(target)));
 
 		double hours = PlayerMeta.getPlaytime(target) / 3600;
 		Text playtime_hover = new Text(new DecimalFormat("0.00").format(hours) + " hours");
 		
-		TextComponent tkills_a = new TextComponent("PVP Kills: ");
+		TextComponent tkills_a = new TextComponent(tertiary + "PVP Kills: ");
 		TextComponent tkills_b = new TextComponent("" + StatsManager.getStats(target).killTotal);
-		TextComponent tdeaths_a = new TextComponent("PVP Deaths: ");
+		TextComponent tdeaths_a = new TextComponent(tertiary + "PVP Deaths: ");
 		TextComponent tdeaths_b = new TextComponent("" + StatsManager.getStats(target).deathTotal);
 		
 		String spawnKills = String.valueOf(StatsManager.getStats(target).spawnKills);
@@ -188,19 +205,16 @@ public class ChatPrint {
 		HoverEvent hover_showHours = new HoverEvent(HoverEvent.Action.SHOW_TEXT, playtime_hover);
 		
 		// style individual components
-		joined_a.setColor(ChatColor.BLUE); joined_a.setBold(true);
+		joined_a.setBold(true);
+		lastSeen_a.setBold(true);
+		rank_a.setBold(true);
 		
-		lastSeen_a.setColor(ChatColor.BLUE); lastSeen_a.setBold(true);
-		
-		rank_a.setColor(ChatColor.BLUE); rank_a.setBold(true);
-		
-		playtime_a.setColor(ChatColor.BLUE); playtime_a.setBold(true);
+		playtime_a.setBold(true);
 		playtime_b.setHoverEvent(hover_showHours);
 		
-		tkills_a.setColor(ChatColor.BLUE); tkills_a.setBold(true);
+		tkills_a.setBold(true);
 		tkills_b.setHoverEvent(hover_killDetail);
-		
-		tdeaths_a.setColor(ChatColor.BLUE); tdeaths_a.setBold(true);
+		tdeaths_a.setBold(true);
 		
 		// parse components into 1-line components
 		TextComponent title = new TextComponent(title_pre, title_name, title_suf);
@@ -215,13 +229,12 @@ public class ChatPrint {
 		TextComponent kd;
 		
 		try {
-			kd = new TextComponent("K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(StatsManager.getStats(target).kd)));
+			kd = new TextComponent(faded + "K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(StatsManager.getStats(target).kd)));
 		} catch (NumberFormatException e) {
-			kd = new TextComponent("K/D: " + StatsManager.getStats(target).kd);
+			kd = new TextComponent(faded + "K/D: " + StatsManager.getStats(target).kd);
 		}
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
-		kd.setColor(ChatColor.GRAY);
 		
 		ArrayList<TextComponent> statsLines; {
 			statsLines = new ArrayList<>(Arrays.asList(title, joined, lastSeen, rank, playtime));
@@ -252,8 +265,8 @@ public class ChatPrint {
 		TextComponent sep = new TextComponent("---");
 		TextComponent title = new TextComponent(" Your Stats Settings ");
 		
-		sep.setColor(ChatColor.GRAY);
-		title.setColor(ChatColor.GOLD); title.setBold(true);
+		sep.setColor(faded);
+		title.setColor(primary); title.setBold(true);
 		
 		TextComponent head = new TextComponent(sep, title, sep);
 		list.add(new TextComponent("")); list.add(head);
@@ -266,13 +279,13 @@ public class ChatPrint {
 		TextComponent showDeathMsgs_a = new TextComponent("All death messages: ");
 		TextComponent currentTimeZone_a = new TextComponent("Timezone: ");
 		
-		showPVP_a.setColor(ChatColor.GOLD);
-		showKills_a.setColor(ChatColor.GOLD);
-		showDeaths_a.setColor(ChatColor.GOLD);
-		showKD_a.setColor(ChatColor.GOLD);
-		showJoinMsgs_a.setColor(ChatColor.GOLD);
-		showDeathMsgs_a.setColor(ChatColor.GOLD);
-		currentTimeZone_a.setColor(ChatColor.GOLD);
+		showPVP_a.setColor(primary);
+		showKills_a.setColor(primary);
+		showDeaths_a.setColor(primary);
+		showKD_a.setColor(primary);
+		showJoinMsgs_a.setColor(primary);
+		showDeathMsgs_a.setColor(primary);
+		currentTimeZone_a.setColor(primary);
 		
 		String spvp; String kill; String die;
 		String kdr; String jMsgs; String dMsgs;

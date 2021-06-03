@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.1"; public static final int build = 275;
+	public static final String version = "0.3.2"; public static final int build = 287;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -46,10 +46,18 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
 
-		try {
-			FileManager.setup();
+		try { FileManager.setup();
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured in FileManager.setup()");
+		}
+
+		try { ThemeManager.load();
+		} catch (Exception e) { e.printStackTrace(); }
+
+		try { ChatPrint.loadColors();
+		} catch (Exception ignore) {
+			ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
+			ChatPrint.loadColors();
 		}
 
 		System.out.println("[core.main] __________________");
@@ -242,6 +250,9 @@ public class Main extends JavaPlugin {
 		try { core_pm.registerEvents(new OpListener(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
+		try { core_pm.registerEvents(new Check(), this);
+		} catch (Exception e) { e.printStackTrace(); }
+
 		try {
 			PacketListener.C2S_AnimationPackets();
 
@@ -251,7 +262,7 @@ public class Main extends JavaPlugin {
 		} catch (Exception e) { e.printStackTrace(); }
 		
 		System.out.println("[core.main] ..finishing up..");
-		
+
 		// Define banned & special blocks
 		ItemCheck.Banned.addAll(Arrays.asList(Material.BARRIER, Material.COMMAND_BLOCK,
 				Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
@@ -298,7 +309,7 @@ public class Main extends JavaPlugin {
 				break; // <- only check first normal dimension found
 			}
 		}
-		
+
 		System.out.println("[core.main] ________________________________");
 		System.out.println("[core.main] -- Finished loading RVAS-Core --");
 		System.out.println("[core.main] ________________________________");

@@ -4,14 +4,14 @@ import core.backend.*;
 import core.backend.utils.Restart;
 import core.backend.utils.Util;
 import core.data.Aliases;
+import core.data.ThemeManager;
+import core.data.objects.Pair;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
 import core.events.SpeedLimiter;
 
 import java.util.*;
 import java.io.IOException;
-
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 
@@ -78,19 +78,26 @@ public class Admin implements CommandExecutor {
 					return true;
 
 				case "RELOAD":
-					try {
-						Config.load();
-						sender.sendMessage("\u00A7aSuccessfully reloaded.");
 
+					try { ChatPrint.loadColors();
+					} catch (Exception ignore) {
+						sender.sendMessage("\u00A74Failed to reload colors, setting internal theme..");
+						ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
+						ChatPrint.loadColors();
+					}
+
+					try { Config.load();
 					} catch (IOException e) {
-						sender.sendMessage("\u00A74Failed to reload.");
+						sender.sendMessage("\u00A74Failed to reload configs, restarting..");
 						Restart.restart();
 					}
+
+					sender.sendMessage("\u00A7aSuccessfully reloaded.");
 					return true;
 					
 				case "SPEED":
 					player.sendMessage("\u00A76Player speeds:");
-					List< Pair<Double, String> > speeds = SpeedLimiter.getSpeeds();
+					List<Pair<Double, String>> speeds = SpeedLimiter.getSpeeds();
 					
 					for (Pair<Double, String> speedEntry : speeds) {
 						double speed = speedEntry.getLeft();
@@ -180,7 +187,7 @@ public class Admin implements CommandExecutor {
 		TextComponent ops_a = new TextComponent("OP Accounts: ");
 		TextComponent ops_b = new TextComponent("" + Bukkit.getOperators().size());
 		
-		ops_a.setColor(ChatColor.RED); ops_b.setColor(ChatColor.GRAY);
+		ops_a.setColor(ChatPrint.fail); ops_b.setColor(ChatPrint.desc);
 		TextComponent ops = new TextComponent(ops_a, ops_b);
 		
 		player.sendMessage("");

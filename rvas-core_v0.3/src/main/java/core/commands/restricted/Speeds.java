@@ -1,6 +1,8 @@
 package core.commands.restricted;
 
-import core.backend.Pair;
+import core.backend.ChatPrint;
+import core.data.PlayerMeta;
+import core.data.objects.Pair;
 import core.events.SpeedLimiter;
 
 import java.util.*;
@@ -12,8 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import org.bukkit.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
@@ -25,8 +25,10 @@ public class Speeds implements CommandExecutor {
 
     private static Player thisPlayer = null;
     public static Inventory speedGUI; static {
-        speedGUI = Bukkit.createInventory(thisPlayer, 54, ChatColor.RED + "Speeds List");
+        speedGUI = Bukkit.createInventory(thisPlayer, 54, ChatPrint.fail + "Speeds List");
     }
+
+    public static Map<Player, Double> sortedSpeedsList = new HashMap<>();
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -38,7 +40,7 @@ public class Speeds implements CommandExecutor {
 
         Player sender = (Player) commandSender;
         if (!sender.isOp()) {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "no").toLegacyText());
+            sender.sendMessage(new TextComponent(ChatPrint.fail + "no").toLegacyText());
             return false;
 
         } else thisPlayer = sender;
@@ -57,19 +59,25 @@ public class Speeds implements CommandExecutor {
             if(speed == 0) continue;
 
             String thisName = speedEntry.getRight();
-            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
+            if (speed >= SpeedLimiter.currentSpeedLimit * 0.4) {
+                sortedSpeedsList.putIfAbsent(Bukkit.getPlayer(thisName), speedEntry.getLeft());
+            }
+        }
 
+        sortedSpeedsList = PlayerMeta.sortSpeedMap(sortedSpeedsList);
+        for (Player thisPlayer: sortedSpeedsList.keySet()) {
+            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
             ItemMeta thisHeadMeta = newHead.getItemMeta();
-            thisHeadMeta.setDisplayName(thisName);
+            thisHeadMeta.setDisplayName(thisPlayer.getName());
 
             String color = "\u00A7";
-            if (speed >= SpeedLimiter.currentSpeedLimit * 0.4) {
-                color += "c"; // red
-                List<String> lore = Collections.singletonList(color + String.format("%4.1f", speed));
-                thisHeadMeta.setLore(lore);
-                newHead.setItemMeta(thisHeadMeta);
-                speedGUI.addItem(newHead);
-            }
+            color += "c"; // red
+            List<String> lore = Collections
+                    .singletonList(color + String.format("%4.1f", sortedSpeedsList.get(thisPlayer)));
+
+            thisHeadMeta.setLore(lore);
+            newHead.setItemMeta(thisHeadMeta);
+            speedGUI.addItem(newHead);
         }
     }
 }

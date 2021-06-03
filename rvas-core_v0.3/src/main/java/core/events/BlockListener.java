@@ -23,6 +23,7 @@ package core.events;
  * 
  * */
 
+import core.backend.ChatPrint;
 import core.backend.Config;
 import core.backend.ItemCheck;
 import core.backend.utils.*;
@@ -31,8 +32,6 @@ import core.commands.restricted.Repair;
 
 import java.util.*;
 import java.text.DecimalFormat;
-
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -229,7 +228,7 @@ public class BlockListener implements Listener {
 			}
 
 			TextComponent warn = new TextComponent("WARN "); warn.setBold(true);
-			warn.setColor(ChatColor.RED);
+			warn.setColor(ChatPrint.fail);
 
 			TextComponent msg = new TextComponent("Potential lag-machine at " +
 					block.getX() + ", " + block.getY() + ", " + block.getZ() + " in " + env +
@@ -241,7 +240,7 @@ public class BlockListener implements Listener {
 
 			msg.setClickEvent(thisEvent);
 
-			if (counter > 256) {
+			if (counter > 192) {
 				Util.notifyOps(new TextComponent(warn, msg));
 			}
 		}
@@ -253,7 +252,7 @@ public class BlockListener implements Listener {
 				event.setCancelled(true);
 
 				placer.sendMessage(new TextComponent(
-						ChatColor.RED + "You can only place shulkers in survival mode").toLegacyText());
+						ChatPrint.fail + "You can only place shulkers in survival mode").toLegacyText());
 			}
 		}
 		

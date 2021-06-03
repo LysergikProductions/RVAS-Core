@@ -23,11 +23,11 @@ package core.tasks;
  * 
  * */
 
+import core.backend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.events.ConnectionManager;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -85,7 +85,7 @@ public class LagManager implements Listener, Runnable {
 			}
 
 			TextComponent warn = new TextComponent("WARN "); warn.setBold(true);
-			warn.setColor(ChatColor.RED);
+			warn.setColor(ChatPrint.fail);
 
 			TextComponent msg = new TextComponent("17+ armor stands at " +
 					spawnLoc.getX() + ", " + spawnLoc.getY() + ", " + spawnLoc.getZ() + " in " + dimension);

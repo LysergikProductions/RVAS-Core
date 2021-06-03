@@ -60,7 +60,6 @@ public class Config {
 
 		debug = Boolean.parseBoolean(getValue("debug"));
 		verbose = Boolean.parseBoolean(getValue("verbose"));
-
 		OpListener.isSauceInitialized = false;
 
 		if (BlockListener.updateConfigs() && verbose) System.out.println("BlockListener sConfigs Updated!");

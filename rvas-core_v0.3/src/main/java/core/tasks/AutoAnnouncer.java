@@ -23,6 +23,7 @@ package core.tasks;
  *
  * */
 
+import core.backend.ChatPrint;
 import core.backend.Scheduler;
 import core.backend.Config;
 
@@ -32,7 +33,6 @@ import java.nio.file.Paths;
 
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.ChatColor;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -56,7 +56,7 @@ public class AutoAnnouncer extends TimerTask {
 	static TextComponent source; static {
 		source = new TextComponent(
 				"RVAS-core is open-source! Click this message to access the repository.");
-		source.setColor(ChatColor.GOLD); source.setItalic(true);
+		source.setColor(ChatPrint.primary); source.setItalic(true);
 
 		source.setClickEvent(new ClickEvent(ClickEvent.Action
 				.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));
@@ -97,7 +97,7 @@ public class AutoAnnouncer extends TimerTask {
 			Bukkit.spigot().broadcast(source);
 		} else {
 			lastAnnouncement = tryMsg;
-			Bukkit.spigot().broadcast(new TextComponent(tryMsg));
+			Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary + tryMsg));
 		}
 		Scheduler.setLastTaskId("autoAnnounce");
 	}

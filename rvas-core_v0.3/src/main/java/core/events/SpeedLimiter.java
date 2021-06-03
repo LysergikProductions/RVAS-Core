@@ -2,6 +2,7 @@ package core.events;
 
 import core.Main;
 import core.backend.*;
+import core.data.objects.Pair;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
 import core.commands.restricted.Admin;
@@ -238,7 +239,7 @@ public class SpeedLimiter implements Listener {
 	}
 
 	/* get speeds sorted from fastest to lowest */
-	public static List< Pair<Double,String> > getSpeeds() {
+	public static List<Pair<Double,String>> getSpeeds() {
 		
 		// create a list from the speeds map
 		List<Map.Entry<String, Double> > list =

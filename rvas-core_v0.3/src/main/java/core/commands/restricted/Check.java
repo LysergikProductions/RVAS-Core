@@ -23,14 +23,18 @@ package core.commands.restricted;
  *
  * */
 
+import core.backend.ChatPrint;
+import core.data.PlayerMeta;
+import core.data.objects.Pair;
 import core.backend.utils.Chunks;
 
 import java.util.*;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -41,24 +45,30 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class Check implements CommandExecutor {
+@SuppressWarnings("deprecation")
+public class Check implements CommandExecutor, Listener {
 
-    public static Map<UUID, Integer> lagList = new HashMap<>();
+    public static Map<UUID, Pair<Integer, Location>> lagList = new HashMap<>();
+    public static Map<Player, Integer> sortedLagList = new HashMap<>();
 
-    private static Player thisPlayer = null;
-    public static Inventory lagCheckGUI; static {
-        lagCheckGUI = Bukkit.createInventory(thisPlayer, 54, ChatColor.RED + "Occupied Laggy Chunks");
+    private static Player checker = null;
+    public static Inventory lagCheckGUI;
+
+    static {
+        lagCheckGUI = Bukkit.createInventory(checker, 54, ChatPrint.fail + "Occupied Laggy Chunks");
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(commandSender instanceof Player)) return false;
 
-        thisPlayer = (Player)commandSender;
-        if (!thisPlayer.isOp()) { thisPlayer.sendMessage("You can't use this!"); return false; }
+        try { checker = (Player)commandSender;
+        } catch (Exception ignore) { return false; }
+
+        if (!checker.isOp()) { checker.sendMessage("You can't use this!"); return false; }
 
         updateGUI();
-        thisPlayer.openInventory(lagCheckGUI);
+        checker.openInventory(lagCheckGUI);
         return true;
     }
 
@@ -70,22 +80,44 @@ public class Check implements CommandExecutor {
 
             if (!thisPlayer.isOp()) {
 
+                lagList.remove(thisPlayer.getUniqueId());
                 thisCount = Chunks.countChunkLagBlocks(thisPlayer);
-                if (thisCount > 256) {
-                    lagList.put(thisPlayer.getUniqueId(), thisCount);
 
-                    String thisName = thisPlayer.getName();
-                    ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
-
-                    ItemMeta thisHeadMeta = newHead.getItemMeta();
-                    thisHeadMeta.setDisplayName(thisName);
-
-                    List<String> lore = Collections.singletonList("\u00A7c" + thisCount);
-                    thisHeadMeta.setLore(lore);
-                    newHead.setItemMeta(thisHeadMeta);
-                    lagCheckGUI.addItem(newHead);
+                if (thisCount > 192) {
+                    lagList.putIfAbsent(thisPlayer.getUniqueId(), new Pair<>(thisCount, thisPlayer.getLocation()));
+                    sortedLagList.putIfAbsent(thisPlayer, thisCount);
                 }
             }
+        }
+
+        sortedLagList = PlayerMeta.sortLagMap(sortedLagList);
+        for (Player thisPlayer: sortedLagList.keySet()) {
+
+            String thisName = thisPlayer.getName();
+            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
+
+            ItemMeta thisHeadMeta = newHead.getItemMeta();
+            thisHeadMeta.setDisplayName(thisName);
+
+            List<String> lore = Collections.singletonList("\u00A7c" + sortedLagList.get(thisPlayer));
+            thisHeadMeta.setLore(lore);
+            newHead.setItemMeta(thisHeadMeta);
+            lagCheckGUI.addItem(newHead);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() == Check.lagCheckGUI) {
+
+            event.setCancelled(true); String thatPlayerName = null;
+
+            try { thatPlayerName = Objects.requireNonNull(event.getCurrentItem()).getItemMeta().getDisplayName();
+            } catch (Exception ignore) {}
+
+            if (event.getWhoClicked().getServer().getPlayer(thatPlayerName) == null) checker
+                    .chat("/admin spot " + thatPlayerName);
+            else checker.chat("/ninjatp " + thatPlayerName);
         }
     }
 }

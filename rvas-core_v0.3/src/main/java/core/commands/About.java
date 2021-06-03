@@ -24,6 +24,7 @@ package core.commands;
  * */
 
 import core.Main;
+import core.backend.ChatPrint;
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
 
@@ -50,15 +51,15 @@ public class About implements CommandExecutor {
 		if (!PlayerMeta.isAdmin(player)) Analytics.about_cmd++;
 		
 		TextComponent build = new TextComponent(
-				ChatColor.GRAY + "RVAS-Core v" + Main.version + " (#" + Main.build + ")");
+				ChatPrint.desc + "RVAS-Core v" + Main.version + " (#" + Main.build + ")");
 		build.setBold(true);
 
 		TextComponent by = new TextComponent(
-				ChatColor.AQUA + "by LysergikProductions, " +
-				ChatColor.GRAY +  "w/code from d2k11 and help from ultradutch");
+				ChatPrint.controls + "by LysergikProductions, " +
+				ChatPrint.desc +  "w/code from d2k11 and help from ultradutch");
 
 		TextComponent source = new TextComponent(
-				ChatColor.GREEN + "RVAS-core is open source. Access the GitHub by clicking this message.");
+				ChatPrint.succeed + "RVAS-core is open source. Access the GitHub by clicking this message.");
 
 		TextComponent license = new TextComponent(
 				ChatColor.ITALIC + "Licensed under AGPL-3.0.");

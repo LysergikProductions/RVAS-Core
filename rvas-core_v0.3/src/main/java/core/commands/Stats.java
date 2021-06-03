@@ -12,8 +12,6 @@ import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
-
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 
@@ -27,7 +25,7 @@ public class Stats implements CommandExecutor {
 	public static int sessionUses = 0;
 
 	public static TextComponent allTimezoneIDs = new TextComponent(
-			ChatColor.AQUA + "Click here to see all timezone IDs!"); static {
+			ChatPrint.controls + "Click here to see all timezone IDs!"); static {
 				allTimezoneIDs.setItalic(true);
 				allTimezoneIDs.setClickEvent(new ClickEvent(
 						ClickEvent.Action.OPEN_URL,
@@ -140,7 +138,7 @@ public class Stats implements CommandExecutor {
 					case "timezone":
 
 						if (args.length != 2) {
-							player.sendMessage(ChatColor.GRAY +
+							player.sendMessage(ChatPrint.desc +
 									"Correct Syntax: /stats timezone EST | America/Phoenix | GMT | etc");
 							player.sendMessage(allTimezoneIDs);
 							return false;

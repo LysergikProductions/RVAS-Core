@@ -1,5 +1,6 @@
 package core.commands;
 
+import core.backend.ChatPrint;
 import core.backend.LagProcessor;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
@@ -44,7 +45,7 @@ public class Tps implements CommandExecutor {
 			switch (((int) ticks_per_second_percentage)/10) {
 				case 0:
 				case 1:
-					msg.setColor(ChatColor.GREEN);
+					msg.setColor(ChatPrint.succeed);
 					break;
 				case 2:
 				case 3:
@@ -53,13 +54,13 @@ public class Tps implements CommandExecutor {
 				case 4:
 				case 5:
 				case 6:
-					msg.setColor(ChatColor.GOLD);
+					msg.setColor(ChatPrint.primary);
 					break;
 				case 7:
 				case 8:
 				case 9:
 				case 10:
-					msg.setColor(ChatColor.RED);
+					msg.setColor(ChatPrint.fail);
 					break;
 				default:
 					msg.setColor(ChatColor.LIGHT_PURPLE);

@@ -1,5 +1,6 @@
 package core.commands;
 
+import core.backend.ChatPrint;
 import core.data.PlayerMeta;
 import core.commands.restricted.Admin;
 
@@ -7,12 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -53,7 +53,7 @@ public class Local implements CommandExecutor {
             Message.AFK_warned.remove(pid);
             AFK._AFKs.remove(pid);
 
-            sender.sendMessage(new TextComponent(ChatColor.GREEN +
+            sender.sendMessage(new TextComponent(ChatPrint.succeed +
                     "You are no longer AFK!").toLegacyText());
         }
 

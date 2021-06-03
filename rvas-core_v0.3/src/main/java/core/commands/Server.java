@@ -1,5 +1,6 @@
 package core.commands;
 
+import core.backend.ChatPrint;
 import core.backend.Config;
 import core.backend.LagProcessor;
 import core.data.PlayerMeta;
@@ -111,50 +112,40 @@ public class Server implements CommandExecutor {
 		TextComponent uptime_b = new TextComponent(Util.timeToString(ServerMeta.getUptime()));
 		
 		// style individual components //
-		title_sep.setColor(ChatColor.GRAY);
+		title_sep.setColor(ChatPrint.faded);
 		
-		players_a.setColor(ChatColor.RED); players_a.setBold(true);
+		players_a.setColor(ChatPrint.fail); players_a.setBold(true);
+		tps_a.setColor(ChatPrint.fail); tps_a.setBold(true);
+		slimit_a.setColor(ChatPrint.faded); slimit_a.setBold(true);
+		skicks_a.setColor(ChatPrint.fail); skicks_a.setBold(true);
+		withers_a.setColor(ChatPrint.faded); withers_a.setBold(true);
+		acr_a.setColor(ChatPrint.fail); acr_a.setBold(true);
+		ujoins_a.setColor(ChatPrint.fail); ujoins_a.setBold(true);
+		donos_a.setColor(ChatPrint.fail); donos_a.setBold(true);
+		laggers_a.setColor(ChatPrint.fail); laggers_a.setBold(true);
+		pmutes_a.setColor(ChatPrint.fail); pmutes_a.setBold(true);
+		ops_a.setColor(ChatPrint.fail); ops_a.setBold(true);
 		
-		tps_a.setColor(ChatColor.RED); tps_a.setBold(true);
-		
-		slimit_a.setColor(ChatColor.GRAY); slimit_a.setBold(true);
-		
-		skicks_a.setColor(ChatColor.RED); skicks_a.setBold(true);
-		
-		withers_a.setColor(ChatColor.GRAY); withers_a.setBold(true);
-		acr_a.setColor(ChatColor.RED); acr_a.setBold(true);
-		
-		ujoins_a.setColor(ChatColor.RED); ujoins_a.setBold(true);
-		
-		donos_a.setColor(ChatColor.RED); donos_a.setBold(true);
-		
-		laggers_a.setColor(ChatColor.RED); laggers_a.setBold(true);
-		
-		pmutes_a.setColor(ChatColor.RED); pmutes_a.setBold(true);
-		
-		ops_a.setColor(ChatColor.RED); ops_a.setBold(true);
-		
-		restart_a.setColor(ChatColor.RED); restart_a.setBold(true);
-		restart_b.setColor(ChatColor.GRAY);
-		
-		rtrig_a.setColor(ChatColor.RED); rtrig_a.setBold(true);
-		rtrig_b.setColor(ChatColor.GRAY); rtrig_c.setColor(ChatColor.GRAY);
+		restart_a.setColor(ChatPrint.fail); restart_a.setBold(true);
+		restart_b.setColor(ChatPrint.desc);
+		rtrig_a.setColor(ChatPrint.fail); rtrig_a.setBold(true);
+		rtrig_b.setColor(ChatPrint.desc); rtrig_c.setColor(ChatPrint.desc);
 		
 		if ((double)witherCount >= ((double)witherLimit * 0.8)) {			
-			withers_b.setColor(ChatColor.RED);
+			withers_b.setColor(ChatPrint.fail);
 			
 		} else if ((double)witherCount >= ((double)witherLimit * 0.5)
 				&& witherCount < ((double)witherLimit * 0.8)) {
 			
-			withers_b.setColor(ChatColor.GOLD);
+			withers_b.setColor(ChatPrint.primary);
 			
 		} else if (witherCount < ((double)witherLimit * 0.5)) {
-			withers_b.setColor(ChatColor.GREEN);
+			withers_b.setColor(ChatPrint.succeed);
 		}
 		
-		slowMode_a.setColor(ChatColor.RED); slowMode_a.setBold(true);
-		slowMode_b.setColor(ChatColor.GRAY);
-		uptime_a.setColor(ChatColor.RED); uptime_a.setBold(true);
+		slowMode_a.setColor(ChatPrint.fail); slowMode_a.setBold(true);
+		slowMode_b.setColor(ChatPrint.desc);
+		uptime_a.setColor(ChatPrint.fail); uptime_a.setBold(true);
 		
 		// parse components into 1-line components
 		TextComponent title = new TextComponent(title_sep, title_name, title_sep);
@@ -180,7 +171,7 @@ public class Server implements CommandExecutor {
 		TextComponent uptime = new TextComponent(uptime_a, uptime_b);
 		// more info
 		TextComponent moreInfo = new TextComponent("Click here to see more info..");
-		moreInfo.setColor(ChatColor.BLUE); moreInfo.setItalic(true);
+		moreInfo.setColor(ChatPrint.tertiary); moreInfo.setItalic(true);
 		
 		// add functionality to components
 		laggers_a.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Trying to lag the server will result in severe consequences.")));

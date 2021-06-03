@@ -1,6 +1,7 @@
 package core.data;
 
 import core.Main;
+import core.backend.ChatPrint;
 import core.data.objects.*;
 import core.backend.Config;
 
@@ -27,6 +28,7 @@ public class FileManager {
 	public static File core_server_config;
 	public static File core_restrictions_config;
 	public static File core_spawn_config;
+	public static File defaultThemeFile;
 
 	public static File donor_list;
 	public static File all_donor_codes;
@@ -73,6 +75,7 @@ public class FileManager {
 		// Instantiate File objects \\
 		File plugin_work_directory = new File(plugin_work_path);
 		File configs_directory = new File(plugin_work_path + "configs");
+		File themes_directory = new File(plugin_work_path + "themes/");
 
 		File analytics_directory = new File(plugin_work_path + "analytics/");
 		File backup_directory = new File(plugin_work_path + "backup");
@@ -81,6 +84,7 @@ public class FileManager {
 		core_server_config = new File(plugin_work_path + "configs/config.txt");
 		core_restrictions_config = new File(plugin_work_path + "configs/restrictions.txt");
 		core_spawn_config = new File(plugin_work_path + "configs/spawn_controller.txt");
+		defaultThemeFile = new File(plugin_work_path + "themes/default.json");
 
 		donor_list = new File(plugin_work_path + "donator.db");
 		all_donor_codes = new File(plugin_work_path + "codes/all.db");
@@ -124,6 +128,14 @@ public class FileManager {
 			}
 		} else if (!configs_directory.exists()) System.out.println("[WARN] FAILED TO CREATE CONFIGS_DIRECTORY");
 
+		if (!themes_directory.exists() && themes_directory.mkdir()) {
+			if (!defaultThemeFile.exists()) {
+				InputStream default_template = Main.class.getResourceAsStream("/themes/default.json");
+				if (default_template != null) {
+					Files.copy(default_template, Paths.get("plugins/core/themes/default.json")); }
+			}
+		}
+
 		if (!analytics_directory.exists() && analytics_directory.mkdir()) {
 			System.out.println("[INFO] Succesfully created analytics_directory");
 		}
@@ -155,7 +167,9 @@ public class FileManager {
 		if (!settings_user_database.exists()) settings_user_database.createNewFile();
 
 		// Load then check the main config version \\
-		Config.load();
+		try { Config.load();
+		} catch (Exception e) { e.printStackTrace(); }
+
 		if (Integer.parseInt(Config.getValue("config.version")) < Config.version) {
 			InputStream core_server_config_template;
 
@@ -167,7 +181,9 @@ public class FileManager {
 				Files.copy(core_server_config_template, Paths.get(plugin_work_path + "/configs/config.txt"));
 			}
 		}
-		Config.load();
+
+		try { Config.load();
+		} catch (Exception e) { e.printStackTrace(); }
 		
 		// Store Donor Codes in RAM \\
 		try {

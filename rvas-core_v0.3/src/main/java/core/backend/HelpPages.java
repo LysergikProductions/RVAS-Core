@@ -23,14 +23,14 @@ package core.backend;
  * */
 
 import java.util.*;
-
-import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+
 
 @SuppressWarnings("SpellCheckingInspection")
 public class HelpPages {
@@ -47,8 +47,8 @@ public class HelpPages {
 		prevPage = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/help " + prevPageInt);
 		nextPage = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/help " + nextPageInt);
 
-		TextComponent prev = new TextComponent(ChatColor.DARK_AQUA + "<<");
-		TextComponent next = new TextComponent(ChatColor.DARK_AQUA + ">>");
+		TextComponent prev = new TextComponent(ChatPrint.controls + "<<");
+		TextComponent next = new TextComponent(ChatPrint.controls + ">>");
 
 		if (prevPageInt >= 1) prev.setClickEvent(prevPage);
 		if (nextPageInt <= maxPage) next.setClickEvent(nextPage);
@@ -91,37 +91,35 @@ public class HelpPages {
 	public static void helpStats(Player receiver) {
 		receiver.sendMessage("");
 
-		TextComponent head = new TextComponent(
-				ChatColor.DARK_AQUA + "<<" +
-						ChatColor.WHITE + " /stats help " +
-								ChatColor.DARK_AQUA + ">>");
-
 		TextComponent self_a = new TextComponent("/stats");
 		TextComponent players_a = new TextComponent("/stats [player name]");
-		TextComponent leaders_a = new TextComponent("/stats 5");
+		TextComponent leaders_a = new TextComponent("/stats [3-15]");
 		TextComponent mcstats_a = new TextComponent("/stats mc");
 
-		TextComponent self_b = new TextComponent(ChatColor.GRAY + " : Shows you your stats");
-		TextComponent players_b = new TextComponent(ChatColor.GRAY + " : Shows the stats for that player");
-		TextComponent leaders_b = new TextComponent(ChatColor.GRAY + " : Shows the top 5 players (by play-time)");
-		TextComponent mcstats_b = new TextComponent(ChatColor.GRAY + " : Shows you some of your MC-tracked world-stats");
+		self_a.setColor(ChatPrint.cmd); players_a.setColor(ChatPrint.cmd);
+		leaders_a.setColor(ChatPrint.cmd); mcstats_a.setColor(ChatPrint.cmd);
+
+		TextComponent self_b = new TextComponent(ChatPrint.desc + " : Shows you your stats");
+		TextComponent players_b = new TextComponent(ChatPrint.desc + " : Shows the stats for that player");
+		TextComponent leaders_b = new TextComponent(ChatPrint.desc + " : Shows the top 3-15 players (by play-time)");
+		TextComponent mcstats_b = new TextComponent(ChatPrint.desc + " : Shows you some of your MC-tracked world-stats");
 
 		TextComponent toggle_info = new TextComponent(
-				"Use /stats kills | deaths | kd, to toggle hiding them from public view!");
+				ChatPrint.clear + "Use /stats kills | deaths | kd, to toggle hiding them from public view!");
 
-		toggle_info.setColor(ChatColor.DARK_AQUA); toggle_info.setItalic(true);
-
-		self_a.setItalic(true);
-		players_a.setItalic(true);
-		leaders_a.setItalic(true);
-		mcstats_a.setItalic(true);
+		toggle_info.setItalic(true);
+		self_a.setItalic(true); players_a.setItalic(true);
+		leaders_a.setItalic(true); mcstats_a.setItalic(true);
 
 		TextComponent self = new TextComponent(self_a, self_b);
 		TextComponent players = new TextComponent(players_a, players_b);
 		TextComponent leaders = new TextComponent(leaders_a, leaders_b);
 		TextComponent mcstats = new TextComponent(mcstats_a, mcstats_b);
 
-		receiver.sendMessage(head.toLegacyText());
+		receiver.sendMessage(new TextComponent(
+				ChatPrint.controls + "<<" +
+						ChatPrint.help_title + " /stats help " +
+						ChatPrint.controls + ">>").toLegacyText());
 
 		HoverEvent hover_leaders = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 				new Text("Click on a player in the leaderboard to see their stats quickly"));
