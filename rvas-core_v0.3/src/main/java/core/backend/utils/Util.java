@@ -22,6 +22,8 @@ package core.backend.utils;
  *
  * */
 
+import core.commands.restricted.Admin;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -35,10 +37,10 @@ public class Util {
 
         for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
             try {
-                if (thisPlayer.isOp()) thisPlayer.sendMessage(msg);
+                if (thisPlayer.isOp() &&
+                        !Admin.doNotDisturb.contains(thisPlayer.getUniqueId())) thisPlayer.sendMessage(msg);
             } catch (Exception e) {return;}
         }
-
         System.out.println(msg.getText());
     }
 
@@ -55,67 +57,41 @@ public class Util {
         long hoursRem = (long) (seconds % 3600);
         long minutes = hoursRem / 60;
 
-        String daysString;
-        String hoursString;
-        String minutesString;
+        String daysString, hoursString, minutesString;
 
-        if (hours == 1) {
-            hoursString = hours + " hour";
-        } else {
-            hoursString = hours + " hours";
-        }
+        if (hours == 1) hoursString = hours + " hour";
+        else hoursString = hours + " hours";
 
-        if (days == 1) {
-            daysString = days + " day";
-        } else {
-            daysString = days + " days";
-        }
+        if (days == 1) daysString = days + " day";
+        else daysString = days + " days";
 
-        if (minutes == 1) {
-            minutesString = minutes + " minute";
-        } else if (minutes == 0) {
-            minutesString = "";
-        } else {
-            minutesString = minutes + " minutes";
-        }
+        if (minutes == 1) minutesString = minutes + " minute";
+        else if (minutes == 0) minutesString = "";
+        else minutesString = minutes + " minutes";
 
         if (minutesString.isEmpty() && hoursString.equals("0 hours")) return "< 1 minute";
 
-        if (days < 1 && minutes == 0) {
-            return hoursString;
-
-        } else if (days < 1) {
-            return hoursString + ", " + minutesString;
-
-        } else if (minutes == 0) {
-            return daysString + ", " + hoursString;
-        } else {
-            return daysString + ", " + hoursString + ", " + minutesString;
-        }
+        if (days < 1 && minutes == 0) return hoursString;
+        else if (days < 1) return hoursString + ", " + minutesString;
+        else if (minutes == 0) return daysString + ", " + hoursString;
+        else return daysString + ", " + hoursString + ", " + minutesString;
     }
 
     public static boolean validServerIP(String ip) {
         try {
-            if ( ip == null || ip.isEmpty() ) {
-                return false;
-            }
+            if ( ip == null || ip.isEmpty() ) return false;
 
             String[] parts = ip.split( "\\." );
-            if ( parts.length != 4 ) {
-                return false;
-            }
+            if ( parts.length != 4 ) return false;
 
             for ( String s : parts ) {
                 int i = Integer.parseInt( s );
-                if ( (i < 0) || (i > 255) ) {
-                    return false;
-                }
+                if ( (i < 0) || (i > 255) ) return false;
             }
+
             return !ip.endsWith(".");
 
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
+        } catch (NumberFormatException nfe) { return false; }
     }
 
     public static String getDimensionName (Location thisLoc) {
@@ -167,10 +143,9 @@ public class Util {
 
     //This code is contributed by Surendra_Gangwar (in-ellipsoid point-check)
     public static int isInEllipse(int h, int k, int x, int y, int a, int b) {
-        // h, k are center point | x, y are co-ords to check | a, b are ellipse radii
-        int p = ((int)Math.pow((x - h), 2) / (int)Math.pow(a, 2))
-                + ((int)Math.pow((y - k), 2) / (int)Math.pow(b, 2));
 
-        return p;
+        // h, k are center point | x, y are co-ords to check | a, b are ellipse radii
+        return ((int)Math.pow((x - h), 2) / (int)Math.pow(a, 2))
+                + ((int)Math.pow((y - k), 2) / (int)Math.pow(b, 2));
     }
 }

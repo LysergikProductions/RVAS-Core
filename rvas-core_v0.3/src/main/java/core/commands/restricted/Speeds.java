@@ -44,6 +44,7 @@ public class Speeds implements CommandExecutor {
             return false;
 
         } else thisPlayer = sender;
+        Admin.doNotDisturb.remove(sender.getUniqueId());
 
         updateGUI();
         sender.openInventory(speedGUI);

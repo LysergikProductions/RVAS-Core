@@ -66,6 +66,7 @@ public class Check implements CommandExecutor, Listener {
         } catch (Exception ignore) { return false; }
 
         if (!checker.isOp()) { checker.sendMessage("You can't use this!"); return false; }
+        Admin.doNotDisturb.remove(checker.getUniqueId());
 
         updateGUI();
         checker.openInventory(lagCheckGUI);

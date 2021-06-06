@@ -1,13 +1,16 @@
 package core.commands;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import core.backend.ChatPrint;
+
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class Ignore implements CommandExecutor {
 
     public static HashMap<UUID, List<UUID>> Ignores = new HashMap<>();
-    private Random r = new Random();
+    private final Random r = new Random();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -82,7 +85,7 @@ public class Ignore implements CommandExecutor {
                 return true;
             }
         } else {
-            sender.sendMessage("\u00A7cConsole can't run this command.");
+            sender.sendMessage(new TextComponent(ChatPrint.fail + "Console can't run this command.").toLegacyText());
             return true;
         }
     }

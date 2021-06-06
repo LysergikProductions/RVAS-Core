@@ -1,6 +1,7 @@
 package core.commands;
 
 import core.backend.Config;
+import core.backend.ChatPrint;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
@@ -38,8 +39,8 @@ public class Kit implements CommandExecutor {
 					"\u00A7a" + player.getName() + " got their complimentary starter kit! Get yours by typing /kit."));
 
 		} else {
-			
-			player.sendMessage("\u00A7cThis command has been disabled by your administrator.");
+			player.sendMessage(new TextComponent(ChatPrint.fail +
+					"This command has been disabled by your administrator.").toLegacyText());
 		}
 		return true;
 	}

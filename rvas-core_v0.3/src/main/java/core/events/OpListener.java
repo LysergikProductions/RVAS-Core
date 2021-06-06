@@ -267,7 +267,12 @@ public class OpListener implements Listener {
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
 		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
-		else if (!event.getWhoClicked().getGameMode().equals(GameMode.SURVIVAL)) event.setCancelled(true);
+
+		else if (!event.getWhoClicked().getGameMode().equals(GameMode.SURVIVAL) &&
+				!PlayerMeta.isAdmin((Player)event.getWhoClicked())) {
+
+			event.setCancelled(true);
+		}
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)

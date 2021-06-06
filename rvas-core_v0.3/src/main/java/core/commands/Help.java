@@ -15,15 +15,13 @@ public class Help implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		Player player = (Player)sender;
 
+		Player player = (Player)sender;
 		if (!PlayerMeta.isAdmin(player)) Analytics.help_cmd++;
 		
-		try {
-			HelpPages.helpGeneral(player, Integer.parseInt(args[0]));
-		} catch (Exception ex) {
-			HelpPages.helpGeneral(player, 1);
-		}
+		try { HelpPages.helpGeneral(player, Integer.parseInt(args[0]));
+		} catch (Exception ex) { HelpPages.helpGeneral(player, 1); }
+
 		return true;
 	}
 }
