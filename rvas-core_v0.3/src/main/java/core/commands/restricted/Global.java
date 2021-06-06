@@ -29,6 +29,7 @@ import core.events.SpawnController;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.util.Vector;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -46,45 +47,51 @@ public class Global implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-
 		Player op = (Player)sender;
 
-		// check args
 		if (args.length != 0) {
-			
 			switch (args[0].toUpperCase()) {
+
 				case "ZAP":
 
-					int i = 0;
-					while (i < 3) { i++;
-						
-						for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-							
-							Location player_loc = p.getLocation();
+					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+						Location player_loc = p.getLocation();
 
-							int range_max = (int)player_loc.getX() + 16;
-							int range_min = (int)player_loc.getX() - 16;
+						int playerX = player_loc.getBlockX();
+						int playerZ = player_loc.getBlockZ();
 
-							player_loc.setX(player_loc.getX() + Util.getRandomNumber(range_min, range_max));
-							player_loc.setZ(player_loc.getZ() + Util.getRandomNumber(range_min, range_max));
-							
-							p.getWorld().spigot().strikeLightning(player_loc, false);
+						// prevent setting fire to bases by checking distance to either axis
+						if (Math.abs(playerX) > 1024 || Math.abs(playerZ) > 1024) {
+
+							for (int i = 0; i < 3; i++) {
+								player_loc.setX(player_loc.getX() + Util.getRandomNumber(playerX-8, playerX+8));
+								player_loc.setZ(player_loc.getZ() + Util.getRandomNumber(playerZ-8, playerZ+8));
+
+								p.getWorld().spigot().strikeLightning(player_loc, false);
+								player_loc.setX(playerX); player_loc.setZ(playerZ);
+							}
 						}
-					}	
-					return true;
+					} return true;
 
 				case "DREAM":
 
 					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
 						if (p.isOp() || PlayerMeta.isAdmin(p)) continue;
 
-						String player_name = p.getName();
 						Location playerSpawn = p.getBedSpawnLocation();
 						Location baseLoc = p.getLocation();
-						Location finalTP;
+						Location finalTP = null; Vector distance;
 
-						if (playerSpawn == null) finalTP = SpawnController.getRandomSpawn(p.getWorld(), baseLoc);
-						else finalTP = playerSpawn;
+						if (playerSpawn != null) {
+
+							distance = playerSpawn.subtract(baseLoc).toVector();
+							if (distance.length() > 1024) continue;
+
+							finalTP = playerSpawn;
+
+						} else finalTP = SpawnController.getRandomEllipseSpawn(baseLoc.getWorld(), baseLoc);
+
+						String player_name = p.getName();
 
 						String x = String.valueOf(finalTP.getBlockX());
 						String y = String.valueOf(finalTP.getBlockY());

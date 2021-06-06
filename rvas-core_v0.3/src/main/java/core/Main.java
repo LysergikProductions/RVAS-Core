@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.3"; public static final int build = 290;
+	public static final String version = "0.3.3"; public static final int build = 291;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -44,14 +44,13 @@ public class Main extends JavaPlugin {
 		System.out.println("forcing default gamemode..");
 		getServer().setDefaultGameMode(GameMode.SURVIVAL);
 
-		System.out.println("[core.main] _____________");
+		System.out.println();
 		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
 
 		try { FileManager.setup();
 		} catch (IOException e) {
-			System.out.println("[core.main] An error occured in FileManager.setup()");
-		}
+			System.out.println("[core.main] An error occured in FileManager.setup()"); }
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
@@ -62,7 +61,7 @@ public class Main extends JavaPlugin {
 			ChatPrint.loadColors();
 		}
 
-		System.out.println("[core.main] __________________");
+		System.out.println();
 		System.out.println("[core.main] Loading more files");
 		System.out.println("[core.main] __________________");
 
@@ -76,7 +75,7 @@ public class Main extends JavaPlugin {
 			System.out.println("[core.main] " + e);
 		}
 
-		System.out.println("[core.main] _________________");
+		System.out.println();
 		System.out.println("[core.main] Enabling commands");
 		System.out.println("[core.main] _________________");
 
@@ -191,7 +190,7 @@ public class Main extends JavaPlugin {
 		System.out.println("/l");
 		Objects.requireNonNull(this.getCommand("l")).setExecutor(new Local());
 
-		System.out.println("[core.main] _______________________");
+		System.out.println();
 		System.out.println("[core.main] Scheduling synced tasks");
 		System.out.println("[core.main] _______________________");
 
@@ -213,7 +212,7 @@ public class Main extends JavaPlugin {
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		System.out.println("[core.main] _______________________");
+		System.out.println();
 		System.out.println("[core.main] Loading event listeners");
 		System.out.println("[core.main] _______________________");
 
@@ -322,13 +321,11 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] _____________________________");
 		System.out.println("[core.main] --- RVAS-Core : Disabling ---");
 		System.out.println("[core.main] _____________________________");
-		
-		// final analytics capture for this session
+
+		System.out.println("[core.main] Capturing remaining analytics data..");
 		Analytics.capture();
-		
-		System.out.println("[core.main] ________________");
-		System.out.println("[core.main] Creating backups");
-		System.out.println("[core.main] ________________");
+
+		System.out.println("[core.main] Creating backups..");
 		
 		try {
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
@@ -343,7 +340,7 @@ public class Main extends JavaPlugin {
 			System.out.println("[core.main] " + ex);
 		}
 		
-		System.out.println("[core.main] ______________________");
+		System.out.println();
 		System.out.println("[core.main] Overwriting save files");
 		System.out.println("[core.main] ______________________");
 		
@@ -361,7 +358,7 @@ public class Main extends JavaPlugin {
 			System.out.println("[core.main] " + ex);
 		}
 		
-		System.out.println("[core.main] __________________");
+		System.out.println();
 		System.out.println("[core.main] Collecting garbage");
 		System.out.println("[core.main] __________________");
 
@@ -370,7 +367,7 @@ public class Main extends JavaPlugin {
 
 		System.out.println("Found " + removed_skulls + " remaining skull/s to trash..");
 		
-		System.out.println("[core.main] ______________________");
+		System.out.println();
 		System.out.println("[core.main] Printing session stats");
 		System.out.println("[core.main] ______________________");
 		

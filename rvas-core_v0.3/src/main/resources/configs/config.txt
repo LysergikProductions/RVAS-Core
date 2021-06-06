@@ -18,7 +18,7 @@ admin = myAccountInGameName
 // - The tps under which the auto-restart timer ticks
 restart.threshold = 7.10
 
-// - Theme [ default || halloween || custom ]
+// - Theme [ default || halloween || custom (coming soon) ]
 theme = default
 
 // ------------------ //

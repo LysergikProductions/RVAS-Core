@@ -49,7 +49,6 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -252,17 +251,14 @@ public class OpListener implements Listener {
 	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
 		if (!Config.getValue("protect.lock.creative").equals("false")) {
+			if (Config.getValue("protect.lock.creative").equals("true")) event.setCancelled(true);
 			
 			HumanEntity ePlayer = event.getWhoClicked();
 			Player player = Bukkit.getPlayer(ePlayer.getUniqueId());
 
-			assert player != null;
-			if (!PlayerMeta.isAdmin(player)) {
-				event.setCancelled(true);
-				
-				if (!player.isOp()) {
-					player.setGameMode(GameMode.SURVIVAL);
-				}
+			if (player != null) {
+				if (!PlayerMeta.isAdmin(player) && !player.isOp()) player.setGameMode(GameMode.SURVIVAL);
+				else event.setCancelled(false);
 			}
 		}
 	}
@@ -271,6 +267,7 @@ public class OpListener implements Listener {
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
 		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
+		else if (!event.getWhoClicked().getGameMode().equals(GameMode.SURVIVAL)) event.setCancelled(true);
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)

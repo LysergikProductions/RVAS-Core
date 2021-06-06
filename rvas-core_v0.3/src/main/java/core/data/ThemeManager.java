@@ -13,13 +13,21 @@ import net.md_5.bungee.api.ChatColor;
 public class ThemeManager {
     public static Theme currentTheme;
 
-    public static void load() throws IOException {
+    public static void load() throws IOException, NoSuchMethodException, SecurityException {
+        File thisFile = FileManager.getTheme();
 
-        try { currentTheme = getThemeFromJSON(FileManager.defaultThemeFile);
-        } catch (Exception e) {
+        if (thisFile != null) {
+            try { currentTheme = getThemeFromJSON(thisFile);
+            } catch (Exception e) {
+                currentTheme = createDefaultTheme();
+                System.out.println("WARN getThemeFromJSON Exception");
+                throw new IOException(e.getMessage());
+            }
+        } else {
+            System.out.println("WARN failed to load the specified theme :(");
+            System.out.println("Creating the default theme from scratch..");
+
             currentTheme = createDefaultTheme();
-            System.out.println("WARN getThemeFromJSON Exception");
-            throw new IOException(e.getMessage());
         }
     }
 

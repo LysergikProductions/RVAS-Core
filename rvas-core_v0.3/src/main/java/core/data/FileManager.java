@@ -3,15 +3,14 @@ package core.data;
 import core.Main;
 import core.data.objects.*;
 import core.backend.Config;
+import com.google.gson.Gson;
 
 import java.io.*;
+import java.util.Date;
+import java.util.UUID;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.UUID;
-
-import java.util.Date;
 import java.text.SimpleDateFormat;
-import com.google.gson.Gson;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class FileManager {
@@ -28,7 +27,9 @@ public class FileManager {
 	public static File core_server_config;
 	public static File core_restrictions_config;
 	public static File core_spawn_config;
+
 	public static File defaultThemeFile;
+	public static File halloweenThemeFile;
 
 	public static File donor_list;
 	public static File all_donor_codes;
@@ -84,7 +85,9 @@ public class FileManager {
 		core_server_config = new File(plugin_work_path + "configs/config.txt");
 		core_restrictions_config = new File(plugin_work_path + "configs/restrictions.txt");
 		core_spawn_config = new File(plugin_work_path + "configs/spawn_controller.txt");
+
 		defaultThemeFile = new File(plugin_work_path + "themes/default.json");
+		halloweenThemeFile = new File(plugin_work_path + "themes/halloween.json");
 
 		donor_list = new File(plugin_work_path + "donator.db");
 		all_donor_codes = new File(plugin_work_path + "codes/all.db");
@@ -128,12 +131,21 @@ public class FileManager {
 			}
 		} else if (!configs_directory.exists()) System.out.println("[WARN] FAILED TO CREATE CONFIGS_DIRECTORY");
 
-		if (!themes_directory.exists() && themes_directory.mkdir()) {
-			if (!defaultThemeFile.exists()) {
-				InputStream default_template = Main.class.getResourceAsStream("/themes/default.json");
-				if (default_template != null) {
-					Files.copy(default_template, Paths.get("plugins/core/themes/default.json")); }
-			}
+		// - THEMES - \\
+		if (!themes_directory.exists() && themes_directory.mkdir()) System.out.println("Created themes directory");
+
+		if (!defaultThemeFile.exists()) {
+			InputStream defaultTemplate = Main.class.getResourceAsStream("/themes/default.json");
+			if (defaultTemplate != null) {
+				Files.copy(defaultTemplate, Paths.get("plugins/core/themes/default.json"));
+				System.out.println("Successfully copied data from resource default.json"); }
+		}
+
+		if (!halloweenThemeFile.exists()) {
+			InputStream halloweenTemplate = Main.class.getResourceAsStream("/themes/halloween.json");
+			if (halloweenTemplate != null) {
+				Files.copy(halloweenTemplate, Paths.get("plugins/core/themes/halloween.json"));
+				System.out.println("Successfully copied data from resource halloween.json"); }
 		}
 
 		if (!analytics_directory.exists() && analytics_directory.mkdir()) {
@@ -240,5 +252,15 @@ public class FileManager {
 
 		gson.toJson(thisObject, writer);
 		writer.flush(); writer.close();
+	}
+
+	public static File getTheme() {
+		String thisString = Config.getValue("theme");
+
+		if (thisString != null) {
+			if (thisString.equals("default")) return defaultThemeFile;
+			else if (thisString.equals("halloween")) return halloweenThemeFile;
+
+		} return null;
 	}
 }
