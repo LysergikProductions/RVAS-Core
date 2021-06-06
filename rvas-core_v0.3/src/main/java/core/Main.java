@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.3"; public static final int build = 289;
+	public static final String version = "0.3.3"; public static final int build = 290;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -38,6 +38,8 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] ______________________________");
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] ______________________________");
+
+		// TODO: Query the git for latest version and write results to stdout
 
 		System.out.println("forcing default gamemode..");
 		getServer().setDefaultGameMode(GameMode.SURVIVAL);
@@ -160,7 +162,7 @@ public class Main extends JavaPlugin {
 		Objects.requireNonNull(this.getCommand("prison")).setExecutor(new core.commands.restricted.Prison());
 
 		System.out.println("/info");
-		Objects.requireNonNull(this.getCommand("info")).setExecutor(new Info());
+		Objects.requireNonNull(this.getCommand("info")).setExecutor(new core.commands.restricted.Info());
 
 		System.out.println("/global");
 		Objects.requireNonNull(this.getCommand("global")).setExecutor(new Global());

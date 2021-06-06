@@ -3,9 +3,9 @@ package core.data;
 import core.data.objects.Theme;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
 import net.md_5.bungee.api.ChatColor;
@@ -43,19 +43,19 @@ public class ThemeManager {
         return new Theme(thisMap);
     }
 
-    public static void writeThemeToJSON(Theme thisTheme, File thisFile) throws IOException {
-        Gson gson = new Gson();
-
-        Writer writer = new FileWriter(thisFile, false);
-        gson.toJson(thisTheme, writer);
-        writer.flush(); writer.close();
-    }
-
+    // - Read and rebuild new Theme object from file
     public static Theme getThemeFromJSON(File thisFile) throws FileNotFoundException {
         Gson gson = new Gson();
-        Reader reader = new InputStreamReader (new FileInputStream (thisFile), StandardCharsets.UTF_8);
-        Theme thisTheme = gson.fromJson(reader, Theme.class);
 
+        if (!thisFile.getName().endsWith(".json")) {
+            System.out.println("WARN tried reading a non-json as json");
+            return null;
+        }
+
+        Reader reader = new InputStreamReader (
+                new FileInputStream (thisFile), StandardCharsets.UTF_8);
+
+        Theme thisTheme = gson.fromJson(reader, Theme.class);
         Map<String, ChatColor> themeBuilder = new HashMap<>();
 
         themeBuilder.put("primary", thisTheme.getPrimary());

@@ -23,8 +23,8 @@ package core.events;
  * 
  * */
 
-import core.backend.ChatPrint;
 import core.backend.Config;
+import core.backend.ChatPrint;
 import core.backend.ItemCheck;
 import core.backend.utils.*;
 import core.data.PlayerMeta;
@@ -230,18 +230,22 @@ public class BlockListener implements Listener {
 			TextComponent warn = new TextComponent("WARN "); warn.setBold(true);
 			warn.setColor(ChatPrint.fail);
 
-			TextComponent msg = new TextComponent("Potential lag-machine at " +
-					block.getX() + ", " + block.getY() + ", " + block.getZ() + " in " + env +
-					" by " + placer_name + " with UUID: " + placer.getUniqueId());
-
 			String location = block.getX() + " " + block.getY() + " " + block.getZ();
 			ClickEvent thisEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 					"/ninjatp " + env + " " + location);
 
-			msg.setClickEvent(thisEvent);
+			TextComponent msg1 = new TextComponent("Potential lag-machine at " +
+					location + " in " + env + " by " + placer_name);
 
-			if (counter > 192) {
-				Util.notifyOps(new TextComponent(warn, msg));
+			TextComponent msg2 = new TextComponent(
+					"UUID: " + placer.getUniqueId() + " | IP: " + PlayerMeta.getIp(placer));
+
+			msg1.setClickEvent(thisEvent);
+			msg2.setClickEvent(thisEvent);
+
+			if (counter >= 224) {
+				Util.notifyOps(new TextComponent(warn, msg1));
+				Util.notifyOps(msg2);
 			}
 		}
 

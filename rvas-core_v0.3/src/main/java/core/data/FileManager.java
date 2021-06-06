@@ -1,7 +1,6 @@
 package core.data;
 
 import core.Main;
-import core.backend.ChatPrint;
 import core.data.objects.*;
 import core.backend.Config;
 
@@ -12,6 +11,7 @@ import java.util.UUID;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import com.google.gson.Gson;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class FileManager {
@@ -233,5 +233,12 @@ public class FileManager {
 		} catch (Exception e) {
 			System.out.println("Exception while reading player_settings.txt : " + e);
 		}
+	}
+
+	public static void writeObjectToJSON(Object thisObject, File thisFile) throws IOException {
+		Gson gson = new Gson(); Writer writer = new FileWriter(thisFile, false);
+
+		gson.toJson(thisObject, writer);
+		writer.flush(); writer.close();
 	}
 }

@@ -91,7 +91,7 @@ public class ChatPrint {
 	public static void printLeaders(Player receiver, int lineLimit) {
 
 		if (lineLimit > 15) lineLimit = 15;
-		if (lineLimit < 3) lineLimit = 3;
+		else if (lineLimit < 3) lineLimit = 3;
 
 		HashMap<UUID, Double> leaders_0_15 = PlayerMeta.getTopFifteenPlayers();
 		HashMap<UUID, Double> realLeaders_0_15 = PlayerMeta.getTopFifteenPlayers();
