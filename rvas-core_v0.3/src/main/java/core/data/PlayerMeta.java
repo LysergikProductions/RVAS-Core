@@ -219,10 +219,16 @@ public class PlayerMeta {
 	}
 
 	public static int getRank(OfflinePlayer p) {
+		String admin = Config.getValue("admin");
 		if (getPlaytime(p) == 0) return 0;
 
-		return Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).map(Map.Entry::getKey)
-				.collect(Collectors.toList()).lastIndexOf(p.getUniqueId()) + 1;
+
+		int out = Playtimes.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).map(Map.Entry::getKey)
+			.collect(Collectors.toList()).lastIndexOf(p.getUniqueId()) + 1;
+
+		if (!admin.equalsIgnoreCase("myAccountInGameName") &&
+				!admin.equals("")) return out-1;
+		else return out;
 	}
 
 	public static HashMap<UUID, Double> getTopFifteenPlayers() {

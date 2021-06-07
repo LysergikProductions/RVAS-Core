@@ -14,7 +14,7 @@ public class ThemeManager {
     public static Theme currentTheme;
 
     public static void load() throws IOException, NoSuchMethodException, SecurityException {
-        File thisFile = FileManager.getTheme();
+        File thisFile = FileManager.getConfiguredThemeFile();
 
         if (thisFile != null) {
             try { currentTheme = getThemeFromJSON(thisFile);

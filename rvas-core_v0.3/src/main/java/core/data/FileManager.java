@@ -17,27 +17,12 @@ public class FileManager {
 	
 	public static final String plugin_work_path = "plugins/core/";
 	
-	public static File pvpstats_user_database;
-	public static File playtime_user_database;
-	public static File settings_user_database;
+	public static File pvpstats_user_database, playtime_user_database,
+			settings_user_database, muted_user_database, prison_user_database,
+			core_server_config, core_restrictions_config, core_spawn_config, server_statistics_list,
+			motd_message_list, auto_announce_list, donor_list, all_donor_codes, used_donor_codes;
 
-	public static File muted_user_database;
-	public static File prison_user_database;
-
-	public static File core_server_config;
-	public static File core_restrictions_config;
-	public static File core_spawn_config;
-
-	public static File defaultThemeFile;
-	public static File halloweenThemeFile;
-
-	public static File donor_list;
-	public static File all_donor_codes;
-	public static File used_donor_codes;
-	
-	public static File server_statistics_list;
-	public static File motd_message_list;
-	public static File auto_announce_list;
+	public static File defaultThemeFile, halloweenThemeFile, customThemeFile;
 	
 	public static void backupData(File thisFile, String thisFileName, String ext) throws IOException {
 	    
@@ -88,6 +73,7 @@ public class FileManager {
 
 		defaultThemeFile = new File(plugin_work_path + "themes/default.json");
 		halloweenThemeFile = new File(plugin_work_path + "themes/halloween.json");
+		customThemeFile = new File(plugin_work_path + "themes/custom.json");
 
 		donor_list = new File(plugin_work_path + "donator.db");
 		all_donor_codes = new File(plugin_work_path + "codes/all.db");
@@ -146,6 +132,13 @@ public class FileManager {
 			if (halloweenTemplate != null) {
 				Files.copy(halloweenTemplate, Paths.get("plugins/core/themes/halloween.json"));
 				System.out.println("Successfully copied data from resource halloween.json"); }
+		}
+
+		if (!customThemeFile.exists()) {
+			InputStream customTemplate = Main.class.getResourceAsStream("/themes/custom.json");
+			if (customTemplate != null) {
+				Files.copy(customTemplate, Paths.get("plugins/core/themes/custom.json"));
+				System.out.println("Successfully copied data from resource custom.json"); }
 		}
 
 		if (!analytics_directory.exists() && analytics_directory.mkdir()) {
@@ -247,20 +240,23 @@ public class FileManager {
 		}
 	}
 
+	public static File getConfiguredThemeFile() {
+		String thisString = Config.getValue("theme");
+
+		if (thisString != null) {
+			switch (thisString) {
+				case "default": return defaultThemeFile;
+				case "halloween": return halloweenThemeFile;
+				case "custom": return customThemeFile;
+			}
+		} return null;
+	}
+
+	// TODO: make a command to create a Theme object from scratch via user input then use this method to write it
 	public static void writeObjectToJSON(Object thisObject, File thisFile) throws IOException {
 		Gson gson = new Gson(); Writer writer = new FileWriter(thisFile, false);
 
 		gson.toJson(thisObject, writer);
 		writer.flush(); writer.close();
-	}
-
-	public static File getTheme() {
-		String thisString = Config.getValue("theme");
-
-		if (thisString != null) {
-			if (thisString.equals("default")) return defaultThemeFile;
-			else if (thisString.equals("halloween")) return halloweenThemeFile;
-
-		} return null;
 	}
 }
