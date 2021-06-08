@@ -1,7 +1,7 @@
 package core.commands.restricted;
 
 import core.backend.ChatPrint;
-import core.data.PlayerMeta;
+import core.backend.utils.Util;
 import core.data.objects.Pair;
 import core.events.SpeedLimiter;
 
@@ -52,7 +52,7 @@ public class Speeds implements CommandExecutor {
     }
 
     public static void updateGUI() throws IllegalArgumentException {
-        speedGUI.clear();
+        speedGUI.clear(); sortedSpeedsList.clear();
         List<Pair<Double, String>> speeds = SpeedLimiter.getSpeeds();
 
         for (Pair<Double, String> speedEntry : speeds) {
@@ -65,7 +65,7 @@ public class Speeds implements CommandExecutor {
             }
         }
 
-        sortedSpeedsList = PlayerMeta.sortSpeedMap(sortedSpeedsList);
+        sortedSpeedsList = Util.sortSpeedMap(sortedSpeedsList);
         for (Player thisPlayer: sortedSpeedsList.keySet()) {
             ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
             ItemMeta thisHeadMeta = newHead.getItemMeta();

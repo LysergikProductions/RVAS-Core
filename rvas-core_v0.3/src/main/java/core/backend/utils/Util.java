@@ -28,6 +28,11 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @SuppressWarnings("SpellCheckingInspection")
 public class Util {
 
@@ -126,7 +131,8 @@ public class Util {
                 thisCmd.contains("/protocol") || thisCmd.contains("/packet") ||
                 thisCmd.contains("/whitelist") || thisCmd.contains("/minecraft") ||
                 thisCmd.contains("/dupe") || thisCmd.contains("/score") ||
-                thisCmd.contains("/tell") || thisCmd.contains("/global");
+                thisCmd.contains("/tell") || thisCmd.contains("/global") ||
+                thisCmd.contains("/core:set") || thisCmd.contains("/core:dupe");
     }
 
     public static World getWorldByDimension(World.Environment thisEnv) {
@@ -147,5 +153,23 @@ public class Util {
         // h, k are center point | x, y are co-ords to check | a, b are ellipse radii
         return ((int)Math.pow((x - h), 2) / (int)Math.pow(a, 2))
                 + ((int)Math.pow((y - k), 2) / (int)Math.pow(b, 2));
+    }
+
+    public static Map<Player, Integer> sortLagMap(Map<Player,Integer> thisMap) {
+        Map<Player, Integer> out;
+
+        out = thisMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(thisMap.size())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+        return out;
+    }
+
+    public static  Map<Player, Double> sortSpeedMap(Map<Player,Double> thisMap) {
+        Map<Player, Double> out;
+
+        out = thisMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(thisMap.size())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+        return out;
     }
 }

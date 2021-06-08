@@ -3,6 +3,7 @@ package core.commands;
 import core.backend.Config;
 import core.data.PlayerMeta;
 import core.data.PlayerMeta.MuteType;
+import core.data.PrisonerManager;
 import core.tasks.Analytics;
 
 import java.util.*;
@@ -76,7 +77,7 @@ public class VoteMute implements CommandExecutor {
 		}
 
 		// Muted people can't vote.
-		if ((PlayerMeta.isMuted(voter) && Config.getValue("mute.hypocrisy").equals("1")) || PlayerMeta.isPrisoner(voter)) {
+		if ((PlayerMeta.isMuted(voter) && Config.getValue("mute.hypocrisy").equals("1")) || PrisonerManager.isPrisoner(voter)) {
 			voter.sendMessage("\u00A7cYou can't vote.");
 			return true;
 		}

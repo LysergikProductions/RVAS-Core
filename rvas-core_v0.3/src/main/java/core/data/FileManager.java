@@ -20,7 +20,7 @@ public class FileManager {
 	public static File pvpstats_user_database, playtime_user_database,
 			settings_user_database, muted_user_database, prison_user_database,
 			core_server_config, core_restrictions_config, core_spawn_config, server_statistics_list,
-			motd_message_list, auto_announce_list, donor_list, all_donor_codes, used_donor_codes;
+			motd_message_list, auto_announce_list, donor_database, all_donor_codes, used_donor_codes;
 
 	public static File defaultThemeFile, halloweenThemeFile, customThemeFile;
 	
@@ -75,7 +75,7 @@ public class FileManager {
 		halloweenThemeFile = new File(plugin_work_path + "themes/halloween.json");
 		customThemeFile = new File(plugin_work_path + "themes/custom.json");
 
-		donor_list = new File(plugin_work_path + "donator.db");
+		donor_database = new File(plugin_work_path + "donators.json");
 		all_donor_codes = new File(plugin_work_path + "codes/all.db");
 		used_donor_codes = new File(plugin_work_path + "codes/used.db");
 		
@@ -154,7 +154,7 @@ public class FileManager {
 			if (!used_donor_codes.exists()) used_donor_codes.createNewFile();
 		} else if (!donor_code_directory.exists()) System.out.println("[WARN] FAILED TO CREATE DONOR_CODE_DIRECTORY");
 
-		if (!donor_list.exists()) donor_list.createNewFile();
+		if (!donor_database.exists()) donor_database.createNewFile();
 		if (!auto_announce_list.exists()) auto_announce_list.createNewFile();
 		if (!muted_user_database.exists()) muted_user_database.createNewFile();
 		if (!motd_message_list.exists()) motd_message_list.createNewFile();
@@ -193,13 +193,13 @@ public class FileManager {
 		// Store Donor Codes in RAM \\
 		try {
 			Files.readAllLines(all_donor_codes.toPath()).forEach(val ->
-				PlayerMeta.DonorCodes.add(val.replace("\"", "").trim()));
+					DonationManager.DonorCodes.add(val.replace("\"", "").trim()));
 		} catch (Exception e) {
 			System.out.println("Exception while reading all.db : " + e);
 		}
 
 		try {
-			PlayerMeta.UsedDonorCodes.addAll(Files.readAllLines(used_donor_codes.toPath()));
+			DonationManager.UsedDonorCodes.addAll(Files.readAllLines(used_donor_codes.toPath()));
 		} catch (Exception e) {
 			System.out.println("Exception while reading used.db : " + e);
 		}	
@@ -250,13 +250,5 @@ public class FileManager {
 				case "custom": return customThemeFile;
 			}
 		} return null;
-	}
-
-	// TODO: make a command to create a Theme object from scratch via user input then use this method to write it
-	public static void writeObjectToJSON(Object thisObject, File thisFile) throws IOException {
-		Gson gson = new Gson(); Writer writer = new FileWriter(thisFile, false);
-
-		gson.toJson(thisObject, writer);
-		writer.flush(); writer.close();
 	}
 }

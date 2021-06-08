@@ -2,7 +2,7 @@ package core.data;
 
 /* *
  * 
- *  About: Stores and mutates `StatsContainer` objects in memory
+ *  About: Reads, writes, and mutates StatsContainer objects
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)

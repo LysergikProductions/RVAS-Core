@@ -5,13 +5,12 @@ import core.commands.Ignore;
 import core.events.ChatListener;
 import core.data.objects.SettingsContainer;
 
-import net.md_5.bungee.api.chat.TextComponent;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -24,32 +23,11 @@ public class PlayerMeta {
 	public static List<String> _ipMutes = new ArrayList<>();
 	public static List<UUID> _permanentMutes = new ArrayList<>();
 	public static HashMap<UUID, Double> _temporaryMutes = new HashMap<>();
-	
-	public static List<UUID> _donatorList = new ArrayList<>();
-	public static List<String> DonorCodes = new ArrayList<>();
-	public static List<String> UsedDonorCodes = new ArrayList<>();
-	
-	public static HashMap<UUID, String> _prisonerList = new HashMap<>();
+
 	public static HashMap<UUID, Double> Playtimes = new HashMap<>();
 	public static Map <UUID, SettingsContainer> sPlayerSettings = new HashMap<>();
 
 	public static boolean MuteAll = false;
-
-	// GET/SET DONATOR STATUS \\
-	public static boolean isDonator(Player p) {
-		return _donatorList.contains(p.getUniqueId());
-	}
-
-	public static void setDonator(Player p, boolean status) {
-
-		if (status && !_donatorList.contains(p.getUniqueId())) _donatorList.add(p.getUniqueId());
-		else _donatorList.remove(p.getUniqueId());
-
-		try { saveDonators();
-		} catch (IOException e) {
-			System.out.println("[core.backend.playermeta] Failed to save donators.");
-		}
-	}
 
 	// --- MUTES --- \\
 	public static boolean isMuted(Player p) {
@@ -128,54 +106,6 @@ public class PlayerMeta {
 		});
 	}
 
-	// -- LAG PRISONERS -- \\
-	public static void togglePrisoner(Player p) throws Exception {
-
-		if (!_prisonerList.containsKey(p.getUniqueId())) {
-			_prisonerList.put(p.getUniqueId(), Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
-		} else {
-			try { _prisonerList.remove(p.getUniqueId());
-			} catch (Exception e) {
-				throw new Exception(e);
-			}
-		}	
-		
-		try { savePrisoners();
-		} catch (IOException e) {
-			System.out.println("[core.backend.playermeta] Failed to save lag priosners.");
-		}
-	}
-
-	public static boolean isPrisoner(Player p) {
-
-		return _prisonerList.containsKey(p.getUniqueId()) ||
-				_prisonerList.containsValue(Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
-	}
-
-	public static void savePrisoners() throws IOException {
-		List<String> list = _prisonerList.keySet().stream().map(u -> u.toString() + ":" + _prisonerList.get(u))
-				.collect(Collectors.toList());
-
-		Files.write(Paths.get("plugins/core/prisoners.db"), String.join("\n", list).getBytes());
-	}
-
-	public static void loadPrisoners() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("plugins/core/prisoners.db"));
-		lines.forEach(val -> _prisonerList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
-	}
-
-	// --- SAVE/LOAD DONATORS --- \\
-	public static void loadDonators() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get("plugins/core/donator.db"));
-		lines.forEach(val -> _donatorList.add(UUID.fromString(val)));
-	}
-
-	public static void saveDonators() throws IOException {
-		List<String> list = _donatorList.stream().map(UUID::toString).collect(Collectors.toList());
-		Files.write(Paths.get("plugins/core/donator.db"), String.join("\n", list).getBytes());
-		Files.write(Paths.get("plugins/core/codes/used.db"), String.join("\n", UsedDonorCodes).getBytes());
-	}
-
 	// --- SAVE/LOAD MUTED --- \\
 	public static void loadMuted() throws IOException {
 		
@@ -241,24 +171,6 @@ public class PlayerMeta {
 
 		try { out.remove(UUID.fromString(Config.getValue("adminid")));
 		} catch (Exception ignore) {}
-		return out;
-	}
-
-	public static  Map<Player, Integer> sortLagMap(Map<Player,Integer> thisMap) {
-		Map<Player, Integer> out;
-
-		out = thisMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(thisMap.size())
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
-		return out;
-	}
-
-	public static  Map<Player, Double> sortSpeedMap(Map<Player,Double> thisMap) {
-		Map<Player, Double> out;
-
-		out = thisMap.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).limit(thisMap.size())
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
-
 		return out;
 	}
 

@@ -32,6 +32,8 @@ import core.commands.restricted.Repair;
 
 import java.util.*;
 import java.text.DecimalFormat;
+
+import core.data.PrisonerManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -199,7 +201,7 @@ public class BlockListener implements Listener {
 		String mat = blockType.toString();
 
 		// prevent lag-prisoners from placing things that can cause lag
-		if (PlayerMeta.isPrisoner(placer)) {
+		if (PrisonerManager.isPrisoner(placer)) {
 
 			if (LagMats.contains(blockType)) {event.setCancelled(true);
 				return;

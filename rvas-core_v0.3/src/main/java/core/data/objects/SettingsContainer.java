@@ -2,8 +2,7 @@ package core.data.objects;
 
 /* *
  * 
- *  About: A class object that is used as the data container
- *  	for toggleable player settings and other information
+ *  About: The data container for toggleable player settings and other information
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)

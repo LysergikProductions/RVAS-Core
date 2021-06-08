@@ -23,10 +23,11 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.data.PlayerMeta;
 import core.backend.utils.Util;
 
 import java.util.*;
+
+import core.data.PrisonerManager;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 
@@ -77,7 +78,7 @@ public class MoveListener implements Listener {
 			player.setHealth(0);
 		
 		// Make game unplayable for laggers
-		if (PlayerMeta.isPrisoner(player)) {
+		if (PrisonerManager.isPrisoner(player)) {
 			int randomNumber = r.nextInt(9);
 			
 			if (randomNumber == 5 || randomNumber == 6) {

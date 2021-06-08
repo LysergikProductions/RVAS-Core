@@ -123,7 +123,7 @@ public class ChatPrint {
 				int deaths = StatsManager.getStats(offPlayer).deathTotal;
 				String kd = StatsManager.getStats(offPlayer).kd;
 				
-				TextComponent a2 = new TextComponent(primary + target_name + ", ");
+				TextComponent a2 = new TextComponent(primary + target_name + "  ");
 				TextComponent b = new TextComponent(Util.timeToString(realLeaders_0_15.get(pid)));
 				
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));

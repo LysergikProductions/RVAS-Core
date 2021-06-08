@@ -7,6 +7,8 @@ import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.utils.Util;
 
+import core.data.DonationManager;
+import core.data.PrisonerManager;
 import core.tasks.Analytics;
 import core.tasks.LagManager;
 import core.tasks.ProcessPlaytime;
@@ -88,9 +90,9 @@ public class Server implements CommandExecutor {
 		TextComponent ujoins_a = new TextComponent("Unique Joins: ");
 		TextComponent ujoins_b = new TextComponent("" + PlayerMeta.Playtimes.keySet().size());
 		TextComponent donos_a = new TextComponent("Donators: ");
-		TextComponent donos_b = new TextComponent("" + PlayerMeta._donatorList.size());
+		TextComponent donos_b = new TextComponent("" + DonationManager._donorList.size());
 		TextComponent laggers_a = new TextComponent("Lag-Prisoners: ");
-		TextComponent laggers_b = new TextComponent("" + PlayerMeta._prisonerList.size());
+		TextComponent laggers_b = new TextComponent("" + PrisonerManager._prisonerList.size());
 		TextComponent pmutes_a = new TextComponent("Permanent Mutes: ");
 		TextComponent pmutes_b = new TextComponent("" + PlayerMeta._permanentMutes.size());
 		TextComponent ops_a = new TextComponent("OP Accounts: ");

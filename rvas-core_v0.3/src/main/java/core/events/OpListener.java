@@ -30,7 +30,7 @@ import core.backend.utils.Chunks;
 import core.commands.restricted.Speeds;
 import core.commands.restricted.Check;
 
-import core.data.Aliases;
+import core.data.objects.Aliases;
 import core.data.PlayerMeta;
 import core.data.ThemeManager;
 import core.data.objects.Pair;

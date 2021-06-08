@@ -24,7 +24,7 @@ package core.commands.restricted;
  * */
 
 import core.backend.ChatPrint;
-import core.data.PlayerMeta;
+import core.backend.utils.Util;
 import core.data.objects.Pair;
 import core.backend.utils.Chunks;
 
@@ -74,7 +74,7 @@ public class Check implements CommandExecutor, Listener {
     }
 
     public static void updateGUI() {
-        lagCheckGUI.clear();
+        lagCheckGUI.clear(); // do not also clear sorted list, to keep results persistent
 
         for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
             int thisCount;
@@ -91,7 +91,7 @@ public class Check implements CommandExecutor, Listener {
             }
         }
 
-        sortedLagList = PlayerMeta.sortLagMap(sortedLagList);
+        sortedLagList = Util.sortLagMap(sortedLagList);
         for (Player thisPlayer: sortedLagList.keySet()) {
 
             String thisName = thisPlayer.getName();

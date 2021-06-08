@@ -6,11 +6,14 @@ import core.commands.AFK;
 import core.commands.Message;
 import core.commands.restricted.Admin;
 
+import core.data.DonationManager;
 import core.data.PlayerMeta;
 import core.data.PlayerMeta.MuteType;
 
 import java.util.*;
 import java.util.logging.Level;
+
+import core.data.PrisonerManager;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
@@ -73,7 +76,7 @@ public class ChatListener implements Listener {
 				color = "\u00A7a"; // Greentext
 				break;
 			case '$':
-				if (PlayerMeta.isDonator(player)) {
+				if (DonationManager.isDonor(player)) {
 					color = "\u00A76"; // Donator text
 					break;
 				}
@@ -82,7 +85,7 @@ public class ChatListener implements Listener {
 				break;
 		}
 
-		if (PlayerMeta.isDonator(player) && !Admin.UseRedName.contains(player.getUniqueId())) {
+		if (DonationManager.isDonor(player) && !Admin.UseRedName.contains(player.getUniqueId())) {
 			usernameColor = "\u00A76";
 		} else if (Admin.UseRedName.contains(player.getUniqueId())) {
 			usernameColor = "\u00A7c";
@@ -98,7 +101,7 @@ public class ChatListener implements Listener {
 		// -- CHECKS -- //
 
 		if (isBlank(finalMessage)) doSend = false;
-		else if (PlayerMeta.isPrisoner(player)) finalMessage = ":'(";
+		else if (PrisonerManager.isPrisoner(player)) finalMessage = ":'(";
 		
 		// Don't send any message if slow-chat configs dictate it
 		if (slowChatEnabled && !player.isOp()) {

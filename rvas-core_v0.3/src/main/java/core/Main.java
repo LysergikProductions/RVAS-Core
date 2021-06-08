@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.3"; public static final int build = 293;
+	public static final String version = "0.3.3"; public static final int build = 294;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -66,9 +66,9 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] __________________");
 
 		try {
-			PlayerMeta.loadDonators();
+			DonationManager.loadDonors();
 			PlayerMeta.loadMuted();
-			PlayerMeta.loadPrisoners();
+			PrisonerManager.loadPrisoners();
 
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured loading files..");
@@ -332,7 +332,7 @@ public class Main extends JavaPlugin {
 			FileManager.backupData(FileManager.playtime_user_database, "playtimes-backup-", ".db");
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
 			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");			
-			FileManager.backupData(FileManager.donor_list, "donator-backup-", ".db");
+			FileManager.backupData(FileManager.donor_database, "donator-backup-", ".db");
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");			
 			
 		} catch (IOException ex) {
@@ -345,9 +345,9 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] ______________________");
 		
 		try {
-			PlayerMeta.saveDonators();
+			DonationManager.saveDonors();
 			PlayerMeta.saveMuted();
-			PlayerMeta.savePrisoners();
+			PrisonerManager.savePrisoners();
 			
 			PlayerMeta.writePlaytime();
 			SettingsManager.writePlayerSettings();

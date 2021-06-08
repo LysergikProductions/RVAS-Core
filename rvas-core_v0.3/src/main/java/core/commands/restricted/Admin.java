@@ -3,7 +3,7 @@ package core.commands.restricted;
 import core.backend.*;
 import core.backend.utils.Restart;
 import core.backend.utils.Util;
-import core.data.Aliases;
+import core.data.objects.Aliases;
 import core.data.ThemeManager;
 import core.data.objects.Pair;
 import core.data.PlayerMeta;

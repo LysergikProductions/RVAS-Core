@@ -73,6 +73,9 @@ public class Config {
 	}
 
 	public static void modifyConfig(String thisConfig, String thisValue) {
+		if (thisConfig == null || thisValue == null) return;
+
+		_values.remove(thisConfig);
 		_values.put(thisConfig, thisValue);
 	}
 

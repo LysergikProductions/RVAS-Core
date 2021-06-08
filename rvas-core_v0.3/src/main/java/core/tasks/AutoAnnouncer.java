@@ -73,23 +73,16 @@ public class AutoAnnouncer extends TimerTask {
 		int rnd = r.nextInt(size+1);
 		String tryMsg;
 
-		if (rnd == size || size == 0) {
-			tryMsg = "default";
-		} else try {
-			tryMsg = announcements.get(rnd);
-		} catch (IndexOutOfBoundsException ignore) {
-			tryMsg = "default";
-		}
+		if (rnd == size || size == 0) { tryMsg = "default";
+		} else try { tryMsg = announcements.get(rnd);
+		} catch (IndexOutOfBoundsException ignore) { tryMsg = "default"; }
 
 		while (tryMsg.equals(lastAnnouncement) && size != 0) {
 			rnd = r.nextInt(size+1);
 
 			if (rnd == size) tryMsg = "default";
-			else try {
-				tryMsg = announcements.get(rnd);
-			} catch (IndexOutOfBoundsException ignore) {
-				tryMsg = "default";
-			}
+			else try { tryMsg = announcements.get(rnd);
+			} catch (IndexOutOfBoundsException ignore) { tryMsg = "default"; }
 		}
 
 		if (tryMsg.equals("default")) {
@@ -97,7 +90,7 @@ public class AutoAnnouncer extends TimerTask {
 			Bukkit.spigot().broadcast(source);
 		} else {
 			lastAnnouncement = tryMsg;
-			Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary + tryMsg));
+			Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary.toString() + tryMsg));
 		}
 		Scheduler.setLastTaskId("autoAnnounce");
 	}
