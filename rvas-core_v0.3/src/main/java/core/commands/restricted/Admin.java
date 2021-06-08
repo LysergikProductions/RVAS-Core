@@ -43,8 +43,8 @@ public class Admin implements CommandExecutor {
 		
 		if (args.length == 1) {
 			if (!PlayerMeta.isOp(sender)) {
-				
-				sender.sendMessage(new TextComponent("\u00A7cYou can't use this.").toLegacyText());
+				sender.sendMessage(new TextComponent(
+						ChatPrint.fail + "You can't use this.").toLegacyText());
 				return true;
 			}
 
@@ -62,6 +62,7 @@ public class Admin implements CommandExecutor {
 								"Enabled warnings!").toLegacyText());
 						doNotDisturb.add(senderID);
 					}
+					return true;
 
 				case "COLOR":
 					if (UseRedName.contains(senderID)) {

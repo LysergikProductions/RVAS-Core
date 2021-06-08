@@ -84,7 +84,7 @@ public class Check implements CommandExecutor, Listener {
                 lagList.remove(thisPlayer.getUniqueId());
                 thisCount = Chunks.countChunkLagBlocks(thisPlayer);
 
-                if (thisCount > 192) {
+                if (thisCount > 255) {
                     lagList.putIfAbsent(thisPlayer.getUniqueId(), new Pair<>(thisCount, thisPlayer.getLocation()));
                     sortedLagList.putIfAbsent(thisPlayer, thisCount);
                 }

@@ -58,12 +58,9 @@ public class DonationManager {
     public static boolean isDonor(Player p) {
         if (p == null) return false;
 
-        System.out.println(p.getUniqueId());
-
         try {
             UUID playerID = p.getUniqueId();
             for (Donor thisDonator: _donorList) {
-                System.out.println(thisDonator.getUserID());
                 if (thisDonator.getUserID().equals(playerID)) return true;
             }
 

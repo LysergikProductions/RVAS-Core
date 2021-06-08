@@ -1,17 +1,16 @@
 package core.tasks;
 
-import core.commands.VoteMute;
-import core.commands.restricted.Check;
-import core.commands.restricted.Speeds;
-import core.events.ChatListener;
-import core.events.ChunkManager;
-import core.data.PlayerMeta;
-
 import core.backend.Config;
 import core.backend.Scheduler;
 import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.LagProcessor;
+
+import core.commands.VoteMute;
+import core.commands.restricted.Check;
+import core.commands.restricted.Speeds;
+import core.events.ChatListener;
+import core.data.PlayerMeta;
 
 import java.util.TimerTask;
 import org.bukkit.Bukkit;
@@ -23,31 +22,17 @@ public class ProcessPlaytime extends TimerTask {
 	private static long lastTime, lastHour = 0;
 	private static long timeTillReset = 3600000;
 
-	private static int lastNewChunks = 0;
 	private static double lastTPS = 0.00;
 
 	@Override
 	public void run() {
-
-		int currentNewChunks = ChunkManager.newCount;
-		double onlinePlayers = Bukkit.getOnlinePlayers().size();
-		
-		if (onlinePlayers != 0 && (currentNewChunks - lastNewChunks) / onlinePlayers > 160.0) {
-			System.out.println(
-					"WARN more than 8 chunks per tick per player in last second");
-			Analytics.capture();
-		}
-		
-		lastNewChunks = currentNewChunks;
 		double currentTPS = LagProcessor.getTPS();
-
 		double difference;
-		if (lastTPS == 0.00) {
-			difference = 0.00;}
-		else {
-			difference = lastTPS - currentTPS;}
+
+		if (lastTPS == 0.00) difference = 0.00;
+		else difference = lastTPS - currentTPS;
 		
-		if (difference > (lastTPS*0.5)) {
+		if (difference > (lastTPS * 0.5)) {
 			System.out.println("WARN 50+% tps drop in 20t");
 			Analytics.capture();
 		}
@@ -64,11 +49,10 @@ public class ProcessPlaytime extends TimerTask {
 		long sinceLast = System.currentTimeMillis() - lastTime;		
 		if (sinceLast > 3000) Analytics.capture();
 
-		// Tick playtime and temporary mutes
+		// Tick playtime, temporary mutes, server uptime, and reconnect delays
 		Bukkit.getOnlinePlayers().forEach(p -> PlayerMeta.tickPlaytime(p, sinceLast));
 		PlayerMeta.tickTempMutes(sinceLast);
 
-		// Tick server uptime and reconnect delays
 		ServerMeta.tickUptime(sinceLast);
 		ServerMeta.tickRcDelays(sinceLast);
 
@@ -83,9 +67,7 @@ public class ProcessPlaytime extends TimerTask {
 		double rThreshold = Double.parseDouble(Config.getValue("restart.threshold"));
 		if (currentTPS < rThreshold) {
 			lowTpsCounter += sinceLast;
-			if (lowTpsCounter >= 300000) {
-				Restart.restart(true);
-			}
+			if (lowTpsCounter >= 300000) Restart.restart(true);
 		}
 
 		timeTillReset = timeTillReset - sinceLast;
@@ -96,12 +78,11 @@ public class ProcessPlaytime extends TimerTask {
 		}
 
 		lastTime = System.currentTimeMillis();
-
-		// Log this
 		Scheduler.setLastTaskId("oneSecondTasks");
 
 		// updateGUIs
 		Speeds.updateGUI();
 		Check.updateGUI();
+		System.out.println(lastTime - System.currentTimeMillis());
 	}
 }
