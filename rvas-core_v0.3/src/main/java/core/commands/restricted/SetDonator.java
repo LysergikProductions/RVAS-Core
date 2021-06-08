@@ -2,7 +2,6 @@ package core.commands.restricted;
 
 import core.backend.Config;
 import core.backend.ChatPrint;
-import core.data.objects.Donor;
 import core.data.DonationManager;
 
 import org.bukkit.Bukkit;
@@ -15,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
+import java.io.IOException;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class SetDonator implements CommandExecutor {
@@ -23,25 +22,39 @@ public class SetDonator implements CommandExecutor {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
-			sender.sendMessage("\u00A7cYou can't run this."); return true;
+			sender.sendMessage(new TextComponent(ChatPrint.fail +
+					"You can't run this").toLegacyText()); return true;
 		}
 
-		if (args.length != 3) {
-			sender.sendMessage("\u00A7cInvalid syntax. Syntax: /setdonator [name] [key] [$amount]"); return true;
-		}
-
+		int argCount = args.length;
 		Player donator = sender.getServer().getPlayer(args[0].trim());
-		if (donator == null) {
-			sender.sendMessage("\u00A7cPlayer is not online.");
-			return true;
 
+		if (donator == null) {
+			sender.sendMessage(new TextComponent(
+					ChatPrint.fail + "Player is not online").toLegacyText());
+			return true;
+		}
+
+		if (argCount == 1) {
+			try {
+				if (!DonationManager.setDonor(donator, "INVALID", 0.00)) return false;
+				else {
+					donator.sendMessage(new TextComponent(
+							ChatPrint.primary + "Removed donator!").toLegacyText());
+					return true;
+				}
+			} catch (IOException e) { e.printStackTrace(); }
+
+		} else if (argCount != 3) {
+			sender.sendMessage(new TextComponent(ChatPrint.fail +
+					"Invalid syntax. Syntax: /setdonator [name] [key] [$amount]").toLegacyText());
+			return true;
 		}
 
 		String key = args[1].trim();
 
 		try {
-			if (!DonationManager.setDonor(new Donor(
-					donator.getUniqueId(), key, new Date(), Double.parseDouble(args[2])))
+			if (!DonationManager.setDonor(donator, key, Double.parseDouble(args[2]))
 			) return false; // < - return false when setDonor returns false
 
 		} catch (Exception e) {

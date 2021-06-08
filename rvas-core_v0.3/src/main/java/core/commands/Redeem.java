@@ -37,7 +37,7 @@ public class Redeem implements CommandExecutor {
 
 			DonationManager.UsedDonorCodes.add(args[0]);
 
-			try { DonationManager.setDonor(new Donor(player.getUniqueId(), args[0], new Date(), 0.00));
+			try { DonationManager.setDonor(player, args[0], 0.00);
 			} catch (IOException e) { e.printStackTrace(); }
 
 			Bukkit.getServer().spigot()

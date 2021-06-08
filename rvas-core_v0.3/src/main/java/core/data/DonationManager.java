@@ -22,20 +22,19 @@ package core.data;
  *
  * */
 
-import core.backend.utils.Util;
 import core.data.objects.Donor;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import com.google.gson.Gson;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import java.io.*;
 import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
+
+import com.google.gson.Gson;
+import com.google.common.reflect.TypeToken;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class DonationManager {
@@ -44,17 +43,16 @@ public class DonationManager {
     public static List<String> DonorCodes = new ArrayList<>();
     public static List<String> UsedDonorCodes = new ArrayList<>();
 
-    public static boolean setDonor(Donor thisDonator) throws IOException {
-        if (thisDonator == null) {
-            Util.notifyOps(new TextComponent("WARN failed to set donator (null donator container)"));
-            return false;
-        }
+    public static boolean setDonor(Player thisPlayer, String thisKey, Double donationSum) throws IOException {
 
-        if (!_donorList.contains(thisDonator)) _donorList.add(thisDonator);
-        else _donorList.remove(thisDonator);
+        if (thisPlayer == null || thisKey == null || donationSum == null) return false;
 
-        saveDonors();
-        return true;
+        if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(
+                thisPlayer.getUniqueId()));
+        else _donorList.add(new Donor(
+                thisPlayer.getUniqueId(), thisKey, new Date(), donationSum));
+
+        saveDonors(); return true;
     }
 
     public static boolean isDonor(Player p) {
@@ -80,6 +78,7 @@ public class DonationManager {
         return null;
     }
 
+    // TODO: add easy way for ops to verify a player is a donator
     public static Donor getDonorByKey(String thisKey) {
         for (Donor thisDonor: _donorList) {
             if (thisDonor.getDonationKey().equals(thisKey)) return thisDonor;
@@ -96,6 +95,7 @@ public class DonationManager {
         return null;
     }
 
+    // JSON management
     public static void loadDonors() {
         _donorList.clear();
 
@@ -127,9 +127,7 @@ public class DonationManager {
         Reader reader = new InputStreamReader (
                 new FileInputStream (thisFile), StandardCharsets.UTF_8);
 
-        try {
-            List<Donor> thisList = new ArrayList<Donor>(gson.fromJson(reader, ArrayList.class));
-            return new ArrayList<>(thisList);
+        try { return gson.fromJson(reader, new TypeToken<List<Donor>>(){}.getType());
         } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
