@@ -50,7 +50,7 @@ public class DonationManager {
         if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(
                 thisPlayer.getUniqueId()));
         else _donorList.add(new Donor(
-                thisPlayer.getUniqueId(), thisKey, new Date(), donationSum));
+                thisPlayer.getUniqueId(), thisKey, donationSum));
 
         saveDonors(); return true;
     }
@@ -116,7 +116,7 @@ public class DonationManager {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    public static List<Donor> getDonorsFromJSON(File thisFile) throws IOException, ClassCastException {
+    public static List<Donor> getDonorsFromJSON(File thisFile) throws IOException {
         Gson gson = new Gson();
 
         if (!thisFile.getName().endsWith(".json")) {
@@ -139,5 +139,10 @@ public class DonationManager {
 
         gson.toJson(theseDonors, writer);
         writer.flush(); writer.close();
+    }
+
+    // Donor-specific utils
+    public static boolean isValidString(String thisString) {
+        return thisString != null && !thisString.equals("") && !thisString.equals("tbd");
     }
 }

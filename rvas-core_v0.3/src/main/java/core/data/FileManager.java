@@ -3,7 +3,6 @@ package core.data;
 import core.Main;
 import core.data.objects.*;
 import core.backend.Config;
-import com.google.gson.Gson;
 
 import java.io.*;
 import java.util.Date;
@@ -20,7 +19,8 @@ public class FileManager {
 	public static File pvpstats_user_database, playtime_user_database,
 			settings_user_database, muted_user_database, prison_user_database,
 			core_server_config, core_restrictions_config, core_spawn_config, server_statistics_list,
-			motd_message_list, auto_announce_list, donor_database, all_donor_codes, used_donor_codes;
+			motd_message_list, auto_announce_list,
+			donor_database, all_donor_codes, used_donor_codes;
 
 	public static File defaultThemeFile, halloweenThemeFile, customThemeFile;
 	

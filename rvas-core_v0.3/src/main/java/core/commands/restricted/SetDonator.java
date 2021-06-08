@@ -39,7 +39,9 @@ public class SetDonator implements CommandExecutor {
 			try {
 				if (!DonationManager.setDonor(donator, "INVALID", 0.00)) return false;
 				else {
-					donator.sendMessage(new TextComponent(
+					if (DonationManager.isDonor(donator)) donator.sendMessage(new TextComponent(
+							ChatPrint.primary + "Added donator!").toLegacyText());
+					else donator.sendMessage(new TextComponent(
 							ChatPrint.primary + "Removed donator!").toLegacyText());
 					return true;
 				}
