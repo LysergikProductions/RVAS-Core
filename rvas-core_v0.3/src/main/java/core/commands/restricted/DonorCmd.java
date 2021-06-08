@@ -5,6 +5,7 @@ import core.data.DonationManager;
 import core.data.objects.Donor;
 
 import java.util.UUID;
+import java.util.Arrays;
 import java.util.Objects;
 
 import org.bukkit.entity.Player;
@@ -22,7 +23,59 @@ public class DonorCmd implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if ((sender instanceof Player)) {
-            if (args.length != 1) {
+            if (args.length >= 3) {
+
+                if (!args[1].equalsIgnoreCase("add") &&
+                        !args[1].equalsIgnoreCase("tag") &&
+                        !args[1].equalsIgnoreCase("motd")) {
+
+                    sender.sendMessage(new TextComponent(ChatPrint.fail +
+                            "Invalid syntax. Syntax: /donor [name] [add/tag/motd]").toLegacyText());
+                    return false;
+                }
+
+                // Concatenate args int message
+                final String[] msg = {""};
+                final int[] x = {2};
+
+                Arrays.stream(args.clone()).forEach(str ->  {
+                    x[0]++; msg[0] += str + " ";
+                });
+                msg[0] = msg[0].trim();
+
+                switch (args[1]) {
+                    case "add":
+                        Objects.requireNonNull(DonationManager
+                                .getDonorByName(args[0])).addToSum(Double.parseDouble(args[2]));
+
+                        sender.sendMessage(new TextComponent(ChatPrint.primary +
+                                "Successfully added $" + args[2] +" to that donor for a total of $" +
+                                Objects.requireNonNull(DonationManager
+                                        .getDonorByName(args[0])).getSumDonated()).toLegacyText());
+                        return true;
+
+                    case "tag":
+                        Objects.requireNonNull(DonationManager
+                                .getDonorByName(args[0])).setTagLine(msg[0]);
+
+                        sender.sendMessage(new TextComponent(ChatPrint.primary +
+                                "Successfully set donor tagline to:").toLegacyText());
+                        sender.sendMessage(msg[0]);
+                        return true;
+
+                    case "motd":
+                        Objects.requireNonNull(DonationManager
+                                .getDonorByName(args[0])).setMsgOtd(msg[0]);
+
+                        sender.sendMessage(new TextComponent(ChatPrint.primary +
+                                "Successfully set donor MOTD to:").toLegacyText());
+                        sender.sendMessage(msg[0]);
+                        return true;
+
+                    default: return false;
+                }
+
+            } else if (args.length != 1) {
                 sender.sendMessage(new TextComponent(ChatPrint.fail +
                         "Invalid syntax. Syntax: /donor [name]").toLegacyText());
                 return false;
@@ -34,8 +87,7 @@ public class DonorCmd implements CommandExecutor {
 
             String thisSearch = args[0].trim();
             UUID thisID = null; Donor thisDonor;
-            TextComponent resultMsg;
-            boolean isID = false;
+            TextComponent resultMsg; boolean isID = false;
 
             try { thisID = UUID.fromString(thisSearch); isID = true;
             } catch (IllegalArgumentException ignore) { }

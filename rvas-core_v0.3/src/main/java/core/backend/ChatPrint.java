@@ -249,6 +249,12 @@ public class ChatPrint {
 			if (targetSettings.show_kd ||
 					receiver.getUniqueId().equals(target.getUniqueId())) statsLines.add(kd);
 		}
+
+		if (DonationManager.isDonor(Bukkit.getPlayer(target.getUniqueId()))) {
+			statsLines.add(new TextComponent(ChatColor.DARK_AQUA +
+					Objects.requireNonNull(DonationManager
+							.getDonorByUUID(target.getUniqueId())).getTagLine()));
+		}
 		
 		// send final message to receiver
 		statsLines.forEach(receiver::sendMessage);

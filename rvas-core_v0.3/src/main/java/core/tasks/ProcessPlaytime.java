@@ -6,11 +6,11 @@ import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.LagProcessor;
 
+import core.data.PlayerMeta;
+import core.events.ChatListener;
 import core.commands.VoteMute;
 import core.commands.restricted.Check;
 import core.commands.restricted.Speeds;
-import core.events.ChatListener;
-import core.data.PlayerMeta;
 
 import java.util.TimerTask;
 import org.bukkit.Bukkit;
@@ -83,6 +83,5 @@ public class ProcessPlaytime extends TimerTask {
 		// updateGUIs
 		Speeds.updateGUI();
 		Check.updateGUI();
-		System.out.println(lastTime - System.currentTimeMillis());
 	}
 }
