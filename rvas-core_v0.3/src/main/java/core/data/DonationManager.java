@@ -75,7 +75,6 @@ public class DonationManager {
         return null;
     }
 
-    // TODO: add easy way for ops to verify a player is a donator
     public static Donor getDonorByKey(String thisKey) {
         for (Donor thisDonor: _donorList) {
             if (thisDonor.getDonationKey().equals(thisKey)) return thisDonor;
@@ -92,7 +91,7 @@ public class DonationManager {
         return null;
     }
 
-    // JSON management
+    // JSON management \\
     public static void loadDonors() {
         _donorList.clear();
 
@@ -113,7 +112,7 @@ public class DonationManager {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    public static List<Donor> getDonorsFromJSON(File thisFile) throws IOException {
+    static List<Donor> getDonorsFromJSON(File thisFile) throws IOException {
         Gson gson = new Gson();
 
         if (!thisFile.getName().endsWith(".json")) {

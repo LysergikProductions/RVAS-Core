@@ -139,7 +139,7 @@ public class PlayerMeta {
 
 			double value = Playtimes.get(p.getUniqueId());
 			value += msToAdd / 1000;
-			Playtimes.put(p.getUniqueId(), value);
+			Playtimes.replace(p.getUniqueId(), value);
 
 		} else Playtimes.put(p.getUniqueId(), msToAdd / 1000);
 	}

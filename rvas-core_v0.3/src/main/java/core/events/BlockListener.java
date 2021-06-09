@@ -84,7 +84,7 @@ public class BlockListener implements Listener {
 				Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH, Material.ACTIVATOR_RAIL, Material.POWERED_RAIL,
 				Material.LEVER, Material.PISTON, Material.STICKY_PISTON, Material.REDSTONE_LAMP, Material.GLOWSTONE,
 				Material.OBSERVER, Material.HOPPER, Material.DROPPER, Material.REPEATER, Material.COMPARATOR,
-				Material.DISPENSER, Material.GRAVEL, Material.DRAGON_EGG, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
+				Material.DISPENSER, Material.DRAGON_EGG, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

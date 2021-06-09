@@ -24,6 +24,8 @@ package core.commands.restricted;
  *
  * */
 
+import core.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
@@ -35,16 +37,21 @@ public class NinjaTP implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+
+        if (!(sender instanceof Player)) return false;
         Player player = (Player)sender;
 
         if (args.length == 4) {
             String dimension = args[0].trim();
-            String loc =  args[1].trim() + " " + args[2].trim() + " " + args[3].trim();
 
+            String loc =  args[1].trim() + " " + args[2].trim() + " " + args[3].trim();
             String tp_cmd = "/execute in " + dimension + " run tp @p[name=" + player.getName() + "] " + loc;
 
             player.chat("/sv on"); // <- requires SuperVanish plugin
-            player.chat(tp_cmd); // <- tp command-sender to the location
+
+            // tp command-sender to the location 20 ticks after beginning to vanish
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, () -> {
+                player.chat(tp_cmd); }, 20L);
 
         } else if (args.length == 1) {
             String tp_cmd = "/tp " + args[0].trim();

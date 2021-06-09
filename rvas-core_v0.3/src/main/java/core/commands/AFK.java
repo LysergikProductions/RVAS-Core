@@ -18,9 +18,10 @@ public class AFK implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
-        UUID playerid = player.getUniqueId();
 
+        UUID playerid = player.getUniqueId();
         TextComponent result;
 
         if (!_AFKs.contains(playerid)) {

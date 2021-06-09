@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import core.data.PlayerMeta;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -24,68 +25,67 @@ public class Ignore implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player)) return false;
 
-        if (sender instanceof Player) {
-            Player player = (Player)sender;
-            UUID playerID = player.getUniqueId();
+        Player player = (Player)sender;
+        UUID playerID = player.getUniqueId();
 
-            if (args.length != 1) {
-                player.sendMessage("\u00A7cIncorrect syntax. Syntax: /ignore [player]");
-                return true;
-            }
+        if (args.length != 1) {
+            player.sendMessage(new TextComponent(ChatPrint.fail +
+                    "Incorrect syntax. Syntax: /ignore [player]").toLegacyText());
+            return true;
+        }
 
-            Player toIgnore = Bukkit.getServer().getPlayer(args[0]);
+        Player toIgnore = Bukkit.getServer().getPlayer(args[0]);
 
-            if (toIgnore == null) {
-                player.sendMessage("\u00A7cPlayer is not online.");
-                return true;
-            }
+        if (toIgnore == null) {
+            player.sendMessage(new TextComponent(ChatPrint.fail +
+                    "Player is not online").toLegacyText());
+            return true;
+        }
 
-            UUID toIgnoreID = toIgnore.getUniqueId();
+        UUID toIgnoreID = toIgnore.getUniqueId();
 
-            if (toIgnore.isOp()) {
-                player.sendMessage("\u00A7cYou can't ignore this person.");
-                return true;
-            }
+        if (toIgnore.isOp() || PlayerMeta.isAdmin(toIgnore)) {
+            player.sendMessage(new TextComponent(ChatPrint.fail +
+                    "You can't ignore this person").toLegacyText());
+            return true;
+        }
 
-            if (Ignores.containsKey(playerID)) {
-                List<UUID> existing = Ignores.get(playerID);
+        if (Ignores.containsKey(playerID)) {
+            List<UUID> existing = Ignores.get(playerID);
 
-                if(existing.contains(toIgnoreID)) {
+            if(existing.contains(toIgnoreID)) {
 
-                    existing.remove(toIgnoreID);
-                    player.sendMessage("\u00A76No longer ignoring " + toIgnore.getName() +".");
-
-                } else {
-                    existing.add(toIgnoreID);
-                    player.sendMessage("\u00A76Now ignoring "+ toIgnore.getName() +
-                            ". This will persist until the server restarts.");
-
-                    int rnd = r.nextInt(10);
-                    if(rnd == 5) {
-                        player.sendMessage("\u00A76\u00A7oTip: You can vote to mute people server-wide. Try \u00A7n/vm " +
-                                toIgnore.getName() +"\u00A7r\u00A76\u00A7o.");
-                    }
-                }
-                Ignores.put(playerID, existing);
-                return true;
+                existing.remove(toIgnoreID);
+                player.sendMessage("\u00A76No longer ignoring " + toIgnore.getName() +".");
 
             } else {
-                List<UUID> ignores = new ArrayList<>();
-                ignores.add(toIgnoreID);
-                Ignores.put(playerID, ignores);
+                existing.add(toIgnoreID);
                 player.sendMessage("\u00A76Now ignoring "+ toIgnore.getName() +
                         ". This will persist until the server restarts.");
 
                 int rnd = r.nextInt(10);
-                if (rnd == 5) {
-                    player.sendMessage("\u00A76\u00A7oTip: You can vote to mute people server-wide. Try \u00A7n/vm "+
+                if(rnd == 5) {
+                    player.sendMessage("\u00A76\u00A7oTip: You can vote to mute people server-wide. Try \u00A7n/vm " +
                             toIgnore.getName() +"\u00A7r\u00A76\u00A7o.");
                 }
-                return true;
             }
+            Ignores.put(playerID, existing);
+            return true;
+
         } else {
-            sender.sendMessage(new TextComponent(ChatPrint.fail + "Console can't run this command.").toLegacyText());
+            List<UUID> ignores = new ArrayList<>();
+            ignores.add(toIgnoreID);
+            Ignores.put(playerID, ignores);
+            player.sendMessage("\u00A76Now ignoring "+ toIgnore.getName() +
+                    ". This will persist until the server restarts.");
+
+            int rnd = r.nextInt(10);
+            if (rnd == 5) {
+                player.sendMessage("\u00A76\u00A7oTip: You can vote to mute people server-wide. Try \u00A7n/vm "+
+                        toIgnore.getName() +"\u00A7r\u00A76\u00A7o.");
+            }
             return true;
         }
     }

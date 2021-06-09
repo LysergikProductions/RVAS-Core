@@ -40,10 +40,12 @@ public class Discord implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		Player player = (Player) sender;
-		
-		if (!PlayerMeta.isAdmin(player)) Analytics.discord_cmd++;
+
 		String link = Config.getValue("discord.link");
+		if (!(sender instanceof Player)) { System.out.println(link); return false; }
+
+		Player player = (Player) sender;
+		if (!PlayerMeta.isAdmin(player)) Analytics.discord_cmd++;
 
 		TextComponent message;
 		if (!link.equals("tbd") && !link.equals("")) {

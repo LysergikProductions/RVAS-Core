@@ -23,15 +23,16 @@ package core.tasks;
  *
  * */
 
+import core.backend.Config;
 import core.backend.ChatPrint;
 import core.backend.Scheduler;
-import core.backend.Config;
 
 import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -54,9 +55,9 @@ public class AutoAnnouncer extends TimerTask {
 	}
 
 	static TextComponent source; static {
-		source = new TextComponent(
+		source = new TextComponent(ChatColor.GOLD +
 				"RVAS-core is open-source! Click this message to access the repository.");
-		source.setColor(ChatPrint.primary); source.setItalic(true);
+		source.setItalic(true);
 
 		source.setClickEvent(new ClickEvent(ClickEvent.Action
 				.OPEN_URL, "https://github.com/LysergikProductions/RVAS-Core"));

@@ -62,6 +62,7 @@ public class Donor {
     public void setTagLine(String tagLine) { this.tagLine = tagLine; }
     public void setMsgOtd(String msgOtd) { this.msgOtd = msgOtd; }
     public void setCustomIGN(String customIGN) { this.customIGN = customIGN; }
+    public void setRecentDonationDate() { this.recentDonationDate = new Date(); }
 
     public void addToSum(Double sumToAdd) {
         this.sumDonated += sumToAdd;

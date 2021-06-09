@@ -15,6 +15,7 @@ public class Help implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+		if (!(sender instanceof Player)) return false;
 
 		Player player = (Player)sender;
 		if (!PlayerMeta.isAdmin(player)) Analytics.help_cmd++;

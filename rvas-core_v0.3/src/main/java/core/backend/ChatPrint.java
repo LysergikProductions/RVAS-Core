@@ -250,10 +250,13 @@ public class ChatPrint {
 					receiver.getUniqueId().equals(target.getUniqueId())) statsLines.add(kd);
 		}
 
-		if (DonationManager.isDonor(Bukkit.getPlayer(target.getUniqueId()))) {
-			statsLines.add(new TextComponent(ChatColor.DARK_AQUA +
-					Objects.requireNonNull(DonationManager
-							.getDonorByUUID(target.getUniqueId())).getTagLine()));
+		String thisTag = Objects.requireNonNull(DonationManager
+				.getDonorByUUID(target.getUniqueId())).getTagLine();
+
+		if (DonationManager.isDonor(Bukkit.getPlayer(target.getUniqueId()))
+				&& DonationManager.isValidString(thisTag)) {
+
+			statsLines.add(new TextComponent(ChatColor.DARK_AQUA + thisTag));
 		}
 		
 		// send final message to receiver

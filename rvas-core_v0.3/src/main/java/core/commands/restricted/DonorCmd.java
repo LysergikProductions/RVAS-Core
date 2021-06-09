@@ -7,6 +7,7 @@ import core.data.objects.Donor;
 import java.util.UUID;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -36,22 +37,25 @@ public class DonorCmd implements CommandExecutor {
 
                 // Concatenate args int message
                 final String[] msg = {""};
-                final int[] x = {2};
+                AtomicInteger i = new AtomicInteger(0);
 
                 Arrays.stream(args.clone()).forEach(str ->  {
-                    x[0]++; msg[0] += str + " ";
+                    i.getAndIncrement();
+
+                    if (!i.equals(new AtomicInteger(1)) &&
+                            !i.equals(new AtomicInteger(2))) msg[0] += str + " ";
                 });
                 msg[0] = msg[0].trim();
 
                 switch (args[1]) {
                     case "add":
-                        Objects.requireNonNull(DonationManager
-                                .getDonorByName(args[0])).addToSum(Double.parseDouble(args[2]));
+                        Donor thisDonor = Objects.requireNonNull(DonationManager.getDonorByName(args[0]));
+                        thisDonor.addToSum(Double.parseDouble(args[2]));
+                        thisDonor.setRecentDonationDate();
 
-                        sender.sendMessage(new TextComponent(ChatPrint.primary +
-                                "Successfully added $" + args[2] +" to that donor for a total of $" +
-                                Objects.requireNonNull(DonationManager
-                                        .getDonorByName(args[0])).getSumDonated()).toLegacyText());
+                        sender.sendMessage(new TextComponent(
+                                ChatPrint.primary + "Successfully added $" + args[2] +
+                                " to that donor for a total of $" + thisDonor.getSumDonated()).toLegacyText());
                         return true;
 
                     case "tag":
