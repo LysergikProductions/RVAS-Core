@@ -58,7 +58,7 @@ public class OpListener implements Listener {
 
 	static ChatColor secondary, successColor, failColor;
 	static Map<UUID, Pair<Location, Location>> lastTPs = new HashMap<>();
-	static HashMap<UUID, ArrayList<Location>> savedTPs = new HashMap<>();
+	static HashMap<UUID, Map<Integer, Location>> savedTPs = new HashMap<>();
 
 	public static boolean isSauceInitialized = false;
 
@@ -80,6 +80,7 @@ public class OpListener implements Listener {
 		
 		Player sender = event.getPlayer();
 		String admin_name = Config.getValue("admin");
+		UUID senderID = sender.getUniqueId();
 		
 		boolean isAdmin = PlayerMeta.isAdmin(sender);
 		String msg = event.getMessage();
@@ -114,7 +115,7 @@ public class OpListener implements Listener {
 		if (msg.startsWith("/tp back")) {
 			event.setCancelled(true);
 
-			Location lastLoc = lastTPs.get(sender.getUniqueId()).getRight();
+			Location lastLoc = lastTPs.get(senderID).getRight();
 			String dim = Util.getDimensionName(lastLoc);
 			String loc = lastLoc.getBlockX() + " " + lastLoc.getBlockY() + " " + lastLoc.getBlockZ();
 
@@ -134,10 +135,13 @@ public class OpListener implements Listener {
 			}
 
 			if (thisIndexInt != null && thisIndexInt >= 0 && thisIndexInt <= 9) {
-				ArrayList<Location> newList = savedTPs.getOrDefault(sender.getUniqueId(), new ArrayList<>());
+				Map<Integer, Location> newMap = savedTPs.getOrDefault(senderID, new HashMap<>());
+				savedTPs.remove(senderID);
 
-				newList.add(thisIndexInt, sender.getLocation());
-				savedTPs.put(sender.getUniqueId(), newList);
+				newMap.remove(thisIndexInt);
+				newMap.put(thisIndexInt, sender.getLocation());
+
+				savedTPs.put(senderID, newMap);
 
 				sender.sendMessage(new TextComponent(
 						successColor + "Successfully saved location #" + thisIndexInt).toLegacyText());
@@ -162,7 +166,7 @@ public class OpListener implements Listener {
 				Location tpLoc;
 
 				try {
-					tpLoc = savedTPs.get(sender.getUniqueId()).get(thisIndexInt);
+					tpLoc = savedTPs.get(senderID).get(thisIndexInt);
 				} catch (Exception ignore) {
 					sender.sendMessage(new TextComponent(
 							failColor + "There is no saved TP at that index").toLegacyText());
