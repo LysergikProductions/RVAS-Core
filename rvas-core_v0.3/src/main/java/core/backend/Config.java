@@ -66,13 +66,16 @@ public class Config {
 		if (Analytics.updateConfigs() && verbose) System.out.println("Analytics sConfigs Updated!");
 		if (SpawnController.updateConfigs() && verbose) System.out.println("SpawnController sConfigs Updated!");
 		if (ItemCheck.updateConfigs() && verbose) System.out.println("Banned Block sConfigs Updated!");
-		if (ConnectionManager.updateConfigs() && verbose) System.out.println("MOTDs Updated!");
+		if (ConnectionController.updateConfigs() && verbose) System.out.println("MOTDs Updated!");
 		if (AutoAnnouncer.updateConfigs() && verbose) System.out.println("Announcements Updated!");
 
 		System.out.println("Configs updated!");
 	}
 
 	public static void modifyConfig(String thisConfig, String thisValue) {
+		if (thisConfig == null || thisValue == null) return;
+
+		_values.remove(thisConfig);
 		_values.put(thisConfig, thisValue);
 	}
 

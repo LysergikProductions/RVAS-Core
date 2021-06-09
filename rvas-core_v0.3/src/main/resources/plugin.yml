@@ -79,3 +79,7 @@ commands:
     description: send messages to player in render distance
   l:
     description: send messages to player in render distance
+  donor:
+    description: set players as donors and retrieve donor info
+  donate:
+    description: give users the link to donate

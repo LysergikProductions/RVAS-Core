@@ -2,8 +2,7 @@ package core.data.objects;
 
 /* *
  * 
- *  About: A class object that is used as the data container
- *  	for all PVP related stats while they are in memory 
+ *  About: The data container for all PVP related stats while they are in memory
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -28,8 +27,8 @@ import core.backend.Config;
 import java.util.UUID;
 import java.io.Serializable;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class StatsContainer implements Serializable {

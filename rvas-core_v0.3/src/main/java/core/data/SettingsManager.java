@@ -2,7 +2,7 @@ package core.data;
 
 /* *
  *
- *  About: Stores and mutates `PlayerSettings` objects in memory
+ *  About: Reads, writes, and mutates PlayerSettings objects
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -23,10 +23,11 @@ package core.data;
  * */
 
 import core.data.objects.SettingsContainer;
+
 import org.bukkit.OfflinePlayer;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 

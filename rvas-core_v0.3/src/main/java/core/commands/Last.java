@@ -45,7 +45,6 @@ public class Last implements CommandExecutor {
             for (String thisWhisper: Reversed.reverse(Message.recentWhispers.get(playerid))) {
                 player.sendMessage("\u00A75" + thisWhisper);
             }
-        }
-        return true;
+        } return true;
     }
 }

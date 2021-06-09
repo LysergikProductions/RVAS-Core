@@ -32,17 +32,17 @@ public class Local implements CommandExecutor {
         if (commandSender instanceof Player) {
             sender = (Player)commandSender;
             sendName = sender.getName();
-        }
-        else return false;
+        } else return false;
 
         if (args.length < 1) {
-            sender.sendMessage("\u00A7cIncorrect syntax. Syntax: /l [message]");
+            sender.sendMessage(new TextComponent(ChatPrint.fail +
+                    "Incorrect syntax. Syntax: /l [message]").toLegacyText());
             return false;
         }
 
-        // If either player is muted, refuse message.
         if (PlayerMeta.isMuted(sender)) {
-            sender.sendMessage("\u00A7cYou can't send messages.");
+            sender.sendMessage(new TextComponent(ChatPrint.fail +
+                    "You can't send messages.").toLegacyText());
             return true;
         }
 

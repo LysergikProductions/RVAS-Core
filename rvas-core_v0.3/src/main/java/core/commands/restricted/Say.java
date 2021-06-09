@@ -4,12 +4,12 @@ import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.jetbrains.annotations.NotNull;
 
 // OP-only say command
 public class Say implements CommandExecutor {

@@ -27,22 +27,21 @@ import core.data.*;
 import core.data.objects.*;
 import core.backend.utils.Util;
 
-import java.io.IOException;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Statistic;
+import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-
-import org.bukkit.entity.Player;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Statistic;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class ChatPrint {
@@ -92,7 +91,7 @@ public class ChatPrint {
 	public static void printLeaders(Player receiver, int lineLimit) {
 
 		if (lineLimit > 15) lineLimit = 15;
-		if (lineLimit < 3) lineLimit = 3;
+		else if (lineLimit < 3) lineLimit = 3;
 
 		HashMap<UUID, Double> leaders_0_15 = PlayerMeta.getTopFifteenPlayers();
 		HashMap<UUID, Double> realLeaders_0_15 = PlayerMeta.getTopFifteenPlayers();
@@ -124,7 +123,7 @@ public class ChatPrint {
 				int deaths = StatsManager.getStats(offPlayer).deathTotal;
 				String kd = StatsManager.getStats(offPlayer).kd;
 				
-				TextComponent a2 = new TextComponent(primary + target_name + ", ");
+				TextComponent a2 = new TextComponent(primary + target_name + "  ");
 				TextComponent b = new TextComponent(Util.timeToString(realLeaders_0_15.get(pid)));
 				
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
@@ -250,6 +249,17 @@ public class ChatPrint {
 			if (targetSettings.show_kd ||
 					receiver.getUniqueId().equals(target.getUniqueId())) statsLines.add(kd);
 		}
+
+		try {
+			String thisTag = Objects.requireNonNull(DonationManager
+					.getDonorByUUID(target.getUniqueId())).getTagLine();
+
+			if (DonationManager.isDonor(Bukkit.getPlayer(target.getUniqueId()))
+					&& DonationManager.isValidString(thisTag)) {
+
+				statsLines.add(new TextComponent(ChatColor.DARK_AQUA + thisTag));
+			}
+		} catch (Exception ignore) {}
 		
 		// send final message to receiver
 		statsLines.forEach(receiver::sendMessage);

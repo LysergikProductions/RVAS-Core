@@ -2,8 +2,8 @@ package core.backend.utils;
 
 // credit: https://stackoverflow.com/questions/1098117/can-one-do-a-for-each-loop-in-java-in-reverse-order
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.Iterator;
 import java.util.ListIterator;
 
 public class Reversed<T> implements Iterable<T> {

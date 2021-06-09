@@ -23,8 +23,8 @@ package core.events;
  * 
  * */
 
-import core.backend.ChatPrint;
 import core.backend.Config;
+import core.backend.ChatPrint;
 import core.backend.ItemCheck;
 import core.backend.utils.*;
 import core.data.PlayerMeta;
@@ -32,6 +32,8 @@ import core.commands.restricted.Repair;
 
 import java.util.*;
 import java.text.DecimalFormat;
+
+import core.data.PrisonerManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -82,7 +84,7 @@ public class BlockListener implements Listener {
 				Material.REDSTONE_TORCH, Material.REDSTONE_WALL_TORCH, Material.ACTIVATOR_RAIL, Material.POWERED_RAIL,
 				Material.LEVER, Material.PISTON, Material.STICKY_PISTON, Material.REDSTONE_LAMP, Material.GLOWSTONE,
 				Material.OBSERVER, Material.HOPPER, Material.DROPPER, Material.REPEATER, Material.COMPARATOR,
-				Material.DISPENSER, Material.GRAVEL, Material.DRAGON_EGG, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
+				Material.DISPENSER, Material.DRAGON_EGG, Material.TRIPWIRE_HOOK, Material.TRIPWIRE));
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -199,7 +201,7 @@ public class BlockListener implements Listener {
 		String mat = blockType.toString();
 
 		// prevent lag-prisoners from placing things that can cause lag
-		if (PlayerMeta.isPrisoner(placer)) {
+		if (PrisonerManager.isPrisoner(placer)) {
 
 			if (LagMats.contains(blockType)) {event.setCancelled(true);
 				return;
@@ -230,18 +232,22 @@ public class BlockListener implements Listener {
 			TextComponent warn = new TextComponent("WARN "); warn.setBold(true);
 			warn.setColor(ChatPrint.fail);
 
-			TextComponent msg = new TextComponent("Potential lag-machine at " +
-					block.getX() + ", " + block.getY() + ", " + block.getZ() + " in " + env +
-					" by " + placer_name + " with UUID: " + placer.getUniqueId());
-
 			String location = block.getX() + " " + block.getY() + " " + block.getZ();
 			ClickEvent thisEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 					"/ninjatp " + env + " " + location);
 
-			msg.setClickEvent(thisEvent);
+			TextComponent msg1 = new TextComponent("Potential lag-machine at " +
+					location + " in " + env + " by " + placer_name);
 
-			if (counter > 192) {
-				Util.notifyOps(new TextComponent(warn, msg));
+			TextComponent msg2 = new TextComponent(
+					"UUID: " + placer.getUniqueId() + " | IP: " + PlayerMeta.getIp(placer));
+
+			msg1.setClickEvent(thisEvent);
+			msg2.setClickEvent(thisEvent);
+
+			if (counter >= 224) {
+				Util.notifyOps(new TextComponent(warn, msg1));
+				Util.notifyOps(msg2);
 			}
 		}
 

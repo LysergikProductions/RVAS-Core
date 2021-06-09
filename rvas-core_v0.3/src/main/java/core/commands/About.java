@@ -2,8 +2,7 @@ package core.commands;
 
 /* *
  * 
- *  About: Give players an easy command to access
- *  	the license or to access the Github repository
+ *  About: Give players an easy command to access the license and the Github repository
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -24,28 +23,29 @@ package core.commands;
  * */
 
 import core.Main;
-import core.backend.ChatPrint;
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
+import core.backend.ChatPrint;
 
 import java.util.Arrays;
+import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class About implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+		if (!(sender instanceof Player)) return false;
 		Player player = (Player) sender;
 		
 		if (!PlayerMeta.isAdmin(player)) Analytics.about_cmd++;

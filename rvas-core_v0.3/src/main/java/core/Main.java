@@ -25,7 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.2"; public static final int build = 287;
+	public static final String version = "0.3.3"; public static final int build = 301;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public static OfflinePlayer Top = null;
@@ -39,17 +39,18 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] ______________________________");
 
+		// TODO: Query the git for latest version and write results to stdout
+
 		System.out.println("forcing default gamemode..");
 		getServer().setDefaultGameMode(GameMode.SURVIVAL);
 
-		System.out.println("[core.main] _____________");
+		System.out.println();
 		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
 
 		try { FileManager.setup();
 		} catch (IOException e) {
-			System.out.println("[core.main] An error occured in FileManager.setup()");
-		}
+			System.out.println("[core.main] An error occured in FileManager.setup()"); }
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
@@ -60,21 +61,21 @@ public class Main extends JavaPlugin {
 			ChatPrint.loadColors();
 		}
 
-		System.out.println("[core.main] __________________");
+		System.out.println();
 		System.out.println("[core.main] Loading more files");
 		System.out.println("[core.main] __________________");
 
 		try {
-			PlayerMeta.loadDonators();
+			DonationManager.loadDonors();
 			PlayerMeta.loadMuted();
-			PlayerMeta.loadPrisoners();
+			PrisonerManager.loadPrisoners();
 
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured loading files..");
 			System.out.println("[core.main] " + e);
 		}
 
-		System.out.println("[core.main] _________________");
+		System.out.println();
 		System.out.println("[core.main] Enabling commands");
 		System.out.println("[core.main] _________________");
 
@@ -160,7 +161,7 @@ public class Main extends JavaPlugin {
 		Objects.requireNonNull(this.getCommand("prison")).setExecutor(new core.commands.restricted.Prison());
 
 		System.out.println("/info");
-		Objects.requireNonNull(this.getCommand("info")).setExecutor(new Info());
+		Objects.requireNonNull(this.getCommand("info")).setExecutor(new core.commands.restricted.Info());
 
 		System.out.println("/global");
 		Objects.requireNonNull(this.getCommand("global")).setExecutor(new Global());
@@ -189,7 +190,13 @@ public class Main extends JavaPlugin {
 		System.out.println("/l");
 		Objects.requireNonNull(this.getCommand("l")).setExecutor(new Local());
 
-		System.out.println("[core.main] _______________________");
+		System.out.println("/donor");
+		Objects.requireNonNull(this.getCommand("donor")).setExecutor(new DonorCmd());
+
+		System.out.println("/donate");
+		Objects.requireNonNull(this.getCommand("donate")).setExecutor(new Donate());
+
+		System.out.println();
 		System.out.println("[core.main] Scheduling synced tasks");
 		System.out.println("[core.main] _______________________");
 
@@ -211,7 +218,7 @@ public class Main extends JavaPlugin {
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		System.out.println("[core.main] _______________________");
+		System.out.println();
 		System.out.println("[core.main] Loading event listeners");
 		System.out.println("[core.main] _______________________");
 
@@ -220,7 +227,7 @@ public class Main extends JavaPlugin {
 		try { core_pm.registerEvents(new ChatListener(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
-		try { core_pm.registerEvents(new ConnectionManager(), this);
+		try { core_pm.registerEvents(new ConnectionController(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new PVP(), this);
@@ -320,20 +327,18 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] _____________________________");
 		System.out.println("[core.main] --- RVAS-Core : Disabling ---");
 		System.out.println("[core.main] _____________________________");
-		
-		// final analytics capture for this session
+
+		System.out.println("[core.main] Capturing remaining analytics data..");
 		Analytics.capture();
-		
-		System.out.println("[core.main] ________________");
-		System.out.println("[core.main] Creating backups");
-		System.out.println("[core.main] ________________");
+
+		System.out.println("[core.main] Creating backups..");
 		
 		try {
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
 			FileManager.backupData(FileManager.playtime_user_database, "playtimes-backup-", ".db");
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
 			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");			
-			FileManager.backupData(FileManager.donor_list, "donator-backup-", ".db");
+			FileManager.backupData(FileManager.donor_database, "donator-backup-", ".db");
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");			
 			
 		} catch (IOException ex) {
@@ -341,14 +346,14 @@ public class Main extends JavaPlugin {
 			System.out.println("[core.main] " + ex);
 		}
 		
-		System.out.println("[core.main] ______________________");
+		System.out.println();
 		System.out.println("[core.main] Overwriting save files");
 		System.out.println("[core.main] ______________________");
 		
 		try {
-			PlayerMeta.saveDonators();
+			DonationManager.saveDonors();
 			PlayerMeta.saveMuted();
-			PlayerMeta.savePrisoners();
+			PrisonerManager.savePrisoners();
 			
 			PlayerMeta.writePlaytime();
 			SettingsManager.writePlayerSettings();
@@ -359,7 +364,7 @@ public class Main extends JavaPlugin {
 			System.out.println("[core.main] " + ex);
 		}
 		
-		System.out.println("[core.main] __________________");
+		System.out.println();
 		System.out.println("[core.main] Collecting garbage");
 		System.out.println("[core.main] __________________");
 
@@ -368,7 +373,7 @@ public class Main extends JavaPlugin {
 
 		System.out.println("Found " + removed_skulls + " remaining skull/s to trash..");
 		
-		System.out.println("[core.main] ______________________");
+		System.out.println();
 		System.out.println("[core.main] Printing session stats");
 		System.out.println("[core.main] ______________________");
 		

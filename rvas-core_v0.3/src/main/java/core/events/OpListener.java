@@ -30,7 +30,7 @@ import core.backend.utils.Chunks;
 import core.commands.restricted.Speeds;
 import core.commands.restricted.Check;
 
-import core.data.Aliases;
+import core.data.objects.Aliases;
 import core.data.PlayerMeta;
 import core.data.ThemeManager;
 import core.data.objects.Pair;
@@ -49,7 +49,6 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -59,7 +58,7 @@ public class OpListener implements Listener {
 
 	static ChatColor secondary, successColor, failColor;
 	static Map<UUID, Pair<Location, Location>> lastTPs = new HashMap<>();
-	static HashMap<UUID, ArrayList<Location>> savedTPs = new HashMap<>();
+	static HashMap<UUID, Map<Integer, Location>> savedTPs = new HashMap<>();
 
 	public static boolean isSauceInitialized = false;
 
@@ -81,6 +80,7 @@ public class OpListener implements Listener {
 		
 		Player sender = event.getPlayer();
 		String admin_name = Config.getValue("admin");
+		UUID senderID = sender.getUniqueId();
 		
 		boolean isAdmin = PlayerMeta.isAdmin(sender);
 		String msg = event.getMessage();
@@ -115,7 +115,7 @@ public class OpListener implements Listener {
 		if (msg.startsWith("/tp back")) {
 			event.setCancelled(true);
 
-			Location lastLoc = lastTPs.get(sender.getUniqueId()).getRight();
+			Location lastLoc = lastTPs.get(senderID).getRight();
 			String dim = Util.getDimensionName(lastLoc);
 			String loc = lastLoc.getBlockX() + " " + lastLoc.getBlockY() + " " + lastLoc.getBlockZ();
 
@@ -135,10 +135,13 @@ public class OpListener implements Listener {
 			}
 
 			if (thisIndexInt != null && thisIndexInt >= 0 && thisIndexInt <= 9) {
-				ArrayList<Location> newList = savedTPs.getOrDefault(sender.getUniqueId(), new ArrayList<>());
+				Map<Integer, Location> newMap = savedTPs.getOrDefault(senderID, new HashMap<>());
+				savedTPs.remove(senderID);
 
-				newList.add(thisIndexInt, sender.getLocation());
-				savedTPs.put(sender.getUniqueId(), newList);
+				newMap.remove(thisIndexInt);
+				newMap.put(thisIndexInt, sender.getLocation());
+
+				savedTPs.put(senderID, newMap);
 
 				sender.sendMessage(new TextComponent(
 						successColor + "Successfully saved location #" + thisIndexInt).toLegacyText());
@@ -163,7 +166,7 @@ public class OpListener implements Listener {
 				Location tpLoc;
 
 				try {
-					tpLoc = savedTPs.get(sender.getUniqueId()).get(thisIndexInt);
+					tpLoc = savedTPs.get(senderID).get(thisIndexInt);
 				} catch (Exception ignore) {
 					sender.sendMessage(new TextComponent(
 							failColor + "There is no saved TP at that index").toLegacyText());
@@ -252,17 +255,14 @@ public class OpListener implements Listener {
 	public void onCreativeEvent(InventoryCreativeEvent event) {
 		
 		if (!Config.getValue("protect.lock.creative").equals("false")) {
+			if (Config.getValue("protect.lock.creative").equals("true")) event.setCancelled(true);
 			
 			HumanEntity ePlayer = event.getWhoClicked();
 			Player player = Bukkit.getPlayer(ePlayer.getUniqueId());
 
-			assert player != null;
-			if (!PlayerMeta.isAdmin(player)) {
-				event.setCancelled(true);
-				
-				if (!player.isOp()) {
-					player.setGameMode(GameMode.SURVIVAL);
-				}
+			if (player != null) {
+				if (!PlayerMeta.isAdmin(player) && !player.isOp()) player.setGameMode(GameMode.SURVIVAL);
+				else event.setCancelled(false);
 			}
 		}
 	}
@@ -271,6 +271,12 @@ public class OpListener implements Listener {
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
 		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
+
+		else if (!event.getWhoClicked().getGameMode().equals(GameMode.SURVIVAL) &&
+				!PlayerMeta.isAdmin((Player)event.getWhoClicked())) {
+
+			event.setCancelled(true);
+		}
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)

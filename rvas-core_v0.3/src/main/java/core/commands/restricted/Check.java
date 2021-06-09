@@ -24,7 +24,7 @@ package core.commands.restricted;
  * */
 
 import core.backend.ChatPrint;
-import core.data.PlayerMeta;
+import core.backend.utils.Util;
 import core.data.objects.Pair;
 import core.backend.utils.Chunks;
 
@@ -66,6 +66,7 @@ public class Check implements CommandExecutor, Listener {
         } catch (Exception ignore) { return false; }
 
         if (!checker.isOp()) { checker.sendMessage("You can't use this!"); return false; }
+        Admin.doNotDisturb.remove(checker.getUniqueId());
 
         updateGUI();
         checker.openInventory(lagCheckGUI);
@@ -73,7 +74,7 @@ public class Check implements CommandExecutor, Listener {
     }
 
     public static void updateGUI() {
-        lagCheckGUI.clear();
+        lagCheckGUI.clear(); // do not also clear sorted list, to keep results persistent
 
         for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
             int thisCount;
@@ -83,14 +84,14 @@ public class Check implements CommandExecutor, Listener {
                 lagList.remove(thisPlayer.getUniqueId());
                 thisCount = Chunks.countChunkLagBlocks(thisPlayer);
 
-                if (thisCount > 192) {
+                if (thisCount > 255) {
                     lagList.putIfAbsent(thisPlayer.getUniqueId(), new Pair<>(thisCount, thisPlayer.getLocation()));
                     sortedLagList.putIfAbsent(thisPlayer, thisCount);
                 }
             }
         }
 
-        sortedLagList = PlayerMeta.sortLagMap(sortedLagList);
+        sortedLagList = Util.sortLagMap(sortedLagList);
         for (Player thisPlayer: sortedLagList.keySet()) {
 
             String thisName = thisPlayer.getName();

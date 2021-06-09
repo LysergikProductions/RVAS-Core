@@ -7,14 +7,14 @@ import core.tasks.Analytics;
 
 import java.text.DecimalFormat;
 import org.apache.commons.lang.math.IntRange;
+
+import org.bukkit.entity.Player;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Tps implements CommandExecutor {

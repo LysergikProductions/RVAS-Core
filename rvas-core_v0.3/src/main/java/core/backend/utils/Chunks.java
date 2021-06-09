@@ -197,12 +197,9 @@ public class Chunks {
             count += banBlockCounter(thisChunk);
 
             for (Material thisMat: BlockListener.LagMats) {
-                if (thisMat != Material.GRAVEL) {
-                    count += Chunks.blockCounter(thisChunk, thisMat);
-                }
+                count += Chunks.blockCounter(thisChunk, thisMat);
             }
-        }
-        return count;
+        } return count;
     }
 
     @Deprecated

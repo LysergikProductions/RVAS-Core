@@ -5,8 +5,10 @@ import core.backend.utils.Util;
 import core.commands.Kit;
 import core.commands.restricted.Admin;
 
+import core.data.DonationManager;
 import core.data.PlayerMeta;
 import core.data.SettingsManager;
+import core.data.objects.Donor;
 import core.data.objects.SettingsContainer;
 
 import java.util.*;
@@ -33,7 +35,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
-public class ConnectionManager implements Listener {
+public class ConnectionController implements Listener {
 	
 	public static String serverHostname = "RVAS";
 	public static double lastJoinTime = 0.00;
@@ -201,13 +203,23 @@ public class ConnectionManager implements Listener {
 
 	private static List<String> allMotds; static {
 			try {
-				allMotds = new ArrayList<>(Arrays.asList(motds));
 				System.out.println("[core.events.connection] Loading " + motds.length + " default MOTDs...");
+
+				allMotds = new ArrayList<>(Arrays.asList(motds));
 				allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
 
-			} catch (IOException ignore) {
-				allMotds = new ArrayList<>(Arrays.asList(motds));
-			}
+				for (Donor thisDonor: DonationManager._donorList) {
+					String thisMOTD = thisDonor.getMsgOtd();
+
+					if (DonationManager.isValidString(thisMOTD)) {
+						allMotds.add(thisMOTD);
+
+						System.out.println(Bukkit.getServer().getPlayer(
+								thisDonor.getUserID()).getName() + " MOTD added: " + thisMOTD);
+					}
+				}
+
+			} catch (IOException ignore) { allMotds = new ArrayList<>(Arrays.asList(motds)); }
 			System.out.println("[core.events.connection] Loaded " + allMotds.size() + " MOTDs");
 	}
 

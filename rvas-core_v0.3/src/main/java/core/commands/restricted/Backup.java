@@ -47,29 +47,32 @@ public class Backup implements CommandExecutor {
 		
 		opBackupCounter++;
 		
-		if (!PlayerMeta.isAdmin(player) && opBackupCounter > 10) {
+		if (!PlayerMeta.isAdmin(player) && opBackupCounter > 8) {
 			player.sendMessage(
-					"Sorry, there have already been at least 10 backups this session.");
+					"Sorry, there have already been at least 8 backups this session.");
 			return false;
 		}
 		
 		try {
-			player.sendMessage("saving pvpstats..");
+			player.sendMessage("backing up pvpstats.txt");
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
 			
-			player.sendMessage("saving playtimes..");
+			player.sendMessage("backing up playtimes.db");
 			FileManager.backupData(FileManager.playtime_user_database, "playtime-backup-", ".db");
 			
-			player.sendMessage("saving player-settings..");
+			player.sendMessage("backing up player-settings.txt");
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
 			
-			player.sendMessage("saving muted players..");
+			player.sendMessage("backing up muted players.db");
 			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");
 			
-			player.sendMessage("saving donators..");
-			FileManager.backupData(FileManager.donor_list, "donator-backup-", ".db");
+			player.sendMessage("backing up donators.json");
+			FileManager.backupData(FileManager.donor_database, "donator-backup-", ".json");
 			
-			player.sendMessage("saving prisoners..");
+			player.sendMessage("backing up prisoners.db");
+			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
+
+			player.sendMessage("backing up custom.json");
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
 			
 		} catch (IOException e) {
@@ -79,7 +82,7 @@ public class Backup implements CommandExecutor {
 			
 			player.sendMessage("There was an exception while trying to backup one or more files :(");
 			return false;
-		}
-		return true;
+
+		} return true;
 	}
 }

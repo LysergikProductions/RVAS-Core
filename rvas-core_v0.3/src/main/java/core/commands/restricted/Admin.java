@@ -3,7 +3,7 @@ package core.commands.restricted;
 import core.backend.*;
 import core.backend.utils.Restart;
 import core.backend.utils.Util;
-import core.data.Aliases;
+import core.data.objects.Aliases;
 import core.data.ThemeManager;
 import core.data.objects.Pair;
 import core.data.PlayerMeta;
@@ -30,6 +30,8 @@ public class Admin implements CommandExecutor {
 	public static List<UUID> Spies = new ArrayList<>();
 	public static List<UUID> MsgToggle = new ArrayList<>();
 	public static List<UUID> UseRedName = new ArrayList<>();
+	public static List<UUID> doNotDisturb = new ArrayList<>();
+
 	public static Map<String, Location> LogOutSpots = new HashMap<>();
 	public static boolean disableWarnings = false;
 
@@ -41,39 +43,60 @@ public class Admin implements CommandExecutor {
 		
 		if (args.length == 1) {
 			if (!PlayerMeta.isOp(sender)) {
-				
-				sender.sendMessage(new TextComponent("\u00A7cYou can't use this.").toLegacyText());
+				sender.sendMessage(new TextComponent(
+						ChatPrint.fail + "You can't use this.").toLegacyText());
 				return true;
 			}
+
+			UUID senderID = player.getUniqueId();
 			
 			switch (args[0].toUpperCase()) {
-				case "COLOR":
-					if (UseRedName.contains(player.getUniqueId())) {
-						player.sendMessage("\u00A76Disabled red name.");
-						UseRedName.remove(player.getUniqueId());
+
+				case "QUIET":
+					if (doNotDisturb.contains(senderID)) {
+						player.sendMessage(new TextComponent(ChatPrint.fail +
+								"Disabled warnings").toLegacyText());
+						doNotDisturb.remove(senderID);
 					} else {
-						player.sendMessage("\u00A76Enabled red name.");
-						UseRedName.add(player.getUniqueId());
+						player.sendMessage(new TextComponent(ChatPrint.succeed +
+								"Enabled warnings!").toLegacyText());
+						doNotDisturb.add(senderID);
+					}
+					return true;
+
+				case "COLOR":
+					if (UseRedName.contains(senderID)) {
+						player.sendMessage(new TextComponent(ChatPrint.fail +
+								"Disabled red name").toLegacyText());
+						UseRedName.remove(senderID);
+					} else {
+						player.sendMessage(new TextComponent(ChatPrint.succeed +
+								"Enabled red name!").toLegacyText());
+						UseRedName.add(senderID);
 					}
 					return true;
 					
 				case "SPY":
-					if (Spies.contains(player.getUniqueId())) {
-						player.sendMessage("\u00A76Disabled spying on player messages.");
-						Spies.remove(player.getUniqueId());
+					if (Spies.contains(senderID)) {
+						player.sendMessage(new TextComponent(ChatPrint.fail +
+								"Disabled spying on player messages").toLegacyText());
+						Spies.remove(senderID);
 					} else {
-						player.sendMessage("\u00A76Enabled spying on player messages.");
+						player.sendMessage(new TextComponent(ChatPrint.succeed +
+								"Enabled spying on player messages!").toLegacyText());
 						Spies.add(player.getUniqueId());
 					}
 					return true;
 					
 				case "MSGTOGGLE":
-					if (MsgToggle.contains(player.getUniqueId())) {
-						player.sendMessage("\u00A76Enabled recieving player messages.");
-						MsgToggle.remove(player.getUniqueId());
+					if (MsgToggle.contains(senderID)) {
+						player.sendMessage(new TextComponent(ChatPrint.succeed +
+								"Enabled receiving player messages!").toLegacyText());
+						MsgToggle.remove(senderID);
 					} else {
-						player.sendMessage("\u00A76Disabled recieving player messages.");
-						MsgToggle.add(player.getUniqueId());
+						player.sendMessage(new TextComponent(ChatPrint.fail +
+								"Disabled receiving player messages!").toLegacyText());
+						MsgToggle.add(senderID);
 					}
 					return true;
 
@@ -81,22 +104,25 @@ public class Admin implements CommandExecutor {
 
 					try { ChatPrint.loadColors();
 					} catch (Exception ignore) {
-						sender.sendMessage("\u00A74Failed to reload colors, setting internal theme..");
+						sender.sendMessage(new TextComponent(ChatPrint.fail +
+								"Failed to reload colors, setting internal theme..").toLegacyText());
 						ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
 						ChatPrint.loadColors();
 					}
 
 					try { Config.load();
 					} catch (IOException e) {
-						sender.sendMessage("\u00A74Failed to reload configs, restarting..");
+						sender.sendMessage(new TextComponent(ChatPrint.fail +
+								"Failed to reload configs, restarting..").toLegacyText());
 						Restart.restart();
 					}
 
-					sender.sendMessage("\u00A7aSuccessfully reloaded.");
+					player.sendMessage(new TextComponent(ChatPrint.succeed +
+							"Successfully reloaded!").toLegacyText());
 					return true;
 					
 				case "SPEED":
-					player.sendMessage("\u00A76Player speeds:");
+					player.sendMessage(new TextComponent(ChatPrint.primary + "Player speeds:").toLegacyText());
 					List<Pair<Double, String>> speeds = SpeedLimiter.getSpeeds();
 					
 					for (Pair<Double, String> speedEntry : speeds) {
@@ -119,10 +145,12 @@ public class Admin implements CommandExecutor {
 				case "AGRO":
 					disableWarnings = !disableWarnings;
 					if(disableWarnings) {
-						sender.sendMessage("\u00A76Enabled aggressive speed limit.");
+						sender.sendMessage(new TextComponent(ChatPrint.succeed +
+								"Enabled aggressive speed limit!").toLegacyText());
 					}
 					else {
-						sender.sendMessage("\u00A76Disabled aggressive speed limit.");
+						sender.sendMessage(new TextComponent(ChatPrint.fail +
+								"Disabled aggressive speed limit").toLegacyText());
 					}
 					return true;
 
@@ -140,9 +168,9 @@ public class Admin implements CommandExecutor {
 				
 				Location loc = LogOutSpots.get(args[1]);
 				
-				if (loc == null) {
-					sender.sendMessage("\u00A76No logout spot logged for " + args[1]);
-				} else {
+				if (loc == null) sender.sendMessage(new TextComponent(ChatPrint.fail +
+							"No logout spot logged for " + args[1]).toLegacyText());
+				else {
 					
 					String dimension = Util.getDimensionName(loc);
 					String location = (int)loc.getX() + " " + (int)loc.getY() + " " + (int)loc.getZ();

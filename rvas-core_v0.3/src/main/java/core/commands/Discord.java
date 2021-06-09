@@ -28,23 +28,24 @@ import core.data.PlayerMeta;
 import core.tasks.Analytics;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
 
 public class Discord implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		Player player = (Player) sender;
-		
-		if (!PlayerMeta.isAdmin(player)) Analytics.discord_cmd++;
+
 		String link = Config.getValue("discord.link");
+		if (!(sender instanceof Player)) { System.out.println(link); return false; }
+
+		Player player = (Player) sender;
+		if (!PlayerMeta.isAdmin(player)) Analytics.discord_cmd++;
 
 		TextComponent message;
 		if (!link.equals("tbd") && !link.equals("")) {

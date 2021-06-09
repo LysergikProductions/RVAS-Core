@@ -6,17 +6,17 @@ import core.data.PlayerMeta;
 
 import java.util.*;
 
+import core.data.PrisonerManager;
 import org.bukkit.Bukkit;
 //import org.bukkit.GameMode;
 //import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-
-import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -110,14 +110,14 @@ public class Prison implements CommandExecutor {
 		} else if (PlayerMeta.isAdmin(thisPlayer) || thisPlayer.isOp()) return false;
 
 		try {
-			PlayerMeta.togglePrisoner(thisPlayer);
+			PrisonerManager.togglePrisoner(thisPlayer);
 		} catch (Exception e) {
 			if (Config.debug) e.printStackTrace();
 			player.sendMessage("Failed to toggle LagPrisoner :/");
 			return false;
 		}
 
-		if (PlayerMeta.isPrisoner(thisPlayer) && !thisPlayer.isOp()) {
+		if (PrisonerManager.isPrisoner(thisPlayer) && !thisPlayer.isOp()) {
 			
 			Arrays.asList(
 
