@@ -23,9 +23,9 @@ package core.commands.restricted;
  *
  * */
 
+import core.data.objects.Pair;
 import core.backend.ChatPrint;
 import core.backend.utils.Util;
-import core.data.objects.Pair;
 import core.backend.utils.Chunks;
 
 import java.util.*;
@@ -77,16 +77,19 @@ public class Check implements CommandExecutor, Listener {
         lagCheckGUI.clear(); // do not also clear sorted list, to keep results persistent
 
         for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
-            int thisCount;
+            final int[] thisCount = new int[1];
 
             if (!thisPlayer.isOp()) {
 
                 lagList.remove(thisPlayer.getUniqueId());
-                thisCount = Chunks.countChunkLagBlocks(thisPlayer);
+                Bukkit.getScheduler().runTaskAsynchronously(core.Main.instance, () ->
+                    thisCount[0] = Chunks.countChunkLagBlocks(thisPlayer));
 
-                if (thisCount > 255) {
-                    lagList.putIfAbsent(thisPlayer.getUniqueId(), new Pair<>(thisCount, thisPlayer.getLocation()));
-                    sortedLagList.putIfAbsent(thisPlayer, thisCount);
+
+                if (thisCount[0] > 255) {
+                    lagList.putIfAbsent(thisPlayer.getUniqueId(),
+                            new Pair<>(thisCount[0], thisPlayer.getLocation()));
+                    sortedLagList.putIfAbsent(thisPlayer, thisCount[0]);
                 }
             }
         }
@@ -116,9 +119,12 @@ public class Check implements CommandExecutor, Listener {
             try { thatPlayerName = Objects.requireNonNull(event.getCurrentItem()).getItemMeta().getDisplayName();
             } catch (Exception ignore) {}
 
-            if (event.getWhoClicked().getServer().getPlayer(thatPlayerName) == null) checker
-                    .chat("/admin spot " + thatPlayerName);
-            else checker.chat("/ninjatp " + thatPlayerName);
+            if (thatPlayerName != null ) {
+                if (event.getWhoClicked().getServer().getPlayer(thatPlayerName) == null) {
+                    checker.chat("/admin spot " + thatPlayerName);
+
+                } else checker.chat("/ninjatp " + thatPlayerName);
+            }
         }
     }
 }

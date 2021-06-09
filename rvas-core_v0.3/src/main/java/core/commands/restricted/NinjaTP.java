@@ -24,9 +24,11 @@ package core.commands.restricted;
  *
  * */
 
-import core.Main;
+import core.backend.ChatPrint;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 public class NinjaTP implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 
         if (!(sender instanceof Player)) return false;
         Player player = (Player)sender;
@@ -48,10 +50,11 @@ public class NinjaTP implements CommandExecutor {
             String tp_cmd = "/execute in " + dimension + " run tp @p[name=" + player.getName() + "] " + loc;
 
             player.chat("/sv on"); // <- requires SuperVanish plugin
+            player.sendMessage(new TextComponent(ChatPrint.secondary +
+                    "teleporting..").toLegacyText());
 
-            // tp command-sender to the location 20 ticks after beginning to vanish
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, () -> {
-                player.chat(tp_cmd); }, 20L);
+            // tp command-sender to the location 50 ticks after beginning to vanish
+            Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () -> player.chat(tp_cmd), 50L);
 
         } else if (args.length == 1) {
             String tp_cmd = "/tp " + args[0].trim();

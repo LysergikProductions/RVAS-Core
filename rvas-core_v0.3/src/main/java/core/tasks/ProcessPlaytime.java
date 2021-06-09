@@ -9,7 +9,7 @@ import core.backend.LagProcessor;
 import core.data.PlayerMeta;
 import core.events.ChatListener;
 import core.commands.VoteMute;
-import core.commands.restricted.Check;
+//import core.commands.restricted.Check;
 import core.commands.restricted.Speeds;
 
 import java.util.TimerTask;
@@ -80,8 +80,7 @@ public class ProcessPlaytime extends TimerTask {
 		lastTime = System.currentTimeMillis();
 		Scheduler.setLastTaskId("oneSecondTasks");
 
-		// updateGUIs
 		Speeds.updateGUI();
-		Check.updateGUI();
+		//Check.updateGUI();
 	}
 }

@@ -27,8 +27,8 @@ import core.data.objects.Theme;
 import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
 import net.md_5.bungee.api.ChatColor;

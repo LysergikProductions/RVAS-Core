@@ -25,7 +25,7 @@ package core.data.objects;
 @SuppressWarnings("SpellCheckingInspection")
 public class Aliases {
 
-    public static String armor_a; public static String armor_b; static {
+    public static String armor_a, armor_b; static {
 
         // chestplate and helmet
         armor_a = "/summon armor_stand ~1 ~2 ~1 {CustomName:\"\\\"Sinse's_32kStackedArmor_a\\\"\",CustomNameVisible:1," +
@@ -43,7 +43,7 @@ public class Aliases {
     }
 
     // totems on armor stands
-    public static String totems_armor1; public static String totems_armor2; static {
+    public static String totems_armor1, totems_armor2; static {
 
         totems_armor1 = "/summon armor_stand ~-1 ~2 ~1 {CustomName:\"StackedTotems\",CustomNameVisible:1," +
                 "ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}";
