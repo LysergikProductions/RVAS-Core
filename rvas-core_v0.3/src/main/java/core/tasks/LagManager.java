@@ -26,7 +26,7 @@ package core.tasks;
 import core.backend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
-import core.events.ConnectionManager;
+import core.events.ConnectionController;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -50,7 +50,7 @@ public class LagManager implements Listener, Runnable {
 		int removed_skulls = removeSkulls(max_age);
 
 		Analytics.removed_skulls += removed_skulls;
-		ConnectionManager.joinCounter = 0;
+		ConnectionController.joinCounter = 0;
 	}
 	
 	@EventHandler

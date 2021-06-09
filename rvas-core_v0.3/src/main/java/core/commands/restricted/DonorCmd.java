@@ -37,13 +37,12 @@ public class DonorCmd implements CommandExecutor {
 
                 // Concatenate args int message
                 final String[] msg = {""};
-                AtomicInteger i = new AtomicInteger(0);
+                int[] i = {0};
 
                 Arrays.stream(args.clone()).forEach(str ->  {
-                    i.getAndIncrement();
+                    i[0]++;
 
-                    if (!i.equals(new AtomicInteger(1)) &&
-                            !i.equals(new AtomicInteger(2))) msg[0] += str + " ";
+                    if (i[0] > 2) msg[0] += str + " ";
                 });
                 msg[0] = msg[0].trim();
 

@@ -250,14 +250,16 @@ public class ChatPrint {
 					receiver.getUniqueId().equals(target.getUniqueId())) statsLines.add(kd);
 		}
 
-		String thisTag = Objects.requireNonNull(DonationManager
-				.getDonorByUUID(target.getUniqueId())).getTagLine();
+		try {
+			String thisTag = Objects.requireNonNull(DonationManager
+					.getDonorByUUID(target.getUniqueId())).getTagLine();
 
-		if (DonationManager.isDonor(Bukkit.getPlayer(target.getUniqueId()))
-				&& DonationManager.isValidString(thisTag)) {
+			if (DonationManager.isDonor(Bukkit.getPlayer(target.getUniqueId()))
+					&& DonationManager.isValidString(thisTag)) {
 
-			statsLines.add(new TextComponent(ChatColor.DARK_AQUA + thisTag));
-		}
+				statsLines.add(new TextComponent(ChatColor.DARK_AQUA + thisTag));
+			}
+		} catch (Exception ignore) {}
 		
 		// send final message to receiver
 		statsLines.forEach(receiver::sendMessage);

@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import com.google.gson.Gson;
 import net.md_5.bungee.api.ChatColor;
@@ -36,9 +37,9 @@ public class ThemeManager {
     public static Theme currentTheme;
 
     public static void load() throws IOException, NoSuchMethodException, SecurityException {
-        File thisFile = FileManager.getConfiguredThemeFile();
+        File thisFile = Objects.requireNonNull(FileManager.getConfiguredThemeFile());
 
-        if (thisFile != null) {
+        if (thisFile.exists()) {
             try { currentTheme = getThemeFromJSON(thisFile);
             } catch (Exception e) {
                 currentTheme = createDefaultTheme();
