@@ -194,13 +194,13 @@ public class FileManager {
 			Files.readAllLines(all_donor_codes.toPath()).forEach(val ->
 					DonationManager.DonorCodes.add(val.replace("\"", "").trim()));
 		} catch (Exception e) {
-			System.out.println("Exception while reading all.db : " + e);
+			System.out.println("WARN Exception while reading all.db : " + e);
 		}
 
 		try {
 			DonationManager.UsedDonorCodes.addAll(Files.readAllLines(used_donor_codes.toPath()));
 		} catch (Exception e) {
-			System.out.println("Exception while reading used.db : " + e);
+			System.out.println("WARN Exception while reading used.db : " + e);
 		}	
 		
 		// Store Playtimes in RAM \\
@@ -209,19 +209,20 @@ public class FileManager {
 				PlayerMeta.Playtimes.put(
 						UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1])));
 		} catch (Exception e) {
-			System.out.println("Exception while reading playtimes.db : " + e);
+			System.out.println("WARN Exception while reading playtimes.db : " + e);
 		}		
 		
 		// Store PVPstats in RAM \\
 		try {
 			Files.readAllLines(pvpstats_user_database.toPath()).forEach(line -> {
-				System.out.println("Reading pvpstats.txt, line = " + line);
+				if (Config.debug && Config.verbose) System.out.println(
+						"Reading pvpstats.txt, line = " + line);
 				
 				StatsContainer stats = StatsContainer.fromString(line);
 				StatsManager.sPVPStats.put(stats.playerid, stats);
 			});
 		} catch (Exception e) {
-			System.out.println("Exception while reading pvpstats.txt : " + e);
+			System.out.println("WARN Exception while reading pvpstats.txt : " + e);
 		}
 		
 		System.out.println("---------------------------------------------------------------------");
@@ -229,13 +230,14 @@ public class FileManager {
 		// Store PlayerSettings in RAM \\
 		try {
 			Files.readAllLines(settings_user_database.toPath()).forEach(line -> {
-				System.out.println("Reading player_settings.txt, line = " + line);
+				if (Config.debug && Config.verbose) System.out.println(
+						"Reading player_settings.txt, line = " + line);
 				
 				SettingsContainer settings = SettingsContainer.fromString(line);
 				PlayerMeta.sPlayerSettings.put(settings.playerid, settings);
 			});
 		} catch (Exception e) {
-			System.out.println("Exception while reading player_settings.txt : " + e);
+			System.out.println("WARN Exception while reading player_settings.txt : " + e);
 		}
 	}
 

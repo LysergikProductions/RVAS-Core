@@ -25,12 +25,12 @@ public class DonorCmd implements CommandExecutor {
         if ((sender instanceof Player)) {
             if (args.length >= 3) {
 
-                if (!args[1].equalsIgnoreCase("add") &&
-                        !args[1].equalsIgnoreCase("tag") &&
-                        !args[1].equalsIgnoreCase("motd")) {
+                if (!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("tag") &&
+                        !args[1].equalsIgnoreCase("motd") && !args[1].equalsIgnoreCase("set") &&
+                        !args[1].equalsIgnoreCase("key") && !args[1].equalsIgnoreCase("ign")) {
 
                     sender.sendMessage(new TextComponent(ChatPrint.fail +
-                            "Invalid syntax. Syntax: /donor [name] [add/tag/motd]").toLegacyText());
+                            "Invalid syntax. Syntax: /donor [name] [add/tag/ign/motd/key/set]").toLegacyText());
                     return false;
                 }
 
@@ -45,15 +45,41 @@ public class DonorCmd implements CommandExecutor {
                 });
                 msg[0] = msg[0].trim();
 
+                Donor thisDonor = Objects.requireNonNull(DonationManager.getDonorByName(args[0]));
                 switch (args[1].toLowerCase()) {
+
                     case "add":
-                        Donor thisDonor = Objects.requireNonNull(DonationManager.getDonorByName(args[0]));
                         thisDonor.addToSum(Double.parseDouble(args[2]));
                         thisDonor.setRecentDonationDate();
 
                         sender.sendMessage(new TextComponent(
                                 ChatPrint.primary + "Successfully added $" + args[2] +
                                 " to that donor for a total of $" + thisDonor.getSumDonated()).toLegacyText());
+                        return true;
+
+                    case "set":
+                        thisDonor.setSumDonated(Double.parseDouble(args[2]));
+
+                        sender.sendMessage(new TextComponent(
+                                ChatPrint.primary + "Successfully set sum donated to $" +
+                                        thisDonor.getSumDonated()).toLegacyText());
+                        return true;
+
+                    case "key":
+                        String newKey = args[2];
+
+                        if (DonationManager.DonorCodes.contains(args[0]) && !DonationManager.UsedDonorCodes.contains(args[0])) {
+                            thisDonor.setDonationKey(newKey);
+                            DonationManager.UsedDonorCodes.add(args[0]);
+
+                        } else {
+                            sender.sendMessage(new TextComponent(ChatPrint.fail + "Invalid key.").toLegacyText());
+                            return false;
+                        }
+
+                        sender.sendMessage(new TextComponent(
+                                ChatPrint.primary + "Successfully set donation key to " +
+                                        thisDonor.getDonationKey()).toLegacyText());
                         return true;
 
                     case "tag":

@@ -100,31 +100,34 @@ public class LagManager implements Listener, Runnable {
 	}
 	
 	public static int removeSkulls(int age_limit) {
-		
-		int skulls_world;
-		int skulls_all = 0;
-		
-		String skullMsg;
-		
-		for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
-			
-			skulls_world = 0;
-			
-			for (Entity e: thisWorld.getEntities()) {
-				if (e instanceof WitherSkull) {
-					if (e.getTicksLived() > age_limit) skulls_world++; e.remove();
+
+		final int[] skulls_world = new int[1];
+		final int[] skulls_all = {0};
+
+		final String[] skullMsg = new String[1];
+
+		Bukkit.getScheduler().runTaskAsynchronously(core.Main.instance, () -> {
+			for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
+
+				skulls_world[0] = 0;
+
+				for (Entity e: thisWorld.getEntities()) {
+					if (e instanceof WitherSkull) {
+						if (e.getTicksLived() > age_limit) skulls_world[0]++; e.remove();
+					}
 				}
+
+				if (skulls_world[0] != 0) {
+
+					if (skulls_world[0] == 1) skullMsg[0] = "skull"; else skullMsg[0] = "skulls";
+					if (Config.debug) System.out.println(
+							"Removed " + skulls_world[0] + " wither " + skullMsg[0] + " from " + thisWorld.getName());
+				}
+				skulls_all[0] += skulls_world[0];
 			}
-			
-			if (skulls_world != 0) {
-				
-				if (skulls_world == 1) skullMsg = "skull"; else skullMsg = "skulls";
-				if (Config.debug) System.out.println(
-						"Removed " + skulls_world + " wither " + skullMsg + " from " + thisWorld.getName());
-			}
-			skulls_all += skulls_world;
-		}
-		return skulls_all;
+		});
+
+		return skulls_all[0];
 	}
 	
 	public static int getWithers() {

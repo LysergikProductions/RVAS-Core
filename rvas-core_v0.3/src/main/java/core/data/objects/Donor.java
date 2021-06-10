@@ -30,8 +30,8 @@ public class Donor {
     final private Date firstDonationDate;
     private Date recentDonationDate;
 
-    private String donationKey, tagLine, msgOtd, customIGN;
     private Double sumDonated;
+    private String donationKey, tagLine, msgOtd, customIGN;
 
     public Donor(UUID thisID, String thisKey, Double amountDonated) {
         this.userID = thisID; this.donationKey = thisKey;

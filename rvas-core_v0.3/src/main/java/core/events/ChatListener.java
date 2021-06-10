@@ -128,7 +128,7 @@ public class ChatListener implements Listener {
 
 			if (DonationManager.isDonor(player)) {
 
-				Donor thisDonor = DonationManager.getDonorByName(player.getName());
+				Donor thisDonor = DonationManager.getDonorByName(username);
 				String customIGN = Objects.requireNonNull(thisDonor).getCustomIGN();
 
 				if (DonationManager.isValidString(customIGN)) username = customIGN;

@@ -62,9 +62,7 @@ public class NinjaTP implements CommandExecutor {
     }
 
     static void scheduleSyncedTP(Player thisPlayer, String thisCmd) {
-        thisPlayer.sendMessage(new TextComponent(ChatPrint.secondary +
-                "teleporting..").toLegacyText());
-
+        thisPlayer.sendMessage(new TextComponent(ChatPrint.faded + "teleporting..").toLegacyText());
         Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () -> thisPlayer.chat(thisCmd), 50L);
     }
 }
