@@ -45,7 +45,7 @@ public class DonorCmd implements CommandExecutor {
                 });
                 msg[0] = msg[0].trim();
 
-                switch (args[1]) {
+                switch (args[1].toLowerCase()) {
                     case "add":
                         Donor thisDonor = Objects.requireNonNull(DonationManager.getDonorByName(args[0]));
                         thisDonor.addToSum(Double.parseDouble(args[2]));
@@ -62,7 +62,7 @@ public class DonorCmd implements CommandExecutor {
 
                         sender.sendMessage(new TextComponent(ChatPrint.primary +
                                 "Successfully set donor tagline to:").toLegacyText());
-                        sender.sendMessage(msg[0]);
+                        sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
                         return true;
 
                     case "motd":
@@ -71,7 +71,16 @@ public class DonorCmd implements CommandExecutor {
 
                         sender.sendMessage(new TextComponent(ChatPrint.primary +
                                 "Successfully set donor MOTD to:").toLegacyText());
-                        sender.sendMessage(msg[0]);
+                        sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
+                        return true;
+
+                    case "ign":
+                        Objects.requireNonNull(DonationManager
+                                .getDonorByName(args[0])).setCustomIGN(msg[0]);
+
+                        sender.sendMessage(new TextComponent(ChatPrint.primary +
+                                "Successfully set custom IGN to:").toLegacyText());
+                        sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
                         return true;
 
                     default: return false;

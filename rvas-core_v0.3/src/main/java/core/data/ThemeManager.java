@@ -71,6 +71,10 @@ public class ThemeManager {
         thisMap.put("cmd", ChatColor.GOLD);
         thisMap.put("controls", ChatColor.AQUA);
 
+        // Try to fix file, but still use this generated Theme object for return
+        try { replaceDefaultJSON(new Theme(thisMap));
+        } catch (IOException ignore) { }
+
         return new Theme(thisMap);
     }
 
@@ -104,5 +108,22 @@ public class ThemeManager {
         themeBuilder.put("controls", thisTheme.getControls());
 
         return new Theme(themeBuilder);
+    }
+
+    public static void writeThemeToJSON(Theme thisTheme, File thisFile) throws IOException {
+        String file_name = thisFile.getName();
+
+        if (!file_name.contains("custom") && !file_name.contains("halloween")) return;
+        Gson gson = new Gson(); Writer writer = new FileWriter(thisFile, false);
+
+        gson.toJson(thisTheme, writer);
+        writer.flush(); writer.close();
+    }
+
+    static void replaceDefaultJSON(Theme thisTheme) throws IOException {
+        Gson gson = new Gson(); Writer writer = new FileWriter(FileManager.defaultThemeFile, false);
+
+        gson.toJson(thisTheme, writer);
+        writer.flush(); writer.close();
     }
 }

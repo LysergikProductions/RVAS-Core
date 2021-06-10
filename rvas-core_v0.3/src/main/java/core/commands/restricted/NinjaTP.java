@@ -50,18 +50,21 @@ public class NinjaTP implements CommandExecutor {
             String tp_cmd = "/execute in " + dimension + " run tp @p[name=" + player.getName() + "] " + loc;
 
             player.chat("/sv on"); // <- requires SuperVanish plugin
-            player.sendMessage(new TextComponent(ChatPrint.secondary +
-                    "teleporting..").toLegacyText());
-
-            // tp command-sender to the location 50 ticks after beginning to vanish
-            Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () -> player.chat(tp_cmd), 50L);
+            scheduleSyncedTP(player, tp_cmd);
 
         } else if (args.length == 1) {
             String tp_cmd = "/tp " + args[0].trim();
 
             player.chat("/sv on"); // <- requires SuperVanish plugin
-            player.chat(tp_cmd); // <- tp command-sender to the location
+            scheduleSyncedTP(player, tp_cmd);
         }
         return true;
+    }
+
+    static void scheduleSyncedTP(Player thisPlayer, String thisCmd) {
+        thisPlayer.sendMessage(new TextComponent(ChatPrint.secondary +
+                "teleporting..").toLegacyText());
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () -> thisPlayer.chat(thisCmd), 50L);
     }
 }

@@ -41,10 +41,10 @@ public class Util {
         if (msg == null) return;
 
         for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
-            try {
-                if (thisPlayer.isOp() &&
-                        !Admin.doNotDisturb.contains(thisPlayer.getUniqueId())) thisPlayer.sendMessage(msg);
-            } catch (Exception e) {return;}
+            try { if (thisPlayer.isOp() &&
+                        !Admin.doNotDisturb.contains(thisPlayer.getUniqueId())) {
+                thisPlayer.sendMessage(msg); }
+            } catch (Exception ignore) { }
         }
         System.out.println(msg.getText());
     }

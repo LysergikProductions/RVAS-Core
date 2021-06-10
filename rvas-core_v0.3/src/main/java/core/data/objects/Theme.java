@@ -27,8 +27,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Theme {
 
-    private ChatColor primary, secondary, tertiary, clear, faded, succeed, fail;
-    private ChatColor help_title, cmd, desc, controls;
+    private ChatColor primary, secondary, tertiary,
+            clear, faded, succeed, fail, help_title, cmd, desc, controls;
 
     public Theme(Map<String, ChatColor> thisMap) {
         this.primary = thisMap.get("primary");
@@ -44,51 +44,31 @@ public class Theme {
         this.controls = thisMap.get("controls");
     }
 
+    public Theme() {
+        this.primary = ChatColor.WHITE; this.secondary = ChatColor.WHITE;
+        this.tertiary = ChatColor.WHITE; this.clear = ChatColor.WHITE;
+        this.faded = ChatColor.WHITE; this.succeed = ChatColor.WHITE;
+        this.fail = ChatColor.WHITE; this.help_title = ChatColor.WHITE;
+        this.cmd = ChatColor.WHITE; this.desc = ChatColor.WHITE;
+        this.controls = ChatColor.WHITE;
+    }
+
     // Setters \\
 
-    public void setPrimary(ChatColor primary) {
-        this.primary = primary;
-    }
+    public void setPrimary(ChatColor primary) { this.primary = primary; }
+    public void setSecondary(ChatColor secondary) { this.secondary = secondary; }
+    public void setTertiary(ChatColor tertiary) { this.tertiary = tertiary; }
 
-    public void setSecondary(ChatColor secondary) {
-        this.secondary = secondary;
-    }
+    public void setClear(ChatColor clear) { this.clear = clear; }
+    public void setFaded(ChatColor faded) { this.faded = faded; }
 
-    public void setTertiary(ChatColor tertiary) {
-        this.tertiary = tertiary;
-    }
+    public void setSucceed(ChatColor succeed) { this.succeed = succeed; }
+    public void setFail(ChatColor fail) { this.fail = fail; }
 
-    public void setClear(ChatColor clear) {
-        this.clear = clear;
-    }
-
-    public void setFaded(ChatColor faded) {
-        this.faded = faded;
-    }
-
-    public void setSucceed(ChatColor succeed) {
-        this.succeed = succeed;
-    }
-
-    public void setFail(ChatColor fail) {
-        this.fail = fail;
-    }
-
-    public void setHelp_title(ChatColor help_title) {
-        this.help_title = help_title;
-    }
-
-    public void setDesc(ChatColor desc) {
-        this.desc = desc;
-    }
-
-    public void setCmd(ChatColor cmd) {
-        this.cmd = cmd;
-    }
-
-    public void setControls(ChatColor controls) {
-        this.controls = controls;
-    }
+    public void setHelp_title(ChatColor help_title) { this.help_title = help_title; }
+    public void setDesc(ChatColor desc) { this.desc = desc; }
+    public void setCmd(ChatColor cmd) { this.cmd = cmd; }
+    public void setControls(ChatColor controls) { this.controls = controls; }
 
     // Getters \\
 
@@ -117,7 +97,7 @@ public class Theme {
     }
 
     public ChatColor getFail() {
-        return fail;
+        return ChatColor.getByChar(fail.toString().charAt(1));
     }
 
     public ChatColor getHelp_title() {

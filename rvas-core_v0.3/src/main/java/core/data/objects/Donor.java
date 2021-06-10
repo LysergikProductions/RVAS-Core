@@ -45,17 +45,6 @@ public class Donor {
         this.customIGN = "tbd";
     }
 
-    // Getters
-    public UUID getUserID() { return userID; }
-    public String getDonationKey() { return donationKey; }
-    public Date getFirstDonationDate() { return firstDonationDate; }
-    public Date getRecentDonationDate() { return recentDonationDate; }
-
-    public Double getSumDonated() { return sumDonated; }
-    public String getMsgOtd() { return msgOtd; }
-    public String getTagLine() { return tagLine; }
-    public String getCustomIGN() { return customIGN; }
-
     // Setters
     public void setDonationKey(String donationKey) { this.donationKey = donationKey; }
     public void setSumDonated(Double sumDonated) { this.sumDonated = sumDonated; }
@@ -68,4 +57,15 @@ public class Donor {
         this.sumDonated += sumToAdd;
         this.recentDonationDate = new Date();
     }
+
+    // Getters
+    public UUID getUserID() { return userID; }
+    public String getDonationKey() { return donationKey; }
+    public Date getFirstDonationDate() { return firstDonationDate; }
+    public Date getRecentDonationDate() { return recentDonationDate; }
+
+    public Double getSumDonated() { return sumDonated; }
+    public String getMsgOtd() { return msgOtd; }
+    public String getTagLine() { return tagLine; }
+    public String getCustomIGN() { return customIGN; }
 }

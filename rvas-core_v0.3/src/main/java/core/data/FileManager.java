@@ -240,14 +240,13 @@ public class FileManager {
 	}
 
 	public static File getConfiguredThemeFile() {
-		String thisString = Config.getValue("theme");
+		String thisString = Config.getValue("theme").trim();
 
-		if (thisString != null) {
-			switch (thisString) {
-				case "default": return defaultThemeFile;
-				case "halloween": return halloweenThemeFile;
-				case "custom": return customThemeFile;
-			}
-		} return null;
+		switch (thisString) {
+			case "default": return defaultThemeFile;
+			case "halloween": return halloweenThemeFile;
+			case "custom": return customThemeFile;
+		}
+		return null;
 	}
 }
