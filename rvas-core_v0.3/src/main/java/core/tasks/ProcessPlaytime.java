@@ -1,5 +1,6 @@
 package core.tasks;
 
+import core.Main;
 import core.backend.Config;
 import core.backend.Scheduler;
 import core.backend.ServerMeta;
@@ -9,7 +10,7 @@ import core.backend.LagProcessor;
 import core.data.PlayerMeta;
 import core.events.ChatListener;
 import core.commands.VoteMute;
-//import core.commands.restricted.Check;
+import core.commands.restricted.Check;
 import core.commands.restricted.Speeds;
 
 import java.util.TimerTask;
@@ -26,15 +27,14 @@ public class ProcessPlaytime extends TimerTask {
 
 	@Override
 	public void run() {
-		double currentTPS = LagProcessor.getTPS();
-		double difference;
+		double difference; double currentTPS = LagProcessor.getTPS();
 
 		if (lastTPS == 0.00) difference = 0.00;
 		else difference = lastTPS - currentTPS;
 		
 		if (difference > (lastTPS * 0.5)) {
 			System.out.println("WARN 50+% tps drop in 20t");
-			Analytics.capture();
+			Bukkit.getScheduler().runTask(Main.instance, Analytics::capture);
 		}
 		
 		lastTPS = currentTPS;
@@ -47,7 +47,7 @@ public class ProcessPlaytime extends TimerTask {
 		}
 		
 		long sinceLast = System.currentTimeMillis() - lastTime;		
-		if (sinceLast > 3000) Analytics.capture();
+		if (sinceLast > 3000) Bukkit.getScheduler().runTask(Main.instance, Analytics::capture);
 
 		// Tick playtime, temporary mutes, server uptime, and reconnect delays
 		Bukkit.getOnlinePlayers().forEach(p -> PlayerMeta.tickPlaytime(p, sinceLast));
@@ -73,14 +73,11 @@ public class ProcessPlaytime extends TimerTask {
 		timeTillReset = timeTillReset - sinceLast;
 
 		if (timeTillReset <= 0) {
-			lowTpsCounter = 0;
-			timeTillReset = 3600000;
-		}
+			timeTillReset = 3600000; lowTpsCounter = 0; }
 
 		lastTime = System.currentTimeMillis();
 		Scheduler.setLastTaskId("oneSecondTasks");
 
 		Speeds.updateGUI();
-		//Check.updateGUI();
 	}
 }

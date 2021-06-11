@@ -24,7 +24,8 @@ package core.tasks;
  * */
 
 import core.backend.Config;
-import core.backend.ChatPrint;
+import core.commands.restricted.Check;
+import core.frontend.ChatPrint;
 import core.backend.Scheduler;
 
 import java.util.*;
@@ -94,6 +95,7 @@ public class AutoAnnouncer extends TimerTask {
 			Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary.toString() + tryMsg));
 		}
 		Scheduler.setLastTaskId("autoAnnounce");
+		Check.updateGUI();
 	}
 
 	public static boolean updateConfigs() {

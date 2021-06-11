@@ -25,7 +25,7 @@ package core.commands;
 import core.Main;
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 
 import java.util.Arrays;
 import org.bukkit.entity.Player;

@@ -1,7 +1,7 @@
 package core.commands.restricted;
 
 import core.backend.Config;
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.data.DonationManager;
 
 import org.bukkit.Bukkit;

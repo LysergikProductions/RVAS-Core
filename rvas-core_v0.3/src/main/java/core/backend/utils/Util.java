@@ -100,9 +100,10 @@ public class Util {
     }
 
     public static String getDimensionName (Location thisLoc) {
+        org.bukkit.World.Environment thisEnv; String out = null;
 
-        String out = null;
-        org.bukkit.World.Environment thisEnv = thisLoc.getWorld().getEnvironment();
+        try { thisEnv = thisLoc.getWorld().getEnvironment();
+        } catch (Exception ignore) { thisEnv = World.Environment.NORMAL; }
 
         if (thisEnv.equals(org.bukkit.World.Environment.NORMAL)) out = "overworld";
         else if (thisEnv.equals(org.bukkit.World.Environment.NETHER)) out = "the_nether";

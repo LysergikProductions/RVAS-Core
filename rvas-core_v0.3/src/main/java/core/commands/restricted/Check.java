@@ -24,7 +24,7 @@ package core.commands.restricted;
  * */
 
 import core.data.objects.Pair;
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
 
@@ -74,40 +74,40 @@ public class Check implements CommandExecutor, Listener {
     }
 
     public static void updateGUI() {
-        lagCheckGUI.clear(); // do not also clear sorted list, to keep results persistent
+        Bukkit.getScheduler().runTask(core.Main.instance, () -> {
+            lagCheckGUI.clear(); // do not also clear sorted list, to keep results persistent
 
-        for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
-            final int[] thisCount = new int[1];
+            for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
+                int thisCount = 0;
 
-            if (!thisPlayer.isOp()) {
+                if (!thisPlayer.isOp()) {
 
-                lagList.remove(thisPlayer.getUniqueId());
-                Bukkit.getScheduler().runTaskAsynchronously(core.Main.instance, () ->
-                    thisCount[0] = Chunks.countChunkLagBlocks(thisPlayer));
+                    lagList.remove(thisPlayer.getUniqueId());
+                    thisCount = Chunks.countChunkLagBlocks(thisPlayer);
 
-
-                if (thisCount[0] > 255) {
-                    lagList.putIfAbsent(thisPlayer.getUniqueId(),
-                            new Pair<>(thisCount[0], thisPlayer.getLocation()));
-                    sortedLagList.putIfAbsent(thisPlayer, thisCount[0]);
+                    if (thisCount > 255) {
+                        lagList.putIfAbsent(thisPlayer.getUniqueId(),
+                                new Pair<>(thisCount, thisPlayer.getLocation()));
+                        sortedLagList.putIfAbsent(thisPlayer, thisCount);
+                    }
                 }
             }
-        }
 
-        sortedLagList = Util.sortLagMap(sortedLagList);
-        for (Player thisPlayer: sortedLagList.keySet()) {
+            sortedLagList = Util.sortLagMap(sortedLagList);
+            for (Player thisPlayer: sortedLagList.keySet()) {
 
-            String thisName = thisPlayer.getName();
-            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
+                String thisName = thisPlayer.getName();
+                ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
 
-            ItemMeta thisHeadMeta = newHead.getItemMeta();
-            thisHeadMeta.setDisplayName(thisName);
+                ItemMeta thisHeadMeta = newHead.getItemMeta();
+                thisHeadMeta.setDisplayName(thisName);
 
-            List<String> lore = Collections.singletonList("\u00A7c" + sortedLagList.get(thisPlayer));
-            thisHeadMeta.setLore(lore);
-            newHead.setItemMeta(thisHeadMeta);
-            lagCheckGUI.addItem(newHead);
-        }
+                List<String> lore = Collections.singletonList("\u00A7c" + sortedLagList.get(thisPlayer));
+                thisHeadMeta.setLore(lore);
+                newHead.setItemMeta(thisHeadMeta);
+                lagCheckGUI.addItem(newHead);
+            }
+        });
     }
 
     @EventHandler

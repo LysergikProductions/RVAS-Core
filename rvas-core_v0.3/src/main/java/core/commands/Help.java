@@ -1,6 +1,6 @@
 package core.commands;
 
-import core.backend.HelpPages;
+import core.frontend.HelpPages;
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
 

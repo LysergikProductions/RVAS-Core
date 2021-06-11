@@ -1,6 +1,6 @@
 package core.commands.restricted;
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.data.DonationManager;
 import core.data.objects.Donor;
 

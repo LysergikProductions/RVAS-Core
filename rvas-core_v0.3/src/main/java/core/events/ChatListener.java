@@ -1,7 +1,7 @@
 package core.events;
 
 import core.backend.Config;
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.commands.AFK;
 import core.commands.Message;
 import core.commands.restricted.Admin;
@@ -60,32 +60,28 @@ public class ChatListener implements Listener {
 		}
 
 		// -- CREATE PROPERTIES -- \\
-		boolean doSend = true;
 		String finalMessage = e.getMessage();
 		String color, usernameColor;
+		boolean doSend = true;
 
 		// -- SET CHAT COLORS -- //
 		switch (e.getMessage().charAt(0)) {
-			case '>':
-				color = "\u00A7a"; // Greentext
+			case '>': color = "\u00A7a"; // Greentext
 				break;
 			case '$':
 				if (DonationManager.isDonor(player)) {
 					color = "\u00A76"; // Donator text
 					break;
 				}
-			default:
-				color = "\u00A7f"; // Normal text
+			default: color = "\u00A7f"; // Normal text
 				break;
 		}
 
-		if (DonationManager.isDonor(player) && !Admin.UseRedName.contains(player.getUniqueId())) {
-			usernameColor = "\u00A76";
-		} else if (Admin.UseRedName.contains(player.getUniqueId())) {
-			usernameColor = "\u00A7c";
-		} else {
-			usernameColor = "\u00A7f";
-		}
+		if (DonationManager.isDonor(player) &&
+				!Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A76";
+
+		else if (Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A7c";
+		else usernameColor = "\u00A7f";
 
 		// -- STRING MODIFICATION -- //
 
@@ -166,22 +162,22 @@ public class ChatListener implements Listener {
 						censored = true;
 						
 						if(violationLevels.containsKey(e.getPlayer().getUniqueId())) {
-							violationLevels.put(e.getPlayer().getUniqueId(), violationLevels.get(e.getPlayer().getUniqueId()) + 1);
-						}
-						else {
-							violationLevels.put(e.getPlayer().getUniqueId(), 1);
-						}
+							violationLevels.put(
+									e.getPlayer().getUniqueId(), violationLevels.get(e.getPlayer().getUniqueId()) + 1);
+
+						} else violationLevels.put(e.getPlayer().getUniqueId(), 1);
 					}
 				}
 				
 				lastChatTimes.put(e.getPlayer().getUniqueId(), System.currentTimeMillis());
 				lastChatMessages.put(e.getPlayer().getUniqueId(), finalMessage);
 				
-				if(violationLevels.containsKey(e.getPlayer().getUniqueId())) {
-					if(violationLevels.get(e.getPlayer().getUniqueId()) == Integer.parseInt(Config.getValue("spam.minimum_vl"))) {
-						PlayerMeta.setMuteType(e.getPlayer(), MuteType.TEMPORARY);
-						return;
-					}
+				if(violationLevels.containsKey(e.getPlayer().getUniqueId()) &&
+						violationLevels.get(e.getPlayer().getUniqueId())
+								== Integer.parseInt(Config.getValue("spam.minimum_vl"))) {
+
+					PlayerMeta.setMuteType(e.getPlayer(), MuteType.TEMPORARY);
+					return;
 				}
 				
 				// op bypass

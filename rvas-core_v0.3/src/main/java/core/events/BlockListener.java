@@ -24,7 +24,7 @@ package core.events;
  * */
 
 import core.backend.Config;
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.backend.ItemCheck;
 import core.backend.utils.*;
 import core.data.PlayerMeta;

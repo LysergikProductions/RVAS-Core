@@ -249,6 +249,6 @@ public class FileManager {
 			case "halloween": return halloweenThemeFile;
 			case "custom": return customThemeFile;
 		}
-		return null;
+		return defaultThemeFile;
 	}
 }

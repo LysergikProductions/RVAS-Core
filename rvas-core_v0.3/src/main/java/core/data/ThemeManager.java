@@ -42,7 +42,7 @@ public class ThemeManager {
         if (thisFile.exists()) {
             try { currentTheme = getThemeFromJSON(thisFile);
             } catch (Exception e) {
-                currentTheme = createDefaultTheme();
+                currentTheme.setToInternalDefaults();
                 System.out.println("WARN getThemeFromJSON Exception");
                 throw new IOException(e.getMessage());
             }
@@ -50,32 +50,8 @@ public class ThemeManager {
             System.out.println("WARN failed to load the specified theme :(");
             System.out.println("Creating the default theme from scratch..");
 
-            currentTheme = createDefaultTheme();
+            currentTheme.setToInternalDefaults();
         }
-    }
-
-    public static Theme createDefaultTheme() {
-        Map<String, ChatColor> thisMap = new HashMap<>();
-
-        thisMap.put("primary", ChatColor.GOLD);
-        thisMap.put("secondary", ChatColor.DARK_AQUA);
-        thisMap.put("tertiary", ChatColor.BLUE);
-
-        thisMap.put("clear", ChatColor.WHITE);
-        thisMap.put("faded", ChatColor.GRAY);
-        thisMap.put("succeed", ChatColor.GREEN);
-        thisMap.put("fail", ChatColor.RED);
-
-        thisMap.put("help_title", ChatColor.WHITE);
-        thisMap.put("desc", ChatColor.GRAY);
-        thisMap.put("cmd", ChatColor.GOLD);
-        thisMap.put("controls", ChatColor.AQUA);
-
-        // Try to fix file, but still use this generated Theme object for return
-        try { replaceDefaultJSON(new Theme(thisMap));
-        } catch (IOException ignore) { }
-
-        return new Theme(thisMap);
     }
 
     // - Read and rebuild new Theme object from file
@@ -120,7 +96,7 @@ public class ThemeManager {
         writer.flush(); writer.close();
     }
 
-    static void replaceDefaultJSON(Theme thisTheme) throws IOException {
+    public static void replaceDefaultJSON(Theme thisTheme) throws IOException {
         Gson gson = new Gson(); Writer writer = new FileWriter(FileManager.defaultThemeFile, false);
 
         gson.toJson(thisTheme, writer);

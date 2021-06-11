@@ -6,6 +6,7 @@ import core.tasks.*;
 import core.backend.*;
 import core.commands.*;
 import core.commands.restricted.*;
+import core.frontend.ChatPrint;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -21,15 +22,17 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import static core.data.ThemeManager.replaceDefaultJSON;
+
 @SuppressWarnings("SpellCheckingInspection")
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.4"; public static final int build = 305;
+	public final static String version = "0.3.4"; public final static int build = 306;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
-	public static OfflinePlayer Top = null;
 	public DiscordBot DiscordHandler;
+	public static OfflinePlayer Top = null;
 
 	@Override
 	public void onEnable() {
@@ -55,10 +58,16 @@ public class Main extends JavaPlugin {
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
 
-		try { ChatPrint.loadColors();
-		} catch (Exception ignore) {
-			ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
-			ChatPrint.loadColors();
+		try { ChatPrint.init();
+		} catch (Exception e) {
+			e.printStackTrace(); System.out.println("WARN Creating a default theme instead..");
+
+			ThemeManager.currentTheme.setToInternalDefaults();
+
+			try { replaceDefaultJSON(ThemeManager.currentTheme);
+			} catch (IOException ignore) { }
+
+			ChatPrint.init();
 		}
 
 		System.out.println();

@@ -24,7 +24,7 @@ package core.commands.restricted;
  *
  * */
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -61,8 +61,20 @@ public class NinjaTP implements CommandExecutor {
         return true;
     }
 
+    final static TextComponent t3 = new TextComponent(ChatPrint.faded + "teleporting in 3 seconds..");
+    final static TextComponent t2 = new TextComponent(ChatPrint.faded + "teleporting in 2 seconds..");
+    final static TextComponent t1 = new TextComponent(ChatPrint.faded + "teleporting now..");
+
     static void scheduleSyncedTP(Player thisPlayer, String thisCmd) {
-        thisPlayer.sendMessage(new TextComponent(ChatPrint.faded + "teleporting..").toLegacyText());
-        Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () -> thisPlayer.chat(thisCmd), 50L);
+        thisPlayer.sendMessage(t3.toLegacyText());
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () ->
+                thisPlayer.sendMessage(t2.toLegacyText()), 20L);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () ->
+                thisPlayer.sendMessage(t1.toLegacyText()), 48L);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () ->
+                thisPlayer.chat(thisCmd), 60L);
     }
 }

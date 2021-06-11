@@ -1,6 +1,6 @@
 package core.commands;
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 
 import java.util.UUID;
 import java.util.ArrayList;

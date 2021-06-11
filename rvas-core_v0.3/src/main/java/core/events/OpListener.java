@@ -24,7 +24,7 @@ package core.events;
  * 
  * */
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
@@ -79,7 +79,7 @@ public class OpListener implements Listener {
 		boolean isAdmin = PlayerMeta.isAdmin(sender);
 		String msg = event.getMessage();
 		
-		// allow ops to use /execute, but only for teleporting between dimensions
+		// ignore (and allow) /execute when used specifcally for teleporting
 		if (
 				msg.startsWith("/execute in the_end run tp") ||
 				msg.startsWith("/execute in the_nether run tp") ||
@@ -91,7 +91,7 @@ public class OpListener implements Listener {
 			if (!msg.contains("@a") && !msg.contains(admin_name) && sender.isOp()) return;
 		}
 		
-		// take-over handling of /lr when receiving /lr skulls (lr normally for 'LaggRemover')
+		// take-over handling of /lr when receiving /lr skulls (lr normally for 'LaggRemover' Plugin)
 		if (msg.startsWith("/lr skulls")) {
 			
 			event.setCancelled(true);
@@ -157,19 +157,19 @@ public class OpListener implements Listener {
 			}
 
 			if (thisIndexInt != null && thisIndexInt >= 0 && thisIndexInt <= 9) {
-				Location tpLoc;
+				Location tpLoc; String dim;
+
+				TextComponent warn = new TextComponent(
+						ChatPrint.fail + "There is no saved TP at that index");
 
 				try {
 					tpLoc = savedTPs.get(senderID).get(thisIndexInt);
-				} catch (Exception ignore) {
-					sender.sendMessage(new TextComponent(
-							ChatPrint.fail + "There is no saved TP at that index").toLegacyText());
-					return;
-				}
+					if (tpLoc == null) { sender.sendMessage(warn.toLegacyText()); return; }
+					dim = Util.getDimensionName(tpLoc);
 
-				String dim = Util.getDimensionName(tpLoc);
+				} catch (Exception ignore) { sender.sendMessage(warn.toLegacyText()); return; }
+
 				String loc = tpLoc.getBlockX() + " " + tpLoc.getBlockY() + " " + tpLoc.getBlockZ();
-
 				sender.chat("/execute in " + dim + " run tp @s " + loc);
 
 			} else sender.sendMessage(new TextComponent(
@@ -185,26 +185,24 @@ public class OpListener implements Listener {
 				sender.sendMessage(new TextComponent(ChatPrint.fail + "no").toLegacyText());
 
 			} else if (msg.contains("@a")) {
-				
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatPrint.fail + "You cannot target everyone!").toLegacyText());
+				sender.sendMessage(new TextComponent(ChatPrint.fail +
+						"You cannot target everyone!").toLegacyText());
 				
 			} else if (msg.contains(admin_name)) {
-				
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatPrint.fail + "You cannot target " + admin_name).toLegacyText());
+				sender.sendMessage(new TextComponent(ChatPrint.fail +
+						"You cannot target " + admin_name).toLegacyText());
 			}
 
 		// 32k commands for testing anti-illegals; owner only
 		} else if (msg.startsWith("/op sauce")) {
 
 			event.setCancelled(true); // <- cut-off default command processing
-			if (!sender.isOp()) return; // <- fallback security layer
+			if (!PlayerMeta.isAdmin(sender)) return; // <- fallback security layer
 
-			if (!msg.contains("=") || msg.endsWith("=")) {
-				sender.sendMessage("Syntax: /op sauce=[type]");
-
-			} else {
+			if (!msg.contains("=") || msg.endsWith("=")) sender.sendMessage("Syntax: /op sauce=[type]");
+			else {
 				String[] args = msg.split("=");
 				String thisArg = args[1];
 
@@ -215,14 +213,11 @@ public class OpListener implements Listener {
 					sender.chat(Aliases.armor_b);
 					sender.chat(Aliases.totems_armor1);
 					sender.chat(Aliases.totems_armor2);
+				}
+				else if (thisArg.contains("feather")) sender.chat(Aliases.feather_32k);
+				else if (thisArg.contains("totem")) sender.chat(Aliases.totems_shulker);
 
-				} else if (thisArg.contains("feather")) {
-					sender.chat(Aliases.feather_32k);
-
-				} else if (thisArg.contains("totem")) {
-					sender.chat(Aliases.totems_shulker);
-
-				} else if (thisArg.contains("all")) {
+				else if (thisArg.contains("all")) {
 					sender.chat(Aliases.armor_a);
 					sender.chat(Aliases.armor_b);
 					sender.chat(Aliases.totems_armor1);
@@ -230,9 +225,8 @@ public class OpListener implements Listener {
 					sender.chat(Aliases.totems_shulker);
 					sender.chat(Aliases.feather_32k);
 
-				} else {
-					sender.sendMessage(new TextComponent(ChatPrint.fail + "Invalid Argument: " + thisArg).toLegacyText());
-				}
+				} else sender.sendMessage(new TextComponent(ChatPrint.fail +
+							"Invalid Argument: " + thisArg).toLegacyText());
 			}
 		}
 	}
@@ -240,9 +234,8 @@ public class OpListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // non-ops cannot be set to a mode besides survival mode
 	public void onModeChange(PlayerGameModeChangeEvent event) {
 		
-		if (!event.getNewGameMode().equals(GameMode.SURVIVAL) && !event.getPlayer().isOp()) {
-			event.setCancelled(true);
-		}
+		if (!event.getNewGameMode().equals(GameMode.SURVIVAL) &&
+				!event.getPlayer().isOp()) { event.setCancelled(true); }
 	}
 	
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // only owner account can dupe/get items from creative mode
@@ -264,13 +257,10 @@ public class OpListener implements Listener {
 	// prevent moving GUI items into player inventories
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
+
 		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
-
 		else if (!event.getWhoClicked().getGameMode().equals(GameMode.SURVIVAL) &&
-				!PlayerMeta.isAdmin((Player)event.getWhoClicked())) {
-
-			event.setCancelled(true);
-		}
+				!PlayerMeta.isAdmin((Player)event.getWhoClicked())) { event.setCancelled(true); }
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)

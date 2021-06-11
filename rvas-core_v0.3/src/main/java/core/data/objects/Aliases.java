@@ -23,15 +23,8 @@ package core.data.objects;
  *
  * */
 
-import core.backend.ChatPrint;
-
-import java.util.List;
-import net.md_5.bungee.api.chat.TextComponent;
-
 @SuppressWarnings("SpellCheckingInspection")
 public class Aliases {
-
-    // COMMANDS \\
 
     public final static String armor_a, armor_b; static {
 
@@ -105,36 +98,5 @@ public class Aliases {
 
         invulCrystal = "/summon minecraft:end_crystal ~ ~-4 ~ {" +
                 "ShowBottom:true,Invulnerable:true,BeamTarget:{X:0.5,Y:128,Z:0.5}}";
-    }
-
-    // 'GUI's \\
-
-    public static List<TextComponent> themeMaker_main; static {
-        TextComponent title = new TextComponent(ChatPrint.primary + "Theme Maker 9000");
-        TextComponent subtitle = new TextComponent(ChatPrint.faded +
-                "Click any of the following IDs to change their colors");
-
-        TextComponent primary = new TextComponent(ChatPrint.secondary + "Primary Color");
-        TextComponent secondary = new TextComponent(ChatPrint.secondary + "Secondary Color");
-        TextComponent tertiary = new TextComponent(ChatPrint.secondary + "Tertiary Color");
-        TextComponent clear = new TextComponent(ChatPrint.secondary + "Clear Color");
-        TextComponent faded = new TextComponent(ChatPrint.secondary + "Faded Color");
-        TextComponent succeed = new TextComponent(ChatPrint.secondary + "Succeed Color");
-        TextComponent fail = new TextComponent(ChatPrint.secondary + "Fail Color");
-        TextComponent help_title = new TextComponent(ChatPrint.secondary + "Help_Title Color");
-        TextComponent desc = new TextComponent(ChatPrint.secondary + "Descriptive Color");
-        TextComponent cmd = new TextComponent(ChatPrint.secondary + "Commands Color");
-        TextComponent controls = new TextComponent(ChatPrint.secondary + "Controls Color");
-
-        title.setBold(true);
-        subtitle.setItalic(true);
-
-        themeMaker_main.add(title); themeMaker_main.add(subtitle);
-        themeMaker_main.add(primary); themeMaker_main.add(secondary);
-        themeMaker_main.add(tertiary); themeMaker_main.add(clear);
-        themeMaker_main.add(faded); themeMaker_main.add(succeed);
-        themeMaker_main.add(fail); themeMaker_main.add(help_title);
-        themeMaker_main.add(desc); themeMaker_main.add(cmd);
-        themeMaker_main.add(controls);
     }
 }

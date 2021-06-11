@@ -23,7 +23,7 @@ package core.commands;
  * */
 
 import core.backend.Config;
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
 

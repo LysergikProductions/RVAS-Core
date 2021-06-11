@@ -7,6 +7,7 @@ import core.data.objects.Aliases;
 import core.data.ThemeManager;
 import core.data.objects.Pair;
 import core.data.PlayerMeta;
+import core.frontend.ChatPrint;
 import core.tasks.Analytics;
 import core.events.SpeedLimiter;
 
@@ -102,12 +103,12 @@ public class Admin implements CommandExecutor {
 
 				case "RELOAD":
 
-					try { ChatPrint.loadColors();
+					try { ChatPrint.init();
 					} catch (Exception ignore) {
 						sender.sendMessage(new TextComponent(ChatPrint.fail +
 								"Failed to reload colors, setting internal theme..").toLegacyText());
-						ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
-						ChatPrint.loadColors();
+						ThemeManager.currentTheme.setToInternalDefaults();
+						ChatPrint.init();
 					}
 
 					try { Config.load();

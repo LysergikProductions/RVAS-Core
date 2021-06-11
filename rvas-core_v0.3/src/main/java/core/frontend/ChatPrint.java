@@ -1,4 +1,4 @@
-package core.backend;
+package core.frontend;
 
 /* *
  * 
@@ -25,6 +25,7 @@ package core.backend;
 
 import core.data.*;
 import core.data.objects.*;
+import core.backend.Config;
 import core.backend.utils.Util;
 
 import java.util.*;
@@ -46,10 +47,15 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 @SuppressWarnings("SpellCheckingInspection")
 public class ChatPrint {
 
+	public final static TextComponent warn = new TextComponent(
+			org.bukkit.ChatColor.RED + "WARN "); static {
+		warn.setBold(true);
+	}
+
 	public static ChatColor primary, secondary, tertiary, clear, faded,
 			succeed, fail, help_title, desc, cmd, controls;
 
-	public static void loadColors() {
+	public static void init() {
 		primary = ThemeManager.currentTheme.getPrimary();
 		secondary = ThemeManager.currentTheme.getSecondary();
 		tertiary = ThemeManager.currentTheme.getTertiary();

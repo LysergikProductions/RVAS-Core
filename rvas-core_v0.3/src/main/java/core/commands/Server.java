@@ -1,6 +1,6 @@
 package core.commands;
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.LagProcessor;
 import core.backend.ServerMeta;

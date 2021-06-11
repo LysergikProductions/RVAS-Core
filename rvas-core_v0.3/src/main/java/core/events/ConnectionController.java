@@ -2,6 +2,7 @@ package core.events;
 
 import core.backend.*;
 import core.backend.utils.Util;
+import core.frontend.ChatPrint;
 import core.commands.Kit;
 import core.commands.restricted.Admin;
 

@@ -23,7 +23,7 @@ package core.tasks;
  * 
  * */
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.events.ConnectionController;
@@ -84,9 +84,6 @@ public class LagManager implements Listener, Runnable {
 				if (thisEntity.getType().equals(thisType)) counter++;
 			}
 
-			TextComponent warn = new TextComponent("WARN "); warn.setBold(true);
-			warn.setColor(ChatPrint.fail);
-
 			TextComponent msg = new TextComponent("17+ armor stands at " +
 					spawnLoc.getX() + ", " + spawnLoc.getY() + ", " + spawnLoc.getZ() + " in " + dimension);
 
@@ -95,39 +92,32 @@ public class LagManager implements Listener, Runnable {
 			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 					"/ninjatp " + dimension + " " + location));
 
-			if (counter > 16) Util.notifyOps(new TextComponent(warn, msg));
+			if (counter > 16) Util.notifyOps(new TextComponent(ChatPrint.warn, msg));
 		}
 	}
 	
 	public static int removeSkulls(int age_limit) {
 
-		final int[] skulls_world = new int[1];
-		final int[] skulls_all = {0};
-
+		int skulls_world; int skulls_all = 0;
 		final String[] skullMsg = new String[1];
 
-		Bukkit.getScheduler().runTaskAsynchronously(core.Main.instance, () -> {
-			for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
+		for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
+			skulls_world = 0;
 
-				skulls_world[0] = 0;
-
-				for (Entity e: thisWorld.getEntities()) {
-					if (e instanceof WitherSkull) {
-						if (e.getTicksLived() > age_limit) skulls_world[0]++; e.remove();
-					}
+			for (Entity e: thisWorld.getEntities()) {
+				if (e instanceof WitherSkull) {
+					if (e.getTicksLived() > age_limit) { skulls_world++; e.remove(); }
 				}
-
-				if (skulls_world[0] != 0) {
-
-					if (skulls_world[0] == 1) skullMsg[0] = "skull"; else skullMsg[0] = "skulls";
-					if (Config.debug) System.out.println(
-							"Removed " + skulls_world[0] + " wither " + skullMsg[0] + " from " + thisWorld.getName());
-				}
-				skulls_all[0] += skulls_world[0];
 			}
-		});
 
-		return skulls_all[0];
+			if (skulls_world != 0) {
+				if (skulls_world == 1) skullMsg[0] = "skull"; else skullMsg[0] = "skulls";
+				if (Config.debug) System.out.println(
+						"Removed " + skulls_world + " wither " + skullMsg[0] + " from " + thisWorld.getName());
+			}
+			skulls_all += skulls_world;
+		}
+		return skulls_all;
 	}
 	
 	public static int getWithers() {
