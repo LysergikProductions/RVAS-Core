@@ -22,6 +22,7 @@ package core.data;
  *
  * */
 
+import core.backend.Config;
 import core.data.objects.Donor;
 
 import java.io.*;
@@ -32,8 +33,10 @@ import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
 import com.google.common.reflect.TypeToken;
+import com.google.common.annotations.Beta;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -139,6 +142,19 @@ public class DonationManager {
 
     // Donor-specific utils
     public static boolean isValidString(String thisString) {
-        return thisString != null && !thisString.equals("") && !thisString.equals("tbd");
+        return thisString != null && !thisString.isEmpty() && !thisString.equals("tbd");
+    }
+
+    @Beta
+    public static boolean isValidKey(String thisKey) {
+        return true; // <- TODO: devise a secure key creation / validation meta
+    }
+
+    public static boolean isRestrictedIGN(String ign) {
+        List<String> opNames = new ArrayList<>();
+        for (OfflinePlayer op: Bukkit.getServer().getOperators()) opNames.add(op.getName());
+
+        return  ign.equalsIgnoreCase("server") || ign.equalsIgnoreCase("console") ||
+                ign.equalsIgnoreCase(Config.getValue("admin")) || opNames.contains(ign);
     }
 }

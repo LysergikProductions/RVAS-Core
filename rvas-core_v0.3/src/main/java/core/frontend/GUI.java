@@ -47,7 +47,7 @@ public class GUI {
                 "/local, /l: \u00A77Send a message only to players in your render distance");
 
         afk_syntax = new TextComponent(ChatPrint.cmd +
-                "/afk: \u00A77Block whispers and tell the whisperer that you are AFK");
+                "/afk: \u00A77Block whispers and tell whisperers that you are AFK");
 
         last_syntax = new TextComponent(ChatPrint.cmd +
                 "/last: \u00A77Show the last three whispers you've received");
