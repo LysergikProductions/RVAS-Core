@@ -87,7 +87,11 @@ public class Restart {
 						.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l1 \u00A7r\u00A76second."));
 
 				TimeUnit.SECONDS.sleep(1);
-			} catch (Exception e) { e.printStackTrace(); }
+
+			} catch (Exception e) {
+				System.out.println("WARN Restart-timer thread error..");
+				e.printStackTrace();
+			}
 
 			Bukkit.getServer().spigot().broadcast(new TextComponent("\u00A76Server is restarting."));
 			Bukkit.shutdown();

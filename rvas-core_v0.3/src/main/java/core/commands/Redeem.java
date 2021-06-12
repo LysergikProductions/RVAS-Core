@@ -28,7 +28,7 @@ public class Redeem implements CommandExecutor {
 			return true;
 		}
 
-		if (DonationManager.isDonor(player)) {
+		if (DonationManager.isValidDonor(player)) {
 			player.sendMessage("\u00A7cYou are already a donator. You keep it for life.");
 			return true;
 		}

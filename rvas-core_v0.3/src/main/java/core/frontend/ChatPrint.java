@@ -157,9 +157,7 @@ public class ChatPrint {
 
 		int i = 0;
 		for (TextComponent ln: list) {
-			receiver.sendMessage(ln);
-			i++;
-
+			receiver.sendMessage(ln); i++;
 			if (i >= lineLimit) break;
 		}
 		receiver.sendMessage(msg);
@@ -183,7 +181,6 @@ public class ChatPrint {
 		String firstPlayed = sdf.format(date);
 		String lastPlayed = sdf.format(new Date(target.getLastSeen()));
 
-		// get all uniquely styleable components
 		TextComponent title_pre = new TextComponent("--- ");
 		TextComponent title_name = new TextComponent(target.getName());
 		TextComponent title_suf = new TextComponent("'s Statistics ---");
@@ -208,19 +205,13 @@ public class ChatPrint {
 		String spawnKills = String.valueOf(StatsManager.getStats(target).spawnKills);
 		HoverEvent hover_killDetail = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Spawn Kills: " + spawnKills));
 		HoverEvent hover_showHours = new HoverEvent(HoverEvent.Action.SHOW_TEXT, playtime_hover);
-		
-		// style individual components
-		joined_a.setBold(true);
-		lastSeen_a.setBold(true);
-		rank_a.setBold(true);
-		
-		playtime_a.setBold(true);
+
+		joined_a.setBold(true); lastSeen_a.setBold(true); rank_a.setBold(true);
+		playtime_a.setBold(true); tkills_a.setBold(true); tdeaths_a.setBold(true);
+
 		playtime_b.setHoverEvent(hover_showHours);
-		
-		tkills_a.setBold(true);
 		tkills_b.setHoverEvent(hover_killDetail);
-		tdeaths_a.setBold(true);
-		
+
 		// parse components into 1-line components
 		TextComponent title = new TextComponent(title_pre, title_name, title_suf);
 		TextComponent joined = new TextComponent(joined_a, joined_b);
@@ -233,8 +224,9 @@ public class ChatPrint {
 		TextComponent tdeaths = new TextComponent(tdeaths_a, tdeaths_b);
 		TextComponent kd;
 		
-		try {
-			kd = new TextComponent(faded + "K/D: " + new DecimalFormat("#.###").format(Double.parseDouble(StatsManager.getStats(target).kd)));
+		try { kd = new TextComponent(faded + "K/D: " +
+				new DecimalFormat("#.###").format(Double.parseDouble(StatsManager.getStats(target).kd)));
+
 		} catch (NumberFormatException e) {
 			kd = new TextComponent(faded + "K/D: " + StatsManager.getStats(target).kd);
 		}
@@ -260,14 +252,13 @@ public class ChatPrint {
 			String thisTag = Objects.requireNonNull(DonationManager
 					.getDonorByUUID(target.getUniqueId())).getTagLine();
 
-			if (DonationManager.isDonor(Bukkit.getPlayer(target.getUniqueId()))
+			if (DonationManager.isValidDonor(Bukkit.getPlayer(target.getUniqueId()))
 					&& DonationManager.isValidString(thisTag)) {
 
 				statsLines.add(new TextComponent(ChatColor.DARK_AQUA + thisTag));
 			}
 		} catch (Exception ignore) {}
-		
-		// send final message to receiver
+
 		statsLines.forEach(receiver::sendMessage);
 	}
 	

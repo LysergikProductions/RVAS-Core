@@ -75,9 +75,8 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.3.4-308</finalName>
+        <finalName>rvas-core-0.3.4-309</finalName>
         <plugins>
-            <!-- download source code in Eclipse, best practice-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>

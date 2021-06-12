@@ -69,7 +69,7 @@ public class ChatListener implements Listener {
 			case '>': color = "\u00A7a"; // Greentext
 				break;
 			case '$':
-				if (DonationManager.isDonor(player)) {
+				if (DonationManager.isValidDonor(player)) {
 					color = "\u00A76"; // Donator text
 					break;
 				}
@@ -77,7 +77,7 @@ public class ChatListener implements Listener {
 				break;
 		}
 
-		if (DonationManager.isDonor(player) &&
+		if (DonationManager.isValidDonor(player) &&
 				!Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A76";
 
 		else if (Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A7c";
@@ -122,7 +122,7 @@ public class ChatListener implements Listener {
 		if (doSend) {
 			String username = player.getName();
 
-			if (DonationManager.isDonor(player)) {
+			if (DonationManager.isValidDonor(player)) {
 
 				Donor thisDonor = DonationManager.getDonorByName(username);
 				String customIGN = Objects.requireNonNull(thisDonor).getCustomIGN();

@@ -71,6 +71,11 @@ public class DonationManager {
         return false;
     }
 
+    public static boolean isValidDonor(Player p) {
+        return isDonor(p) && !Objects.requireNonNull(
+                getDonorByUUID(p.getUniqueId())).getDonationKey().equalsIgnoreCase("INVALID");
+    }
+
     public static Donor getDonorByUUID(UUID thisID) {
         for (Donor thisDonor: _donorList) {
             if (thisDonor.getUserID().equals(thisID)) return thisDonor;
@@ -140,7 +145,7 @@ public class DonationManager {
         writer.flush(); writer.close();
     }
 
-    // Donor-specific utils
+    // Donor-specific utils \\
     public static boolean isValidString(String thisString) {
         return thisString != null && !thisString.isEmpty() && !thisString.equals("tbd");
     }
@@ -156,5 +161,15 @@ public class DonationManager {
 
         return  ign.equalsIgnoreCase("server") || ign.equalsIgnoreCase("console") ||
                 ign.equalsIgnoreCase(Config.getValue("admin")) || opNames.contains(ign);
+    }
+
+    public static boolean isExistingIGN(String ign) {
+        for (Donor thisDonor: _donorList) {
+            String thisIGN = thisDonor.getCustomIGN();
+
+            if (!thisIGN.equalsIgnoreCase("tbd") && !thisIGN.isEmpty()) {
+                return thisIGN.equalsIgnoreCase(ign); }
+        }
+        return false;
     }
 }

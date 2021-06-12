@@ -1,9 +1,31 @@
 package core;
 
-import core.data.*;
-import core.events.*;
-import core.tasks.*;
-import core.backend.*;
+/* *
+ *
+ *  About: Main class for RVAS-Core v0.3.4, Paper-Spigot #446+
+ *
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * */
+
+import core.data.*; import core.events.*;
+import core.tasks.*; import core.backend.*;
+import static core.data.ThemeManager.replaceDefaultJSON;
+
 import core.commands.*;
 import core.commands.restricted.*;
 import core.frontend.ChatPrint;
@@ -12,24 +34,20 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.GameMode;
-
+import org.bukkit.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import static core.data.ThemeManager.replaceDefaultJSON;
+import org.bukkit.World.Environment;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public final static String version = "0.3.4"; public final static int build = 308;
-	public static long worldAge_atStart; public static boolean isNewWorld;
+	public final static String version = "0.3.4"; public final static int build = 309;
+
+	public static long worldAge_atStart;
+	public static boolean isNewWorld, isOfficialVersion;
 
 	public DiscordBot DiscordHandler;
 	public static OfflinePlayer Top = null;
@@ -42,7 +60,13 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] ______________________________");
 
-		// TODO: Query the git for latest version and write results to stdout
+		// VERSION CHECK \\
+		GitGetter.load(); // TODO: Query the git for latest version and write results to stdout
+		isOfficialVersion = GitGetter.isVersionCurrent();
+
+		if (isOfficialVersion) System.out.println("RVAS-Core is up-to-date!");
+		else if (GitGetter.isVersionBeta()) System.out.println("WARN This is a beta version of RVAS-Core!");
+		else System.out.println("WARN Invalid version for RVAS-Core!");
 
 		System.out.println("forcing default gamemode..");
 		getServer().setDefaultGameMode(GameMode.SURVIVAL);
@@ -51,6 +75,7 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
 
+		// LOADING SAVED DATA \\
 		try { FileManager.setup();
 		} catch (IOException e) {
 			System.out.println("[core.main] An error occured in FileManager.setup()"); }
@@ -88,6 +113,7 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] Enabling commands");
 		System.out.println("[core.main] _________________");
 
+		// INIT BUKKIT METHODS \\
 		System.out.println("/kit");
 		Objects.requireNonNull(this.getCommand("kit")).setExecutor(new Kit());
 
@@ -152,7 +178,7 @@ public class Main extends JavaPlugin {
 		Objects.requireNonNull(this.getCommand("tjm")).setExecutor(new ToggleJoinMessages());
 
 		System.out.println("/server");
-		Objects.requireNonNull(this.getCommand("server")).setExecutor(new Server());
+		Objects.requireNonNull(this.getCommand("server")).setExecutor(new ServerCmd());
 
 		System.out.println("/help");
 		Objects.requireNonNull(this.getCommand("help")).setExecutor(new Help());
@@ -269,14 +295,15 @@ public class Main extends JavaPlugin {
 		try { core_pm.registerEvents(new Check(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
+		// INIT PROTOCOL_LIB METHODS \\
 		try {
 			PacketListener.C2S_AnimationPackets();
-
 			PacketListener.S2C_MapChunkPackets();
 			PacketListener.S2C_WitherSpawnSound();
 
 		} catch (Exception e) { e.printStackTrace(); }
-		
+
+		// OTHER STUFF \\
 		System.out.println("[core.main] ..finishing up..");
 
 		// Define banned & special blocks

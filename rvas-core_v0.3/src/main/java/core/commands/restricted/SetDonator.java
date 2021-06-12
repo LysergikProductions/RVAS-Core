@@ -39,7 +39,7 @@ public class SetDonator implements CommandExecutor {
 			try {
 				if (!DonationManager.setDonor(donator, "INVALID", 0.00)) return false;
 				else {
-					if (DonationManager.isDonor(donator)) donator.sendMessage(new TextComponent(
+					if (DonationManager.isValidDonor(donator)) donator.sendMessage(new TextComponent(
 							ChatPrint.primary + "Added donator!").toLegacyText());
 					else donator.sendMessage(new TextComponent(
 							ChatPrint.primary + "Removed donator!").toLegacyText());
@@ -68,7 +68,7 @@ public class SetDonator implements CommandExecutor {
 			e.printStackTrace(); return false;
 		}
 
-		if (DonationManager.isDonor(donator)) {
+		if (DonationManager.isValidDonor(donator)) {
 			Bukkit.getServer().spigot()
 					.broadcast(new TextComponent("\u00A76" + donator.getName() + " just donated to the server!"));
 			return true;

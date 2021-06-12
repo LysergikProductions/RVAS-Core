@@ -218,11 +218,7 @@ public class Chunks {
                     }
                 }
             } return counter;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return counter;
-        }
+        } catch (Exception e) { System.out.println(e.getMessage()); return counter; }
     }
 
     @Deprecated
@@ -245,7 +241,6 @@ public class Chunks {
                     if (counter >= limiter) return counter;
                 }
             }
-        }
-        return counter;
+        } return counter;
     }
 }
