@@ -366,7 +366,7 @@ public class ItemCheck {
 		return false;
 	}
 
-	public static boolean updateConfigs() {
+	public static boolean init() {
 
 		try {
 			Banned.remove(Material.BEDROCK);

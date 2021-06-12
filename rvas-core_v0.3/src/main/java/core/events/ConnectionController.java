@@ -269,7 +269,7 @@ public class ConnectionController implements Listener {
 		return out.toString();
 	}
 
-	public static boolean updateConfigs() {
+	public static boolean init() {
 
 		try {
 			allMotds = new ArrayList<>(Arrays.asList(motds));

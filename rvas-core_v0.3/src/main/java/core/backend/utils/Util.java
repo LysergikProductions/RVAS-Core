@@ -22,15 +22,16 @@ package core.backend.utils;
  *
  * */
 
+import core.backend.Config;
 import core.commands.restricted.Admin;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.Map;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -154,6 +155,23 @@ public class Util {
         // h, k are center point | x, y are co-ords to check | a, b are ellipse radii
         return ((int)Math.pow((x - h), 2) / (int)Math.pow(a, 2))
                 + ((int)Math.pow((y - k), 2) / (int)Math.pow(b, 2));
+    }
+
+    public static boolean isInSpawn(Location thisLoc) {
+        double max_x, max_z, min_x, min_z;
+
+        double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
+        double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
+        double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
+        double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+
+        if (Double.isNaN(config_max_x)) max_x = 420.0; else max_x = config_max_x;
+        if (Double.isNaN(config_max_z)) max_z = 420.0; else max_z = config_max_z;
+        if (Double.isNaN(config_min_x)) min_x = -420.0; else min_x = config_min_x;
+        if (Double.isNaN(config_min_z)) min_z = -420.0; else min_z = config_min_z;
+
+        double x = thisLoc.getX(); double z = thisLoc.getZ();
+        return x > min_x && x < max_x && z > min_z && z < max_z;
     }
 
     public static Map<Player, Integer> sortLagMap(Map<Player,Integer> thisMap) {

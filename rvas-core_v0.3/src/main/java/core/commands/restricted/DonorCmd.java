@@ -101,6 +101,12 @@ public class DonorCmd implements CommandExecutor {
                         return true;
 
                     case "ign":
+                        if (args.length != 3) {
+                            sender.sendMessage(new TextComponent(ChatPrint.fail +
+                                    "Invalid syntax. Syntax: /donor [name] ign [one_word_ign]").toLegacyText());
+                            return false;
+                        }
+
                         Objects.requireNonNull(DonationManager
                                 .getDonorByName(args[0])).setCustomIGN(msg[0]);
 

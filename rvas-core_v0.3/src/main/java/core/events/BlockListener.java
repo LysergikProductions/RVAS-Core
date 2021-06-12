@@ -334,7 +334,7 @@ public class BlockListener implements Listener {
 		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
 	}
 	
-	public static boolean updateConfigs() {
+	public static boolean init() {
 		
 		try {
 			roofProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.roof"));

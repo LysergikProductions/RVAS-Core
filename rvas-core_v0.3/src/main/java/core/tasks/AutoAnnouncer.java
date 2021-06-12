@@ -98,7 +98,7 @@ public class AutoAnnouncer extends TimerTask {
 		Check.updateGUI();
 	}
 
-	public static boolean updateConfigs() {
+	public static boolean init() {
 		try {
 			announcements = new ArrayList<>();
 			announcements.addAll(Files.readAllLines(Paths.get("plugins/core/announcements.txt")));

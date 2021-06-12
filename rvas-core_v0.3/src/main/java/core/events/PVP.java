@@ -25,6 +25,7 @@ package core.events;
  * */
 
 import core.backend.Config;
+import core.backend.utils.Util;
 import core.data.PlayerMeta;
 import core.data.StatsManager;
 
@@ -70,7 +71,7 @@ public class PVP implements Listener {
 						", "+killed.getLocation().getY() +
 						", "+killed.getLocation().getZ();
 			}
-			System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
+			if (Config.debug) System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
 		}
 
 		// increment appropriate stats, do nothing if this was not a PVP kill
@@ -82,24 +83,8 @@ public class PVP implements Listener {
 		// check if victim was in the spawn region on death
 		OfflinePlayer victim = Bukkit.getOfflinePlayer(killedID);
 		double victim_playtime = PlayerMeta.getPlaytime(victim);
-		
-		double cX = killed.getLocation().getX();
-		double cZ = killed.getLocation().getZ();
-		
-		double max_x; double max_z;
-		double min_x; double min_z;
-		
-		double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
-		double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
-		double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
-		double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
-		
-		if (Double.isNaN(config_max_x)) max_x = 420.0; else max_x = config_max_x;
-		if (Double.isNaN(config_max_z)) max_z = 420.0; else max_z = config_max_z;
-		if (Double.isNaN(config_min_x)) min_x = -420.0; else min_x = config_min_x;
-		if (Double.isNaN(config_min_z)) min_z = -420.0; else min_z = config_min_z;
 
-		if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {
+		if (Util.isInSpawn(killed.getLocation())) {
 			if (Config.debug) System.out.println(killedName + " was killed in the spawn region!");
 
 			if (victim_playtime < 3600.0) {

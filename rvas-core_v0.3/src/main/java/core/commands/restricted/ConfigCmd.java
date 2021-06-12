@@ -63,7 +63,7 @@ public class ConfigCmd implements CommandExecutor {
 
         String thisKey = args[0]; String thisValue = args[1];
 
-        if (!Config.isRealConfig(thisKey)) {
+        if (!Config.exists(thisKey)) {
             player.sendMessage("This is not a recognized config key!");
             return false;
         }
@@ -73,7 +73,7 @@ public class ConfigCmd implements CommandExecutor {
             if (thisKey.equalsIgnoreCase("debug")) Config.debug = Boolean.parseBoolean(thisValue);
             else if (thisKey.equalsIgnoreCase("verbose")) Config.verbose = Boolean.parseBoolean(thisValue);
 
-        } else Config.modifyConfig(thisKey, thisValue);
+        } else Config.modify(thisKey, thisValue);
 
         player.sendMessage(thisKey + " is now set to " + Config.getValue(thisKey));
         return true;

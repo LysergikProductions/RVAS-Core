@@ -232,7 +232,7 @@ public class Analytics extends TimerTask {
 		  } catch (IOException e) { throw new UncheckedIOException(e); }
 	}
 
-	public static boolean updateConfigs() {
+	public static boolean init() {
 
 		try {
 			doAnalytics = Boolean.parseBoolean(Config.getValue("analytics.enabled"));

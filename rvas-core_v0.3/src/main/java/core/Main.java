@@ -28,7 +28,7 @@ import static core.data.ThemeManager.replaceDefaultJSON;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public final static String version = "0.3.4"; public final static int build = 306;
+	public final static String version = "0.3.4"; public final static int build = 307;
 	public static long worldAge_atStart; public static boolean isNewWorld;
 
 	public DiscordBot DiscordHandler;
