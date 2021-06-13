@@ -26,8 +26,7 @@ public class Speeds implements CommandExecutor {
 
     private static Player thisPlayer = null;
     public static Inventory speedGUI; static {
-        speedGUI = Bukkit.createInventory(thisPlayer, 54, ChatPrint.fail + "Speeds List");
-    }
+        speedGUI = Bukkit.createInventory(thisPlayer, 54, ChatPrint.fail + "Speeds List"); }
 
     public static Map<Player, Double> sortedSpeedsList = new HashMap<>();
 

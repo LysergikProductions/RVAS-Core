@@ -23,15 +23,17 @@ package core.events;
  * 
  * */
 
+import core.Main;
 import core.backend.Config;
-import core.frontend.ChatPrint;
-import core.backend.ItemCheck;
 import core.backend.utils.*;
+import core.backend.ItemCheck;
+import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
 import core.commands.restricted.Repair;
 
 import java.util.*;
 import java.text.DecimalFormat;
+import java.util.logging.Level;
 
 import core.data.PrisonerManager;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -185,9 +187,7 @@ public class BlockListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlace(BlockPlaceEvent event) {
-		
-		long startTime = System.nanoTime();		
-		if (Config.debug) System.out.println("onPlace triggered.." + startTime);
+		long startTime = System.nanoTime();
 		
 		Player placer = event.getPlayer();
 		if (PlayerMeta.isAdmin(placer)) return;
@@ -203,8 +203,8 @@ public class BlockListener implements Listener {
 		// prevent lag-prisoners from placing things that can cause lag
 		if (PrisonerManager.isPrisoner(placer)) {
 
-			if (LagMats.contains(blockType)) {event.setCancelled(true);
-				return;
+			if (LagMats.contains(blockType)) {
+				event.setCancelled(true); return;
 			} else if (
 					mat.endsWith("SAND") ||
 					mat.contains("POWDER") ||
@@ -214,8 +214,7 @@ public class BlockListener implements Listener {
 					mat.contains("DOOR")
 					) {
 				
-				event.setCancelled(true);
-				return;
+				event.setCancelled(true); return;
 			}
 		}
 
@@ -256,9 +255,7 @@ public class BlockListener implements Listener {
 
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
 				event.setCancelled(true);
-
-				placer.sendMessage(new TextComponent(
-						ChatPrint.fail + "You can only place shulkers in survival mode").toLegacyText());
+				placer.sendMessage(ChatPrint.fail + "You can only place shulkers in survival mode");
 			}
 		}
 		
@@ -287,7 +284,7 @@ public class BlockListener implements Listener {
 				return;
 			} else if (blockType.equals(Material.BEDROCK)) {
 				placedBedrockCounter++;
-				System.out.println("WARN: " + placer_name + " just placed bedrock at " + block_loc);
+				Main.console.log(Level.WARNING, placer_name + " just placed bedrock at " + block_loc);
 			}
 		}
 
@@ -342,12 +339,8 @@ public class BlockListener implements Listener {
 			modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
 			modeOnBreak = Boolean.parseBoolean(Config.getValue("protect.gamemode.onbreak"));
 			consumeCreativeBlocks = Boolean.parseBoolean(Config.getValue("consume.creative.blocks"));
-			
 			return true;
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		} catch (Exception e) { e.printStackTrace(); return false; }
 	}
 }

@@ -10,17 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 // INTERNAL USE ONLY
-
 public class RestartCmd implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 
 		if (!PlayerMeta.isOp(sender)) {
-			sender.sendMessage(ChatPrint.fail + "You can't run this");
-			return true;
-		}
-		Restart.restart(args.length != 0);
-		return true;
+			sender.sendMessage(ChatPrint.fail + "You can't run this"); return false; }
+
+		Restart.restart(args.length != 0); return true;
 	}
 }

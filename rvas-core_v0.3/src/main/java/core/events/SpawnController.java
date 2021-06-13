@@ -23,11 +23,13 @@ package core.events;
  * 
  * */
 
+import core.Main;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.tasks.Analytics;
 
 import java.util.*;
+import java.util.logging.Level;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
@@ -85,8 +87,8 @@ public class SpawnController implements Listener {
 			double tryLocation_x = Math.rint(Util.getRandomNumber((int)min_x, (int)max_x)) + 0.5;
 			double tryLocation_z = Math.rint(Util.getRandomNumber((int)min_z, (int)max_z)) + 0.5;
 			
-			if (Config.debug) System.out.println("RVAS: Validating spawn coordinates: " +
-					tryLocation_x + ", " + tryLocation_z);
+			if (Config.debug) Main.console.log(Level.INFO,
+					"Validating spawn coordinates: " + tryLocation_x + ", " + tryLocation_z);
 			
 			int y = 257;
 			while (y > 1) {
@@ -109,8 +111,8 @@ public class SpawnController implements Listener {
 					if (!BannedSpawnFloors.contains(floorBlock.getType())) {
 						
 						if (Config.debug)
-							System.out.println("Found valid respawn location on "
-									+ floorBlock.getType() + "!");
+							Main.console.log(Level.INFO,
+									"Found valid respawn location on " + floorBlock.getType() + "!");
 
 						if (forceShallow &&
 								floorBlock.getType().equals(Material.WATER) ||
@@ -122,7 +124,7 @@ public class SpawnController implements Listener {
 							if (nextBlockDown.equals(Material.WATER) || nextBlockDown.equals(Material.LAVA) ||
 									nextBlockDown.equals(Material.KELP) || nextBlockDown.equals(Material.KELP_PLANT)) {
 
-								if (Config.debug) System.out.println("..but it wasn't shallow enough :(");
+								if (Config.debug) Main.console.log(Level.INFO, "..but it wasn't shallow enough :(");
 								break;
 							}
 						}
@@ -162,8 +164,8 @@ public class SpawnController implements Listener {
 					0, 0, (int)tryLocation_x, (int)tryLocation_z, (int)radius_X, (int)radius_Z);
 
 			if (ellipseCheck <= 1) {
-				if (Config.debug) System.out.println("RVAS: Validating spawn coordinates: " +
-						tryLocation_x + ", " + tryLocation_z);
+				if (Config.debug) Main.console.log(Level.INFO,
+						"Validating spawn coordinates: " + tryLocation_x + ", " + tryLocation_z);
 
 				int y = 257;
 				while (y > 1) {
@@ -186,8 +188,8 @@ public class SpawnController implements Listener {
 						if (!BannedSpawnFloors.contains(floorBlock.getType())) {
 
 							if (Config.debug)
-								System.out.println("Found valid respawn location on "
-										+ floorBlock.getType() + "!");
+								Main.console.log(Level.INFO,
+										"Found valid respawn location on " + floorBlock.getType() + "!");
 
 							if (forceShallow &&
 									floorBlock.getType().equals(Material.WATER) ||
@@ -199,8 +201,8 @@ public class SpawnController implements Listener {
 								if (nextBlockDown.equals(Material.WATER) || nextBlockDown.equals(Material.LAVA) ||
 										nextBlockDown.equals(Material.KELP) || nextBlockDown.equals(Material.KELP_PLANT)) {
 
-									if (Config.debug) System.out.println("..but it wasn't shallow enough :(");
-									break;
+									if (Config.debug) Main.console.log(Level.INFO,
+											"..but it wasn't shallow enough :("); break;
 								}
 							}
 
@@ -264,9 +266,9 @@ public class SpawnController implements Listener {
 
 				return;
 			}
-			System.out.println(event.getPlayer().getName() + " has a bed or anchor spawn");
+			Main.console.log(Level.INFO, event.getPlayer().getName() + " has a bed or anchor spawn");
 		}
-		System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core");
+		Main.console.log(Level.INFO, event.getPlayer().getName() + "'s respawn event was ignored by rvas-core");
 	}
 
 	@EventHandler

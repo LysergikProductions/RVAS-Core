@@ -46,7 +46,7 @@ import org.bukkit.World.Environment;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public final static String version = "0.3.4"; public final static int build = 312;
+	public final static String version = "0.3.4"; public final static int build = 313;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -341,9 +341,7 @@ public class Main extends JavaPlugin {
 			if (thisWorld.getEnvironment().equals(Environment.NORMAL)) {
 				
 				thisWorld.getChunkAt(0, 0).load(true);
-				
-				worldAge_atStart = thisWorld.getChunkAt(0, 0)
-						.getChunkSnapshot().getCaptureFullTime();
+				worldAge_atStart = thisWorld.getChunkAt(0, 0).getChunkSnapshot().getCaptureFullTime();
 
 				if (worldAge_atStart < 710) {
 

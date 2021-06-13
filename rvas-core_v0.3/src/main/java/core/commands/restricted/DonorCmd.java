@@ -227,7 +227,7 @@ public class DonorCmd implements CommandExecutor {
 
         sender.sendMessage("");
 
-        sender.sendMessage(ChatPrint.primary + "Current Real IGN: " + ChatPrint.clear + donorRealIGN);
+        sender.sendMessage(ChatPrint.primary + "Real IGN: " + ChatPrint.clear + donorRealIGN);
         sender.sendMessage(ChatPrint.primary + "UUID: " + ChatPrint.clear + thisDonor.getUserID());
         sender.sendMessage(ChatPrint.primary + "Custom IGN: " + ChatPrint.clear + thisDonor.getCustomIGN());
         sender.sendMessage(ChatPrint.primary + "Donation Key: " + ChatPrint.clear + thisDonor.getDonationKey());

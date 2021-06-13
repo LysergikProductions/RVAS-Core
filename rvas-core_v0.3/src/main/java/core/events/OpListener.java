@@ -28,12 +28,12 @@ import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
-import core.commands.restricted.Speeds;
-import core.commands.restricted.Check;
 
 import core.data.PlayerMeta;
 import core.data.objects.Pair;
 import core.data.objects.Aliases;
+import core.commands.restricted.Speeds;
+import core.commands.restricted.Check;
 
 import java.util.*;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -44,10 +44,10 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.HumanEntity;
 
-import org.bukkit.event.inventory.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -123,8 +123,7 @@ public class OpListener implements Listener {
 
 			try { thisIndexInt = Integer.parseInt(thisIndexStr);
 			} catch (Exception ignore) {
-				sender.sendMessage(new TextComponent(
-						ChatPrint.fail + "Oops, " + thisIndexStr + " is not a number lol").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "Oops, " + thisIndexStr + " is not a number lol");
 				thisIndexInt = null;
 			}
 
@@ -137,11 +136,9 @@ public class OpListener implements Listener {
 
 				savedTPs.put(senderID, newMap);
 
-				sender.sendMessage(new TextComponent(
-						ChatPrint.succeed + "Successfully saved location #" + thisIndexInt).toLegacyText());
+				sender.sendMessage(ChatPrint.succeed + "Successfully saved location #" + thisIndexInt);
 
-			} else sender.sendMessage(new TextComponent(
-					ChatPrint.fail + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
+			} else sender.sendMessage(ChatPrint.fail + "Nononono, zeeeeeroooo to niiiiine");
 
 		} else if (msg.startsWith("/tp:")) {
 			event.setCancelled(true);
@@ -151,8 +148,7 @@ public class OpListener implements Listener {
 
 			try { thisIndexInt = Integer.parseInt(thisIndexStr);
 			} catch (Exception ignore) {
-				sender.sendMessage(new TextComponent(
-						ChatPrint.fail + "Please use a number from 0 to 9 to choose a location").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "Please use a number from 0 to 9 to choose a location");
 				thisIndexInt = null;
 			}
 
@@ -172,8 +168,7 @@ public class OpListener implements Listener {
 				String loc = tpLoc.getBlockX() + " " + tpLoc.getBlockY() + " " + tpLoc.getBlockZ();
 				sender.chat("/execute in " + dim + " run tp @s " + loc);
 
-			} else sender.sendMessage(new TextComponent(
-					ChatPrint.fail + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
+			} else sender.sendMessage(ChatPrint.fail + "Nononono, zeeeeeroooo to niiiiine");
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
@@ -182,17 +177,15 @@ public class OpListener implements Listener {
 					Util.isCmdRestricted(msg)) { // <- LOCKS OUT DANGEROUS COMMANDS
 
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatPrint.fail + "no").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "no");
 
 			} else if (msg.contains("@a")) {
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatPrint.fail +
-						"You cannot target everyone!").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "You cannot target everyone!");
 				
 			} else if (msg.contains(admin_name)) {
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(ChatPrint.fail +
-						"You cannot target " + admin_name).toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "You cannot target " + admin_name);
 			}
 
 		// 32k commands for testing anti-illegals; owner only
@@ -225,8 +218,7 @@ public class OpListener implements Listener {
 					sender.chat(Aliases.totems_shulker);
 					sender.chat(Aliases.feather_32k);
 
-				} else sender.sendMessage(new TextComponent(ChatPrint.fail +
-							"Invalid Argument: " + thisArg).toLegacyText());
+				} else sender.sendMessage(ChatPrint.fail + "Invalid Argument: " + thisArg);
 			}
 		}
 	}
