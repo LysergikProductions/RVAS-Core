@@ -33,6 +33,8 @@ import core.frontend.ChatPrint;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.*;
 import org.bukkit.plugin.Plugin;
@@ -44,13 +46,15 @@ import org.bukkit.World.Environment;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public final static String version = "0.3.4"; public final static int build = 311;
+	public final static String version = "0.3.4"; public final static int build = 312;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
 
 	public DiscordBot DiscordHandler;
 	public static OfflinePlayer Top = null;
+
+	public final static Logger console = Bukkit.getLogger();
 
 	@Override
 	public void onEnable() {
@@ -61,32 +65,34 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] ______________________________");
 
 		// VERSION CHECK \\
-		GitGetter.load(); // TODO: Query the git for latest version and write results to stdout
-		isOfficialVersion = GitGetter.isVersionCurrent();
+		GitGetter.load(); isOfficialVersion = GitGetter.isVersionCurrent();
 
-		if (isOfficialVersion) System.out.println("RVAS-Core is up-to-date!");
-		else if (GitGetter.isVersionBeta()) System.out.println("WARN This is a beta version of RVAS-Core!");
-		else System.out.println("WARN Invalid version for RVAS-Core!");
+		if (isOfficialVersion) console.log(Level.INFO, "RVAS-Core is up-to-date!");
+		else if (GitGetter.isVersionBeta()) console.log(Level.WARNING, "This is a beta version of RVAS-Core!");
+		else console.log(Level.WARNING, "This version is invalid or unrecognized!");
 
-		System.out.println("forcing default gamemode..");
+		console.log(Level.INFO, "Forcing default gamemode to Survival Mode");
 		getServer().setDefaultGameMode(GameMode.SURVIVAL);
 
 		System.out.println();
 		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
 
-		// LOADING SAVED DATA \\
+		// LOADING DATA FROM STORAGE \\
 		try { FileManager.setup();
 		} catch (IOException e) {
-			System.out.println("[core.main] An error occured in FileManager.setup()"); }
+			console.log(Level.SEVERE, "Exception in FileManager.setup()"); }
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try { ChatPrint.init();
 		} catch (Exception e) {
-			e.printStackTrace(); System.out.println("WARN Creating a default theme instead..");
 
+			console.log(Level.WARNING,
+					"Exception in ChatPrint.init().. creating a default theme instead");
+
+			e.printStackTrace();
 			ThemeManager.currentTheme.setToInternalDefaults();
 
 			try { replaceDefaultJSON(ThemeManager.currentTheme);
@@ -105,8 +111,8 @@ public class Main extends JavaPlugin {
 			PrisonerManager.loadPrisoners();
 
 		} catch (IOException e) {
-			System.out.println("[core.main] An error occured loading files..");
-			System.out.println("[core.main] " + e);
+			console.log(Level.SEVERE, "Exception while loading data");
+			e.printStackTrace();
 		}
 
 		System.out.println();
@@ -330,7 +336,7 @@ public class Main extends JavaPlugin {
 
 		// Load chunk at 0,0 to test for world age
 		for (World thisWorld: getServer().getWorlds()) {
-			System.out.println("[core.main] Checking world age..");
+			console.log(Level.INFO, "Checking world age..");
 			
 			if (thisWorld.getEnvironment().equals(Environment.NORMAL)) {
 				
@@ -340,14 +346,15 @@ public class Main extends JavaPlugin {
 						.getChunkSnapshot().getCaptureFullTime();
 
 				if (worldAge_atStart < 710) {
-					
-					System.out.println("[core.main] This world is NEW! World Ticks: " + worldAge_atStart);
+
 					isNewWorld = true;
+					console.log(Level.INFO, "This world is NEW! World Ticks: " + worldAge_atStart);
 
 				} else {
-					
-					System.out.println("[core.main] This world is not new! World Ticks: " + worldAge_atStart);
+
 					isNewWorld = false;
+					console.log(Level.INFO, "This world is not new! World Ticks: " + worldAge_atStart);
+
 				}
 				break; // <- only check first normal dimension found
 			}
@@ -364,10 +371,8 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] --- RVAS-Core : Disabling ---");
 		System.out.println("[core.main] _____________________________");
 
-		System.out.println("[core.main] Capturing remaining analytics data..");
-		Analytics.capture();
-
-		System.out.println("[core.main] Creating backups..");
+		console.log(Level.INFO, "Capturing remaining analytics data..");
+		Analytics.capture(); console.log(Level.INFO, "Creating backups..");
 		
 		try {
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
@@ -378,8 +383,8 @@ public class Main extends JavaPlugin {
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");			
 			
 		} catch (IOException ex) {
-			System.out.println("[core.main] WARNING - Failed to save one or more backup files.");
-			System.out.println("[core.main] " + ex);
+			console.log(Level.WARNING, "Failed to save one or more backup files");
+			ex.printStackTrace();
 		}
 		
 		System.out.println();
@@ -396,8 +401,8 @@ public class Main extends JavaPlugin {
 			StatsManager.writePVPStats();
 			
 		} catch (IOException ex) {
-			System.out.println("[core.main] WARNING - Failed to write one or more files.");
-			System.out.println("[core.main] " + ex);
+			console.log(Level.SEVERE, "Failed to write one or more files");
+			ex.printStackTrace();
 		}
 		
 		System.out.println();
@@ -407,17 +412,17 @@ public class Main extends JavaPlugin {
 		int max_age = Integer.parseInt(Config.getValue("wither.skull.max_ticks"));
 		int removed_skulls = LagManager.removeSkulls(max_age);
 
-		System.out.println("Found " + removed_skulls + " remaining skull/s to trash..");
+		console.log(Level.INFO, "Found " + removed_skulls + " remaining skull/s to trash..");
 		
 		System.out.println();
 		System.out.println("[core.main] Printing session stats");
 		System.out.println("[core.main] ______________________");
-		
-		System.out.println("New Chunks Generated: " + ChunkManager.newCount);
-		System.out.println("New Unique Players: " + SpawnController.sessionNewPlayers);
-		System.out.println("Total Respawns: " + SpawnController.sessionTotalRespawns);
-		System.out.println("Bedrock Placed: " + BlockListener.placedBedrockCounter);
-		System.out.println("Bedrock Broken: " + BlockListener.brokenBedrockCounter);
+
+		console.log(Level.INFO, "New Chunks Generated: " + ChunkManager.newCount);
+		console.log(Level.INFO, "New Unique Players: " + SpawnController.sessionNewPlayers);
+		console.log(Level.INFO, "Total Respawns: " + SpawnController.sessionTotalRespawns);
+		console.log(Level.INFO, "Bedrock Placed: " + BlockListener.placedBedrockCounter);
+		console.log(Level.INFO, "Bedrock Broken: " + BlockListener.brokenBedrockCounter);
 		
 		System.out.println("[core.main] ____________________________");
 		System.out.println("[core.main] --- RVAS-Core : Disabled ---");

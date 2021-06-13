@@ -22,6 +22,7 @@ package core.backend.utils;
  *
  * */
 
+import core.Main;
 import core.backend.Config;
 import core.commands.restricted.Admin;
 
@@ -32,6 +33,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import java.util.Map;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -42,16 +44,17 @@ public class Util {
         if (msg == null) return;
 
         for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
-            try { if (thisPlayer.isOp() &&
-                        !Admin.doNotDisturb.contains(thisPlayer.getUniqueId())) {
-                thisPlayer.sendMessage(msg); }
+            try {
+                if (thisPlayer.isOp() && !Admin.doNotDisturb.contains(thisPlayer.getUniqueId())) {
+                    thisPlayer.sendMessage(msg); }
+
             } catch (Exception ignore) { }
         }
-        System.out.println(msg.getText());
+        Main.console.log(Level.INFO, msg.getText());
     }
 
     // converts sum seconds into human-readable string
-    public static String timeToString(double seconds) {
+    public static String durationFormat(double seconds) {
 
         long hours;
         long days = (long) (seconds / 86400);

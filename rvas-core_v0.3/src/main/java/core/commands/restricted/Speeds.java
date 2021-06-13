@@ -7,6 +7,7 @@ import core.data.objects.Pair;
 import core.events.SpeedLimiter;
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,13 +35,11 @@ public class Speeds implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
         if (!(commandSender instanceof Player)) {
-            System.out.println("[INFO] This command cannot be sent from the console!");
-            return false;
-        }
+            Main.console.log(Level.INFO, "This command cannot be run from the console"); return false; }
 
         Player sender = (Player) commandSender;
         if (!sender.isOp()) {
-            sender.sendMessage(new TextComponent(ChatPrint.fail + "no").toLegacyText());
+            sender.sendMessage(ChatPrint.fail + "no");
             return false;
 
         } else thisPlayer = sender;

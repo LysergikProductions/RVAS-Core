@@ -1,14 +1,16 @@
 package core.backend;
 
+import core.Main;
 import core.events.*;
 import core.tasks.Analytics;
 import core.tasks.AutoAnnouncer;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.logging.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class Config {
 
@@ -27,7 +29,7 @@ public class Config {
 
 		_values.remove(thisConfig); _values.put(thisConfig, thisValue);
 
-		if (debug) System.out.println(
+		if (debug) Main.console.log(Level.INFO,
 				"[core.backend.config.modify] Result: " + _values.get(thisConfig));
 	}
 
@@ -38,8 +40,8 @@ public class Config {
 
 			try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
 			} catch (Exception e) {
-				System.out.println("Failed to store value for " + val.split("=")[0].trim());
-				System.out.println(e.getMessage());
+				Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
+				if (debug) e.printStackTrace();
 			}
 		});
 
@@ -49,8 +51,8 @@ public class Config {
 
 			try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
 			} catch (Exception e) {
-				System.out.println("Failed to store value for " + val.split("=")[0].trim());
-				System.out.println(e.getMessage());
+				Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
+				if (debug) e.printStackTrace();
 			}
 		});
 
@@ -60,8 +62,8 @@ public class Config {
 
 			try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
 			} catch (Exception e) {
-				System.out.println("Failed to store value for " + val.split("=")[0].trim());
-				System.out.println(e.getMessage());
+				Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
+				if (debug) e.printStackTrace();
 			}
 		});
 
@@ -69,13 +71,13 @@ public class Config {
 		verbose = Boolean.parseBoolean(getValue("verbose"));
 		OpListener.isSauceInitialized = false;
 
-		if (BlockListener.init() && debug) System.out.println("BlockListener sConfigs Updated!");
-		if (Analytics.init() && debug) System.out.println("Analytics sConfigs Updated!");
-		if (SpawnController.init() && debug) System.out.println("SpawnController sConfigs Updated!");
-		if (ItemCheck.init() && debug) System.out.println("Banned Block sConfigs Updated!");
-		if (ConnectionController.init() && debug) System.out.println("MOTDs Updated!");
-		if (AutoAnnouncer.init() && debug) System.out.println("Announcements Updated!");
+		if (BlockListener.init() && debug) Main.console.log(Level.INFO, "BlockListener sConfigs Updated!");
+		if (Analytics.init() && debug) Main.console.log(Level.INFO, "Analytics sConfigs Updated!");
+		if (SpawnController.init() && debug) Main.console.log(Level.INFO, "SpawnController sConfigs Updated!");
+		if (ItemCheck.init() && debug) Main.console.log(Level.INFO, "Banned Block sConfigs Updated!");
+		if (ConnectionController.init() && debug) Main.console.log(Level.INFO, "MOTDs Updated!");
+		if (AutoAnnouncer.init() && debug) Main.console.log(Level.INFO, "Announcements Updated!");
 
-		System.out.println("Configs updated!");
+		Main.console.log(Level.INFO, "Configs updated!");
 	}
 }

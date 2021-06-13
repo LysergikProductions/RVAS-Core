@@ -117,7 +117,7 @@ public class ChatPrint {
 			
 			if (target_name == null) {
 				
-				TextComponent b = new TextComponent("[unknown], " + Util.timeToString(realLeaders_0_15.get(pid)));
+				TextComponent b = new TextComponent("[unknown], " + Util.durationFormat(realLeaders_0_15.get(pid)));
 				TextComponent c = new TextComponent(a1, b);
 				
 				c.setColor(primary);
@@ -130,7 +130,7 @@ public class ChatPrint {
 				String kd = StatsManager.getStats(offPlayer).kd;
 				
 				TextComponent a2 = new TextComponent(primary + target_name + "  ");
-				TextComponent b = new TextComponent(Util.timeToString(realLeaders_0_15.get(pid)));
+				TextComponent b = new TextComponent(Util.durationFormat(realLeaders_0_15.get(pid)));
 				
 				HoverEvent hoverStats = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Kills: "+kills+" | Deaths: "+deaths+" | K/D: "+kd));
 				ClickEvent shortcut = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/stats " + target_name);
@@ -192,7 +192,7 @@ public class ChatPrint {
 		TextComponent rank_a = new TextComponent(tertiary + "Ranking: ");
 		TextComponent rank_b = new TextComponent("" + PlayerMeta.getRank(target));
 		TextComponent playtime_a = new TextComponent(tertiary + "Time played: ");
-		TextComponent playtime_b = new TextComponent(Util.timeToString(PlayerMeta.getPlaytime(target)));
+		TextComponent playtime_b = new TextComponent(Util.durationFormat(PlayerMeta.getPlaytime(target)));
 
 		double hours = PlayerMeta.getPlaytime(target) / 3600;
 		Text playtime_hover = new Text(new DecimalFormat("0.00").format(hours) + " hours");

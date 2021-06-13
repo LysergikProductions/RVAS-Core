@@ -20,7 +20,7 @@ import java.util.Objects;
 @SuppressWarnings("SpellCheckingInspection")
 public class SetDonator implements CommandExecutor {
 
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
 			sender.sendMessage(new TextComponent(ChatPrint.fail +

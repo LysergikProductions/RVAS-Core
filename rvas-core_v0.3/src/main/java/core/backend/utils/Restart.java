@@ -22,6 +22,8 @@ package core.backend.utils;
  *
  * */
 
+import core.Main;
+import java.util.logging.Level;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
@@ -89,7 +91,7 @@ public class Restart {
 				TimeUnit.SECONDS.sleep(1);
 
 			} catch (Exception e) {
-				System.out.println("WARN Restart-timer thread error..");
+				Main.console.log(Level.WARNING, "Exception restart-timer thread");
 				e.printStackTrace();
 			}
 

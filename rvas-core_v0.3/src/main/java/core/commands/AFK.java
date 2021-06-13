@@ -5,7 +5,6 @@ import core.frontend.ChatPrint;
 import java.util.UUID;
 import java.util.ArrayList;
 import org.bukkit.entity.Player;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,20 +20,17 @@ public class AFK implements CommandExecutor {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
 
+        String result;
         UUID playerid = player.getUniqueId();
-        TextComponent result;
 
         if (!_AFKs.contains(playerid)) {
             _AFKs.add(playerid);
-            result = new TextComponent(ChatPrint.controls + "Your whisperers will now see that you are AFK!");
+            result = ChatPrint.controls + "Your whisperers will now see that you are AFK!";
 
         } else {
-            _AFKs.remove(playerid);
-            Message.AFK_warned.remove(playerid);
-            result = new TextComponent(ChatPrint.succeed + "You are no longer AFK!");
+            _AFKs.remove(playerid); Message.AFK_warned.remove(playerid);
+            result = ChatPrint.succeed + "You are no longer AFK!";
         }
-
-        player.sendMessage(result.toLegacyText());
-        return true;
+        player.sendMessage(result); return true;
     }
 }

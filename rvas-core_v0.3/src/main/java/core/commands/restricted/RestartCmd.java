@@ -1,6 +1,7 @@
 package core.commands.restricted;
 
 import core.data.PlayerMeta;
+import core.frontend.ChatPrint;
 import core.backend.utils.Restart;
 
 import org.bukkit.command.Command;
@@ -16,7 +17,7 @@ public class RestartCmd implements CommandExecutor {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
 		if (!PlayerMeta.isOp(sender)) {
-			sender.sendMessage("\u00A7cYou can't run this.");
+			sender.sendMessage(ChatPrint.fail + "You can't run this");
 			return true;
 		}
 		Restart.restart(args.length != 0);

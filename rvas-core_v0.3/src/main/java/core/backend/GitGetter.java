@@ -23,6 +23,7 @@ package core.backend;
  * */
 
 import core.Main;
+import org.bukkit.Bukkit;
 
 import java.net.URL;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.logging.Level;
 
 public class GitGetter {
 
@@ -38,7 +40,7 @@ public class GitGetter {
 
     public static void load() {
 
-        final List<String> data = new ArrayList<>(); String ln;
+        final List<String> data = new ArrayList<>();
         final URL versionLink; final BufferedReader buffer;
 
         try {
@@ -49,8 +51,9 @@ public class GitGetter {
 
         } catch (Exception e) {
 
-            System.out.println("WARN exception while getting Github version file");
-            System.out.println("Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
+            Bukkit.getLogger().log(Level.WARNING, "Exception while loading the core.version file");
+            Bukkit.getLogger().log(Level.WARNING,
+                    "Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
 
             official_version = default_version;
             beta_version = Main.version;
@@ -58,25 +61,28 @@ public class GitGetter {
             e.printStackTrace(); return;
         }
 
+        String ln; // Read lines
         try { while ((ln = buffer.readLine()) != null) data.add(ln.trim()); buffer.close();
         } catch (Exception e) {
 
-            System.out.println("WARN exception while reading data from version file");
-            System.out.println("Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
+            Bukkit.getLogger().log(Level.WARNING, "Exception while reading data from core.version file");
+            Bukkit.getLogger().log(Level.WARNING,
+                    "Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
 
             official_version = default_version;
             beta_version = Main.version;
-
             e.printStackTrace(); return;
         }
 
+        // Parse data
         if (data.isEmpty()) {
-            System.out.println("WARN Github version data is empty");
-            System.out.println("Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
+
+            Bukkit.getLogger().log(Level.WARNING, "Github version data is empty");
+            Bukkit.getLogger().log(Level.WARNING,
+                    "Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
 
             official_version = default_version;
             beta_version = Main.version;
-
             return;
         }
 
@@ -85,7 +91,8 @@ public class GitGetter {
             if (i == 0) official_version = thisVersion;
             else if (i == 1) beta_version = thisVersion;
         }
-        System.out.println("Latest release: " + official_version + " | Current version: " + Main.version);
+        Bukkit.getLogger().log(Level.INFO,
+                "Latest release: " + official_version + " | Current version: " + Main.version);
     }
 
     public static String getBeta_version() { return beta_version; }

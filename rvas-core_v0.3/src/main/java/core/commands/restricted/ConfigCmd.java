@@ -27,6 +27,9 @@ import core.backend.utils.Restart;
 import core.data.PlayerMeta;
 
 import java.io.IOException;
+
+import core.frontend.ChatPrint;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
@@ -37,36 +40,36 @@ import org.jetbrains.annotations.NotNull;
 public class ConfigCmd implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
+
+        if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
 
         if (!player.isOp() || !PlayerMeta.isAdmin(player)) {
-            player.sendMessage("You can't use this!");
+            player.sendMessage(ChatPrint.fail + "You can't use this!");
             return false;
 
         } else if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 
             try {
                 Config.load();
-                sender.sendMessage("\u00A7aSuccessfully reloaded.");
+                sender.sendMessage(ChatPrint.succeed + "Successfully reloaded");
 
             } catch (IOException e) {
-                sender.sendMessage("\u00A74Failed to reload.");
+                sender.sendMessage(ChatPrint.fail + "Failed to reload");
                 if (Config.debug) Restart.restart();
             }
             return true;
 
         } else if (args.length != 2) {
-            player.sendMessage("Correct syntax: /fig [key] [value]");
+            player.sendMessage(ChatPrint.fail + "Correct syntax: /fig [key] [value]");
             return false;
         }
 
         String thisKey = args[0]; String thisValue = args[1];
 
         if (!Config.exists(thisKey)) {
-            player.sendMessage("This is not a recognized config key!");
-            return false;
-        }
+            player.sendMessage(ChatPrint.fail + "Invalid config"); return false; }
 
         if (thisValue.equalsIgnoreCase("true") || thisValue.equalsIgnoreCase("false")) {
 
@@ -75,7 +78,7 @@ public class ConfigCmd implements CommandExecutor {
 
         } else Config.modify(thisKey, thisValue);
 
-        player.sendMessage(thisKey + " is now set to " + Config.getValue(thisKey));
+        player.sendMessage(ChatPrint.secondary + thisKey + " is now set to " + Config.getValue(thisKey));
         return true;
     }
 }

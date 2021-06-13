@@ -22,7 +22,6 @@ package core.commands.restricted;
  *
  * */
 
-import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
 import core.data.DonationManager;
 import core.data.objects.Donor;
@@ -56,8 +55,8 @@ public class DonorCmd implements CommandExecutor {
                     !args[1].equalsIgnoreCase("key") && !args[1].equalsIgnoreCase("ign") &&
                     !args[1].equalsIgnoreCase("refresh")) {
 
-                sender.sendMessage(new TextComponent(ChatPrint.fail +
-                        "Invalid syntax. Syntax: /donor [name] [add/tag/ign/motd/key/set/refresh]").toLegacyText());
+                sender.sendMessage(ChatPrint.fail +
+                        "Invalid syntax. Syntax: /donor [name] [add/tag/ign/motd/key/set/refresh]");
                 return false;
             }
 
@@ -79,15 +78,13 @@ public class DonorCmd implements CommandExecutor {
 
                     try { Double.parseDouble(args[2]);
                     } catch (Exception ignore) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                    "Invalid number.").toLegacyText()); return false; }
+                        sender.sendMessage(ChatPrint.fail + "Invalid number."); return false; }
 
                     thisDonor.addToSum(Double.parseDouble(args[2]));
                     thisDonor.setRecentDonationDate();
 
-                    sender.sendMessage(new TextComponent(
-                            ChatPrint.primary + "Successfully added $" + args[2] + " to " + args[0] +
-                                    "'s profile for a total of $" + thisDonor.getSumDonated()).toLegacyText());
+                    sender.sendMessage(ChatPrint.primary + "Successfully added $" + args[2] + " to " +
+                            args[0] + "'s profile for a total of $" + thisDonor.getSumDonated());
                     return true;
 
                 case "set":
@@ -96,14 +93,12 @@ public class DonorCmd implements CommandExecutor {
 
                     try { thisAmount = Double.parseDouble(args[2]);
                     } catch (Exception ignore) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Invalid number.").toLegacyText()); return false; }
+                        sender.sendMessage(ChatPrint.fail + "Invalid number."); return false; }
 
                     thisDonor.setSumDonated(thisAmount);
+                    sender.sendMessage(ChatPrint.primary +
+                            "Successfully set sum donated to $" + thisDonor.getSumDonated());
 
-                    sender.sendMessage(new TextComponent(
-                            ChatPrint.primary + "Successfully set sum donated to $" +
-                                    thisDonor.getSumDonated()).toLegacyText());
                     return true;
 
                 case "key":
@@ -111,8 +106,7 @@ public class DonorCmd implements CommandExecutor {
                     String newKey = args[2].trim();
 
                     if (!DonationManager.isValidKey(newKey)) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Invalid key.").toLegacyText()); return false; }
+                        sender.sendMessage(ChatPrint.fail + "Invalid key."); return false; }
 
                     if (DonationManager.DonorCodes.contains(newKey) &&
                             !DonationManager.UsedDonorCodes.contains(newKey)) {
@@ -121,114 +115,84 @@ public class DonorCmd implements CommandExecutor {
                         DonationManager.UsedDonorCodes.add(newKey);
 
                     } else {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail + "Invalid key.").toLegacyText());
-                        return false;
+                        sender.sendMessage(ChatPrint.fail + "Invalid key."); return false;
                     }
 
-                    sender.sendMessage(new TextComponent(
-                            ChatPrint.primary + "Successfully set donation key to " +
-                                    thisDonor.getDonationKey()).toLegacyText());
+                    sender.sendMessage(ChatPrint.primary +
+                            "Successfully set donation key to " + thisDonor.getDonationKey());
                     return true;
 
                 case "tag":
 
                     if (msg[0].length() < 1 || msg[0].length() > 54) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Invalid tag. Use 1 to 54 characters.").toLegacyText()); return false; }
+                        sender.sendMessage(ChatPrint.fail + "Invalid tag. Use 1 to 54 characters."); return false; }
 
                     try { Objects.requireNonNull(DonationManager
                                 .getDonorByName(args[0])).setTagLine(msg[0]);
 
                     } catch (Exception ignore) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Internal error. Failed to set tag to:").toLegacyText());
-
-                        sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
-                        return false;
+                        sender.sendMessage(ChatPrint.fail + "Internal error. Failed to set tag to:");
+                        sender.sendMessage(ChatPrint.secondary + msg[0]); return false;
                     }
 
-                    sender.sendMessage(new TextComponent(ChatPrint.primary +
-                            "Successfully set donor tagline to:").toLegacyText());
-                    sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
-                    return true;
+                    sender.sendMessage(ChatPrint.primary + "Successfully set donor tagline to:");
+                    sender.sendMessage(ChatPrint.secondary + msg[0]); return true;
 
                 case "motd":
 
                     if (msg[0].length() < 2 || msg[0].length() > 48) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Invalid MOTD. Use 3 to 48 characters.").toLegacyText()); return false;
-                    }
+                        sender.sendMessage(ChatPrint.fail + "Invalid MOTD. Use 3 to 48 characters."); return false; }
 
                     try { Objects.requireNonNull(DonationManager
                                 .getDonorByName(args[0])).setMsgOtd(msg[0]);
 
                     } catch (Exception ignore) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Internal error. Failed to set MOTD to:").toLegacyText());
-
-                        sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
-                        return false;
+                        sender.sendMessage(ChatPrint.fail + "Internal error. Failed to set MOTD to:");
+                        sender.sendMessage(ChatPrint.secondary + msg[0]); return false;
                     }
 
-                    sender.sendMessage(new TextComponent(ChatPrint.primary +
-                            "Successfully set donor MOTD to:").toLegacyText());
-                    sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
-                    return true;
+                    sender.sendMessage(ChatPrint.primary + "Successfully set donor MOTD to:");
+                    sender.sendMessage(ChatPrint.secondary + msg[0]); return true;
 
                 case "ign":
 
                     if (args.length != 3) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Invalid syntax. Syntax: /donor [name] ign [one_word_ign]").toLegacyText());
+                        sender.sendMessage(ChatPrint.fail +
+                                "Invalid syntax. Syntax: /donor [name] ign [one_word_ign]");
                         return false;
                     }
 
                     if (msg[0].length() < 3 || msg[0].length() > 20) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Invalid IGN. Use 3 to 20 characters.").toLegacyText()); return false;
+                        sender.sendMessage(ChatPrint.fail + "Invalid IGN. Use 3 to 20 characters."); return false;
 
                     } else if (DonationManager.isRestrictedIGN(msg[0])) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Invalid IGN. Use another name.").toLegacyText()); return false; }
+                        sender.sendMessage(ChatPrint.fail + "Invalid IGN. Use another name."); return false; }
 
                     try { Objects.requireNonNull(DonationManager
                                 .getDonorByName(args[0])).setCustomIGN(msg[0]);
 
                     } catch (Exception ignore) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Internal error. Failed to set IGN to:").toLegacyText());
-
-                        sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
-                        return false;
+                        sender.sendMessage(ChatPrint.fail + "Internal error. Failed to set IGN to:");
+                        sender.sendMessage(ChatPrint.secondary + msg[0]); return false;
                     }
 
-                    sender.sendMessage(new TextComponent(ChatPrint.primary +
-                            "Successfully set custom IGN to:").toLegacyText());
-
-                    sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
-                    return true;
+                    sender.sendMessage(ChatPrint.primary + "Successfully set custom IGN to:");
+                    sender.sendMessage(ChatPrint.secondary + msg[0]); return true;
 
                 case "refresh":
 
                     try { Objects.requireNonNull(DonationManager.getDonorByName(args[0])).updateDonorIGN();
                     } catch (Exception ignore) {
-                        sender.sendMessage(new TextComponent(ChatPrint.fail +
-                                "Internal error. Failed to update IGN.").toLegacyText());
-                        return false;
-                    }
+                        sender.sendMessage(ChatPrint.fail + "Internal error. Failed to update IGN."); return false; }
 
                 default: return false;
             }
 
         } else if (args.length != 1) {
-            sender.sendMessage(new TextComponent(ChatPrint.fail +
-                    "Invalid syntax. Syntax: /donor [name]").toLegacyText());
-            return false;
+            sender.sendMessage(ChatPrint.fail + "Invalid syntax. Syntax: /donor [name]"); return false;
 
         } else if (!sender.isOp()) {
-            sender.sendMessage(new TextComponent(ChatPrint.fail + "yeah no").toLegacyText());
-            return false;
-        }
+            sender.sendMessage(ChatPrint.fail + "yeah no"); return false; }
 
         String thisSearch = args[0].trim();
         UUID thisID = null; Donor thisDonor;
@@ -259,37 +223,19 @@ public class DonorCmd implements CommandExecutor {
                     .getPlayer(thisDonor.getUserID())).getName();
 
         } catch (Exception ignore) {
-            sender.sendMessage(new TextComponent(ChatPrint.fail +
-                    "Internal error. Failed to get Bukkit player name.").toLegacyText()); return false; }
+            sender.sendMessage(ChatPrint.fail + "Internal error. Failed to get Bukkit player name."); return false; }
 
         sender.sendMessage("");
 
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "Current Real IGN: " +
-                ChatPrint.clear + donorRealIGN).toLegacyText());
-
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "UUID: " +
-                ChatPrint.clear + thisDonor.getUserID()).toLegacyText());
-
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "Custom IGN: " +
-                ChatPrint.clear + thisDonor.getCustomIGN()).toLegacyText());
-
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "Donation Key: " +
-                ChatPrint.clear + thisDonor.getDonationKey()).toLegacyText());
-
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "First Donation Date: " +
-                ChatPrint.clear + thisDonor.getFirstDonationDate()).toLegacyText());
-
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "Recent Donation Date: " +
-                ChatPrint.clear + thisDonor.getRecentDonationDate()).toLegacyText());
-
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "Total donated on record: " +
-                ChatPrint.clear + "$" + thisDonor.getSumDonated()).toLegacyText());
-
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "Tagline: " +
-                ChatPrint.clear + thisDonor.getTagLine()).toLegacyText());
-
-        sender.sendMessage(new TextComponent(ChatPrint.primary + "MOTD: " +
-                ChatPrint.clear + thisDonor.getMsgOtd()).toLegacyText());
+        sender.sendMessage(ChatPrint.primary + "Current Real IGN: " + ChatPrint.clear + donorRealIGN);
+        sender.sendMessage(ChatPrint.primary + "UUID: " + ChatPrint.clear + thisDonor.getUserID());
+        sender.sendMessage(ChatPrint.primary + "Custom IGN: " + ChatPrint.clear + thisDonor.getCustomIGN());
+        sender.sendMessage(ChatPrint.primary + "Donation Key: " + ChatPrint.clear + thisDonor.getDonationKey());
+        sender.sendMessage(ChatPrint.primary + "First Donation Date: " + ChatPrint.clear + thisDonor.getFirstDonationDate());
+        sender.sendMessage(ChatPrint.primary + "Recent Donation Date: " + ChatPrint.clear + thisDonor.getRecentDonationDate());
+        sender.sendMessage(ChatPrint.primary + "Total donated on record: " + ChatPrint.clear + "$" + thisDonor.getSumDonated());
+        sender.sendMessage(ChatPrint.primary + "Tagline: " + ChatPrint.clear + thisDonor.getTagLine());
+        sender.sendMessage(ChatPrint.primary + "MOTD: " + ChatPrint.clear + thisDonor.getMsgOtd());
 
         return true;
     }

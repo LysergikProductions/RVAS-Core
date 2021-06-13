@@ -109,7 +109,7 @@ public class ServerCmd implements CommandExecutor {
 		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
 		TextComponent slowMode_b = new TextComponent(ChatListener.slowChatEnabled ? "True" : "False");
 		TextComponent uptime_a = new TextComponent("Server Uptime: ");
-		TextComponent uptime_b = new TextComponent(Util.timeToString(ServerMeta.getUptime()));
+		TextComponent uptime_b = new TextComponent(Util.durationFormat(ServerMeta.getUptime()));
 		
 		// style individual components //
 		title_sep.setColor(ChatPrint.faded);

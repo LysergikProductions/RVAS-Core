@@ -50,7 +50,7 @@ public class Donor {
         this.sumDonated = amountDonated;
 
         this.msgOtd = "tbd"; this.tagLine = "tbd"; this.customIGN = "tbd";
-        this.realIGN = Objects.requireNonNull(Bukkit.getPlayer(this.userID)).getName();
+        this.realIGN = Objects.requireNonNull(this.getPlayer()).getName();
     }
 
     // Setters
@@ -61,7 +61,7 @@ public class Donor {
     public void setRecentDonationDate() { this.recentDonationDate = new Date(); }
 
     public void updateDonorIGN() {
-        this.realIGN = Objects.requireNonNull(Bukkit.getPlayer(this.userID)).getName();
+        this.realIGN = Objects.requireNonNull(this.getPlayer()).getName();
     }
 
     public void addToSum(Double sumToAdd) {
