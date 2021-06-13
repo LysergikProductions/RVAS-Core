@@ -35,10 +35,12 @@ public class Donor {
 
     final private UUID userID;
     final private Date firstDonationDate;
+    final private String donationKey;
+
     private Date recentDonationDate;
 
     private Double sumDonated;
-    private String donationKey, tagLine, msgOtd, customIGN;
+    private String tagLine, msgOtd, customIGN, realIGN;
 
     public Donor(UUID thisID, String thisKey, Double amountDonated) {
         this.userID = thisID; this.donationKey = thisKey;
@@ -47,18 +49,20 @@ public class Donor {
         this.recentDonationDate = this.firstDonationDate;
         this.sumDonated = amountDonated;
 
-        this.msgOtd = "tbd";
-        this.tagLine = "tbd";
-        this.customIGN = "tbd";
+        this.msgOtd = "tbd"; this.tagLine = "tbd"; this.customIGN = "tbd";
+        this.realIGN = Objects.requireNonNull(Bukkit.getPlayer(this.userID)).getName();
     }
 
     // Setters
-    public void setDonationKey(String donationKey) { this.donationKey = donationKey; }
     public void setSumDonated(Double sumDonated) { this.sumDonated = sumDonated; }
     public void setTagLine(String tagLine) { this.tagLine = tagLine; }
     public void setMsgOtd(String msgOtd) { this.msgOtd = msgOtd; }
     public void setCustomIGN(String customIGN) { this.customIGN = customIGN; }
     public void setRecentDonationDate() { this.recentDonationDate = new Date(); }
+
+    public void updateDonorIGN() {
+        this.realIGN = Objects.requireNonNull(Bukkit.getPlayer(this.userID)).getName();
+    }
 
     public void addToSum(Double sumToAdd) {
         this.sumDonated += sumToAdd;
@@ -67,6 +71,7 @@ public class Donor {
 
     // Getters
     public UUID getUserID() { return userID; }
+    public String getRealIGN() { return realIGN; }
     public String getDonationKey() { return donationKey; }
     public Date getFirstDonationDate() { return firstDonationDate; }
     public Date getRecentDonationDate() { return recentDonationDate; }

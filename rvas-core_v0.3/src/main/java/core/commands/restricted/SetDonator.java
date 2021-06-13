@@ -15,6 +15,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class SetDonator implements CommandExecutor {
@@ -23,7 +24,7 @@ public class SetDonator implements CommandExecutor {
 
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
 			sender.sendMessage(new TextComponent(ChatPrint.fail +
-					"You can't run this").toLegacyText()); return true;
+					"You can't run this").toLegacyText()); return false;
 		}
 
 		int argCount = args.length;
@@ -73,10 +74,11 @@ public class SetDonator implements CommandExecutor {
 					.broadcast(new TextComponent("\u00A76" + donator.getName() + " just donated to the server!"));
 
 			try {
-				DonationManager.getDonorByUUID(donator.getUniqueId()).sendMessage(new TextComponent(
-						ChatPrint.controls + "/w an op while you are online to set your custom IGN, tag, and motd!"));
-			} catch (Exception ignore) { }
+				Objects.requireNonNull(DonationManager.getDonorByUUID(donator.getUniqueId()))
+						.sendMessage(new TextComponent(ChatPrint.controls +
+								"/w an op about setting your custom IGN, tag, and motd!"));
 
+			} catch (Exception ignore) { }
 			return true;
 		}
 		return false;

@@ -53,10 +53,11 @@ public class DonorCmd implements CommandExecutor {
 
             if (!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("tag") &&
                     !args[1].equalsIgnoreCase("motd") && !args[1].equalsIgnoreCase("set") &&
-                    !args[1].equalsIgnoreCase("key") && !args[1].equalsIgnoreCase("ign")) {
+                    !args[1].equalsIgnoreCase("key") && !args[1].equalsIgnoreCase("ign") &&
+                    !args[1].equalsIgnoreCase("refresh")) {
 
                 sender.sendMessage(new TextComponent(ChatPrint.fail +
-                        "Invalid syntax. Syntax: /donor [name] [add/tag/ign/motd/key/set]").toLegacyText());
+                        "Invalid syntax. Syntax: /donor [name] [add/tag/ign/motd/key/set/refresh]").toLegacyText());
                 return false;
             }
 
@@ -85,8 +86,8 @@ public class DonorCmd implements CommandExecutor {
                     thisDonor.setRecentDonationDate();
 
                     sender.sendMessage(new TextComponent(
-                            ChatPrint.primary + "Successfully added $" + args[2] +
-                            " to that donor for a total of $" + thisDonor.getSumDonated()).toLegacyText());
+                            ChatPrint.primary + "Successfully added $" + args[2] + " to " + args[0] +
+                                    "'s profile for a total of $" + thisDonor.getSumDonated()).toLegacyText());
                     return true;
 
                 case "set":
@@ -116,7 +117,7 @@ public class DonorCmd implements CommandExecutor {
                     if (DonationManager.DonorCodes.contains(newKey) &&
                             !DonationManager.UsedDonorCodes.contains(newKey)) {
 
-                        thisDonor.setDonationKey(newKey);
+                        thisDonor = new Donor(thisDonor.getUserID(), newKey, thisDonor.getSumDonated());
                         DonationManager.UsedDonorCodes.add(newKey);
 
                     } else {
@@ -206,6 +207,15 @@ public class DonorCmd implements CommandExecutor {
 
                     sender.sendMessage(new TextComponent(ChatPrint.secondary + msg[0]).toLegacyText());
                     return true;
+
+                case "refresh":
+
+                    try { Objects.requireNonNull(DonationManager.getDonorByName(args[0])).updateDonorIGN();
+                    } catch (Exception ignore) {
+                        sender.sendMessage(new TextComponent(ChatPrint.fail +
+                                "Internal error. Failed to update IGN.").toLegacyText());
+                        return false;
+                    }
 
                 default: return false;
             }

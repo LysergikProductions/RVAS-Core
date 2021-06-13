@@ -61,7 +61,7 @@ public class GitGetter {
         try { while ((ln = buffer.readLine()) != null) data.add(ln.trim()); buffer.close();
         } catch (Exception e) {
 
-            System.out.println("WARN exception while parsing data from version file");
+            System.out.println("WARN exception while reading data from version file");
             System.out.println("Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
 
             official_version = default_version;

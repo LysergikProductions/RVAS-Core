@@ -150,12 +150,11 @@ public class DonationManager {
     }
 
     public static boolean isValidKey(String thisKey) {
-        System.out.println(thisKey.length());
+        System.out.println("Checking: " + thisKey + " | Length: " + thisKey.length());
         if (thisKey.length() != 19) return false;
 
         for (int i = 0; i < thisKey.length(); i++){
             char c = thisKey.charAt(i);
-            System.out.println("Checking: " + c);
 
             //0123456789012345678
             //abcd-2021-jhas-06ds
@@ -179,7 +178,7 @@ public class DonationManager {
                 ign.equalsIgnoreCase(Config.getValue("admin")) || opNames.contains(ign);
     }
 
-    public static boolean isExistingIGN(String ign) {
+    public static boolean isExistingCustomIGN(String ign) {
         for (Donor thisDonor: _donorList) {
             String thisIGN = thisDonor.getCustomIGN();
 

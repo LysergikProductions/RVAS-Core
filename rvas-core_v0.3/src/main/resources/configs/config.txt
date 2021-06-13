@@ -118,6 +118,9 @@ speedlimit.tier_five = 20
 // - Enable auto-announcer in the in-game chat
 announcer.enabled = true
 
+// - Default auto-announcer message [ default = clickable github msg | anything else = custom non-clickable msg ]
+announcer.default = default
+
 // - Force the server IP. true/false. default = false
 motd.force = false
 

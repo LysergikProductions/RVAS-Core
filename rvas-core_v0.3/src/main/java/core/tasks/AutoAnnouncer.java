@@ -24,9 +24,9 @@ package core.tasks;
  * */
 
 import core.backend.Config;
-import core.commands.restricted.Check;
-import core.frontend.ChatPrint;
 import core.backend.Scheduler;
+import core.frontend.ChatPrint;
+import core.commands.restricted.Check;
 
 import java.util.*;
 import java.nio.file.Files;
@@ -89,7 +89,11 @@ public class AutoAnnouncer extends TimerTask {
 
 		if (tryMsg.equals("default")) {
 			lastAnnouncement = "default";
-			Bukkit.spigot().broadcast(source);
+			String fig = Config.getValue("announcer.default").trim();
+
+			if (fig.equalsIgnoreCase("default") || fig.isEmpty()) Bukkit.spigot().broadcast(source);
+			else Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary.toString() + fig));
+
 		} else {
 			lastAnnouncement = tryMsg;
 			Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary.toString() + tryMsg));
