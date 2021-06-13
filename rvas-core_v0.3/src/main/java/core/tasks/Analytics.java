@@ -23,6 +23,7 @@ package core.tasks;
  * 
  * */
 
+import core.Main;
 import core.backend.Config;
 import core.data.FileManager;
 import core.backend.LagProcessor;
@@ -31,6 +32,7 @@ import java.io.*;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.lang.StringBuilder;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
@@ -157,7 +159,7 @@ public class Analytics extends TimerTask {
 		server_cmd = 0; sign_cmd = 0; stats_total = 0; stats_help = 0;
 		stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0; local_cmd = 0;
 		
-		if (Config.debug && Config.verbose) System.out.println("[core.tasks.analytics] Analytics updated!");
+		if (Config.debug && Config.verbose) Main.console.log(Level.INFO, "[core.tasks.analytics] Analytics updated!");
 	}
 	
 	// convert data to a single performance CSV-file line
@@ -239,8 +241,7 @@ public class Analytics extends TimerTask {
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			e.printStackTrace(); return false;
 		}
 	}
 }

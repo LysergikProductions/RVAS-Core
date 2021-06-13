@@ -101,6 +101,10 @@ public class DonationManager {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
+    static boolean isAboveThreshold(Donor donor) {
+        return donor.getSumDonated() >= 25.0;
+    }
+
     static List<Donor> getDonorsFromJSON(File thisFile) throws IOException {
         Gson gson = new Gson();
 
@@ -141,8 +145,9 @@ public class DonationManager {
     }
 
     public static boolean isValidDonor(Player p) {
-        return isDonor(p) && !Objects.requireNonNull(
-                getDonorByUUID(p.getUniqueId())).getDonationKey().equalsIgnoreCase("INVALID");
+        String key = Objects.requireNonNull(getDonorByUUID(p.getUniqueId())).getDonationKey();
+        return isDonor(p) && isAboveThreshold(DonationManager.getDonorByUUID(p.getUniqueId()))
+                && !key.equalsIgnoreCase("INVALID") && !key.isEmpty();
     }
 
     public static boolean isValidString(String thisString) {

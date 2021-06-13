@@ -22,11 +22,15 @@ package core.commands.restricted;
  * 
  * */
 
+import core.Main;
 import core.backend.Config;
+import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
 import core.data.FileManager;
 
 import java.io.IOException;
+import java.util.logging.Level;
+
 import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
@@ -40,7 +44,7 @@ public class Backup implements CommandExecutor {
 	public static int opBackupCounter = 0;
 	
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		Player player = (Player) sender;
 		if (!player.isOp() || args.length != 0) return false;
@@ -73,14 +77,14 @@ public class Backup implements CommandExecutor {
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
 
 			player.sendMessage("backing up custom.json");
-			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");
+			FileManager.backupData(FileManager.customThemeFile, "custom-backup-", ".json");
 			
 		} catch (IOException e) {
 			
-			System.out.println("Could not backup one or more files..");
+			Main.console.log(Level.WARNING, "Could not backup one or more files..");
 			if (Config.debug) e.printStackTrace();
 			
-			player.sendMessage("There was an exception while trying to backup one or more files :(");
+			player.sendMessage(ChatPrint.fail + "There was an exception while trying to backup one or more files :(");
 			return false;
 
 		} return true;

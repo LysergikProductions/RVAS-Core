@@ -22,12 +22,14 @@ package core.data;
  *
  * */
 
+import core.Main;
 import core.data.objects.Theme;
 
 import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
@@ -43,12 +45,12 @@ public class ThemeManager {
             try { currentTheme = getThemeFromJSON(thisFile);
             } catch (Exception e) {
                 currentTheme.setToInternalDefaults();
-                System.out.println("WARN getThemeFromJSON Exception");
+                Main.console.log(Level.WARNING, "getThemeFromJSON Exception");
                 throw new IOException(e.getMessage());
             }
         } else {
-            System.out.println("WARN failed to load the specified theme :(");
-            System.out.println("Creating the default theme from scratch..");
+            Main.console.log(Level.WARNING, "Failed to load the specified theme :(");
+            Main.console.log(Level.WARNING, "Creating the default theme from scratch..");
 
             currentTheme.setToInternalDefaults();
         }
@@ -59,7 +61,7 @@ public class ThemeManager {
         Gson gson = new Gson();
 
         if (!thisFile.getName().endsWith(".json")) {
-            System.out.println("WARN tried reading a non-json as json");
+            Main.console.log(Level.WARNING, "Tried reading a non-json as json!");
             return null;
         }
 

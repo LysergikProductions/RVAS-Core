@@ -6,9 +6,9 @@ import core.events.ChatListener;
 import core.data.objects.SettingsContainer;
 
 import java.io.*;
+import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 import java.util.stream.Collectors;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -44,8 +44,8 @@ public class PlayerMeta {
 
 	public static boolean isIgnoring(UUID ignorer, UUID ignored) {
 		if(Ignore.Ignores.containsKey(ignorer)) {
-			return Ignore.Ignores.get(ignorer).contains(ignored);
-		}
+			return Ignore.Ignores.get(ignorer).contains(ignored); }
+
 		return false;
 	}
 
@@ -178,7 +178,6 @@ public class PlayerMeta {
 		List<String> list = new ArrayList<>();
 
 		Playtimes.keySet().forEach(user -> list.add(user.toString() + ":" + Math.rint(Playtimes.get(user))));
-
 		Files.write(Paths.get("plugins/core/playtime.db"), String.join("\n", list).getBytes());
 	}
 
@@ -199,7 +198,7 @@ public class PlayerMeta {
 		UUID admin_id;
 		
 		try { admin_id = UUID.fromString(Config.getValue("adminid"));
-		} catch (Exception e) {return false;}
+		} catch (Exception e) { return false; }
 
 		return admin_name.equals(target_name) && admin_id.equals(target_id);
 	}

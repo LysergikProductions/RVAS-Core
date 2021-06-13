@@ -46,7 +46,7 @@ import org.bukkit.World.Environment;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public final static String version = "0.3.4"; public final static int build = 313;
+	public final static String version = "0.3.4"; public final static int build = 314;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -92,7 +92,7 @@ public class Main extends JavaPlugin {
 			console.log(Level.WARNING,
 					"Exception in ChatPrint.init().. creating a default theme instead");
 
-			e.printStackTrace();
+			if (Config.debug) e.printStackTrace();
 			ThemeManager.currentTheme.setToInternalDefaults();
 
 			try { replaceDefaultJSON(ThemeManager.currentTheme);

@@ -34,10 +34,10 @@ import java.nio.file.Paths;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
 @SuppressWarnings("deprecation")
@@ -50,9 +50,8 @@ public class AutoAnnouncer extends TimerTask {
 		try {
 			announcements = new ArrayList<>();
 			announcements.addAll(Files.readAllLines(Paths.get("plugins/core/announcements.txt")));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 
 	static TextComponent source; static {

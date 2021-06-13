@@ -24,8 +24,8 @@ package core.data;
 
 import core.data.objects.StatsContainer;
 
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
@@ -86,12 +86,9 @@ public class StatsManager {
 			double kills = stats.killTotal;
 			double deaths = stats.deathTotal;
 			
-			if (deaths < 0.710) {
-				stats.kd = "Unkillable!";
-			} else {
-				stats.kd = Double.toString(kills / deaths);
-			}
-			
+			if (deaths < 0.710) stats.kd = "Unkillable!";
+			else stats.kd = Double.toString(kills / deaths);
+
 			return stats;
 			
 		} else {
@@ -112,9 +109,7 @@ public class StatsManager {
 				w.write(object.toString() + "\n");
 				w.flush();
 				
-			  } catch (IOException e) {
-				  throw new UncheckedIOException(e);
-			  }
+			} catch (IOException e) { throw new UncheckedIOException(e); }
 		}
 		w.close();
 	}

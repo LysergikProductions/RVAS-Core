@@ -1,24 +1,25 @@
 package core.backend;
 
 import core.data.PlayerMeta;
-import java.util.*;
 
+import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.*;
 import org.bukkit.block.EnderChest;
 import org.bukkit.block.ShulkerBox;
+import org.bukkit.inventory.meta.*;
+import org.bukkit.inventory.ItemStack;
 
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.potion.PotionType;
+import org.bukkit.enchantments.Enchantment;
 
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ItemCheck {
 
-	public static ArrayList<Material> Banned = new ArrayList<>(), Special = new ArrayList<>(), LegalHeads = new ArrayList<>();
+	public static ArrayList<Material> Banned = new ArrayList<>(),
+			Special = new ArrayList<>(), LegalHeads = new ArrayList<>();
 	static {
 		// Banned materials.
 		Banned.addAll(Arrays.asList(Material.BARRIER, Material.WATER, Material.LAVA, Material.FARMLAND));
@@ -104,8 +105,7 @@ public class ItemCheck {
 
 		// Delete spawn eggs
 		if (item.getType().toString().toUpperCase().contains("SPAWN") && !specialRebuild[0]) {
-			item.setAmount(0);
-			return;
+			item.setAmount(0); return;
 		}
 
 		// Patch illegal stacked items
@@ -125,10 +125,7 @@ public class ItemCheck {
 					skipUnstack = true;
 				}
 			}
-
-			if(!skipUnstack) {
-				item.setAmount(item.getMaxStackSize());
-			}
+			if(!skipUnstack) item.setAmount(item.getMaxStackSize());
 		}
 
 		// Reset item meta
@@ -137,12 +134,9 @@ public class ItemCheck {
 			ItemMeta newMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
 
 			// Rebuild Basic Item Attribs
-			if (item instanceof EnderChest) {
-				newMeta.setDisplayName("Ender Chest");
-			} else {
-				if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(
+			if (item instanceof EnderChest) newMeta.setDisplayName("Ender Chest");
+			else if (item.getItemMeta().hasDisplayName()) newMeta.setDisplayName(
 						Objects.requireNonNull(item.getItemMeta().getDisplayName()));
-			}
 
 			if (item.getItemMeta().hasLore()) newMeta.setLore(item.getItemMeta().getLore());
 
@@ -184,8 +178,7 @@ public class ItemCheck {
 					}
 
 				} catch (IllegalArgumentException e) {
-					item.setAmount(0);
-					return;
+					item.setAmount(0); return;
 				}
 			}
 
@@ -199,9 +192,8 @@ public class ItemCheck {
 				
 				if (Config.getValue("item.rebuild.unbreakable").equals("true")) {
 					newMeta.setUnbreakable(item.getItemMeta().isUnbreakable());
-				} else {
-					newMeta.setUnbreakable(false);
-				}
+
+				} else newMeta.setUnbreakable(false);
 			}
 
 			// Set item to rebuilt item
@@ -217,9 +209,7 @@ public class ItemCheck {
 			EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
 
 			if (meta.getStoredEnchants().size() == 0) {
-				item.setAmount(0);
-				return;
-			}
+				item.setAmount(0); return; }
 
 			// Rebuild stored enchants
 			for (Enchantment e : meta.getStoredEnchants().keySet()) {
@@ -279,45 +269,31 @@ public class ItemCheck {
 
 		// Fix maps
 		if (item.getType().equals(Material.FILLED_MAP)) {
-			removeEnchants(item);
-			return;
-		}
+			removeEnchants(item); return; }
 
 		// Fix banners
 		if (item.getItemMeta() instanceof BannerMeta) {
-			removeEnchants(item);
-			return;
-		}
+			removeEnchants(item); return; }
 
 		// Fix respawn anchors (?)
 		if (item.getType().equals(Material.RESPAWN_ANCHOR)) {
-			removeEnchants(item);
-			return;
-		}
+			removeEnchants(item); return; }
 
 		// Fix beehives
 		if (item.getType().equals(Material.BEEHIVE)) {
-			removeEnchants(item);
-			return;
-		}
+			removeEnchants(item); return; }
 
 		// Fix beenests
 		if (item.getType().equals(Material.BEE_NEST)) {
-			removeEnchants(item);
-			return;
-		}
+			removeEnchants(item); return; }
 
 		// Fix fireworks and firework stars
 		if (item.getType().equals(Material.FIREWORK_ROCKET) || item.getType().equals(Material.FIREWORK_STAR)) {
-			removeEnchants(item);
-			return;
-		}
+			removeEnchants(item); return; }
 
 		// Fix shields
 		if (item.getType().equals(Material.SHIELD)) {
-			removeEnchants(item);
-			return;
-		}
+			removeEnchants(item); return; }
 
 		// Delete player heads (exempt wither heads)
 		if (item.getItemMeta() instanceof SkullMeta &&
@@ -338,18 +314,16 @@ public class ItemCheck {
 
 	// Remove item enchants.
 	private static void removeEnchants(ItemStack item) {
-		if (item == null)
-			return;
+		if (item == null) return;
 		ItemMeta meta = item.getItemMeta();
+
 		if (meta.hasEnchants()) {
 			for (Enchantment ench : meta.getEnchants().keySet()) {
 				if (!ench.canEnchantItem(item)) {
-					meta.removeEnchant(ench);
-					continue;
-				}
+					meta.removeEnchant(ench); continue; }
+
 				if (ench.getMaxLevel() > meta.getEnchantLevel(ench)) {
-					meta.removeEnchant(ench);
-				}
+					meta.removeEnchant(ench); }
 			}
 		}
 		item.setItemMeta(meta);
@@ -393,11 +367,10 @@ public class ItemCheck {
 				Banned.add(Material.STRUCTURE_VOID);
 				Banned.add(Material.STRUCTURE_BLOCK);
 			}
-
 			return true;
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (Config.debug) e.printStackTrace();
 			return false;
 		}
 	}

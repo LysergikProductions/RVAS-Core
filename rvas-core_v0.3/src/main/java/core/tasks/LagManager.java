@@ -23,11 +23,13 @@ package core.tasks;
  * 
  * */
 
+import core.Main;
 import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.events.ConnectionController;
 
+import java.util.logging.Level;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -63,7 +65,7 @@ public class LagManager implements Listener, Runnable {
 			
 			Analytics.wither_spawns++;
 			
-			if (Config.debug && Config.verbose) System.out.println("Wither Limit: " + witherLimit);
+			if (Config.debug && Config.verbose) Main.console.log(Level.INFO, "Wither Limit: " + witherLimit);
 			
 			currentWithers = getWithers();
 			
@@ -112,7 +114,7 @@ public class LagManager implements Listener, Runnable {
 
 			if (skulls_world != 0) {
 				if (skulls_world == 1) skullMsg[0] = "skull"; else skullMsg[0] = "skulls";
-				if (Config.debug) System.out.println(
+				if (Config.debug) Main.console.log(Level.INFO,
 						"Removed " + skulls_world + " wither " + skullMsg[0] + " from " + thisWorld.getName());
 			}
 			skulls_all += skulls_world;
@@ -125,7 +127,8 @@ public class LagManager implements Listener, Runnable {
 
 		for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
 			
-			if (Config.debug && Config.verbose) System.out.println("Counting withers in: " + thisWorld.getName());
+			if (Config.debug && Config.verbose) Main.console.log(Level.INFO,
+					"Counting withers in: " + thisWorld.getName());
 			
 			for (Entity e: thisWorld.getEntities()) {
 				if (e instanceof Wither) {
@@ -133,7 +136,7 @@ public class LagManager implements Listener, Runnable {
 				}
 			}
 		}
-		if (Config.debug) System.out.println("Counted Withers: " + counter);
+		if (Config.debug) Main.console.log(Level.INFO, "Counted Withers: " + counter);
 		return counter;
 	}
 }

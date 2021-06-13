@@ -10,10 +10,11 @@ import core.backend.LagProcessor;
 import core.data.PlayerMeta;
 import core.events.ChatListener;
 import core.commands.VoteMute;
-import core.commands.restricted.Check;
 import core.commands.restricted.Speeds;
 
 import java.util.TimerTask;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 
 // Playtime processor (every 20 ticks)
@@ -33,7 +34,7 @@ public class ProcessPlaytime extends TimerTask {
 		else difference = lastTPS - currentTPS;
 		
 		if (difference > (lastTPS * 0.5)) {
-			System.out.println("WARN 50+% tps drop in 20t");
+			Main.console.log(Level.SEVERE, "WARN 50+% tps drop in 20t");
 			Bukkit.getScheduler().runTask(Main.instance, Analytics::capture);
 		}
 		
