@@ -50,7 +50,8 @@ public class Donate implements CommandExecutor {
         msg3.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link2_url));
 
         msg1.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatPrint.faded + id)));
-        msg2.setBold(true); msg3.setBold(true); msg3.setItalic(true);
+        msg2.setBold(true); msg2.setUnderlined(true);
+        msg3.setBold(true); msg3.setItalic(true); msg3.setUnderlined(true);
 
         // Print messages
         sender.sendMessage(new TextComponent(ChatPrint.warn, new TextComponent("Please DM " + Config.getValue("admin") +

@@ -22,6 +22,7 @@ package core.commands.restricted;
  *
  * */
 
+import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
 import core.data.DonationManager;
 import core.data.objects.Donor;
@@ -90,12 +91,14 @@ public class DonorCmd implements CommandExecutor {
 
                 case "set":
 
-                    try { Double.parseDouble(args[2]);
+                    double thisAmount;
+
+                    try { thisAmount = Double.parseDouble(args[2]);
                     } catch (Exception ignore) {
                         sender.sendMessage(new TextComponent(ChatPrint.fail +
                                 "Invalid number.").toLegacyText()); return false; }
 
-                    thisDonor.setSumDonated(Double.parseDouble(args[2]));
+                    thisDonor.setSumDonated(thisAmount);
 
                     sender.sendMessage(new TextComponent(
                             ChatPrint.primary + "Successfully set sum donated to $" +
@@ -104,15 +107,17 @@ public class DonorCmd implements CommandExecutor {
 
                 case "key":
 
-                    if (args[2].length() != 32 || !DonationManager.isValidKey(msg[0])) {
+                    String newKey = args[2].trim();
+
+                    if (!DonationManager.isValidKey(newKey)) {
                         sender.sendMessage(new TextComponent(ChatPrint.fail +
                                 "Invalid key.").toLegacyText()); return false; }
 
-                    String newKey = args[2];
+                    if (DonationManager.DonorCodes.contains(newKey) &&
+                            !DonationManager.UsedDonorCodes.contains(newKey)) {
 
-                    if (DonationManager.DonorCodes.contains(args[0]) && !DonationManager.UsedDonorCodes.contains(args[0])) {
                         thisDonor.setDonationKey(newKey);
-                        DonationManager.UsedDonorCodes.add(args[0]);
+                        DonationManager.UsedDonorCodes.add(newKey);
 
                     } else {
                         sender.sendMessage(new TextComponent(ChatPrint.fail + "Invalid key.").toLegacyText());

@@ -71,6 +71,12 @@ public class SetDonator implements CommandExecutor {
 		if (DonationManager.isValidDonor(donator)) {
 			Bukkit.getServer().spigot()
 					.broadcast(new TextComponent("\u00A76" + donator.getName() + " just donated to the server!"));
+
+			try {
+				DonationManager.getDonorByUUID(donator.getUniqueId()).sendMessage(new TextComponent(
+						ChatPrint.controls + "/w an op while you are online to set your custom IGN, tag, and motd!"));
+			} catch (Exception ignore) { }
+
 			return true;
 		}
 		return false;
