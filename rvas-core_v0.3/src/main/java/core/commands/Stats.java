@@ -185,7 +185,6 @@ public class Stats implements CommandExecutor {
 		} else { // user supplied no arguments
 			
 			OfflinePlayer target = Bukkit.getOfflinePlayer(player.getUniqueId());
-			
 			ChatPrint.printStats(player, target);
 		}
 		return true;

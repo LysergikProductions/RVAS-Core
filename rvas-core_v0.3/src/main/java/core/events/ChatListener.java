@@ -59,6 +59,8 @@ public class ChatListener implements Listener {
 					"You are no longer AFK!").toLegacyText());
 		}
 
+		boolean isValidDonor = DonationManager._validDonors.contains(playerid);
+
 		// -- CREATE PROPERTIES -- \\
 		String finalMessage = e.getMessage();
 		String color, usernameColor;
@@ -69,7 +71,7 @@ public class ChatListener implements Listener {
 			case '>': color = "\u00A7a"; // Greentext
 				break;
 			case '$':
-				if (DonationManager.isValidDonor(player)) {
+				if (isValidDonor) {
 					color = "\u00A76"; // Donator text
 					break;
 				}
@@ -77,9 +79,7 @@ public class ChatListener implements Listener {
 				break;
 		}
 
-		if (DonationManager.isValidDonor(player) &&
-				!Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A76";
-
+		if (isValidDonor && !Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A76";
 		else if (Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A7c";
 		else usernameColor = "\u00A7f";
 

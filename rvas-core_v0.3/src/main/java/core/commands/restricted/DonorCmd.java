@@ -157,8 +157,7 @@ public class DonorCmd implements CommandExecutor {
                 case "ign":
 
                     if (args.length != 3) {
-                        sender.sendMessage(ChatPrint.fail +
-                                "Invalid syntax. Syntax: /donor [name] ign [one_word_ign]");
+                        sender.sendMessage(ChatPrint.fail + "Invalid syntax. Syntax: /donor [name] ign [one_word_ign]");
                         return false;
                     }
 
@@ -166,7 +165,10 @@ public class DonorCmd implements CommandExecutor {
                         sender.sendMessage(ChatPrint.fail + "Invalid IGN. Use 3 to 20 characters."); return false;
 
                     } else if (DonationManager.isRestrictedIGN(msg[0])) {
-                        sender.sendMessage(ChatPrint.fail + "Invalid IGN. Use another name."); return false; }
+                        sender.sendMessage(ChatPrint.fail + "Invalid IGN. Use another name."); return false;
+
+                    } else if (DonationManager.isExistingCustomIGN(msg[0])) {
+                        sender.sendMessage(ChatPrint.fail + "IGN is alrady taken. Try another name."); return false; }
 
                     try { Objects.requireNonNull(DonationManager
                                 .getDonorByName(args[0])).setCustomIGN(msg[0]);

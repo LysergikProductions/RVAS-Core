@@ -252,7 +252,7 @@ public class ChatPrint {
 			String thisTag = Objects.requireNonNull(DonationManager
 					.getDonorByUUID(target.getUniqueId())).getTagLine();
 
-			if (DonationManager.isValidDonor(Bukkit.getPlayer(target.getUniqueId()))
+			if (DonationManager._validDonors.contains(target.getUniqueId())
 					&& DonationManager.isValidString(thisTag)) {
 
 				statsLines.add(new TextComponent(ChatColor.DARK_AQUA + thisTag));

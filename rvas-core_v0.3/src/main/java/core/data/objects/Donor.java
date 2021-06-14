@@ -38,6 +38,7 @@ public class Donor {
     final private String donationKey;
 
     private Date recentDonationDate;
+    private boolean validity;
 
     private Double sumDonated;
     private String tagLine, msgOtd, customIGN, realIGN;
@@ -51,6 +52,7 @@ public class Donor {
 
         this.msgOtd = "tbd"; this.tagLine = "tbd"; this.customIGN = "tbd";
         this.realIGN = Objects.requireNonNull(this.getPlayer()).getName();
+        this.validity = this.sumDonated >= 25.0;
     }
 
     // Setters
@@ -63,16 +65,20 @@ public class Donor {
     public void updateDonorIGN() {
         this.realIGN = Objects.requireNonNull(this.getPlayer()).getName();
     }
+    public void updateValidity() { this.validity = this.sumDonated >= 25.0; }
 
     public void addToSum(Double sumToAdd) {
         this.sumDonated += sumToAdd;
         this.recentDonationDate = new Date();
+        this.updateValidity();
     }
 
     // Getters
     public UUID getUserID() { return userID; }
     public String getRealIGN() { return realIGN; }
     public String getDonationKey() { return donationKey; }
+    public boolean isValid() { return validity; }
+
     public Date getFirstDonationDate() { return firstDonationDate; }
     public Date getRecentDonationDate() { return recentDonationDate; }
 

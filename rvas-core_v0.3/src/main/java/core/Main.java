@@ -46,7 +46,7 @@ import org.bukkit.World.Environment;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public final static String version = "0.3.4"; public final static int build = 315;
+	public final static String version = "0.3.4"; public final static int build = 316;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;

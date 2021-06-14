@@ -22,6 +22,7 @@ package core.data;
  *
  * */
 
+import core.Main;
 import core.backend.Config;
 import core.data.objects.Donor;
 
@@ -30,6 +31,7 @@ import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 
 import com.google.gson.Gson;
 import com.google.common.reflect.TypeToken;
@@ -42,6 +44,7 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("SpellCheckingInspection")
 public class DonationManager {
 
+    public final static List<UUID> _validDonors = new ArrayList<>();
     public final static List<Donor> _donorList = new ArrayList<>();
     public static List<String> DonorCodes = new ArrayList<>();
     public static List<String> UsedDonorCodes = new ArrayList<>();
@@ -49,17 +52,23 @@ public class DonationManager {
     public static boolean setDonor(Player thisPlayer, String thisKey, Double donationSum) throws IOException {
 
         if (thisPlayer == null || thisKey == null || donationSum == null) return false;
+        if (!isValidKey(thisKey)) Main.console.log(Level.WARNING, "Tried setting invalid donor key!");
 
-        if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(
-                thisPlayer.getUniqueId()));
-        else _donorList.add(new Donor(
-                thisPlayer.getUniqueId(), thisKey, donationSum));
+        UUID thisID = thisPlayer.getUniqueId();
+        if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(thisID));
+        else _donorList.add(new Donor(thisPlayer.getUniqueId(), thisKey, donationSum));
+
+        Donor newDonor = getDonorByUUID(thisID);
+        if (newDonor != null) {
+            newDonor.updateValidity();
+            if (newDonor.isValid()) _validDonors.add(thisID); }
 
         saveDonors(); return true;
     }
 
     public static Donor getDonorByUUID(UUID thisID) {
         for (Donor thisDonor: _donorList) {
+            thisDonor.updateValidity();
             if (thisDonor.getUserID().equals(thisID)) return thisDonor;
         }
         return null;
