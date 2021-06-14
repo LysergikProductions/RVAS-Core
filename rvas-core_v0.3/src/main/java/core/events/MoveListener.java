@@ -64,8 +64,7 @@ public class MoveListener implements Listener {
 
 		// Ensure survival-mode players are not invulnerable
 		if (player.getGameMode().equals(GameMode.SURVIVAL) && !player.isOp()) {
-			player.setInvulnerable(false);
-		}
+			player.setInvulnerable(false); }
 
 		// -- ROOF AND FLOOR PATCH -- //
 
@@ -83,14 +82,11 @@ public class MoveListener implements Listener {
 			
 			if (randomNumber == 5 || randomNumber == 6) {
 				player.sendMessage("\u00A7cThis is what you get!");
-				event.setCancelled(true);
-				return;
+				event.setCancelled(true); return;
 			}
 
 			randomNumber = r.nextInt(250);
-			if (randomNumber == 21) {
-				player.kickPlayer("\u00A76lmao -tries to move-");
-			}
+			if (randomNumber == 21) player.kickPlayer("\u00A76lmao -tries to move-");
 		}
 	}
 		

@@ -24,14 +24,24 @@ package core.data.objects;
 
 import java.util.*;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+
+import net.md_5.bungee.api.chat.TextComponent;
+import org.jetbrains.annotations.NotNull;
+
 public class Donor {
 
     final private UUID userID;
     final private Date firstDonationDate;
-    private Date recentDonationDate;
+    final private String donationKey;
 
-    private String donationKey, tagLine, msgOtd, customIGN;
+    private Date recentDonationDate;
+    private boolean validity;
+
     private Double sumDonated;
+    private String tagLine, msgOtd, customIGN, realIGN;
 
     public Donor(UUID thisID, String thisKey, Double amountDonated) {
         this.userID = thisID; this.donationKey = thisKey;
@@ -40,14 +50,35 @@ public class Donor {
         this.recentDonationDate = this.firstDonationDate;
         this.sumDonated = amountDonated;
 
-        this.msgOtd = "tbd";
-        this.tagLine = "tbd";
-        this.customIGN = "tbd";
+        this.msgOtd = "tbd"; this.tagLine = "tbd"; this.customIGN = "tbd";
+        this.realIGN = Objects.requireNonNull(this.getPlayer()).getName();
+        this.validity = this.sumDonated >= 25.0;
+    }
+
+    // Setters
+    public void setSumDonated(Double sumDonated) { this.sumDonated = sumDonated; }
+    public void setTagLine(String tagLine) { this.tagLine = tagLine; }
+    public void setMsgOtd(String msgOtd) { this.msgOtd = msgOtd; }
+    public void setCustomIGN(String customIGN) { this.customIGN = customIGN; }
+    public void setRecentDonationDate() { this.recentDonationDate = new Date(); }
+
+    public void updateDonorIGN() {
+        this.realIGN = Objects.requireNonNull(this.getPlayer()).getName();
+    }
+    public void updateValidity() { this.validity = this.sumDonated >= 25.0; }
+
+    public void addToSum(Double sumToAdd) {
+        this.sumDonated += sumToAdd;
+        this.recentDonationDate = new Date();
+        this.updateValidity();
     }
 
     // Getters
     public UUID getUserID() { return userID; }
+    public String getRealIGN() { return realIGN; }
     public String getDonationKey() { return donationKey; }
+    public boolean isValid() { return validity; }
+
     public Date getFirstDonationDate() { return firstDonationDate; }
     public Date getRecentDonationDate() { return recentDonationDate; }
 
@@ -56,16 +87,13 @@ public class Donor {
     public String getTagLine() { return tagLine; }
     public String getCustomIGN() { return customIGN; }
 
-    // Setters
-    public void setDonationKey(String donationKey) { this.donationKey = donationKey; }
-    public void setSumDonated(Double sumDonated) { this.sumDonated = sumDonated; }
-    public void setTagLine(String tagLine) { this.tagLine = tagLine; }
-    public void setMsgOtd(String msgOtd) { this.msgOtd = msgOtd; }
-    public void setCustomIGN(String customIGN) { this.customIGN = customIGN; }
-    public void setRecentDonationDate() { this.recentDonationDate = new Date(); }
+    // Bukkit Getters
+    public Player getPlayer() { return Bukkit.getPlayer(this.userID); }
+    public OfflinePlayer getOfflinePlayer() { return Bukkit.getOfflinePlayer(this.userID); }
 
-    public void addToSum(Double sumToAdd) {
-        this.sumDonated += sumToAdd;
-        this.recentDonationDate = new Date();
+    // Actions
+    public void sendMessage(@NotNull TextComponent msg) {
+        Player p = this.getPlayer(); if (!p.isOnline()) return;
+        p.getPlayer().sendMessage(msg);
     }
 }

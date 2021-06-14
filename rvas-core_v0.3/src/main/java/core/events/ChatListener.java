@@ -1,19 +1,19 @@
 package core.events;
 
-import core.backend.ChatPrint;
 import core.backend.Config;
+import core.frontend.ChatPrint;
 import core.commands.AFK;
 import core.commands.Message;
 import core.commands.restricted.Admin;
 
-import core.data.DonationManager;
 import core.data.PlayerMeta;
+import core.data.objects.Donor;
+import core.data.DonationManager;
+import core.data.PrisonerManager;
 import core.data.PlayerMeta.MuteType;
 
 import java.util.*;
 import java.util.logging.Level;
-
-import core.data.PrisonerManager;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
@@ -33,23 +33,20 @@ public class ChatListener implements Listener {
 		"redeem", "stats", "tdm", "tjm", "tps", "vm", "vote", "ignore", "server", "sign", "afk", "last", "donate"
 	));
 	
-	private HashMap<UUID, Long> lastChatTimes = new HashMap<>();
-	private HashMap<UUID, String> lastChatMessages = new HashMap<>();
+	private final HashMap<UUID, Long> lastChatTimes = new HashMap<>();
+	private final HashMap<UUID, String> lastChatMessages = new HashMap<>();
 	
 	public static HashMap<UUID, Integer> violationLevels = new HashMap<>();
 	public static boolean slowChatEnabled = false;
 
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
-		
-		// Cancel this event so we can override vanilla chat
-		e.setCancelled(true);
-		
+		e.setCancelled(true); // <- override vanilla chat
+
 		Player player = e.getPlayer();
 
 		// Don't execute if the player is muted
-		if (PlayerMeta.isMuted(player) || (PlayerMeta.MuteAll && !player.isOp()))
-			return;
+		if (PlayerMeta.isMuted(player) || (PlayerMeta.MuteAll && !player.isOp())) return;
 
 		// remove AFK statuses
 		UUID playerid = player.getUniqueId();
@@ -62,36 +59,29 @@ public class ChatListener implements Listener {
 					"You are no longer AFK!").toLegacyText());
 		}
 
+		boolean isValidDonor = DonationManager._validDonors.contains(playerid);
+
 		// -- CREATE PROPERTIES -- \\
-		
-		boolean doSend = true;
 		String finalMessage = e.getMessage();
-		String color;
-		String usernameColor;
+		String color, usernameColor;
+		boolean doSend = true;
 
 		// -- SET CHAT COLORS -- //
-
 		switch (e.getMessage().charAt(0)) {
-			case '>':
-				color = "\u00A7a"; // Greentext
+			case '>': color = "\u00A7a"; // Greentext
 				break;
 			case '$':
-				if (DonationManager.isDonor(player)) {
+				if (isValidDonor) {
 					color = "\u00A76"; // Donator text
 					break;
 				}
-			default:
-				color = "\u00A7f"; // Normal text
+			default: color = "\u00A7f"; // Normal text
 				break;
 		}
 
-		if (DonationManager.isDonor(player) && !Admin.UseRedName.contains(player.getUniqueId())) {
-			usernameColor = "\u00A76";
-		} else if (Admin.UseRedName.contains(player.getUniqueId())) {
-			usernameColor = "\u00A7c";
-		} else {
-			usernameColor = "\u00A7f";
-		}
+		if (isValidDonor && !Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A76";
+		else if (Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A7c";
+		else usernameColor = "\u00A7f";
 
 		// -- STRING MODIFICATION -- //
 
@@ -113,7 +103,8 @@ public class ChatListener implements Listener {
 				
 				msg.setColor(ChatPrint.fail);
 				
-				if(lastChatTimes.get(player.getUniqueId()) + Integer.parseInt(Config.getValue("chat.slow.time")) > System.currentTimeMillis()) {
+				if (lastChatTimes.get(player.getUniqueId()) +
+						Integer.parseInt(Config.getValue("chat.slow.time")) > System.currentTimeMillis()) {
 					
 					doSend = false;
 					player.sendMessage(msg.toLegacyText());
@@ -129,7 +120,15 @@ public class ChatListener implements Listener {
 		// -- SEND FINAL MESSAGE -- //
 
 		if (doSend) {
-			String username = e.getPlayer().getName();
+			String username = player.getName();
+
+			if (DonationManager.isValidDonor(player)) {
+
+				Donor thisDonor = DonationManager.getDonorByName(username);
+				String customIGN = Objects.requireNonNull(thisDonor).getCustomIGN();
+
+				if (DonationManager.isValidString(customIGN)) username = customIGN;
+			}
 
 			TextComponent finalCom = new TextComponent("\u00A7f<" + usernameColor + username +
 					"\u00A7f> " + color + finalMessage);
@@ -163,22 +162,22 @@ public class ChatListener implements Listener {
 						censored = true;
 						
 						if(violationLevels.containsKey(e.getPlayer().getUniqueId())) {
-							violationLevels.put(e.getPlayer().getUniqueId(), violationLevels.get(e.getPlayer().getUniqueId()) + 1);
-						}
-						else {
-							violationLevels.put(e.getPlayer().getUniqueId(), 1);
-						}
+							violationLevels.put(
+									e.getPlayer().getUniqueId(), violationLevels.get(e.getPlayer().getUniqueId()) + 1);
+
+						} else violationLevels.put(e.getPlayer().getUniqueId(), 1);
 					}
 				}
 				
 				lastChatTimes.put(e.getPlayer().getUniqueId(), System.currentTimeMillis());
 				lastChatMessages.put(e.getPlayer().getUniqueId(), finalMessage);
 				
-				if(violationLevels.containsKey(e.getPlayer().getUniqueId())) {
-					if(violationLevels.get(e.getPlayer().getUniqueId()) == Integer.parseInt(Config.getValue("spam.minimum_vl"))) {
-						PlayerMeta.setMuteType(e.getPlayer(), MuteType.TEMPORARY);
-						return;
-					}
+				if(violationLevels.containsKey(e.getPlayer().getUniqueId()) &&
+						violationLevels.get(e.getPlayer().getUniqueId())
+								== Integer.parseInt(Config.getValue("spam.minimum_vl"))) {
+
+					PlayerMeta.setMuteType(e.getPlayer(), MuteType.TEMPORARY);
+					return;
 				}
 				
 				// op bypass

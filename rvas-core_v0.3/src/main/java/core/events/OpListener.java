@@ -24,31 +24,30 @@ package core.events;
  * 
  * */
 
+import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
+
+import core.data.PlayerMeta;
+import core.data.objects.Pair;
+import core.data.objects.Aliases;
 import core.commands.restricted.Speeds;
 import core.commands.restricted.Check;
 
-import core.data.objects.Aliases;
-import core.data.PlayerMeta;
-import core.data.ThemeManager;
-import core.data.objects.Pair;
-
 import java.util.*;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.HumanEntity;
 
-import org.bukkit.event.inventory.*;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -56,7 +55,6 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 @SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
 
-	static ChatColor secondary, successColor, failColor;
 	static Map<UUID, Pair<Location, Location>> lastTPs = new HashMap<>();
 	static HashMap<UUID, Map<Integer, Location>> savedTPs = new HashMap<>();
 
@@ -73,10 +71,6 @@ public class OpListener implements Listener {
 	// this happens *before* the OP Lock plugin will see the command
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
-
-		secondary = ThemeManager.currentTheme.getSecondary();
-		successColor = ThemeManager.currentTheme.getSucceed();
-		failColor = ThemeManager.currentTheme.getFail();
 		
 		Player sender = event.getPlayer();
 		String admin_name = Config.getValue("admin");
@@ -85,7 +79,7 @@ public class OpListener implements Listener {
 		boolean isAdmin = PlayerMeta.isAdmin(sender);
 		String msg = event.getMessage();
 		
-		// allow ops to use /execute, but only for teleporting between dimensions
+		// ignore (and allow) /execute when used specifcally for teleporting
 		if (
 				msg.startsWith("/execute in the_end run tp") ||
 				msg.startsWith("/execute in the_nether run tp") ||
@@ -97,7 +91,7 @@ public class OpListener implements Listener {
 			if (!msg.contains("@a") && !msg.contains(admin_name) && sender.isOp()) return;
 		}
 		
-		// take-over handling of /lr when receiving /lr skulls (lr normally for 'LaggRemover')
+		// take-over handling of /lr when receiving /lr skulls (lr normally for 'LaggRemover' Plugin)
 		if (msg.startsWith("/lr skulls")) {
 			
 			event.setCancelled(true);
@@ -108,7 +102,7 @@ public class OpListener implements Listener {
 			event.setCancelled(true);
 			if (sender.isOp()) {
 				int removed_items = Chunks.clearChunkItems(sender.getLocation().getChunk());
-				sender.sendMessage(secondary + "Removed " + removed_items + " item stacks.");
+				sender.sendMessage(ChatPrint.secondary + "Removed " + removed_items + " item stacks.");
 			}
 		}
 
@@ -129,8 +123,7 @@ public class OpListener implements Listener {
 
 			try { thisIndexInt = Integer.parseInt(thisIndexStr);
 			} catch (Exception ignore) {
-				sender.sendMessage(new TextComponent(
-						failColor + "Oops, " + thisIndexStr + " is not a number lol").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "Oops, " + thisIndexStr + " is not a number lol");
 				thisIndexInt = null;
 			}
 
@@ -143,11 +136,9 @@ public class OpListener implements Listener {
 
 				savedTPs.put(senderID, newMap);
 
-				sender.sendMessage(new TextComponent(
-						successColor + "Successfully saved location #" + thisIndexInt).toLegacyText());
+				sender.sendMessage(ChatPrint.succeed + "Successfully saved location #" + thisIndexInt);
 
-			} else sender.sendMessage(new TextComponent(
-					failColor + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
+			} else sender.sendMessage(ChatPrint.fail + "Nononono, zeeeeeroooo to niiiiine");
 
 		} else if (msg.startsWith("/tp:")) {
 			event.setCancelled(true);
@@ -157,29 +148,27 @@ public class OpListener implements Listener {
 
 			try { thisIndexInt = Integer.parseInt(thisIndexStr);
 			} catch (Exception ignore) {
-				sender.sendMessage(new TextComponent(
-						failColor + "Please use a number from 0 to 9 to choose a location").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "Please use a number from 0 to 9 to choose a location");
 				thisIndexInt = null;
 			}
 
 			if (thisIndexInt != null && thisIndexInt >= 0 && thisIndexInt <= 9) {
-				Location tpLoc;
+				Location tpLoc; String dim;
+
+				TextComponent warn = new TextComponent(
+						ChatPrint.fail + "There is no saved TP at that index");
 
 				try {
 					tpLoc = savedTPs.get(senderID).get(thisIndexInt);
-				} catch (Exception ignore) {
-					sender.sendMessage(new TextComponent(
-							failColor + "There is no saved TP at that index").toLegacyText());
-					return;
-				}
+					if (tpLoc == null) { sender.sendMessage(warn.toLegacyText()); return; }
+					dim = Util.getDimensionName(tpLoc);
 
-				String dim = Util.getDimensionName(tpLoc);
+				} catch (Exception ignore) { sender.sendMessage(warn.toLegacyText()); return; }
+
 				String loc = tpLoc.getBlockX() + " " + tpLoc.getBlockY() + " " + tpLoc.getBlockZ();
-
 				sender.chat("/execute in " + dim + " run tp @s " + loc);
 
-			} else sender.sendMessage(new TextComponent(
-					failColor + "Nononono, zeeeeeroooo to niiiiine").toLegacyText());
+			} else sender.sendMessage(ChatPrint.fail + "Nononono, zeeeeeroooo to niiiiine");
 		}
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
@@ -188,29 +177,25 @@ public class OpListener implements Listener {
 					Util.isCmdRestricted(msg)) { // <- LOCKS OUT DANGEROUS COMMANDS
 
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(failColor + "no").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "no");
 
 			} else if (msg.contains("@a")) {
-				
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(failColor + "You cannot target everyone!").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "You cannot target everyone!");
 				
 			} else if (msg.contains(admin_name)) {
-				
 				event.setCancelled(true);
-				sender.sendMessage(new TextComponent(failColor + "You cannot target " + admin_name).toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "You cannot target " + admin_name);
 			}
 
 		// 32k commands for testing anti-illegals; owner only
 		} else if (msg.startsWith("/op sauce")) {
 
 			event.setCancelled(true); // <- cut-off default command processing
-			if (!sender.isOp()) return; // <- fallback security layer
+			if (!PlayerMeta.isAdmin(sender)) return; // <- fallback security layer
 
-			if (!msg.contains("=") || msg.endsWith("=")) {
-				sender.sendMessage("Syntax: /op sauce=[type]");
-
-			} else {
+			if (!msg.contains("=") || msg.endsWith("=")) sender.sendMessage("Syntax: /op sauce=[type]");
+			else {
 				String[] args = msg.split("=");
 				String thisArg = args[1];
 
@@ -221,14 +206,11 @@ public class OpListener implements Listener {
 					sender.chat(Aliases.armor_b);
 					sender.chat(Aliases.totems_armor1);
 					sender.chat(Aliases.totems_armor2);
+				}
+				else if (thisArg.contains("feather")) sender.chat(Aliases.feather_32k);
+				else if (thisArg.contains("totem")) sender.chat(Aliases.totems_shulker);
 
-				} else if (thisArg.contains("feather")) {
-					sender.chat(Aliases.feather_32k);
-
-				} else if (thisArg.contains("totem")) {
-					sender.chat(Aliases.totems_shulker);
-
-				} else if (thisArg.contains("all")) {
+				else if (thisArg.contains("all")) {
 					sender.chat(Aliases.armor_a);
 					sender.chat(Aliases.armor_b);
 					sender.chat(Aliases.totems_armor1);
@@ -236,9 +218,7 @@ public class OpListener implements Listener {
 					sender.chat(Aliases.totems_shulker);
 					sender.chat(Aliases.feather_32k);
 
-				} else {
-					sender.sendMessage(new TextComponent(failColor + "Invalid Argument: " + thisArg).toLegacyText());
-				}
+				} else sender.sendMessage(ChatPrint.fail + "Invalid Argument: " + thisArg);
 			}
 		}
 	}
@@ -246,9 +226,8 @@ public class OpListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // non-ops cannot be set to a mode besides survival mode
 	public void onModeChange(PlayerGameModeChangeEvent event) {
 		
-		if (!event.getNewGameMode().equals(GameMode.SURVIVAL) && !event.getPlayer().isOp()) {
-			event.setCancelled(true);
-		}
+		if (!event.getNewGameMode().equals(GameMode.SURVIVAL) &&
+				!event.getPlayer().isOp()) { event.setCancelled(true); }
 	}
 	
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true) // only owner account can dupe/get items from creative mode
@@ -270,13 +249,10 @@ public class OpListener implements Listener {
 	// prevent moving GUI items into player inventories
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
+
 		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
-
 		else if (!event.getWhoClicked().getGameMode().equals(GameMode.SURVIVAL) &&
-				!PlayerMeta.isAdmin((Player)event.getWhoClicked())) {
-
-			event.setCancelled(true);
-		}
+				!PlayerMeta.isAdmin((Player)event.getWhoClicked())) { event.setCancelled(true); }
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)

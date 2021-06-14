@@ -1,6 +1,6 @@
 package core.commands;
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.backend.LagProcessor;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
@@ -24,13 +24,11 @@ public class Tps implements CommandExecutor {
 		if (!PlayerMeta.isAdmin((Player)sender)) Analytics.tps_cmd++;
 
 		double tps = LagProcessor.getTPS();
-		if (tps > 20)
-			tps = 20;
+		if (tps > 20) tps = 20;
 
 		if (!new IntRange(1, 20).containsInteger(tps)) {
-			TextComponent component = new TextComponent(
+			sender.sendMessage(ChatPrint.warn.toLegacyText() + ChatPrint.clear +
 					"TPS is either extremely low or still processing. Try again later.");
-			sender.sendMessage(component.toLegacyText());
 
 		} else {
 			String message_formatted_ticks_per_second = new DecimalFormat("0.000").format(tps);

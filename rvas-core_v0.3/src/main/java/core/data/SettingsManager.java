@@ -24,12 +24,12 @@ package core.data;
 
 import core.data.objects.SettingsContainer;
 
-import org.bukkit.OfflinePlayer;
-
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+
+import org.bukkit.OfflinePlayer;
 
 public class SettingsManager {
 
@@ -40,7 +40,6 @@ public class SettingsManager {
         SettingsContainer settings = PlayerMeta.sPlayerSettings.get(p.getUniqueId());
 
         if (settings != null && PlayerMeta.sPlayerSettings.containsKey(p.getUniqueId())) {
-
             return settings;
 
         } else return getNewSettings(p);
@@ -55,9 +54,7 @@ public class SettingsManager {
                 w.write(object.toString() + "\n");
                 w.flush();
 
-              } catch (IOException e) {
-                  throw new UncheckedIOException(e);
-              }
+            } catch (IOException e) { throw new UncheckedIOException(e); }
         }
         w.close();
     }

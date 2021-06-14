@@ -1,6 +1,6 @@
 package core.commands;
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.LagProcessor;
 import core.backend.ServerMeta;
@@ -32,7 +32,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class Server implements CommandExecutor {
+public class ServerCmd implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -109,7 +109,7 @@ public class Server implements CommandExecutor {
 		TextComponent slowMode_a = new TextComponent("Slow chat enabled: ");
 		TextComponent slowMode_b = new TextComponent(ChatListener.slowChatEnabled ? "True" : "False");
 		TextComponent uptime_a = new TextComponent("Server Uptime: ");
-		TextComponent uptime_b = new TextComponent(Util.timeToString(ServerMeta.getUptime()));
+		TextComponent uptime_b = new TextComponent(Util.durationFormat(ServerMeta.getUptime()));
 		
 		// style individual components //
 		title_sep.setColor(ChatPrint.faded);

@@ -22,6 +22,8 @@ package core.backend.utils;
  *
  * */
 
+import core.Main;
+import java.util.logging.Level;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
@@ -87,7 +89,11 @@ public class Restart {
 						.broadcast(new TextComponent("\u00A76Server restarting in \u00A76\u00A7l1 \u00A7r\u00A76second."));
 
 				TimeUnit.SECONDS.sleep(1);
-			} catch (Exception e) { e.printStackTrace(); }
+
+			} catch (Exception e) {
+				Main.console.log(Level.WARNING, "Exception restart-timer thread");
+				e.printStackTrace();
+			}
 
 			Bukkit.getServer().spigot().broadcast(new TextComponent("\u00A76Server is restarting."));
 			Bukkit.shutdown();

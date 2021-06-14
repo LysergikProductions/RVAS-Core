@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>core</groupId>
     <artifactId>rvas-core</artifactId>
-    <version>0.3.3</version>
+    <version>0.3.4</version>
     <name>rvas</name>
     <description>paper-plugin</description>
 
@@ -75,9 +75,8 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.3.3-301</finalName>
+        <finalName>rvas-core-0.3.4-316</finalName>
         <plugins>
-            <!-- download source code in Eclipse, best practice-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>

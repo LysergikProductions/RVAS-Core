@@ -7,6 +7,7 @@ import core.backend.Config;
 import java.io.*;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -52,7 +53,7 @@ public class FileManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} else System.out.println("[WARN] FAILED TO COPY ONE OR MORE FILES");
+		} else Main.console.log(Level.WARNING, "FAILED TO COPY ONE OR MORE FILES");
 	}
 	
 	public static void setup() throws IOException {
@@ -90,8 +91,7 @@ public class FileManager {
 
 		// Create directories and files \\
 		if (!plugin_work_directory.exists() && plugin_work_directory.mkdir()) {
-			System.out.println("[INFO] Succesfully created plugin_work_directory");
-		}
+			Main.console.log(Level.INFO, "Succesfully created plugin_work_directory"); }
 
 		if (!configs_directory.exists() && configs_directory.mkdir()) {
 			if (!core_server_config.exists()) {
@@ -114,44 +114,47 @@ public class FileManager {
 					Files.copy(core_spawn_config_template, Paths.get(plugin_work_path + "configs/spawn_controller.txt"));
 				}
 			}
-		} else if (!configs_directory.exists()) System.out.println("[WARN] FAILED TO CREATE CONFIGS_DIRECTORY");
+		} else if (!configs_directory.exists()) Main.console.log(Level.WARNING, "Failed to create configs directory!");
 
 		// - THEMES - \\
-		if (!themes_directory.exists() && themes_directory.mkdir()) System.out.println("Created themes directory");
+		if (!themes_directory.exists() &&
+				themes_directory.mkdir()) Main.console.log(Level.INFO, "Created themes directory!");
 
 		if (!defaultThemeFile.exists()) {
 			InputStream defaultTemplate = Main.class.getResourceAsStream("/themes/default.json");
+
 			if (defaultTemplate != null) {
 				Files.copy(defaultTemplate, Paths.get("plugins/core/themes/default.json"));
-				System.out.println("Successfully copied data from resource default.json"); }
+				Main.console.log(Level.INFO, "Successfully copied data from resource default.json"); }
 		}
 
 		if (!halloweenThemeFile.exists()) {
 			InputStream halloweenTemplate = Main.class.getResourceAsStream("/themes/halloween.json");
+
 			if (halloweenTemplate != null) {
 				Files.copy(halloweenTemplate, Paths.get("plugins/core/themes/halloween.json"));
-				System.out.println("Successfully copied data from resource halloween.json"); }
+				Main.console.log(Level.INFO, "Successfully copied data from resource halloween.json"); }
 		}
 
 		if (!customThemeFile.exists()) {
 			InputStream customTemplate = Main.class.getResourceAsStream("/themes/custom.json");
+
 			if (customTemplate != null) {
 				Files.copy(customTemplate, Paths.get("plugins/core/themes/custom.json"));
-				System.out.println("Successfully copied data from resource custom.json"); }
+				Main.console.log(Level.INFO, "Successfully copied data from resource custom.json"); }
 		}
 
 		if (!analytics_directory.exists() && analytics_directory.mkdir()) {
-			System.out.println("[INFO] Succesfully created analytics_directory");
-		}
+			Main.console.log(Level.INFO, "Succesfully created analytics_directory"); }
 
 		if (!backup_directory.exists() && backup_directory.mkdir()) {
-			System.out.println("[INFO] Succesfully created backup_directory");
-		}
+			Main.console.log(Level.INFO, "Succesfully created backup_directory"); }
 
 		if (!donor_code_directory.exists() && donor_code_directory.mkdir()) {
 			if (!all_donor_codes.exists()) all_donor_codes.createNewFile();
 			if (!used_donor_codes.exists()) used_donor_codes.createNewFile();
-		} else if (!donor_code_directory.exists()) System.out.println("[WARN] FAILED TO CREATE DONOR_CODE_DIRECTORY");
+
+		} else if (!donor_code_directory.exists()) Main.console.log(Level.WARNING, "Failed to create donor code files");
 
 		if (!donor_database.exists()) donor_database.createNewFile();
 		if (!auto_announce_list.exists()) auto_announce_list.createNewFile();
@@ -194,13 +197,13 @@ public class FileManager {
 			Files.readAllLines(all_donor_codes.toPath()).forEach(val ->
 					DonationManager.DonorCodes.add(val.replace("\"", "").trim()));
 		} catch (Exception e) {
-			System.out.println("Exception while reading all.db : " + e);
+			Main.console.log(Level.WARNING, "WARN Exception while reading all.db : " + e);
 		}
 
 		try {
 			DonationManager.UsedDonorCodes.addAll(Files.readAllLines(used_donor_codes.toPath()));
 		} catch (Exception e) {
-			System.out.println("Exception while reading used.db : " + e);
+			Main.console.log(Level.WARNING, "WARN Exception while reading used.db : " + e);
 		}	
 		
 		// Store Playtimes in RAM \\
@@ -209,19 +212,20 @@ public class FileManager {
 				PlayerMeta.Playtimes.put(
 						UUID.fromString(val.split(":")[0]), Double.parseDouble(val.split(":")[1])));
 		} catch (Exception e) {
-			System.out.println("Exception while reading playtimes.db : " + e);
+			Main.console.log(Level.WARNING, "Exception while reading playtimes.db : " + e);
 		}		
 		
 		// Store PVPstats in RAM \\
 		try {
 			Files.readAllLines(pvpstats_user_database.toPath()).forEach(line -> {
-				System.out.println("Reading pvpstats.txt, line = " + line);
+				if (Config.debug && Config.verbose) Main.console.log(Level.INFO,
+						"Reading pvpstats.txt, line = " + line);
 				
 				StatsContainer stats = StatsContainer.fromString(line);
 				StatsManager.sPVPStats.put(stats.playerid, stats);
 			});
 		} catch (Exception e) {
-			System.out.println("Exception while reading pvpstats.txt : " + e);
+			Main.console.log(Level.WARNING, "Exception while reading pvpstats.txt : " + e);
 		}
 		
 		System.out.println("---------------------------------------------------------------------");
@@ -229,25 +233,25 @@ public class FileManager {
 		// Store PlayerSettings in RAM \\
 		try {
 			Files.readAllLines(settings_user_database.toPath()).forEach(line -> {
-				System.out.println("Reading player_settings.txt, line = " + line);
+				if (Config.debug && Config.verbose) Main.console.log(Level.INFO,
+						"Reading player_settings.txt, line = " + line);
 				
 				SettingsContainer settings = SettingsContainer.fromString(line);
 				PlayerMeta.sPlayerSettings.put(settings.playerid, settings);
 			});
 		} catch (Exception e) {
-			System.out.println("Exception while reading player_settings.txt : " + e);
+			Main.console.log(Level.WARNING, "Exception while reading player_settings.txt : " + e);
 		}
 	}
 
 	public static File getConfiguredThemeFile() {
-		String thisString = Config.getValue("theme");
+		String thisString = Config.getValue("theme").trim();
 
-		if (thisString != null) {
-			switch (thisString) {
-				case "default": return defaultThemeFile;
-				case "halloween": return halloweenThemeFile;
-				case "custom": return customThemeFile;
-			}
-		} return null;
+		switch (thisString) {
+			case "default": return defaultThemeFile;
+			case "halloween": return halloweenThemeFile;
+			case "custom": return customThemeFile;
+		}
+		return defaultThemeFile;
 	}
 }

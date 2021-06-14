@@ -23,11 +23,13 @@ package core.tasks;
  * 
  * */
 
-import core.backend.ChatPrint;
+import core.Main;
+import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.events.ConnectionController;
 
+import java.util.logging.Level;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -63,7 +65,7 @@ public class LagManager implements Listener, Runnable {
 			
 			Analytics.wither_spawns++;
 			
-			if (Config.debug && Config.verbose) System.out.println("Wither Limit: " + witherLimit);
+			if (Config.debug && Config.verbose) Main.console.log(Level.INFO, "Wither Limit: " + witherLimit);
 			
 			currentWithers = getWithers();
 			
@@ -84,9 +86,6 @@ public class LagManager implements Listener, Runnable {
 				if (thisEntity.getType().equals(thisType)) counter++;
 			}
 
-			TextComponent warn = new TextComponent("WARN "); warn.setBold(true);
-			warn.setColor(ChatPrint.fail);
-
 			TextComponent msg = new TextComponent("17+ armor stands at " +
 					spawnLoc.getX() + ", " + spawnLoc.getY() + ", " + spawnLoc.getZ() + " in " + dimension);
 
@@ -95,32 +94,28 @@ public class LagManager implements Listener, Runnable {
 			msg.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
 					"/ninjatp " + dimension + " " + location));
 
-			if (counter > 16) Util.notifyOps(new TextComponent(warn, msg));
+			if (counter > 16) Util.notifyOps(new TextComponent(ChatPrint.warn, msg));
 		}
 	}
 	
 	public static int removeSkulls(int age_limit) {
-		
-		int skulls_world;
-		int skulls_all = 0;
-		
-		String skullMsg;
-		
+
+		int skulls_world; int skulls_all = 0;
+		final String[] skullMsg = new String[1];
+
 		for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
-			
 			skulls_world = 0;
-			
+
 			for (Entity e: thisWorld.getEntities()) {
 				if (e instanceof WitherSkull) {
-					if (e.getTicksLived() > age_limit) skulls_world++; e.remove();
+					if (e.getTicksLived() > age_limit) { skulls_world++; e.remove(); }
 				}
 			}
-			
+
 			if (skulls_world != 0) {
-				
-				if (skulls_world == 1) skullMsg = "skull"; else skullMsg = "skulls";
-				if (Config.debug) System.out.println(
-						"Removed " + skulls_world + " wither " + skullMsg + " from " + thisWorld.getName());
+				if (skulls_world == 1) skullMsg[0] = "skull"; else skullMsg[0] = "skulls";
+				if (Config.debug) Main.console.log(Level.INFO,
+						"Removed " + skulls_world + " wither " + skullMsg[0] + " from " + thisWorld.getName());
 			}
 			skulls_all += skulls_world;
 		}
@@ -132,7 +127,8 @@ public class LagManager implements Listener, Runnable {
 
 		for (org.bukkit.World thisWorld: Bukkit.getServer().getWorlds()) {
 			
-			if (Config.debug && Config.verbose) System.out.println("Counting withers in: " + thisWorld.getName());
+			if (Config.debug && Config.verbose) Main.console.log(Level.INFO,
+					"Counting withers in: " + thisWorld.getName());
 			
 			for (Entity e: thisWorld.getEntities()) {
 				if (e instanceof Wither) {
@@ -140,7 +136,7 @@ public class LagManager implements Listener, Runnable {
 				}
 			}
 		}
-		if (Config.debug) System.out.println("Counted Withers: " + counter);
+		if (Config.debug) Main.console.log(Level.INFO, "Counted Withers: " + counter);
 		return counter;
 	}
 }

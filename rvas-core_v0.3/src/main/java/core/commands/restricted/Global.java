@@ -22,7 +22,7 @@ package core.commands.restricted;
  * 
  * */
 
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
 import core.backend.utils.Util;
 import core.events.SpawnController;

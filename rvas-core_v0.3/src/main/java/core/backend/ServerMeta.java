@@ -10,19 +10,16 @@ public class ServerMeta {
 
 	private static double _uptimeInSeconds = 0;
 
-	public static void tickUptime(double msToAdd)
-	{
+	public static void tickUptime(double msToAdd) {
 		_uptimeInSeconds += msToAdd / 1000;
 	}
-	public static double getUptime()
-	{
-		return _uptimeInSeconds;
-	}
+
+	public static double getUptime() { return _uptimeInSeconds; }
 
 	// -- RC BLOCKING -- //
 
-	private static HashMap<UUID, Double> Delays = new HashMap<>();
-	private static HashMap<UUID, Double> InitialDelays = new HashMap<>();
+	private static final HashMap<UUID, Double> Delays = new HashMap<>();
+	private static final HashMap<UUID, Double> InitialDelays = new HashMap<>();
 
 	@SuppressWarnings("deprecation")
 	public static void kickWithDelay(Player p, double delay) {
@@ -45,8 +42,7 @@ public class ServerMeta {
 	}
 
 	public static void tickRcDelays(double elapsed) {
-		HashMap<UUID, Double> temp = Delays;
-		for (UUID u : temp.keySet()) {
+		for (UUID u : Delays.keySet()) {
 			double oldValue = Delays.get(u);
 			Delays.put(u, oldValue + elapsed);
 			if (oldValue + elapsed >= InitialDelays.get(u)) {

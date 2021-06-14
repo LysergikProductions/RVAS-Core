@@ -1,15 +1,12 @@
 package core.commands.restricted;
 
 import core.backend.Config;
+import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
-//import core.events.SpawnController;
+import core.data.PrisonerManager;
 
 import java.util.*;
-
-import core.data.PrisonerManager;
 import org.bukkit.Bukkit;
-//import org.bukkit.GameMode;
-//import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -22,98 +19,28 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("SpellCheckingInspection")
 public class Prison implements CommandExecutor {
 
-	//HashMap<UUID, Boolean> threadIndicators = new HashMap<UUID, Boolean>();
-	//HashMap<UUID, Boolean> threadProgression = new HashMap<UUID, Boolean>();
-
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		Player player = (Player) sender;
 		
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
-			sender.sendMessage("\u00A7cYou can't run this.");
-			return true;
-		}
+			sender.sendMessage(ChatPrint.fail + "You can't run this"); return true; }
+
 		if (args.length != 1) {
-			sender.sendMessage("\u00A7cInvalid syntax. Syntax: /prison [name]");
-			return true;
-		}
-
-		/*if (sender.isOp()) {
-			Player op = (Player) sender;
-			switch (args[0]) {
-				case "cam":
-					Bukkit.getScheduler().runTaskAsynchronously(core.Main.instance, () -> {
-						while (true) {
-
-							Player finalOp  = (Player) sender;
-							Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
-							players.forEach(p -> {
-								if (p.isOp())
-									return;
-								Bukkit.getScheduler().runTask(core.Main.instance, () -> {
-									finalOp.setGameMode(GameMode.SPECTATOR);
-									finalOp.teleport(p.getLocation());
-								});
-								finalOp.sendMessage("§6Player: " + p.getName());
-
-								while (!threadProgression.get(finalOp.getUniqueId()) && !threadIndicators.get(finalOp.getUniqueId())) {
-									try {
-										Thread.sleep(500);
-									} catch (InterruptedException e) {
-									}
-								}
-
-								if (threadIndicators.get(finalOp.getUniqueId())) {
-									threadIndicators.remove(finalOp.getUniqueId());
-									threadProgression.remove(finalOp.getUniqueId());
-									return;
-								}
-
-								if (threadProgression.get(finalOp.getUniqueId())) {
-									threadProgression.put(finalOp.getUniqueId(), false);
-								}
-
-							});
-							if (threadIndicators.get(finalOp.getUniqueId())) {
-								threadIndicators.remove(finalOp.getUniqueId());
-								threadProgression.remove(finalOp.getUniqueId());
-								break;
-							}
-						}
-						return;
-					});
-					op = (Player) sender;
-					threadIndicators.put(op.getUniqueId(), false);
-					threadProgression.put(op.getUniqueId(), false);
-					return true;
-				case "cancel":
-					op = (Player) sender;
-					if (threadIndicators.containsKey(op.getUniqueId())) {
-						threadIndicators.put(op.getUniqueId(), true);
-					}
-					return true;
-				case "next":
-					op = (Player) sender;
-					if (threadProgression.containsKey(op.getUniqueId())) {
-						threadProgression.put(op.getUniqueId(), true);
-					}
-					return true;
-			}
-		}*/
+			sender.sendMessage(ChatPrint.fail + "Invalid syntax. Syntax: /prison [name]"); return true; }
 
 		Player thisPlayer = Bukkit.getPlayer(args[0]);
 		
 		if (thisPlayer == null) {
-			sender.sendMessage("\u00A7cPlayer is not online.");
+			sender.sendMessage(ChatPrint.fail + "Player is not online");
 			return true;
 			
 		} else if (PlayerMeta.isAdmin(thisPlayer) || thisPlayer.isOp()) return false;
 
-		try {
-			PrisonerManager.togglePrisoner(thisPlayer);
+		try { PrisonerManager.togglePrisoner(thisPlayer);
 		} catch (Exception e) {
 			if (Config.debug) e.printStackTrace();
-			player.sendMessage("Failed to toggle LagPrisoner :/");
+			player.sendMessage(ChatPrint.fail + "Failed to toggle LagPrisoner :/");
 			return false;
 		}
 
@@ -127,7 +54,7 @@ public class Prison implements CommandExecutor {
 					+ Math.round(thisPlayer.getLocation().getY()) + ", "
 					+ Math.round(thisPlayer.getLocation().getZ())
 
-			).forEach(s -> Bukkit.getServer().spigot().broadcast(new TextComponent(s)));
+			).forEach(ln -> Bukkit.getServer().spigot().broadcast(new TextComponent(ln)));
 
 			thisPlayer.getEnderChest().clear();
 			thisPlayer.setHealth(0);

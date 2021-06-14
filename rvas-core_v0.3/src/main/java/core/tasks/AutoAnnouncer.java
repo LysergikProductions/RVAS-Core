@@ -24,8 +24,9 @@ package core.tasks;
  * */
 
 import core.backend.Config;
-import core.backend.ChatPrint;
 import core.backend.Scheduler;
+import core.frontend.ChatPrint;
+import core.commands.restricted.Check;
 
 import java.util.*;
 import java.nio.file.Files;
@@ -33,10 +34,10 @@ import java.nio.file.Paths;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
 @SuppressWarnings("deprecation")
@@ -49,9 +50,8 @@ public class AutoAnnouncer extends TimerTask {
 		try {
 			announcements = new ArrayList<>();
 			announcements.addAll(Files.readAllLines(Paths.get("plugins/core/announcements.txt")));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 
 	static TextComponent source; static {
@@ -88,15 +88,20 @@ public class AutoAnnouncer extends TimerTask {
 
 		if (tryMsg.equals("default")) {
 			lastAnnouncement = "default";
-			Bukkit.spigot().broadcast(source);
+			String fig = Config.getValue("announcer.default").trim();
+
+			if (fig.equalsIgnoreCase("default") || fig.isEmpty()) Bukkit.spigot().broadcast(source);
+			else Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary.toString() + fig));
+
 		} else {
 			lastAnnouncement = tryMsg;
 			Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary.toString() + tryMsg));
 		}
 		Scheduler.setLastTaskId("autoAnnounce");
+		Check.updateGUI();
 	}
 
-	public static boolean updateConfigs() {
+	public static boolean init() {
 		try {
 			announcements = new ArrayList<>();
 			announcements.addAll(Files.readAllLines(Paths.get("plugins/core/announcements.txt")));

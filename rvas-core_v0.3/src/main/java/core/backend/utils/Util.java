@@ -22,15 +22,18 @@ package core.backend.utils;
  *
  * */
 
+import core.Main;
+import core.backend.Config;
 import core.commands.restricted.Admin;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.Map;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -42,15 +45,16 @@ public class Util {
 
         for (Player thisPlayer: Bukkit.getOnlinePlayers()) {
             try {
-                if (thisPlayer.isOp() &&
-                        !Admin.doNotDisturb.contains(thisPlayer.getUniqueId())) thisPlayer.sendMessage(msg);
-            } catch (Exception e) {return;}
+                if (thisPlayer.isOp() && !Admin.doNotDisturb.contains(thisPlayer.getUniqueId())) {
+                    thisPlayer.sendMessage(msg); }
+
+            } catch (Exception ignore) { }
         }
-        System.out.println(msg.getText());
+        Main.console.log(Level.INFO, msg.getText());
     }
 
     // converts sum seconds into human-readable string
-    public static String timeToString(double seconds) {
+    public static String durationFormat(double seconds) {
 
         long hours;
         long days = (long) (seconds / 86400);
@@ -100,9 +104,10 @@ public class Util {
     }
 
     public static String getDimensionName (Location thisLoc) {
+        org.bukkit.World.Environment thisEnv; String out = null;
 
-        String out = null;
-        org.bukkit.World.Environment thisEnv = thisLoc.getWorld().getEnvironment();
+        try { thisEnv = thisLoc.getWorld().getEnvironment();
+        } catch (Exception ignore) { thisEnv = World.Environment.NORMAL; }
 
         if (thisEnv.equals(org.bukkit.World.Environment.NORMAL)) out = "overworld";
         else if (thisEnv.equals(org.bukkit.World.Environment.NETHER)) out = "the_nether";
@@ -153,6 +158,23 @@ public class Util {
         // h, k are center point | x, y are co-ords to check | a, b are ellipse radii
         return ((int)Math.pow((x - h), 2) / (int)Math.pow(a, 2))
                 + ((int)Math.pow((y - k), 2) / (int)Math.pow(b, 2));
+    }
+
+    public static boolean isInSpawn(Location thisLoc) {
+        double max_x, max_z, min_x, min_z;
+
+        double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
+        double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
+        double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
+        double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
+
+        if (Double.isNaN(config_max_x)) max_x = 420.0; else max_x = config_max_x;
+        if (Double.isNaN(config_max_z)) max_z = 420.0; else max_z = config_max_z;
+        if (Double.isNaN(config_min_x)) min_x = -420.0; else min_x = config_min_x;
+        if (Double.isNaN(config_min_z)) min_z = -420.0; else min_z = config_min_z;
+
+        double x = thisLoc.getX(); double z = thisLoc.getZ();
+        return x > min_x && x < max_x && z > min_z && z < max_z;
     }
 
     public static Map<Player, Integer> sortLagMap(Map<Player,Integer> thisMap) {

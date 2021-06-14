@@ -23,15 +23,17 @@ package core.events;
  * 
  * */
 
-import core.backend.Config;
-import core.backend.ChatPrint;
-import core.backend.ItemCheck;
-import core.backend.utils.*;
+import core.Main;
 import core.data.PlayerMeta;
+import core.backend.Config;
+import core.backend.utils.*;
+import core.backend.ItemCheck;
+import core.frontend.ChatPrint;
 import core.commands.restricted.Repair;
 
 import java.util.*;
 import java.text.DecimalFormat;
+import java.util.logging.Level;
 
 import core.data.PrisonerManager;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -89,105 +91,100 @@ public class BlockListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event) {
-		
-		//long startTime = System.nanoTime();		
+		//long startTime = System.nanoTime();
+
 		Player breaker = event.getPlayer();
+		if (PlayerMeta.isAdmin(breaker)) return; // <- ignore server owner's events
 		
-		// prevent creative players from breaking certain blocks but completely ignore admin account
-		if (!PlayerMeta.isAdmin(breaker)) {
-			
-			Block block = event.getBlock();
-			Location block_loc = block.getLocation();
-			
-			int x = (int)block_loc.getX();
-			int y = (int)block_loc.getY();
-			int z = (int)block_loc.getZ();
+		// prevent creative players from breaking certain blocks
+		Block block = event.getBlock();
+		Location block_loc = block.getLocation();
 
-			String breaker_name = breaker.getName();
-			Material blockType = block.getType();
-			Environment dimension = block.getWorld().getEnvironment();
-			
-			TextComponent cancelPos = new TextComponent(
-					breaker_name + "'s BlockBreakEvent was cancelled: " + blockType);
-			
-			if (!breaker.isOp() && modeOnBreak) breaker.setGameMode(GameMode.SURVIVAL);
-			
-			if (BreakBanned.contains(blockType)) {
+		int x = (int)block_loc.getX();
+		int y = (int)block_loc.getY();
+		int z = (int)block_loc.getZ();
 
-				System.out.println("WARN " + breaker_name + " tried to break a protected admin block!");
+		String breaker_name = breaker.getName();
+		Material blockType = block.getType();
+		Environment dimension = block.getWorld().getEnvironment();
+
+		TextComponent cancelPos = new TextComponent(
+				breaker_name + "'s BlockBreakEvent was cancelled: " + blockType);
+
+		if (!breaker.isOp() && modeOnBreak) breaker.setGameMode(GameMode.SURVIVAL);
+
+		if (BreakBanned.contains(blockType)) {
+
+			Main.console.log(Level.WARNING, breaker_name + " tried to break a protected admin block!");
+			if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+
+			event.setCancelled(true);
+
+		// do things if block == bedrock
+		} else if (blockType.equals(Material.BEDROCK)) {
+
+			// protect bedrock floor
+			if (y < 1 && floorProt) {
+
+				Main.console.log(Level.WARNING, breaker_name + " tried to break a protected floor block!");
 				if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 
 				event.setCancelled(true);
-				
-			// do things if block == bedrock
-			} else if (blockType.equals(Material.BEDROCK)) {
-				
-				// protect bedrock floor
-				if (y < 1 && floorProt) {
+				return;
 
-					System.out.println("WARN " + breaker_name + " tried to break a protected floor block!");
-					if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+			// protect nether roof
+			} else if (y == 127 && roofProt &&
+					dimension.equals(Environment.NETHER)) {
 
-					event.setCancelled(true);
-					return;
-					
-				// protect nether roof	
-				} else if (y == 127 && roofProt &&
-						dimension.equals(Environment.NETHER)) {
+				Main.console.log(Level.WARNING, breaker_name + " tried to break a protected roof block!");
+				if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 
-					System.out.println("WARN " + breaker_name + " tried to break a protected roof block!");
-					if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+				event.setCancelled(true);
+				return;
 
-					event.setCancelled(true);
-					return;
-				
-				// protect exit portal in the end
-				} else if (dimension.equals(Environment.THE_END) &&
-						y == Repair.y_low || y == Repair.y_low+1) {
-					
-					if (x < 4 && x > -4) {
-						if (z < 4 && z > -4) {
-							
-							System.out.println("WARN " + breaker_name + " tried to break a protected exit portal block!");
-							if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+			// protect exit portal in the end
+			} else if (dimension.equals(Environment.THE_END) &&
+					y == Repair.y_low || y == Repair.y_low+1) {
 
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
-				
-				if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(
-						new TextComponent(breaker_name + " just broke BEDROCK!"));
-				brokenBedrockCounter++;
-				
-			// protect natural The_End entry and exit portals
-			} else if (blockType.equals(Material.END_PORTAL)) {
-				
-				if (dimension.equals(Environment.THE_END) &&
-						y == Repair.y_low || y == Repair.y_low+1) {
-					
-					if (x < 4 && x > -4) {
-						if (z < 4 && z > -4) {
-							
-							event.setCancelled(true);
-							if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(cancelPos);
-						}
+				if (x < 4 && x > -4) {
+					if (z < 4 && z > -4) {
+
+						Main.console.log(Level.WARNING, breaker_name + " tried to break a protected exit portal block!");
+						if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+
+						event.setCancelled(true);
+						return;
 					}
 				}
 			}
-			
-			//long endTime = System.nanoTime();
-			//long duration = (endTime - startTime);
-			//System.out.println("BreakTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
+
+			if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(
+					new TextComponent(breaker_name + " just broke BEDROCK!"));
+			brokenBedrockCounter++;
+
+		// protect natural The_End entry and exit portals
+		} else if (blockType.equals(Material.END_PORTAL)) {
+
+			if (dimension.equals(Environment.THE_END) &&
+					y == Repair.y_low || y == Repair.y_low+1) {
+
+				if (x < 4 && x > -4) {
+					if (z < 4 && z > -4) {
+
+						event.setCancelled(true);
+						if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+					}
+				}
+			}
 		}
+		//long endTime = System.nanoTime();
+		//long duration = (endTime - startTime);
+		//System.out.println("BreakTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlace(BlockPlaceEvent event) {
-		
-		long startTime = System.nanoTime();		
-		if (Config.debug) System.out.println("onPlace triggered.." + startTime);
+		long startTime = System.nanoTime();
 		
 		Player placer = event.getPlayer();
 		if (PlayerMeta.isAdmin(placer)) return;
@@ -203,8 +200,8 @@ public class BlockListener implements Listener {
 		// prevent lag-prisoners from placing things that can cause lag
 		if (PrisonerManager.isPrisoner(placer)) {
 
-			if (LagMats.contains(blockType)) {event.setCancelled(true);
-				return;
+			if (LagMats.contains(blockType)) {
+				event.setCancelled(true); return;
 			} else if (
 					mat.endsWith("SAND") ||
 					mat.contains("POWDER") ||
@@ -214,8 +211,7 @@ public class BlockListener implements Listener {
 					mat.contains("DOOR")
 					) {
 				
-				event.setCancelled(true);
-				return;
+				event.setCancelled(true); return;
 			}
 		}
 
@@ -256,9 +252,7 @@ public class BlockListener implements Listener {
 
 			if (!placer.getGameMode().equals(GameMode.SURVIVAL)) {
 				event.setCancelled(true);
-
-				placer.sendMessage(new TextComponent(
-						ChatPrint.fail + "You can only place shulkers in survival mode").toLegacyText());
+				placer.sendMessage(ChatPrint.fail + "You can only place shulkers in survival mode");
 			}
 		}
 		
@@ -287,7 +281,7 @@ public class BlockListener implements Listener {
 				return;
 			} else if (blockType.equals(Material.BEDROCK)) {
 				placedBedrockCounter++;
-				System.out.println("WARN: " + placer_name + " just placed bedrock at " + block_loc);
+				Main.console.log(Level.WARNING, placer_name + " just placed bedrock at " + block_loc);
 			}
 		}
 
@@ -334,7 +328,7 @@ public class BlockListener implements Listener {
 		if (!thisPlayer.isOp() && modeOnPlace) thisPlayer.setGameMode(GameMode.SURVIVAL);
 	}
 	
-	public static boolean updateConfigs() {
+	public static boolean init() {
 		
 		try {
 			roofProt = Boolean.parseBoolean(Config.getValue("protect.bedrock.roof"));
@@ -342,12 +336,8 @@ public class BlockListener implements Listener {
 			modeOnPlace = Boolean.parseBoolean(Config.getValue("protect.gamemode.onplace"));
 			modeOnBreak = Boolean.parseBoolean(Config.getValue("protect.gamemode.onbreak"));
 			consumeCreativeBlocks = Boolean.parseBoolean(Config.getValue("consume.creative.blocks"));
-			
 			return true;
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		} catch (Exception e) { e.printStackTrace(); return false; }
 	}
 }

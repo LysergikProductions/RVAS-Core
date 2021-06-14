@@ -1,7 +1,9 @@
 package core.events;
 
+import core.Main;
 import core.backend.*;
 import core.backend.utils.Util;
+import core.frontend.ChatPrint;
 import core.commands.Kit;
 import core.commands.restricted.Admin;
 
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.net.InetAddress;
 import java.text.DecimalFormat;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -53,22 +56,21 @@ public class ConnectionController implements Listener {
 		boolean isLoopback = thisAddress.isLoopbackAddress();
 
 		if (isMulti) {
-			System.out.println("[WARN] MULTI IP " + playerIP +
-					" with name (" + playerName + ") and UUID (" + playerID + ")");
+			Main.console.log(Level.WARNING,
+					"MULTI IP " + playerIP + " with name (" + playerName + ") and UUID (" + playerID + ")");
 
 			event.setKickMessage("\u00A76You are using a multi ip. You cannot connect like this.");
 			event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
 			return;
 		}
 
-		if (isLoopback) System.out.println("[WARN] LOCAL LOOPBACK IP " + playerIP +
-				" with name (" + playerName + ")");
-		else System.out.println("[INFO] Connection Attempt: " + playerID +
-				" is trying to connect from IP: " + playerIP + " with the name " + playerName);
+		if (isLoopback) Main.console.log(Level.WARNING,
+				"LOCAL LOOPBACK IP " + playerIP + " with name (" + playerName + ")");
+
+		else Main.console.log(Level.INFO,
+				"Connection Attempt: " + playerID + " from IP: " + playerIP + " with name " + playerName);
 
 		//TODO: Get timezone by ip
-		// Store this timezone in the player's sPlayerSettings
-		// If they don't have an entry, getNewSettings() then set timezone
 	}
 
 	@EventHandler (ignoreCancelled = true)
@@ -87,13 +89,11 @@ public class ConnectionController implements Listener {
 
 		// Set server name if it's forced
 		if(Config.getValue("motd.force").equals("true")) {
-			serverHostname = Config.getValue("motd.force.name");
-		}
+			serverHostname = Config.getValue("motd.force.name"); }
 		
 		// Get domain name, NOT ip if player is connecting from IP
 		if(!Util.validServerIP(e.getHostname()) && serverHostname.equals("unknown")) {
-			serverHostname = e.getHostname().split(":")[0];
-		}
+			serverHostname = e.getHostname().split(":")[0]; }
 		
 		// Custom whitelist kick
 		if(Bukkit.hasWhitelist() && !Bukkit.getWhitelistedPlayers().contains(e.getPlayer())
@@ -123,26 +123,29 @@ public class ConnectionController implements Listener {
 		}
 		
 		if(!PlayerMeta.Playtimes.containsKey(playerid)) {
-			PlayerMeta.Playtimes.put(playerid, 0.0D);
-		}
+			PlayerMeta.Playtimes.put(playerid, 0.0D); }
 
 		Kit.kickedFromKit.remove(playerid);
 
 		// Full player check on initial join
 		if (Config.getValue("item.illegal.onjoin").equals("true")) {
-			thisPlayer.getInventory().forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_INVENTORY_ITEM", thisPlayer));
-			thisPlayer.getEnderChest().forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_ENDER_CHEST_ITEM", thisPlayer));
-			Arrays.stream(thisPlayer.getInventory().getArmorContents()).forEach(itemStack -> ItemCheck.IllegalCheck(itemStack, "LOGON_ARMOR_ITEM", thisPlayer));
+
+			thisPlayer.getInventory().forEach(itemStack ->
+					ItemCheck.IllegalCheck(itemStack, "LOGON_INVENTORY_ITEM", thisPlayer));
+
+			thisPlayer.getEnderChest().forEach(itemStack ->
+					ItemCheck.IllegalCheck(itemStack, "LOGON_ENDER_CHEST_ITEM", thisPlayer));
+
+			Arrays.stream(thisPlayer.getInventory().getArmorContents()).forEach(itemStack ->
+					ItemCheck.IllegalCheck(itemStack, "LOGON_ARMOR_ITEM", thisPlayer));
 
 			ItemCheck.IllegalCheck(thisPlayer.getInventory().getItemInMainHand(), "LOGON_MAIN_HAND", thisPlayer);
-
 			ItemCheck.IllegalCheck(thisPlayer.getInventory().getItemInOffHand(), "LOGON_OFF_HAND", thisPlayer);
 		}
 
 		// Set survival if enabled; exempt ops
 		if (Config.getValue("misc.survival").equals("true") && !thisPlayer.isOp()) {
-			thisPlayer.setGameMode(GameMode.SURVIVAL);
-		}
+			thisPlayer.setGameMode(GameMode.SURVIVAL); }
 
 		// Send join messages to joining players
 		String everyMsg = Config.getValue("join.message.everyJoin").replace('"', ' ').trim();
@@ -151,11 +154,8 @@ public class ConnectionController implements Listener {
 		TextComponent everyComp = new TextComponent(everyMsg); everyComp.setColor(ChatPrint.tertiary);
 		TextComponent firstComp = new TextComponent(firstMsg); firstComp.setColor(ChatPrint.tertiary);
 
-		if (thisPlayer.hasPlayedBefore()) {
-			if (!everyMsg.equals("")) thisPlayer.spigot().sendMessage(everyComp);
-		} else {
-			if (!firstMsg.equals("")) thisPlayer.spigot().sendMessage(firstComp);
-		}
+		if (thisPlayer.hasPlayedBefore() && !everyMsg.isEmpty()) thisPlayer.spigot().sendMessage(everyComp);
+		else if (!everyMsg.isEmpty()) thisPlayer.spigot().sendMessage(firstComp);
 	}
 
 	public enum MessageType {
@@ -202,25 +202,26 @@ public class ConnectionController implements Listener {
 	private Random r = new Random();
 
 	private static List<String> allMotds; static {
-			try {
-				System.out.println("[core.events.connection] Loading " + motds.length + " default MOTDs...");
+		try {
+			Main.console.log(Level.INFO, "Loading " + motds.length + " default MOTDs...");
 
-				allMotds = new ArrayList<>(Arrays.asList(motds));
-				allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
+			allMotds = new ArrayList<>(Arrays.asList(motds));
+			allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
 
-				for (Donor thisDonor: DonationManager._donorList) {
-					String thisMOTD = thisDonor.getMsgOtd();
+			for (Donor thisDonor: DonationManager._donorList) {
+				String thisMOTD = thisDonor.getMsgOtd();
 
-					if (DonationManager.isValidString(thisMOTD)) {
-						allMotds.add(thisMOTD);
+				if (DonationManager.isValidString(thisMOTD)) {
+					allMotds.add(thisMOTD);
 
-						System.out.println(Bukkit.getServer().getPlayer(
-								thisDonor.getUserID()).getName() + " MOTD added: " + thisMOTD);
-					}
+					Main.console.log(Level.INFO,
+							Bukkit.getServer().getPlayer(thisDonor.getUserID()).getName()
+									+ " MOTD added: " + thisMOTD);
 				}
+			}
+		} catch (IOException ignore) { allMotds = new ArrayList<>(Arrays.asList(motds)); }
 
-			} catch (IOException ignore) { allMotds = new ArrayList<>(Arrays.asList(motds)); }
-			System.out.println("[core.events.connection] Loaded " + allMotds.size() + " MOTDs");
+		Main.console.log(Level.INFO, "Loaded " + allMotds.size() + " MOTDs");
 	}
 
 	@EventHandler
@@ -268,18 +269,17 @@ public class ConnectionController implements Listener {
 		return out.toString();
 	}
 
-	public static boolean updateConfigs() {
+	public static boolean init() {
 
 		try {
 			allMotds = new ArrayList<>(Arrays.asList(motds));
-			System.out.println("[core.events.connection] Loading " + motds.length + " default MOTDs...");
+			Main.console.log(Level.INFO, "[core.events.connection] Loading " + motds.length + " default MOTDs...");
 			allMotds.addAll(Files.readAllLines(Paths.get("plugins/core/motds.txt")));
 			return true;
 
 		} catch (Exception e) {
 			allMotds = new ArrayList<>(Arrays.asList(motds));
-			e.printStackTrace();
-			return false;
+			e.printStackTrace(); return false;
 		}
 	}
 }

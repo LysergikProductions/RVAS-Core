@@ -1,7 +1,7 @@
 package core.commands.restricted;
 
 import core.backend.Config;
-import core.backend.ChatPrint;
+import core.frontend.ChatPrint;
 import core.data.DonationManager;
 
 import org.bukkit.Bukkit;
@@ -15,15 +15,16 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class SetDonator implements CommandExecutor {
 
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 
 		if (!(sender instanceof ConsoleCommandSender) && !sender.isOp()) {
 			sender.sendMessage(new TextComponent(ChatPrint.fail +
-					"You can't run this").toLegacyText()); return true;
+					"You can't run this").toLegacyText()); return false;
 		}
 
 		int argCount = args.length;
@@ -39,7 +40,7 @@ public class SetDonator implements CommandExecutor {
 			try {
 				if (!DonationManager.setDonor(donator, "INVALID", 0.00)) return false;
 				else {
-					if (DonationManager.isDonor(donator)) donator.sendMessage(new TextComponent(
+					if (DonationManager.isValidDonor(donator)) donator.sendMessage(new TextComponent(
 							ChatPrint.primary + "Added donator!").toLegacyText());
 					else donator.sendMessage(new TextComponent(
 							ChatPrint.primary + "Removed donator!").toLegacyText());
@@ -68,9 +69,16 @@ public class SetDonator implements CommandExecutor {
 			e.printStackTrace(); return false;
 		}
 
-		if (DonationManager.isDonor(donator)) {
+		if (DonationManager.isValidDonor(donator)) {
 			Bukkit.getServer().spigot()
 					.broadcast(new TextComponent("\u00A76" + donator.getName() + " just donated to the server!"));
+
+			try {
+				Objects.requireNonNull(DonationManager.getDonorByUUID(donator.getUniqueId()))
+						.sendMessage(new TextComponent(ChatPrint.controls +
+								"/w an op about setting your custom IGN, tag, and motd!"));
+
+			} catch (Exception ignore) { }
 			return true;
 		}
 		return false;

@@ -22,16 +22,19 @@ package core.data;
  *
  * */
 
+import core.Main;
+
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -45,19 +48,16 @@ public class PrisonerManager {
             _prisonerList.put(p.getUniqueId(), Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
         } else {
             try { _prisonerList.remove(p.getUniqueId());
-            } catch (Exception e) {
-                throw new Exception(e);
-            }
+            } catch (Exception e) { throw new Exception(e); }
         }
 
         try { savePrisoners();
         } catch (IOException e) {
-            System.out.println("[core.backend.playermeta] Failed to save lag priosners.");
+            Main.console.log(Level.WARNING, "[core.backend.playermeta] Failed to save lag priosners.");
         }
     }
 
     public static boolean isPrisoner(Player p) {
-
         return _prisonerList.containsKey(p.getUniqueId()) ||
                 _prisonerList.containsValue(Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
     }

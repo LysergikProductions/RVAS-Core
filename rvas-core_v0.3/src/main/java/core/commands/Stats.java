@@ -1,10 +1,11 @@
 package core.commands;
 
 import core.Main;
-import core.backend.*;
 import core.data.PlayerMeta;
 import core.data.SettingsManager;
 import core.data.objects.*;
+import core.frontend.ChatPrint;
+import core.frontend.HelpPages;
 import core.tasks.Analytics;
 
 import java.util.*;
@@ -184,7 +185,6 @@ public class Stats implements CommandExecutor {
 		} else { // user supplied no arguments
 			
 			OfflinePlayer target = Bukkit.getOfflinePlayer(player.getUniqueId());
-			
 			ChatPrint.printStats(player, target);
 		}
 		return true;

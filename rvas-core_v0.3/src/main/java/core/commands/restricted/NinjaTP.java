@@ -24,9 +24,11 @@ package core.commands.restricted;
  *
  * */
 
-import core.Main;
+import core.frontend.ChatPrint;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 public class NinjaTP implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 
         if (!(sender instanceof Player)) return false;
         Player player = (Player)sender;
@@ -48,17 +50,31 @@ public class NinjaTP implements CommandExecutor {
             String tp_cmd = "/execute in " + dimension + " run tp @p[name=" + player.getName() + "] " + loc;
 
             player.chat("/sv on"); // <- requires SuperVanish plugin
-
-            // tp command-sender to the location 20 ticks after beginning to vanish
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, () -> {
-                player.chat(tp_cmd); }, 20L);
+            scheduleSyncedTP(player, tp_cmd);
 
         } else if (args.length == 1) {
             String tp_cmd = "/tp " + args[0].trim();
 
             player.chat("/sv on"); // <- requires SuperVanish plugin
-            player.chat(tp_cmd); // <- tp command-sender to the location
+            scheduleSyncedTP(player, tp_cmd);
         }
         return true;
+    }
+
+    final static TextComponent t3 = new TextComponent(ChatPrint.faded + "teleporting in 3 seconds..");
+    final static TextComponent t2 = new TextComponent(ChatPrint.faded + "teleporting in 2 seconds..");
+    final static TextComponent t1 = new TextComponent(ChatPrint.faded + "teleporting now..");
+
+    static void scheduleSyncedTP(Player thisPlayer, String thisCmd) {
+        thisPlayer.sendMessage(t3.toLegacyText());
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () ->
+                thisPlayer.sendMessage(t2.toLegacyText()), 20L);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () ->
+                thisPlayer.sendMessage(t1.toLegacyText()), 48L);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(core.Main.instance, () ->
+                thisPlayer.chat(thisCmd), 60L);
     }
 }

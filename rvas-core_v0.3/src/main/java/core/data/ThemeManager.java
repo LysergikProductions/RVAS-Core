@@ -22,13 +22,15 @@ package core.data;
  *
  * */
 
+import core.Main;
 import core.data.objects.Theme;
 
 import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
 import net.md_5.bungee.api.ChatColor;
@@ -42,36 +44,16 @@ public class ThemeManager {
         if (thisFile.exists()) {
             try { currentTheme = getThemeFromJSON(thisFile);
             } catch (Exception e) {
-                currentTheme = createDefaultTheme();
-                System.out.println("WARN getThemeFromJSON Exception");
+                currentTheme.setToInternalDefaults();
+                Main.console.log(Level.WARNING, "getThemeFromJSON Exception");
                 throw new IOException(e.getMessage());
             }
         } else {
-            System.out.println("WARN failed to load the specified theme :(");
-            System.out.println("Creating the default theme from scratch..");
+            Main.console.log(Level.WARNING, "Failed to load the specified theme :(");
+            Main.console.log(Level.WARNING, "Creating the default theme from scratch..");
 
-            currentTheme = createDefaultTheme();
+            currentTheme.setToInternalDefaults();
         }
-    }
-
-    public static Theme createDefaultTheme() {
-        Map<String, ChatColor> thisMap = new HashMap<>();
-
-        thisMap.put("primary", ChatColor.GOLD);
-        thisMap.put("secondary", ChatColor.DARK_AQUA);
-        thisMap.put("tertiary", ChatColor.BLUE);
-
-        thisMap.put("clear", ChatColor.WHITE);
-        thisMap.put("faded", ChatColor.GRAY);
-        thisMap.put("succeed", ChatColor.GREEN);
-        thisMap.put("fail", ChatColor.RED);
-
-        thisMap.put("help_title", ChatColor.WHITE);
-        thisMap.put("desc", ChatColor.GRAY);
-        thisMap.put("cmd", ChatColor.GOLD);
-        thisMap.put("controls", ChatColor.AQUA);
-
-        return new Theme(thisMap);
     }
 
     // - Read and rebuild new Theme object from file
@@ -79,7 +61,7 @@ public class ThemeManager {
         Gson gson = new Gson();
 
         if (!thisFile.getName().endsWith(".json")) {
-            System.out.println("WARN tried reading a non-json as json");
+            Main.console.log(Level.WARNING, "Tried reading a non-json as json!");
             return null;
         }
 
@@ -104,5 +86,22 @@ public class ThemeManager {
         themeBuilder.put("controls", thisTheme.getControls());
 
         return new Theme(themeBuilder);
+    }
+
+    public static void writeThemeToJSON(Theme thisTheme, File thisFile) throws IOException {
+        String file_name = thisFile.getName();
+
+        if (!file_name.contains("custom") && !file_name.contains("halloween")) return;
+        Gson gson = new Gson(); Writer writer = new FileWriter(thisFile, false);
+
+        gson.toJson(thisTheme, writer);
+        writer.flush(); writer.close();
+    }
+
+    public static void replaceDefaultJSON(Theme thisTheme) throws IOException {
+        Gson gson = new Gson(); Writer writer = new FileWriter(FileManager.defaultThemeFile, false);
+
+        gson.toJson(thisTheme, writer);
+        writer.flush(); writer.close();
     }
 }

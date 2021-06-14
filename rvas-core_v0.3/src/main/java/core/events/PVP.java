@@ -24,35 +24,34 @@ package core.events;
  * 
  * */
 
+import core.Main;
 import core.backend.Config;
+import core.backend.utils.Util;
 import core.data.PlayerMeta;
 import core.data.StatsManager;
 
 import java.util.UUID;
 import java.util.Objects;
-
-import org.bukkit.event.Listener;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.OfflinePlayer;
 
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.PlayerDeathEvent;
+
 public class PVP implements Listener {
 	
 	@EventHandler
 	public void onKill(PlayerDeathEvent event) {
-		
-		if (Config.debug && Config.verbose) System.out.println("[core.events.pvp] onKill has been called");
-		
+
 		Player killed = event.getEntity();
-		UUID killedID = killed.getUniqueId();
 		Player killer = killed.getKiller();
+		UUID killedID = killed.getUniqueId();
 
-		String killerName;
-		String killerLoc;
-
+		String killerName, killerLoc;
 		String killedName = killed.getName();
 		
 		if (Config.debug) {
@@ -63,14 +62,15 @@ public class PVP implements Listener {
 						", "+killer.getLocation().getZ();
 
 			} catch (Exception ignore) {
-				System.out.println("[core.events.pvp] Killer was null!");
+				if (Config.debug) Main.console.log(Level.INFO, "Killer was null!");
 
 				killerName = "null";
 				killerLoc = killed.getLocation().getX() +
 						", "+killed.getLocation().getY() +
 						", "+killed.getLocation().getZ();
 			}
-			System.out.println("[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
+			if (Config.debug) Main.console.log(Level.INFO,
+					"[core.events.pvp] "+killerName+" "+killedName+" "+killerLoc);
 		}
 
 		// increment appropriate stats, do nothing if this was not a PVP kill
@@ -82,29 +82,13 @@ public class PVP implements Listener {
 		// check if victim was in the spawn region on death
 		OfflinePlayer victim = Bukkit.getOfflinePlayer(killedID);
 		double victim_playtime = PlayerMeta.getPlaytime(victim);
-		
-		double cX = killed.getLocation().getX();
-		double cZ = killed.getLocation().getZ();
-		
-		double max_x; double max_z;
-		double min_x; double min_z;
-		
-		double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
-		double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
-		double config_min_x = Double.parseDouble(Config.getValue("spawn.min.X"));
-		double config_min_z = Double.parseDouble(Config.getValue("spawn.min.Z"));
-		
-		if (Double.isNaN(config_max_x)) max_x = 420.0; else max_x = config_max_x;
-		if (Double.isNaN(config_max_z)) max_z = 420.0; else max_z = config_max_z;
-		if (Double.isNaN(config_min_x)) min_x = -420.0; else min_x = config_min_x;
-		if (Double.isNaN(config_min_z)) min_z = -420.0; else min_z = config_min_z;
 
-		if (cX < max_x && cZ < max_z && cX > min_x && cZ > min_z) {
-			if (Config.debug) System.out.println(killedName + " was killed in the spawn region!");
+		if (Util.isInSpawn(killed.getLocation())) {
+			if (Config.debug && Config.verbose) Main.console.log(
+					Level.INFO, killedName + " was killed in the spawn region!");
 
 			if (victim_playtime < 3600.0) {
-
-				if (Config.debug) System.out.println(killedName + " was also a new player!");
+				if (Config.debug && Config.verbose) Main.console.log(Level.INFO, killedName + " was also a new player!");
 				StatsManager.incSpawnKill(killer, 1);
 			}
 		}

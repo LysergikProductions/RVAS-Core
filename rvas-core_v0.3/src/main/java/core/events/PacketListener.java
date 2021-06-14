@@ -26,17 +26,17 @@ import core.Main;
 import core.backend.Config;
 import core.backend.ItemCheck;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.logging.Level;
+
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-
-import java.util.ArrayList;
-import java.util.List;
 import com.comphenix.protocol.wrappers.nbt.NbtBase;
 
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
@@ -57,15 +57,12 @@ public class PacketListener implements Listener {
 				Player sender = event.getPlayer();
 
 				ItemStack inHand;
-				try {
-					inHand = sender.getInventory().getItem(sender.getInventory().getHeldItemSlot());
-				} catch (Exception e) {
-					inHand = null;
-				}
+				try { inHand = sender.getInventory().getItem(sender.getInventory().getHeldItemSlot());
+				} catch (Exception e) { inHand = null; }
 
 				try {
 					if (inHand != null) {
-						if (Config.verbose) System.out.println("Checking item for legality..");
+						if (Config.debug && Config.verbose) Main.console.log(Level.INFO, "Checking item for legality..");
 						ItemCheck.IllegalCheck(inHand, "Animation Packet", sender);
 					}
 				} catch (Exception e) {
@@ -96,13 +93,13 @@ public class PacketListener implements Listener {
 
 				// limit BE list size in Map_Chunk packets
 				if (thisSize > ChunkManager.TE_limiter) {
-					event.setCancelled(true); // <- if remainder of block throws exception, players are still protected
 
-					System.out.println(
-							"WARN: Packet MAP_CHUNK contains " + thisSize + " entries in getListNbtModifier().read(0)");
+					event.setCancelled(true); // <- always protect players from these packets
+					Main.console.log(Level.WARNING,
+							"Packet MAP_CHUNK contains " + thisSize + " entries in getListNbtModifier().read(0)");
 
 					if (Config.getValue("remove.chunk_bans").equals("true")) {
-						System.out.println("Calling ChunkManager.removeChunkBan()..");
+						if (Config.debug) Main.console.log(Level.INFO, "Calling ChunkManager.removeChunkBan()..");
 
 						// count the block entities and remove any discovered chunk bans
 						Chunk thisChunk = thisWorld.getChunkAt(chunk_x, chunk_z);

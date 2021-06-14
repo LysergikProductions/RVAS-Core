@@ -15,8 +15,13 @@ adminid = my-full-account-user-id-with-dashes
 // - !! IGN for the full-access owner's account !! - \\
 admin = myAccountInGameName
 
-// - The tps under which the auto-restart timer ticks
-restart.threshold = 7.10
+// - Donation Links
+link.donation.1 = https://commerce.coinbase.com/checkout/f3a218cd-d7f5-4248-bcbc-8c230af05178
+link.donation.2 =
+
+// - The terms used in the message "Click here to donate with [your_term]!"
+id.donation.1 = crypto
+id.donation.2 = cash
 
 // - Theme [ default || halloween || custom ]
 theme = default
@@ -80,6 +85,9 @@ mute.hypocrisy = true
 // --- PERFORMANCE --- //
 // ------------------- //
 
+// - The tps under which the auto-restart timer ticks
+restart.threshold = 7.10
+
 // - Global wither limit. default = 710
 wither.limit = 710
 
@@ -109,6 +117,9 @@ speedlimit.tier_five = 20
 
 // - Enable auto-announcer in the in-game chat
 announcer.enabled = true
+
+// - Default auto-announcer message [ default = clickable github msg | anything else = custom non-clickable msg ]
+announcer.default = default
 
 // - Force the server IP. true/false. default = false
 motd.force = false

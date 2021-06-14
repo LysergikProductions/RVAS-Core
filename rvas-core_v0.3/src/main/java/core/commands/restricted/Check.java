@@ -23,9 +23,9 @@ package core.commands.restricted;
  *
  * */
 
-import core.backend.ChatPrint;
-import core.backend.utils.Util;
 import core.data.objects.Pair;
+import core.frontend.ChatPrint;
+import core.backend.utils.Util;
 import core.backend.utils.Chunks;
 
 import java.util.*;
@@ -74,37 +74,40 @@ public class Check implements CommandExecutor, Listener {
     }
 
     public static void updateGUI() {
-        lagCheckGUI.clear(); // do not also clear sorted list, to keep results persistent
+        Bukkit.getScheduler().runTask(core.Main.instance, () -> {
+            lagCheckGUI.clear(); // do not also clear sorted list, to keep results persistent
 
-        for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
-            int thisCount;
+            for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
+                int thisCount = 0;
 
-            if (!thisPlayer.isOp()) {
+                if (!thisPlayer.isOp()) {
 
-                lagList.remove(thisPlayer.getUniqueId());
-                thisCount = Chunks.countChunkLagBlocks(thisPlayer);
+                    lagList.remove(thisPlayer.getUniqueId());
+                    thisCount = Chunks.countChunkLagBlocks(thisPlayer);
 
-                if (thisCount > 255) {
-                    lagList.putIfAbsent(thisPlayer.getUniqueId(), new Pair<>(thisCount, thisPlayer.getLocation()));
-                    sortedLagList.putIfAbsent(thisPlayer, thisCount);
+                    if (thisCount > 255) {
+                        lagList.putIfAbsent(thisPlayer.getUniqueId(),
+                                new Pair<>(thisCount, thisPlayer.getLocation()));
+                        sortedLagList.putIfAbsent(thisPlayer, thisCount);
+                    }
                 }
             }
-        }
 
-        sortedLagList = Util.sortLagMap(sortedLagList);
-        for (Player thisPlayer: sortedLagList.keySet()) {
+            sortedLagList = Util.sortLagMap(sortedLagList);
+            for (Player thisPlayer: sortedLagList.keySet()) {
 
-            String thisName = thisPlayer.getName();
-            ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
+                String thisName = thisPlayer.getName();
+                ItemStack newHead = new ItemStack(Material.PLAYER_HEAD, 1);
 
-            ItemMeta thisHeadMeta = newHead.getItemMeta();
-            thisHeadMeta.setDisplayName(thisName);
+                ItemMeta thisHeadMeta = newHead.getItemMeta();
+                thisHeadMeta.setDisplayName(thisName);
 
-            List<String> lore = Collections.singletonList("\u00A7c" + sortedLagList.get(thisPlayer));
-            thisHeadMeta.setLore(lore);
-            newHead.setItemMeta(thisHeadMeta);
-            lagCheckGUI.addItem(newHead);
-        }
+                List<String> lore = Collections.singletonList("\u00A7c" + sortedLagList.get(thisPlayer));
+                thisHeadMeta.setLore(lore);
+                newHead.setItemMeta(thisHeadMeta);
+                lagCheckGUI.addItem(newHead);
+            }
+        });
     }
 
     @EventHandler
@@ -116,9 +119,12 @@ public class Check implements CommandExecutor, Listener {
             try { thatPlayerName = Objects.requireNonNull(event.getCurrentItem()).getItemMeta().getDisplayName();
             } catch (Exception ignore) {}
 
-            if (event.getWhoClicked().getServer().getPlayer(thatPlayerName) == null) checker
-                    .chat("/admin spot " + thatPlayerName);
-            else checker.chat("/ninjatp " + thatPlayerName);
+            if (thatPlayerName != null ) {
+                if (event.getWhoClicked().getServer().getPlayer(thatPlayerName) == null) {
+                    checker.chat("/admin spot " + thatPlayerName);
+
+                } else checker.chat("/ninjatp " + thatPlayerName);
+            }
         }
     }
 }

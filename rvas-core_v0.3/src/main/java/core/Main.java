@@ -1,35 +1,60 @@
 package core;
 
-import core.data.*;
-import core.events.*;
-import core.tasks.*;
-import core.backend.*;
+/* *
+ *
+ *  About: Main class for RVAS-Core v0.3.4, Paper-Spigot #446+
+ *
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * */
+
+import core.data.*; import core.events.*;
+import core.tasks.*; import core.backend.*;
+import static core.data.ThemeManager.replaceDefaultJSON;
+
 import core.commands.*;
 import core.commands.restricted.*;
+import core.frontend.ChatPrint;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.World.Environment;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.GameMode;
-
+import org.bukkit.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.World.Environment;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public static final String version = "0.3.3"; public static final int build = 301;
-	public static long worldAge_atStart; public static boolean isNewWorld;
+	public final static String version = "0.3.4"; public final static int build = 316;
 
-	public static OfflinePlayer Top = null;
+	public static long worldAge_atStart;
+	public static boolean isNewWorld, isOfficialVersion;
+
 	public DiscordBot DiscordHandler;
+	public static OfflinePlayer Top = null;
+
+	public final static Logger console = Bukkit.getLogger();
 
 	@Override
 	public void onEnable() {
@@ -39,26 +64,41 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] --- Initializing RVAS-Core ---");
 		System.out.println("[core.main] ______________________________");
 
-		// TODO: Query the git for latest version and write results to stdout
+		// VERSION CHECK \\
+		GitGetter.load(); isOfficialVersion = GitGetter.isVersionCurrent();
 
-		System.out.println("forcing default gamemode..");
+		if (isOfficialVersion) console.log(Level.INFO, "RVAS-Core is up-to-date!");
+		else if (GitGetter.isVersionBeta()) console.log(Level.WARNING, "This is a beta version of RVAS-Core!");
+		else console.log(Level.WARNING, "This version is invalid or unrecognized!");
+
+		console.log(Level.INFO, "Forcing default gamemode to Survival Mode");
 		getServer().setDefaultGameMode(GameMode.SURVIVAL);
 
 		System.out.println();
 		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
 
+		// LOADING DATA FROM STORAGE \\
 		try { FileManager.setup();
 		} catch (IOException e) {
-			System.out.println("[core.main] An error occured in FileManager.setup()"); }
+			console.log(Level.SEVERE, "Exception in FileManager.setup()"); }
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
 
-		try { ChatPrint.loadColors();
-		} catch (Exception ignore) {
-			ThemeManager.currentTheme = ThemeManager.createDefaultTheme();
-			ChatPrint.loadColors();
+		try { ChatPrint.init();
+		} catch (Exception e) {
+
+			console.log(Level.WARNING,
+					"Exception in ChatPrint.init().. creating a default theme instead");
+
+			if (Config.debug) e.printStackTrace();
+			ThemeManager.currentTheme.setToInternalDefaults();
+
+			try { replaceDefaultJSON(ThemeManager.currentTheme);
+			} catch (IOException ignore) { }
+
+			ChatPrint.init();
 		}
 
 		System.out.println();
@@ -71,14 +111,15 @@ public class Main extends JavaPlugin {
 			PrisonerManager.loadPrisoners();
 
 		} catch (IOException e) {
-			System.out.println("[core.main] An error occured loading files..");
-			System.out.println("[core.main] " + e);
+			console.log(Level.SEVERE, "Exception while loading data");
+			e.printStackTrace();
 		}
 
 		System.out.println();
 		System.out.println("[core.main] Enabling commands");
 		System.out.println("[core.main] _________________");
 
+		// INIT BUKKIT METHODS \\
 		System.out.println("/kit");
 		Objects.requireNonNull(this.getCommand("kit")).setExecutor(new Kit());
 
@@ -143,7 +184,7 @@ public class Main extends JavaPlugin {
 		Objects.requireNonNull(this.getCommand("tjm")).setExecutor(new ToggleJoinMessages());
 
 		System.out.println("/server");
-		Objects.requireNonNull(this.getCommand("server")).setExecutor(new Server());
+		Objects.requireNonNull(this.getCommand("server")).setExecutor(new ServerCmd());
 
 		System.out.println("/help");
 		Objects.requireNonNull(this.getCommand("help")).setExecutor(new Help());
@@ -260,14 +301,15 @@ public class Main extends JavaPlugin {
 		try { core_pm.registerEvents(new Check(), this);
 		} catch (Exception e) { e.printStackTrace(); }
 
+		// INIT PROTOCOL_LIB METHODS \\
 		try {
 			PacketListener.C2S_AnimationPackets();
-
 			PacketListener.S2C_MapChunkPackets();
 			PacketListener.S2C_WitherSpawnSound();
 
 		} catch (Exception e) { e.printStackTrace(); }
-		
+
+		// OTHER STUFF \\
 		System.out.println("[core.main] ..finishing up..");
 
 		// Define banned & special blocks
@@ -294,24 +336,23 @@ public class Main extends JavaPlugin {
 
 		// Load chunk at 0,0 to test for world age
 		for (World thisWorld: getServer().getWorlds()) {
-			System.out.println("[core.main] Checking world age..");
+			console.log(Level.INFO, "Checking world age..");
 			
 			if (thisWorld.getEnvironment().equals(Environment.NORMAL)) {
 				
 				thisWorld.getChunkAt(0, 0).load(true);
-				
-				worldAge_atStart = thisWorld.getChunkAt(0, 0)
-						.getChunkSnapshot().getCaptureFullTime();
+				worldAge_atStart = thisWorld.getChunkAt(0, 0).getChunkSnapshot().getCaptureFullTime();
 
 				if (worldAge_atStart < 710) {
-					
-					System.out.println("[core.main] This world is NEW! World Ticks: " + worldAge_atStart);
+
 					isNewWorld = true;
+					console.log(Level.INFO, "This world is NEW! World Ticks: " + worldAge_atStart);
 
 				} else {
-					
-					System.out.println("[core.main] This world is not new! World Ticks: " + worldAge_atStart);
+
 					isNewWorld = false;
+					console.log(Level.INFO, "This world is not new! World Ticks: " + worldAge_atStart);
+
 				}
 				break; // <- only check first normal dimension found
 			}
@@ -328,10 +369,8 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] --- RVAS-Core : Disabling ---");
 		System.out.println("[core.main] _____________________________");
 
-		System.out.println("[core.main] Capturing remaining analytics data..");
-		Analytics.capture();
-
-		System.out.println("[core.main] Creating backups..");
+		console.log(Level.INFO, "Capturing remaining analytics data..");
+		Analytics.capture(); console.log(Level.INFO, "Creating backups..");
 		
 		try {
 			FileManager.backupData(FileManager.pvpstats_user_database, "pvpstats-backup-", ".txt");
@@ -342,8 +381,8 @@ public class Main extends JavaPlugin {
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");			
 			
 		} catch (IOException ex) {
-			System.out.println("[core.main] WARNING - Failed to save one or more backup files.");
-			System.out.println("[core.main] " + ex);
+			console.log(Level.WARNING, "Failed to save one or more backup files");
+			ex.printStackTrace();
 		}
 		
 		System.out.println();
@@ -360,8 +399,8 @@ public class Main extends JavaPlugin {
 			StatsManager.writePVPStats();
 			
 		} catch (IOException ex) {
-			System.out.println("[core.main] WARNING - Failed to write one or more files.");
-			System.out.println("[core.main] " + ex);
+			console.log(Level.SEVERE, "Failed to write one or more files");
+			ex.printStackTrace();
 		}
 		
 		System.out.println();
@@ -371,17 +410,17 @@ public class Main extends JavaPlugin {
 		int max_age = Integer.parseInt(Config.getValue("wither.skull.max_ticks"));
 		int removed_skulls = LagManager.removeSkulls(max_age);
 
-		System.out.println("Found " + removed_skulls + " remaining skull/s to trash..");
+		console.log(Level.INFO, "Found " + removed_skulls + " remaining skull/s to trash..");
 		
 		System.out.println();
 		System.out.println("[core.main] Printing session stats");
 		System.out.println("[core.main] ______________________");
-		
-		System.out.println("New Chunks Generated: " + ChunkManager.newCount);
-		System.out.println("New Unique Players: " + SpawnController.sessionNewPlayers);
-		System.out.println("Total Respawns: " + SpawnController.sessionTotalRespawns);
-		System.out.println("Bedrock Placed: " + BlockListener.placedBedrockCounter);
-		System.out.println("Bedrock Broken: " + BlockListener.brokenBedrockCounter);
+
+		console.log(Level.INFO, "New Chunks Generated: " + ChunkManager.newCount);
+		console.log(Level.INFO, "New Unique Players: " + SpawnController.sessionNewPlayers);
+		console.log(Level.INFO, "Total Respawns: " + SpawnController.sessionTotalRespawns);
+		console.log(Level.INFO, "Bedrock Placed: " + BlockListener.placedBedrockCounter);
+		console.log(Level.INFO, "Bedrock Broken: " + BlockListener.brokenBedrockCounter);
 		
 		System.out.println("[core.main] ____________________________");
 		System.out.println("[core.main] --- RVAS-Core : Disabled ---");

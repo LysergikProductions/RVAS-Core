@@ -22,6 +22,8 @@ package core.data;
  *
  * */
 
+import core.Main;
+import core.backend.Config;
 import core.data.objects.Donor;
 
 import java.io.*;
@@ -29,16 +31,20 @@ import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 
 import com.google.gson.Gson;
 import com.google.common.reflect.TypeToken;
+import com.google.common.annotations.Beta;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class DonationManager {
 
+    public final static List<UUID> _validDonors = new ArrayList<>();
     public final static List<Donor> _donorList = new ArrayList<>();
     public static List<String> DonorCodes = new ArrayList<>();
     public static List<String> UsedDonorCodes = new ArrayList<>();
@@ -46,38 +52,24 @@ public class DonationManager {
     public static boolean setDonor(Player thisPlayer, String thisKey, Double donationSum) throws IOException {
 
         if (thisPlayer == null || thisKey == null || donationSum == null) return false;
+        if (!isValidKey(thisKey)) Main.console.log(Level.WARNING, "Tried setting invalid donor key!");
 
-        if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(
-                thisPlayer.getUniqueId()));
-        else _donorList.add(new Donor(
-                thisPlayer.getUniqueId(), thisKey, donationSum));
+        UUID thisID = thisPlayer.getUniqueId();
+        if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(thisID));
+        else _donorList.add(new Donor(thisPlayer.getUniqueId(), thisKey, donationSum));
+
+        Donor newDonor = getDonorByUUID(thisID);
+        if (newDonor != null) {
+            newDonor.updateValidity();
+            if (newDonor.isValid()) _validDonors.add(thisID); }
 
         saveDonors(); return true;
     }
 
-    public static boolean isDonor(Player p) {
-        if (p == null) return false;
-
-        try {
-            UUID playerID = p.getUniqueId();
-            for (Donor thisDonator: _donorList) {
-                if (thisDonator.getUserID().equals(playerID)) return true;
-            }
-
-        } catch (Exception e) { return false; }
-        return false;
-    }
-
     public static Donor getDonorByUUID(UUID thisID) {
         for (Donor thisDonor: _donorList) {
+            thisDonor.updateValidity();
             if (thisDonor.getUserID().equals(thisID)) return thisDonor;
-        }
-        return null;
-    }
-
-    public static Donor getDonorByKey(String thisKey) {
-        for (Donor thisDonor: _donorList) {
-            if (thisDonor.getDonationKey().equals(thisKey)) return thisDonor;
         }
         return null;
     }
@@ -87,6 +79,14 @@ public class DonationManager {
             if (Objects.equals(
                     Bukkit.getOfflinePlayer(thisDonor.getUserID()).getName(), thisName)
             ) return thisDonor;
+        }
+        return null;
+    }
+
+    @Beta
+    public static Donor getDonorByKey(String thisKey) {
+        for (Donor thisDonor: _donorList) {
+            if (thisDonor.getDonationKey().equals(thisKey)) return thisDonor;
         }
         return null;
     }
@@ -110,6 +110,10 @@ public class DonationManager {
                     Paths.get("plugins/core/codes/used.db"), String.join("\n", UsedDonorCodes).getBytes());
 
         } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    static boolean isAboveThreshold(Donor donor) {
+        return donor.getSumDonated() >= 25.0;
     }
 
     static List<Donor> getDonorsFromJSON(File thisFile) throws IOException {
@@ -137,8 +141,68 @@ public class DonationManager {
         writer.flush(); writer.close();
     }
 
-    // Donor-specific utils
+    // Donor-specific utils \\
+    public static boolean isDonor(Player p) {
+        if (p == null) return false;
+
+        try {
+            UUID playerID = p.getUniqueId();
+            for (Donor thisDonator: _donorList) {
+                if (thisDonator.getUserID().equals(playerID)) return true;
+            }
+        } catch (Exception ignore) { return false; }
+
+        return false;
+    }
+
+    public static boolean isValidDonor(Player p) {
+        String key;
+
+        try { key = Objects.requireNonNull(getDonorByUUID(p.getUniqueId())).getDonationKey();
+        } catch (Exception ignore) { return false; }
+
+        return isDonor(p) && isAboveThreshold(DonationManager.getDonorByUUID(p.getUniqueId()))
+                && !key.equalsIgnoreCase("INVALID") && !key.isEmpty();
+    }
+
     public static boolean isValidString(String thisString) {
-        return thisString != null && !thisString.equals("") && !thisString.equals("tbd");
+        return thisString != null && !thisString.isEmpty() && !thisString.equals("tbd");
+    }
+
+    public static boolean isValidKey(String thisKey) {
+        System.out.println("Checking: " + thisKey + " | Length: " + thisKey.length());
+        if (thisKey.length() != 19) return false;
+
+        for (int i = 0; i < thisKey.length(); i++){
+            char c = thisKey.charAt(i);
+
+            // abcd-2021-jhas-06ds
+            if (i < 4 && c == '-') return false;
+            else if (i == 4 && c != '-') return false;
+            else if (i > 4 && i < 9 && c == '-') return false;
+            else if (i == 9 && c != '-') return false;
+            else if (i > 9 && i < 14 && c == '-') return false;
+            else if (i == 14 && c != '-') return false;
+            else if (i > 14 && c == '-') return false;
+        }
+        return true;
+    }
+
+    public static boolean isRestrictedIGN(String ign) {
+        List<String> opNames = new ArrayList<>();
+        for (OfflinePlayer op: Bukkit.getServer().getOperators()) opNames.add(op.getName());
+
+        return  ign.equalsIgnoreCase("server") || ign.equalsIgnoreCase("console") ||
+                ign.equalsIgnoreCase(Config.getValue("admin")) || opNames.contains(ign);
+    }
+
+    public static boolean isExistingCustomIGN(String ign) {
+        for (Donor thisDonor: _donorList) {
+            String thisIGN = thisDonor.getCustomIGN();
+
+            if (!thisIGN.equalsIgnoreCase("tbd") && !thisIGN.isEmpty())
+                return thisIGN.equalsIgnoreCase(ign);
+        }
+        return false;
     }
 }

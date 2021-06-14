@@ -2,7 +2,8 @@ package core.data.objects;
 
 /* *
  *
- *  About: Aliases for exceptionally long and / or complex minecraft commands
+ *  About: Aliases for exceptionally long and / or complex
+ *          minecraft commands and other blobs of code
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -25,7 +26,7 @@ package core.data.objects;
 @SuppressWarnings("SpellCheckingInspection")
 public class Aliases {
 
-    public static String armor_a; public static String armor_b; static {
+    public final static String armor_a, armor_b; static {
 
         // chestplate and helmet
         armor_a = "/summon armor_stand ~1 ~2 ~1 {CustomName:\"\\\"Sinse's_32kStackedArmor_a\\\"\",CustomNameVisible:1," +
@@ -43,7 +44,7 @@ public class Aliases {
     }
 
     // totems on armor stands
-    public static String totems_armor1; public static String totems_armor2; static {
+    public final static String totems_armor1, totems_armor2; static {
 
         totems_armor1 = "/summon armor_stand ~-1 ~2 ~1 {CustomName:\"StackedTotems\",CustomNameVisible:1," +
                 "ShowArms:1,HandItems:[{id:totem_of_undying,Count:64},{id:totem_of_undying,Count:64}]}";
@@ -53,7 +54,7 @@ public class Aliases {
     }
 
     // totems in shulker box
-    public static String totems_shulker; static {
+    public final static String totems_shulker; static {
 
         totems_shulker = "/give @s yellow_shulker_box{BlockEntityTag:{Items:[{Slot:0,id:totem_of_undying,Count:127}," +
                 "{Slot:1,id:totem_of_undying,Count:127},{Slot:2,id:totem_of_undying,Count:127}," +
@@ -72,7 +73,7 @@ public class Aliases {
     }
 
     // illegals kit
-    public static String illegals_kit; static {
+    public final static String illegals_kit; static {
 
         illegals_kit = "/give @s black_shulker_box{BlockEntityTag:{Items:[{Slot:0,id:totem_of_undying,Count:127}," +
                 "{Slot:1,id:barrier,Count:127},{Slot:2,id:structure_block,Count:127}," +
@@ -85,7 +86,7 @@ public class Aliases {
     }
 
     // 32k feathers
-    public static String feather_32k; static {
+    public final static String feather_32k; static {
 
         feather_32k = "/give @s feather{Enchantments:[{id:sharpness,lvl:32767},{id:knockback,lvl:32767}," +
                 "{id:fire_aspect,lvl:32767},{id:looting,lvl:10},{id:sweeping,lvl:3},{id:unbreaking,lvl:32767}," +
@@ -93,7 +94,7 @@ public class Aliases {
     }
 
     // invulnerable end-crystal below commander
-    public static String invulCrystal; static {
+    public final static String invulCrystal; static {
 
         invulCrystal = "/summon minecraft:end_crystal ~ ~-4 ~ {" +
                 "ShowBottom:true,Invulnerable:true,BeamTarget:{X:0.5,Y:128,Z:0.5}}";

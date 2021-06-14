@@ -23,11 +23,13 @@ package core.events;
  * 
  * */
 
+import core.Main;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.tasks.Analytics;
 
 import java.util.*;
+import java.util.logging.Level;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.Bukkit;
@@ -46,9 +48,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class SpawnController implements Listener {
-	
-	static double max_x, max_z, min_x, min_z;
-	static double radius_X, radius_Z;
+	static double max_x, max_z, min_x, min_z, radius_X, radius_Z;
 	
 	static Double config_max_x = Double.parseDouble(Config.getValue("spawn.max.X"));
 	static Double config_max_z = Double.parseDouble(Config.getValue("spawn.max.Z"));
@@ -67,12 +67,12 @@ public class SpawnController implements Listener {
 		BannedSpawnFloors.addAll(Arrays.asList(
 				Material.CAVE_AIR, Material.VOID_AIR, Material.WALL_TORCH));
 	}
-	
-	// takes a location object and gives it a random location within rectangular spawn range
+
+	// mutate a given Location object to have co-ords within an rectangular spawn area
 	public static Location getRandomSpawn(World thisWorld, Location newSpawnLocation) {
 		
 		boolean valid_spawn_location = false;
-		boolean forceOutside = Boolean.parseBoolean(Config.getValue("spawn.prevent.inside"));
+		final boolean forceOutside = Boolean.parseBoolean(Config.getValue("spawn.prevent.inside"));
 		
 		// if a configured value can't be parsed to Double, set to default
 		if (config_max_x.isNaN()) max_x = 420.0; else max_x = config_max_x;
@@ -87,8 +87,8 @@ public class SpawnController implements Listener {
 			double tryLocation_x = Math.rint(Util.getRandomNumber((int)min_x, (int)max_x)) + 0.5;
 			double tryLocation_z = Math.rint(Util.getRandomNumber((int)min_z, (int)max_z)) + 0.5;
 			
-			if (Config.debug) System.out.println("RVAS: Validating spawn coordinates: " +
-					tryLocation_x + ", " + tryLocation_z);
+			if (Config.debug) Main.console.log(Level.INFO,
+					"Validating spawn coordinates: " + tryLocation_x + ", " + tryLocation_z);
 			
 			int y = 257;
 			while (y > 1) {
@@ -111,8 +111,8 @@ public class SpawnController implements Listener {
 					if (!BannedSpawnFloors.contains(floorBlock.getType())) {
 						
 						if (Config.debug)
-							System.out.println("Found valid respawn location on "
-									+ floorBlock.getType() + "!");
+							Main.console.log(Level.INFO,
+									"Found valid respawn location on " + floorBlock.getType() + "!");
 
 						if (forceShallow &&
 								floorBlock.getType().equals(Material.WATER) ||
@@ -124,7 +124,7 @@ public class SpawnController implements Listener {
 							if (nextBlockDown.equals(Material.WATER) || nextBlockDown.equals(Material.LAVA) ||
 									nextBlockDown.equals(Material.KELP) || nextBlockDown.equals(Material.KELP_PLANT)) {
 
-								if (Config.debug) System.out.println("..but it wasn't shallow enough :(");
+								if (Config.debug) Main.console.log(Level.INFO, "..but it wasn't shallow enough :(");
 								break;
 							}
 						}
@@ -135,21 +135,19 @@ public class SpawnController implements Listener {
 						newSpawnLocation.setX(tryLocation_x);
 						newSpawnLocation.setY(y);
 						newSpawnLocation.setZ(tryLocation_z);
-						
 						break;
 						
 					} else if (forceOutside) break;
 				}
 			}
-		}
-		return newSpawnLocation;
+		} return newSpawnLocation;
 	}
 
-	// takes a location object and gives it a random location within rectangular spawn range
+	// mutate a given Location object to have co-ords within an ellipsoid spawn area
 	public static Location getRandomEllipseSpawn(World thisWorld, Location newSpawnLocation) {
 
 		boolean valid_spawn_location = false;
-		boolean forceOutside = Boolean.parseBoolean(Config.getValue("spawn.prevent.inside"));
+		final boolean forceOutside = Boolean.parseBoolean(Config.getValue("spawn.prevent.inside"));
 
 		// if a configured value can't be parsed to Double, set to default
 		if (config_radius_x.isNaN()) radius_X = 420.0; else radius_X = config_radius_x;
@@ -158,14 +156,16 @@ public class SpawnController implements Listener {
 		// get random x, z coordinates and check them top-down from y256 for validity
 		while (!valid_spawn_location) {
 
-			// get random x, z co-coordinates within range; refer to the *center* of blocks
-			double tryLocation_x = Math.rint(Util.getRandomNumber((int)radius_X*-1, (int)radius_X)) + 0.5;
-			double tryLocation_z = Math.rint(Util.getRandomNumber((int)radius_Z*-1, (int)radius_Z)) + 0.5;
-			int ellipseCheck = Util.isInEllipse(0, 0, (int)tryLocation_x, (int)tryLocation_z, (int)radius_X, (int)radius_Z);
+			// get random x, z co-coordinates within the ellipse; +0.5 to spawn on center of blocks
+			final double tryLocation_x = Math.rint(Util.getRandomNumber((int)radius_X*-1, (int)radius_X)) + 0.5;
+			final double tryLocation_z = Math.rint(Util.getRandomNumber((int)radius_Z*-1, (int)radius_Z)) + 0.5;
+
+			final int ellipseCheck = Util.isInEllipse(
+					0, 0, (int)tryLocation_x, (int)tryLocation_z, (int)radius_X, (int)radius_Z);
 
 			if (ellipseCheck <= 1) {
-				if (Config.debug) System.out.println("RVAS: Validating spawn coordinates: " +
-						tryLocation_x + ", " + tryLocation_z);
+				if (Config.debug) Main.console.log(Level.INFO,
+						"Validating spawn coordinates: " + tryLocation_x + ", " + tryLocation_z);
 
 				int y = 257;
 				while (y > 1) {
@@ -188,8 +188,8 @@ public class SpawnController implements Listener {
 						if (!BannedSpawnFloors.contains(floorBlock.getType())) {
 
 							if (Config.debug)
-								System.out.println("Found valid respawn location on "
-										+ floorBlock.getType() + "!");
+								Main.console.log(Level.INFO,
+										"Found valid respawn location on " + floorBlock.getType() + "!");
 
 							if (forceShallow &&
 									floorBlock.getType().equals(Material.WATER) ||
@@ -201,8 +201,8 @@ public class SpawnController implements Listener {
 								if (nextBlockDown.equals(Material.WATER) || nextBlockDown.equals(Material.LAVA) ||
 										nextBlockDown.equals(Material.KELP) || nextBlockDown.equals(Material.KELP_PLANT)) {
 
-									if (Config.debug) System.out.println("..but it wasn't shallow enough :(");
-									break;
+									if (Config.debug) Main.console.log(Level.INFO,
+											"..but it wasn't shallow enough :("); break;
 								}
 							}
 
@@ -266,9 +266,9 @@ public class SpawnController implements Listener {
 
 				return;
 			}
-			System.out.println(event.getPlayer().getName() + " has a bed or anchor spawn");
+			Main.console.log(Level.INFO, event.getPlayer().getName() + " has a bed or anchor spawn");
 		}
-		System.out.println(event.getPlayer().getName() + "'s respawn event was ignored by rvas-core");
+		Main.console.log(Level.INFO, event.getPlayer().getName() + "'s respawn event was ignored by rvas-core");
 	}
 
 	@EventHandler
@@ -279,7 +279,7 @@ public class SpawnController implements Listener {
 		
 		final World thisWorld = event.getPlayer().getWorld();
 		Location thisLocation = thisWorld.getSpawnLocation();
-		Chunk spawnChunk = thisLocation.getChunk();
+		final Chunk spawnChunk = thisLocation.getChunk();
 		
 		//ChunkListener.fixEndExit(spawnChunk);
 		
@@ -304,9 +304,9 @@ public class SpawnController implements Listener {
 		
 		if (Config.getValue("spawn.random.join").equals("true")) {
 			
-			Player joiner = event.getPlayer();
-			String joiner_name = joiner.getName();
-			UUID joiner_id = joiner.getUniqueId();
+			final Player joiner = event.getPlayer();
+			final String joiner_name = joiner.getName();
+			final UUID joiner_id = joiner.getUniqueId();
 			
 			OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(joiner_id);
 			boolean playedBefore = offPlayer.hasPlayedBefore();
@@ -323,7 +323,7 @@ public class SpawnController implements Listener {
 		}
 	}
 
-	public static boolean updateConfigs() {
+	public static boolean init() {
 
 		try {
 			forceShallow = Boolean.parseBoolean(Config.getValue("spawn.force.shallow"));
@@ -338,9 +338,6 @@ public class SpawnController implements Listener {
 
 			return true;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		} catch (Exception e) { e.printStackTrace(); return false; }
 	}
 }
