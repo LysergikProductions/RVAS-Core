@@ -43,7 +43,7 @@ public class PlayerMeta {
 	}
 
 	public static boolean isIgnoring(UUID ignorer, UUID ignored) {
-		if(Ignore.Ignores.containsKey(ignorer)) {
+		if (Ignore.Ignores.containsKey(ignorer)) {
 			return Ignore.Ignores.get(ignorer).contains(ignored); }
 
 		return false;

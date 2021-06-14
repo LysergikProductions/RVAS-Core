@@ -24,11 +24,11 @@ package core.events;
  * */
 
 import core.Main;
+import core.data.PlayerMeta;
 import core.backend.Config;
 import core.backend.utils.*;
 import core.backend.ItemCheck;
 import core.frontend.ChatPrint;
-import core.data.PlayerMeta;
 import core.commands.restricted.Repair;
 
 import java.util.*;
@@ -91,98 +91,95 @@ public class BlockListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event) {
-		
-		//long startTime = System.nanoTime();		
+		//long startTime = System.nanoTime();
+
 		Player breaker = event.getPlayer();
+		if (PlayerMeta.isAdmin(breaker)) return; // <- ignore server owner's events
 		
-		// prevent creative players from breaking certain blocks but completely ignore admin account
-		if (!PlayerMeta.isAdmin(breaker)) {
-			
-			Block block = event.getBlock();
-			Location block_loc = block.getLocation();
-			
-			int x = (int)block_loc.getX();
-			int y = (int)block_loc.getY();
-			int z = (int)block_loc.getZ();
+		// prevent creative players from breaking certain blocks
+		Block block = event.getBlock();
+		Location block_loc = block.getLocation();
 
-			String breaker_name = breaker.getName();
-			Material blockType = block.getType();
-			Environment dimension = block.getWorld().getEnvironment();
-			
-			TextComponent cancelPos = new TextComponent(
-					breaker_name + "'s BlockBreakEvent was cancelled: " + blockType);
-			
-			if (!breaker.isOp() && modeOnBreak) breaker.setGameMode(GameMode.SURVIVAL);
-			
-			if (BreakBanned.contains(blockType)) {
+		int x = (int)block_loc.getX();
+		int y = (int)block_loc.getY();
+		int z = (int)block_loc.getZ();
 
-				System.out.println("WARN " + breaker_name + " tried to break a protected admin block!");
+		String breaker_name = breaker.getName();
+		Material blockType = block.getType();
+		Environment dimension = block.getWorld().getEnvironment();
+
+		TextComponent cancelPos = new TextComponent(
+				breaker_name + "'s BlockBreakEvent was cancelled: " + blockType);
+
+		if (!breaker.isOp() && modeOnBreak) breaker.setGameMode(GameMode.SURVIVAL);
+
+		if (BreakBanned.contains(blockType)) {
+
+			Main.console.log(Level.WARNING, breaker_name + " tried to break a protected admin block!");
+			if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+
+			event.setCancelled(true);
+
+		// do things if block == bedrock
+		} else if (blockType.equals(Material.BEDROCK)) {
+
+			// protect bedrock floor
+			if (y < 1 && floorProt) {
+
+				Main.console.log(Level.WARNING, breaker_name + " tried to break a protected floor block!");
 				if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 
 				event.setCancelled(true);
-				
-			// do things if block == bedrock
-			} else if (blockType.equals(Material.BEDROCK)) {
-				
-				// protect bedrock floor
-				if (y < 1 && floorProt) {
+				return;
 
-					System.out.println("WARN " + breaker_name + " tried to break a protected floor block!");
-					if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+			// protect nether roof
+			} else if (y == 127 && roofProt &&
+					dimension.equals(Environment.NETHER)) {
 
-					event.setCancelled(true);
-					return;
-					
-				// protect nether roof	
-				} else if (y == 127 && roofProt &&
-						dimension.equals(Environment.NETHER)) {
+				Main.console.log(Level.WARNING, breaker_name + " tried to break a protected roof block!");
+				if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
 
-					System.out.println("WARN " + breaker_name + " tried to break a protected roof block!");
-					if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+				event.setCancelled(true);
+				return;
 
-					event.setCancelled(true);
-					return;
-				
-				// protect exit portal in the end
-				} else if (dimension.equals(Environment.THE_END) &&
-						y == Repair.y_low || y == Repair.y_low+1) {
-					
-					if (x < 4 && x > -4) {
-						if (z < 4 && z > -4) {
-							
-							System.out.println("WARN " + breaker_name + " tried to break a protected exit portal block!");
-							if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+			// protect exit portal in the end
+			} else if (dimension.equals(Environment.THE_END) &&
+					y == Repair.y_low || y == Repair.y_low+1) {
 
-							event.setCancelled(true);
-							return;
-						}
-					}
-				}
-				
-				if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(
-						new TextComponent(breaker_name + " just broke BEDROCK!"));
-				brokenBedrockCounter++;
-				
-			// protect natural The_End entry and exit portals
-			} else if (blockType.equals(Material.END_PORTAL)) {
-				
-				if (dimension.equals(Environment.THE_END) &&
-						y == Repair.y_low || y == Repair.y_low+1) {
-					
-					if (x < 4 && x > -4) {
-						if (z < 4 && z > -4) {
-							
-							event.setCancelled(true);
-							if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(cancelPos);
-						}
+				if (x < 4 && x > -4) {
+					if (z < 4 && z > -4) {
+
+						Main.console.log(Level.WARNING, breaker_name + " tried to break a protected exit portal block!");
+						if (Config.debug && Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+
+						event.setCancelled(true);
+						return;
 					}
 				}
 			}
-			
-			//long endTime = System.nanoTime();
-			//long duration = (endTime - startTime);
-			//System.out.println("BreakTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
+
+			if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(
+					new TextComponent(breaker_name + " just broke BEDROCK!"));
+			brokenBedrockCounter++;
+
+		// protect natural The_End entry and exit portals
+		} else if (blockType.equals(Material.END_PORTAL)) {
+
+			if (dimension.equals(Environment.THE_END) &&
+					y == Repair.y_low || y == Repair.y_low+1) {
+
+				if (x < 4 && x > -4) {
+					if (z < 4 && z > -4) {
+
+						event.setCancelled(true);
+						if (Config.debug && !Config.verbose) Bukkit.spigot().broadcast(cancelPos);
+					}
+				}
+			}
 		}
+		//long endTime = System.nanoTime();
+		//long duration = (endTime - startTime);
+		//System.out.println("BreakTime: " + new DecimalFormat("#.###").format((double)duration/1000000.0) + " ms");
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)

@@ -34,9 +34,8 @@ import org.bukkit.OfflinePlayer;
 public class StatsContainer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public UUID playerid; public int killTotal;
-	public int deathTotal; public String kd;
-	public int spawnKills;
+	public UUID playerid; public String kd;
+	public int killTotal, deathTotal, spawnKills;
 	
 	public StatsContainer(UUID playerid, int killTotal, int deathTotal, String kd, int spawnKills) {
 
@@ -64,23 +63,19 @@ public class StatsContainer implements Serializable {
 			System.out.println("Parsed id: " + playerid);
 		}
 		
-		int killTotal;
+		int killTotal, deathTotal, spawnKills;
 		
-		try {killTotal = Integer.parseInt(stats[1]);} catch (Exception e) {killTotal = 0;}
+		try { killTotal = Integer.parseInt(stats[1]); } catch (Exception e) { killTotal = 0; }
 		if (Config.debug) System.out.println("Parsed kills: " + killTotal);
 		
-		int deathTotal;
-		
-		try {deathTotal = Integer.parseInt(stats[2]);} catch (Exception e) {deathTotal = 0;}
+		try { deathTotal = Integer.parseInt(stats[2]); } catch (Exception e) { deathTotal = 0; }
 		if (Config.debug) System.out.println("Parsed deaths: " + deathTotal);
 		
 		String kd;
-		
-		try {kd = stats[3];} catch (Exception e) {kd = "null";}
+		try { kd = stats[3];} catch (Exception e) {kd = "null";}
 		if (Config.debug) System.out.println("Parsed k/d: " + kd);
-		
-		int spawnKills;		
-		try {spawnKills = Integer.parseInt(stats[4]);} catch (Exception e) {spawnKills = 0;}
+
+		try { spawnKills = Integer.parseInt(stats[4]); } catch (Exception e) { spawnKills = 0; }
 		if (Config.debug) System.out.println("Parsed spawn kills: " + spawnKills);
 
 		return new StatsContainer(playerid, killTotal, deathTotal, kd, spawnKills);

@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 
 import com.google.gson.Gson;
 import com.google.common.reflect.TypeToken;
+import com.google.common.annotations.Beta;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -64,18 +65,19 @@ public class DonationManager {
         return null;
     }
 
-    public static Donor getDonorByKey(String thisKey) {
-        for (Donor thisDonor: _donorList) {
-            if (thisDonor.getDonationKey().equals(thisKey)) return thisDonor;
-        }
-        return null;
-    }
-
     public static Donor getDonorByName(String thisName) {
         for (Donor thisDonor: _donorList) {
             if (Objects.equals(
                     Bukkit.getOfflinePlayer(thisDonor.getUserID()).getName(), thisName)
             ) return thisDonor;
+        }
+        return null;
+    }
+
+    @Beta
+    public static Donor getDonorByKey(String thisKey) {
+        for (Donor thisDonor: _donorList) {
+            if (thisDonor.getDonationKey().equals(thisKey)) return thisDonor;
         }
         return null;
     }
@@ -145,7 +147,11 @@ public class DonationManager {
     }
 
     public static boolean isValidDonor(Player p) {
-        String key = Objects.requireNonNull(getDonorByUUID(p.getUniqueId())).getDonationKey();
+        String key;
+
+        try { key = Objects.requireNonNull(getDonorByUUID(p.getUniqueId())).getDonationKey();
+        } catch (Exception ignore) { return false; }
+
         return isDonor(p) && isAboveThreshold(DonationManager.getDonorByUUID(p.getUniqueId()))
                 && !key.equalsIgnoreCase("INVALID") && !key.isEmpty();
     }
@@ -161,9 +167,7 @@ public class DonationManager {
         for (int i = 0; i < thisKey.length(); i++){
             char c = thisKey.charAt(i);
 
-            //0123456789012345678
-            //abcd-2021-jhas-06ds
-
+            // abcd-2021-jhas-06ds
             if (i < 4 && c == '-') return false;
             else if (i == 4 && c != '-') return false;
             else if (i > 4 && i < 9 && c == '-') return false;

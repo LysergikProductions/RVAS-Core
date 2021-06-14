@@ -29,16 +29,9 @@ import java.io.Serializable;
 public class SettingsContainer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	public UUID playerid;
-	public String timezone;
-	public boolean show_PVPstats;
-	
-	public boolean show_kills;
-	public boolean show_deaths;
-	public boolean show_kd;
-	
-	public boolean show_player_join_messages;
-	public boolean show_player_death_messages;
+	public UUID playerid; public String timezone;
+	public boolean show_PVPstats, show_kills, show_deaths, show_kd;
+	public boolean show_player_join_messages, show_player_death_messages;
 	
 	public SettingsContainer(
 			UUID playerid, boolean show_PVPstats, boolean show_kills,
@@ -53,12 +46,9 @@ public class SettingsContainer implements Serializable {
 	
 	@Override
     public String toString() {
-		String out; {
-				out = playerid + ":" + show_PVPstats + ":" + show_kills + ":" + show_deaths + ":" +
-						show_kd + ":" +show_player_join_messages + ":" + show_player_death_messages +
-						":" + timezone;
-		} return out;
-    }
+		return playerid + ":" + show_PVPstats + ":" + show_kills + ":" + show_deaths + ":" +
+				show_kd + ":" +show_player_join_messages + ":" + show_player_death_messages + ":" + timezone;
+	}
 	
 	public static SettingsContainer fromString(String line) {
 		// Example of intended given line: f6c6e3a1-a1ec-4fee-9d1d-f5e495c3e9d7:true:true:true:true:false:true:PST
