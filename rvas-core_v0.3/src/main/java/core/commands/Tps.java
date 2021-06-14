@@ -1,9 +1,10 @@
 package core.commands;
 
-import core.frontend.ChatPrint;
-import core.backend.LagProcessor;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
+import core.frontend.ChatPrint;
+import core.backend.LagProcessor;
+import core.annotations.Critical;
 
 import java.text.DecimalFormat;
 import org.apache.commons.lang.math.IntRange;
@@ -17,6 +18,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 public class Tps implements CommandExecutor {
 
 	@Override

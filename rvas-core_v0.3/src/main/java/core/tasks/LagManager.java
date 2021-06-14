@@ -28,6 +28,7 @@ import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.events.ConnectionController;
+import core.annotations.Critical;
 
 import java.util.logging.Level;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -41,6 +42,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class LagManager implements Listener, Runnable {
 	

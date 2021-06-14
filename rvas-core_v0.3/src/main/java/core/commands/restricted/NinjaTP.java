@@ -25,6 +25,7 @@ package core.commands.restricted;
  * */
 
 import core.frontend.ChatPrint;
+import core.annotations.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,6 +36,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 public class NinjaTP implements CommandExecutor {
 
     @Override

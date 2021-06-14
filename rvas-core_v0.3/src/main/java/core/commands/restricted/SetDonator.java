@@ -3,6 +3,7 @@ package core.commands.restricted;
 import core.backend.Config;
 import core.frontend.ChatPrint;
 import core.data.DonationManager;
+import core.annotations.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Objects;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class SetDonator implements CommandExecutor {
 

@@ -25,6 +25,7 @@ package core.commands.restricted;
 import core.frontend.ChatPrint;
 import core.data.DonationManager;
 import core.data.objects.Donor;
+import core.annotations.Critical;
 
 import java.util.UUID;
 import java.util.Arrays;
@@ -39,6 +40,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class DonorCmd implements CommandExecutor {
 
@@ -80,7 +82,7 @@ public class DonorCmd implements CommandExecutor {
                     } catch (Exception ignore) {
                         sender.sendMessage(ChatPrint.fail + "Invalid number."); return false; }
 
-                    thisDonor.addToSum(Double.parseDouble(args[2]));
+                    thisDonor.addToSum(Double.parseDouble(args[2])); // <- updates validity automatically
                     thisDonor.setRecentDonationDate();
 
                     sender.sendMessage(ChatPrint.primary + "Successfully added $" + args[2] + " to " +
@@ -114,13 +116,12 @@ public class DonorCmd implements CommandExecutor {
                         thisDonor = new Donor(thisDonor.getUserID(), newKey, thisDonor.getSumDonated());
                         DonationManager.UsedDonorCodes.add(newKey);
 
-                    } else {
-                        sender.sendMessage(ChatPrint.fail + "Invalid key."); return false;
-                    }
+                    } else { sender.sendMessage(ChatPrint.fail + "Invalid key."); return false; }
 
                     sender.sendMessage(ChatPrint.primary +
                             "Successfully set donation key to " + thisDonor.getDonationKey());
-                    return true;
+
+                    thisDonor.updateValidity(); return true;
 
                 case "tag":
 

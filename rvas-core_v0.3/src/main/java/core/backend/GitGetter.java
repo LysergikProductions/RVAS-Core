@@ -35,8 +35,12 @@ import java.util.logging.Level;
 
 public class GitGetter {
 
-    static String official_version, beta_version;
+    static String issues_url = "https://github.com/LysergikProductions/RVAS-Core/issues/new?"
+                + "assignees=LysergikProductions&labels=needs+triage&template=version_issue.md"
+                + "&title=%5BGitGetter%5D+Failed+to+get+core.version";
+
     static String default_version = "0.2.5";
+    static String official_version, beta_version;
 
     public static void load() {
 
@@ -44,16 +48,13 @@ public class GitGetter {
         final URL versionLink; final BufferedReader buffer;
 
         try {
-            versionLink = new URL(
-                    "https://raw.githubusercontent.com/LysergikProductions/RVAS-Core/main/core.version");
-
+            versionLink = new URL("https://raw.githubusercontent.com/LysergikProductions/RVAS-Core/main/core.version");
             buffer = new BufferedReader(new InputStreamReader(versionLink.openStream()));
 
         } catch (Exception e) {
 
             Bukkit.getLogger().log(Level.WARNING, "Exception while loading the core.version file");
-            Bukkit.getLogger().log(Level.WARNING,
-                    "Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
+            Bukkit.getLogger().log(Level.WARNING, issues_url);
 
             official_version = default_version;
             beta_version = Main.version;
@@ -66,8 +67,7 @@ public class GitGetter {
         } catch (Exception e) {
 
             Bukkit.getLogger().log(Level.WARNING, "Exception while reading data from core.version file");
-            Bukkit.getLogger().log(Level.WARNING,
-                    "Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
+            Bukkit.getLogger().log(Level.WARNING, issues_url);
 
             official_version = default_version;
             beta_version = Main.version;
@@ -78,8 +78,7 @@ public class GitGetter {
         if (data.isEmpty()) {
 
             Bukkit.getLogger().log(Level.WARNING, "Github version data is empty");
-            Bukkit.getLogger().log(Level.WARNING,
-                    "Please write an issue about it here: https://github.com/LysergikProductions/RVAS-Core");
+            Bukkit.getLogger().log(Level.WARNING, issues_url);
 
             official_version = default_version;
             beta_version = Main.version;
@@ -94,9 +93,6 @@ public class GitGetter {
         Bukkit.getLogger().log(Level.INFO,
                 "Latest release: " + official_version + " | Current version: " + Main.version);
     }
-
-    public static String getBeta_version() { return beta_version; }
-    public static String getOfficial_version() { return official_version; }
 
     public static boolean isVersionCurrent() {
         return official_version.equals(Main.version); }

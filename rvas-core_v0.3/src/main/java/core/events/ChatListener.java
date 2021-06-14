@@ -5,6 +5,7 @@ import core.frontend.ChatPrint;
 import core.commands.AFK;
 import core.commands.Message;
 import core.commands.restricted.Admin;
+import core.annotations.Critical;
 
 import core.data.PlayerMeta;
 import core.data.objects.Donor;
@@ -25,6 +26,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
+@Critical
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ChatListener implements Listener {
 

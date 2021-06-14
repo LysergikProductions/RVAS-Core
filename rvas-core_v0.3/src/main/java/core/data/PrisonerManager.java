@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import core.annotations.Critical;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -62,15 +63,16 @@ public class PrisonerManager {
                 _prisonerList.containsValue(Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
     }
 
+    @Critical
+    public static void loadPrisoners() throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get("plugins/core/prisoners.db"));
+        lines.forEach(val -> _prisonerList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
+    }
+
     public static void savePrisoners() throws IOException {
         List<String> list = _prisonerList.keySet().stream().map(u -> u.toString() + ":" + _prisonerList.get(u))
                 .collect(Collectors.toList());
 
         Files.write(Paths.get("plugins/core/prisoners.db"), String.join("\n", list).getBytes());
-    }
-
-    public static void loadPrisoners() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get("plugins/core/prisoners.db"));
-        lines.forEach(val -> _prisonerList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
     }
 }

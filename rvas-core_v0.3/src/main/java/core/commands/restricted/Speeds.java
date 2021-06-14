@@ -5,6 +5,7 @@ import core.frontend.ChatPrint;
 import core.backend.utils.Util;
 import core.data.objects.Pair;
 import core.events.SpeedLimiter;
+import core.annotations.Critical;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -22,6 +23,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 public class Speeds implements CommandExecutor {
 
     private static Player thisPlayer = null;

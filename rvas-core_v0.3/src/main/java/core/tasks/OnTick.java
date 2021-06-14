@@ -2,10 +2,11 @@ package core.tasks;
 
 import core.backend.Scheduler;
 import core.commands.VoteMute;
+import core.annotations.Critical;
 
 import java.util.TimerTask;
 
-// Tps processor
+@Critical
 public class OnTick extends TimerTask {
 
 	@Override

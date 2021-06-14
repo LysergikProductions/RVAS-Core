@@ -2,6 +2,7 @@ package core.commands;
 
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
+import core.annotations.Critical;
 
 import java.util.Objects;
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 public class Kill implements CommandExecutor {
 
 	@Override

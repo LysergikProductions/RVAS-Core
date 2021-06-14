@@ -10,6 +10,7 @@ import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
 import core.tasks.Analytics;
 import core.events.SpeedLimiter;
+import core.annotations.Critical;
 
 import java.util.*;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class Admin implements CommandExecutor {
 

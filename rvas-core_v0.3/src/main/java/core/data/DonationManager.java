@@ -23,6 +23,7 @@ package core.data;
  * */
 
 import core.Main;
+import core.annotations.Critical;
 import core.backend.Config;
 import core.data.objects.Donor;
 
@@ -92,6 +93,8 @@ public class DonationManager {
     }
 
     // JSON management \\
+
+    @Critical
     public static void loadDonors() {
         _donorList.clear();
 

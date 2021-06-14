@@ -27,6 +27,7 @@ import core.backend.Config;
 import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
 import core.data.FileManager;
+import core.annotations.Critical;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -38,6 +39,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class Backup implements CommandExecutor {
 	

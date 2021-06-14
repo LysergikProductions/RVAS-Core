@@ -24,11 +24,13 @@ package core.events;
  * 
  * */
 
+
 import core.backend.Config;
 import core.backend.utils.Chunks;
 import core.backend.utils.Util;
-import core.commands.restricted.Repair;
 import core.tasks.Analytics;
+import core.commands.restricted.Repair;
+import core.annotations.Critical;
 
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -43,6 +45,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.boss.DragonBattle;
 import org.bukkit.entity.Player;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class ChunkManager implements Listener {
 	final static int TE_limiter = 16384;

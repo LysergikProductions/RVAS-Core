@@ -3,6 +3,7 @@ package core.commands.restricted;
 import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
 import core.backend.utils.Restart;
+import core.annotations.Critical;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 // INTERNAL USE ONLY
+
+@Critical
 public class RestartCmd implements CommandExecutor {
 
 	@Override

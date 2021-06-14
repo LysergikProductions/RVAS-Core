@@ -56,20 +56,19 @@ public class Donor {
     }
 
     // Setters
-    public void setSumDonated(Double sumDonated) { this.sumDonated = sumDonated; }
     public void setTagLine(String tagLine) { this.tagLine = tagLine; }
     public void setMsgOtd(String msgOtd) { this.msgOtd = msgOtd; }
     public void setCustomIGN(String customIGN) { this.customIGN = customIGN; }
     public void setRecentDonationDate() { this.recentDonationDate = new Date(); }
 
-    public void updateDonorIGN() {
-        this.realIGN = Objects.requireNonNull(this.getPlayer()).getName();
-    }
-    public void updateValidity() { this.validity = this.sumDonated >= 25.0; }
-
     public void addToSum(Double sumToAdd) {
         this.sumDonated += sumToAdd;
         this.recentDonationDate = new Date();
+        this.updateValidity();
+    }
+
+    public void setSumDonated(Double sumDonated) {
+        this.sumDonated = sumDonated;
         this.updateValidity();
     }
 
@@ -92,6 +91,13 @@ public class Donor {
     public OfflinePlayer getOfflinePlayer() { return Bukkit.getOfflinePlayer(this.userID); }
 
     // Actions
+    public void updateValidity() { this.validity = this.sumDonated >= 25.0; }
+
+    public void updateDonorIGN() {
+        Player p = this.getPlayer(); if (p == null) return;
+        this.realIGN = p.getName();
+    }
+
     public void sendMessage(@NotNull TextComponent msg) {
         Player p = this.getPlayer(); if (!p.isOnline()) return;
         p.getPlayer().sendMessage(msg);

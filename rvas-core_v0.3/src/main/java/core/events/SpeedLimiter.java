@@ -6,6 +6,7 @@ import core.data.objects.Pair;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
 import core.commands.restricted.Admin;
+import core.annotations.Critical;
 
 import java.util.UUID;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class SpeedLimiter implements Listener {
 

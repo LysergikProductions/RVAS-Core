@@ -24,12 +24,14 @@ package core.commands.restricted;
 
 import core.events.ChatListener;
 import org.bukkit.entity.Player;
+import core.annotations.Critical;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 public class SlowChat implements CommandExecutor {
 	static String msg;
 	

@@ -4,6 +4,7 @@ import core.backend.Config;
 import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
 import core.data.PrisonerManager;
+import core.annotations.Critical;
 
 import java.util.*;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class Prison implements CommandExecutor {
 

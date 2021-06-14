@@ -27,6 +27,7 @@ import core.backend.Config;
 import core.backend.Scheduler;
 import core.frontend.ChatPrint;
 import core.commands.restricted.Check;
+import core.annotations.Critical;
 
 import java.util.*;
 import java.nio.file.Files;
@@ -40,6 +41,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
+@Critical
 @SuppressWarnings("deprecation")
 public class AutoAnnouncer extends TimerTask {
 

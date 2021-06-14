@@ -30,6 +30,7 @@ import core.backend.utils.*;
 import core.backend.ItemCheck;
 import core.frontend.ChatPrint;
 import core.commands.restricted.Repair;
+import core.annotations.Critical;
 
 import java.util.*;
 import java.text.DecimalFormat;
@@ -57,6 +58,7 @@ import org.bukkit.GameMode;
 import org.bukkit.World.Environment;
 import org.bukkit.entity.Player;
 
+@Critical
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class BlockListener implements Listener {
 

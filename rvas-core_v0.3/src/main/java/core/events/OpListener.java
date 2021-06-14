@@ -24,10 +24,11 @@ package core.events;
  * 
  * */
 
-import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
+import core.frontend.ChatPrint;
+import core.annotations.Critical;
 
 import core.data.PlayerMeta;
 import core.data.objects.Pair;
@@ -52,6 +53,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
 

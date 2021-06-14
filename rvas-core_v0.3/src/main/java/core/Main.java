@@ -46,7 +46,7 @@ import org.bukkit.World.Environment;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public final static String version = "0.3.4"; public final static int build = 316;
+	public final static String version = "0.3.5"; public final static int build = 319;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -71,17 +71,20 @@ public class Main extends JavaPlugin {
 		else if (GitGetter.isVersionBeta()) console.log(Level.WARNING, "This is a beta version of RVAS-Core!");
 		else console.log(Level.WARNING, "This version is invalid or unrecognized!");
 
+		System.out.println();
+		System.out.println("[core.main] _____________");
+		System.out.println("[core.main] Setting properties");
+
 		console.log(Level.INFO, "Forcing default gamemode to Survival Mode");
 		getServer().setDefaultGameMode(GameMode.SURVIVAL);
 
 		System.out.println();
-		System.out.println("[core.main] Loading files");
 		System.out.println("[core.main] _____________");
+		System.out.println("[core.main] Loading files");
 
 		// LOADING DATA FROM STORAGE \\
 		try { FileManager.setup();
-		} catch (IOException e) {
-			console.log(Level.SEVERE, "Exception in FileManager.setup()"); }
+		} catch (IOException e) { shutdownWithException(e); }
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
@@ -102,86 +105,89 @@ public class Main extends JavaPlugin {
 		}
 
 		System.out.println();
-		System.out.println("[core.main] Loading more files");
 		System.out.println("[core.main] __________________");
+		System.out.println("[core.main] Loading more files");
 
 		try {
 			DonationManager.loadDonors();
 			PlayerMeta.loadMuted();
 			PrisonerManager.loadPrisoners();
 
-		} catch (IOException e) {
-			console.log(Level.SEVERE, "Exception while loading data");
-			e.printStackTrace();
-		}
+		} catch (IOException e) { shutdownWithException(e); }
 
 		System.out.println();
-		System.out.println("[core.main] Enabling commands");
 		System.out.println("[core.main] _________________");
+		System.out.println("[core.main] Enabling commands");
 
 		// INIT BUKKIT METHODS \\
-		System.out.println("/kit");
-		Objects.requireNonNull(this.getCommand("kit")).setExecutor(new Kit());
+		try {
+			System.out.println("/mute");
+			Objects.requireNonNull(this.getCommand("mute")).setExecutor(new Mute());
 
-		System.out.println("/mute");
-		Objects.requireNonNull(this.getCommand("mute")).setExecutor(new Mute());
+			System.out.println("/dupehand");
+			Objects.requireNonNull(this.getCommand("dupehand")).setExecutor(new DupeHand());
 
-		System.out.println("/dupehand");
-		Objects.requireNonNull(this.getCommand("dupehand")).setExecutor(new DupeHand());
+			System.out.println("/ninjatp");
+			Objects.requireNonNull(this.getCommand("ninjatp")).setExecutor(new NinjaTP());
 
-		System.out.println("/ninjatp");
-		Objects.requireNonNull(this.getCommand("ninjatp")).setExecutor(new NinjaTP());
+			System.out.println("/vm");
+			Objects.requireNonNull(this.getCommand("vm")).setExecutor(new VoteMute());
 
-		System.out.println("/vm");
-		Objects.requireNonNull(this.getCommand("vm")).setExecutor(new VoteMute());
+			System.out.println("/msg");
+			Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
 
-		System.out.println("/msg");
-		Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
+			System.out.println("/w");
+			Objects.requireNonNull(this.getCommand("w")).setExecutor(new Message());
 
-		System.out.println("/w");
-		Objects.requireNonNull(this.getCommand("w")).setExecutor(new Message());
+			System.out.println("/r");
+			Objects.requireNonNull(this.getCommand("r")).setExecutor(new Reply());
 
-		System.out.println("/r");
-		Objects.requireNonNull(this.getCommand("r")).setExecutor(new Reply());
+			System.out.println("/say");
+			Objects.requireNonNull(this.getCommand("say")).setExecutor(new Say());
 
-		System.out.println("/say");
-		Objects.requireNonNull(this.getCommand("say")).setExecutor(new Say());
+			System.out.println("/tps");
+			Objects.requireNonNull(this.getCommand("tps")).setExecutor(new Tps());
 
-		System.out.println("/discord");
-		Objects.requireNonNull(this.getCommand("discord")).setExecutor(new Discord());
+			System.out.println("/kill");
+			Objects.requireNonNull(this.getCommand("kill")).setExecutor(new Kill());
 
-		System.out.println("/tps");
-		Objects.requireNonNull(this.getCommand("tps")).setExecutor(new Tps());
+			System.out.println("/setdonator");
+			Objects.requireNonNull(this.getCommand("setdonator")).setExecutor(new SetDonator());
 
-		System.out.println("/kill");
-		Objects.requireNonNull(this.getCommand("kill")).setExecutor(new Kill());
+			System.out.println("/restart");
+			Objects.requireNonNull(this.getCommand("restart")).setExecutor(new RestartCmd());
 
-		System.out.println("/setdonator");
-		Objects.requireNonNull(this.getCommand("setdonator")).setExecutor(new SetDonator());
+			System.out.println("/admin");
+			Objects.requireNonNull(this.getCommand("admin")).setExecutor(new Admin());
 
-		System.out.println("/about");
-		Objects.requireNonNull(this.getCommand("about")).setExecutor(new About());
+			System.out.println("/redeem");
+			Objects.requireNonNull(this.getCommand("redeem")).setExecutor(new Redeem());
 
-		System.out.println("/vote");
-		Objects.requireNonNull(this.getCommand("vote")).setExecutor(new VoteCmd());
+			System.out.println("/repair");
+			Objects.requireNonNull(this.getCommand("repair")).setExecutor(new Repair());
 
-		System.out.println("/restart");
-		Objects.requireNonNull(this.getCommand("restart")).setExecutor(new RestartCmd());
+			System.out.println("/slowchat");
+			Objects.requireNonNull(this.getCommand("slowchat")).setExecutor(new SlowChat());
 
-		System.out.println("/sign");
-		Objects.requireNonNull(this.getCommand("sign")).setExecutor(new Sign());
+			System.out.println("/backup");
+			Objects.requireNonNull(this.getCommand("backup")).setExecutor(new Backup());
 
-		System.out.println("/admin");
-		Objects.requireNonNull(this.getCommand("admin")).setExecutor(new Admin());
+			System.out.println("/prison");
+			Objects.requireNonNull(this.getCommand("prison")).setExecutor(new core.commands.restricted.Prison());
 
-		System.out.println("/stats");
-		Objects.requireNonNull(this.getCommand("stats")).setExecutor(new Stats());
+			System.out.println("/check");
+			Objects.requireNonNull(this.getCommand("check")).setExecutor(new Check());
 
-		System.out.println("/redeem");
-		Objects.requireNonNull(this.getCommand("redeem")).setExecutor(new Redeem());
+			System.out.println("/speeds");
+			Objects.requireNonNull(this.getCommand("speeds")).setExecutor(new Speeds());
 
-		System.out.println("/tjm");
-		Objects.requireNonNull(this.getCommand("tjm")).setExecutor(new ToggleJoinMessages());
+			System.out.println("/donor");
+			Objects.requireNonNull(this.getCommand("donor")).setExecutor(new DonorCmd());
+
+		} catch (Exception e) { shutdownWithException(e); }
+
+		System.out.println("/info");
+		Objects.requireNonNull(this.getCommand("info")).setExecutor(new core.commands.restricted.Info());
 
 		System.out.println("/server");
 		Objects.requireNonNull(this.getCommand("server")).setExecutor(new ServerCmd());
@@ -189,20 +195,32 @@ public class Main extends JavaPlugin {
 		System.out.println("/help");
 		Objects.requireNonNull(this.getCommand("help")).setExecutor(new Help());
 
-		System.out.println("/repair");
-		Objects.requireNonNull(this.getCommand("repair")).setExecutor(new Repair());
+		System.out.println("/local");
+		Objects.requireNonNull(this.getCommand("local")).setExecutor(new Local());
 
-		System.out.println("/slowchat");
-		Objects.requireNonNull(this.getCommand("slowchat")).setExecutor(new SlowChat());
+		System.out.println("/l");
+		Objects.requireNonNull(this.getCommand("l")).setExecutor(new Local());
 
-		System.out.println("/backup");
-		Objects.requireNonNull(this.getCommand("backup")).setExecutor(new Backup());
+		System.out.println("/stats");
+		Objects.requireNonNull(this.getCommand("stats")).setExecutor(new Stats());
 
-		System.out.println("/prison");
-		Objects.requireNonNull(this.getCommand("prison")).setExecutor(new core.commands.restricted.Prison());
+		System.out.println("/sign");
+		Objects.requireNonNull(this.getCommand("sign")).setExecutor(new Sign());
 
-		System.out.println("/info");
-		Objects.requireNonNull(this.getCommand("info")).setExecutor(new core.commands.restricted.Info());
+		System.out.println("/kit");
+		Objects.requireNonNull(this.getCommand("kit")).setExecutor(new Kit());
+
+		System.out.println("/discord");
+		Objects.requireNonNull(this.getCommand("discord")).setExecutor(new Discord());
+
+		System.out.println("/about");
+		Objects.requireNonNull(this.getCommand("about")).setExecutor(new About());
+
+		System.out.println("/vote");
+		Objects.requireNonNull(this.getCommand("vote")).setExecutor(new VoteCmd());
+
+		System.out.println("/tjm");
+		Objects.requireNonNull(this.getCommand("tjm")).setExecutor(new ToggleJoinMessages());
 
 		System.out.println("/global");
 		Objects.requireNonNull(this.getCommand("global")).setExecutor(new Global());
@@ -219,87 +237,72 @@ public class Main extends JavaPlugin {
 		System.out.println("/fig");
 		Objects.requireNonNull(this.getCommand("fig")).setExecutor(new ConfigCmd());
 
-		System.out.println("/check");
-		Objects.requireNonNull(this.getCommand("check")).setExecutor(new Check());
-
-		System.out.println("/speeds");
-		Objects.requireNonNull(this.getCommand("speeds")).setExecutor(new Speeds());
-
-		System.out.println("/local");
-		Objects.requireNonNull(this.getCommand("local")).setExecutor(new Local());
-
-		System.out.println("/l");
-		Objects.requireNonNull(this.getCommand("l")).setExecutor(new Local());
-
-		System.out.println("/donor");
-		Objects.requireNonNull(this.getCommand("donor")).setExecutor(new DonorCmd());
-
 		System.out.println("/donate");
 		Objects.requireNonNull(this.getCommand("donate")).setExecutor(new Donate());
 
 		System.out.println();
-		System.out.println("[core.main] Scheduling synced tasks");
 		System.out.println("[core.main] _______________________");
+		System.out.println("[core.main] Scheduling synced tasks");
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		System.out.println();
-		System.out.println("[core.main] Loading event listeners");
 		System.out.println("[core.main] _______________________");
+		System.out.println("[core.main] Loading event listeners");
 
 		PluginManager core_pm = getServer().getPluginManager();
 
 		try { core_pm.registerEvents(new ChatListener(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new ConnectionController(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new PVP(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new MoveListener(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new SpawnController(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new LagManager(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new SpeedLimiter(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new ItemCheckTriggers(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new BlockListener(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new ChunkManager(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new OpListener(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		try { core_pm.registerEvents(new Check(), this);
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		// INIT PROTOCOL_LIB METHODS \\
 		try {
@@ -307,9 +310,11 @@ public class Main extends JavaPlugin {
 			PacketListener.S2C_MapChunkPackets();
 			PacketListener.S2C_WitherSpawnSound();
 
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		// OTHER STUFF \\
+		System.out.println();
+		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] ..finishing up..");
 
 		// Define banned & special blocks
@@ -328,11 +333,15 @@ public class Main extends JavaPlugin {
 				Material.WITHER_SKELETON_SKULL, Material.DRAGON_HEAD));
 
 		// Enable speed limit
-		SpeedLimiter.scheduleSlTask();
+		try { SpeedLimiter.scheduleSlTask();
+		} catch (Exception e) { shutdownWithException(e); }
 		
 		// Enable discord notifications for this instance
-		DiscordHandler = new DiscordBot();
-		getServer().getPluginManager().registerEvents(DiscordHandler, this);
+		try {
+			DiscordHandler = new DiscordBot();
+			getServer().getPluginManager().registerEvents(DiscordHandler, this);
+		} catch (Exception e) { shutdownWithException(e); }
+
 
 		// Load chunk at 0,0 to test for world age
 		for (World thisWorld: getServer().getWorlds()) {
@@ -386,8 +395,8 @@ public class Main extends JavaPlugin {
 		}
 		
 		System.out.println();
-		System.out.println("[core.main] Overwriting save files");
 		System.out.println("[core.main] ______________________");
+		System.out.println("[core.main] Overwriting save files");
 		
 		try {
 			DonationManager.saveDonors();
@@ -404,8 +413,8 @@ public class Main extends JavaPlugin {
 		}
 		
 		System.out.println();
-		System.out.println("[core.main] Collecting garbage");
 		System.out.println("[core.main] __________________");
+		System.out.println("[core.main] Collecting garbage");
 
 		int max_age = Integer.parseInt(Config.getValue("wither.skull.max_ticks"));
 		int removed_skulls = LagManager.removeSkulls(max_age);
@@ -413,8 +422,8 @@ public class Main extends JavaPlugin {
 		console.log(Level.INFO, "Found " + removed_skulls + " remaining skull/s to trash..");
 		
 		System.out.println();
-		System.out.println("[core.main] Printing session stats");
 		System.out.println("[core.main] ______________________");
+		System.out.println("[core.main] Printing session stats");
 
 		console.log(Level.INFO, "New Chunks Generated: " + ChunkManager.newCount);
 		console.log(Level.INFO, "New Unique Players: " + SpawnController.sessionNewPlayers);
@@ -425,5 +434,10 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] ____________________________");
 		System.out.println("[core.main] --- RVAS-Core : Disabled ---");
 		System.out.println("[core.main] ____________________________");
+	}
+
+	void shutdownWithException(Exception e) {
+		console.log(Level.SEVERE, "Failed to enable a critical feature. Shutting down server..");
+		e.printStackTrace(); Bukkit.shutdown();
 	}
 }

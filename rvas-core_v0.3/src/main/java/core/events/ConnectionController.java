@@ -6,6 +6,7 @@ import core.backend.utils.Util;
 import core.frontend.ChatPrint;
 import core.commands.Kit;
 import core.commands.restricted.Admin;
+import core.annotations.Critical;
 
 import core.data.DonationManager;
 import core.data.PlayerMeta;
@@ -37,6 +38,7 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 
+@Critical
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class ConnectionController implements Listener {
 	

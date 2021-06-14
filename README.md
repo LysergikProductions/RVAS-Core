@@ -30,6 +30,8 @@ _**Doesn't prevent any vanilla exploits** by default_
 
 - Customizable + randomized MOTDs
 
+- **In-game donor database** with advanced management
+
 - Customizable Themes!
 
 ##### Commands:

@@ -24,6 +24,7 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.utils.Util;
+import core.annotations.Critical;
 
 import java.util.*;
 
@@ -42,6 +43,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class MoveListener implements Listener {
 

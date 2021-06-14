@@ -3,13 +3,14 @@ package core.data;
 import core.Main;
 import core.data.objects.*;
 import core.backend.Config;
+import core.annotations.Critical;
 
 import java.io.*;
 import java.util.Date;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
 import java.text.SimpleDateFormat;
 
 @SuppressWarnings("SpellCheckingInspection")
@@ -17,13 +18,12 @@ public class FileManager {
 	
 	public static final String plugin_work_path = "plugins/core/";
 	
-	public static File pvpstats_user_database, playtime_user_database,
-			settings_user_database, muted_user_database, prison_user_database,
-			core_server_config, core_restrictions_config, core_spawn_config, server_statistics_list,
-			motd_message_list, auto_announce_list, donor_database, all_donor_codes, used_donor_codes;
+	public static File pvpstats_user_database, playtime_user_database, server_statistics_list,
+			settings_user_database, muted_user_database, prison_user_database, core_server_config,
+			core_restrictions_config, core_spawn_config, motd_message_list, auto_announce_list,
+			donor_database, all_donor_codes, used_donor_codes, defaultThemeFile, halloweenThemeFile, customThemeFile;
 
-	public static File defaultThemeFile, halloweenThemeFile, customThemeFile;
-	
+	@Critical
 	public static void backupData(File thisFile, String thisFileName, String ext) throws IOException {
 	    
 	    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
@@ -55,7 +55,8 @@ public class FileManager {
 			}
 		} else Main.console.log(Level.WARNING, "FAILED TO COPY ONE OR MORE FILES");
 	}
-	
+
+	@Critical
 	public static void setup() throws IOException {
 
 		// Instantiate File objects \\

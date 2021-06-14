@@ -1,6 +1,7 @@
 package core.commands.restricted;
 
 import java.util.Arrays;
+import core.annotations.Critical;
 
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -11,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
-// OP-only say command
+@Critical
 public class Say implements CommandExecutor {
 
 	@Override

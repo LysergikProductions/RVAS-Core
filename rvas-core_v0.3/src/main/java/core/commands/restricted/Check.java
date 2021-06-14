@@ -27,6 +27,7 @@ import core.data.objects.Pair;
 import core.frontend.ChatPrint;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
+import core.annotations.Critical;
 
 import java.util.*;
 import org.bukkit.*;
@@ -45,6 +46,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("deprecation")
 public class Check implements CommandExecutor, Listener {
 

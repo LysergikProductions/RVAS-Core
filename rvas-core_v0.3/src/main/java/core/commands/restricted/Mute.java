@@ -2,6 +2,7 @@ package core.commands.restricted;
 
 import core.data.PlayerMeta;
 import core.data.PlayerMeta.MuteType;
+import core.annotations.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("deprecation")
 public class Mute implements CommandExecutor {
 

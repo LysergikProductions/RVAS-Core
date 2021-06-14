@@ -1,7 +1,8 @@
 package core.commands;
 
-import core.data.DonationManager;
 import core.frontend.ChatPrint;
+import core.data.DonationManager;
+import core.annotations.Critical;
 
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class Redeem implements CommandExecutor {
 

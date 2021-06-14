@@ -24,6 +24,7 @@ package core.commands.restricted;
 
 import core.events.ChunkManager;
 import core.backend.utils.Chunks;
+import core.annotations.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -35,6 +36,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 public class Repair implements CommandExecutor {
 	public static int y_default = 62;
 	public static int y_low;

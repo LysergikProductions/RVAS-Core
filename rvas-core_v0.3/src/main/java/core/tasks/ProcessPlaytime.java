@@ -6,6 +6,7 @@ import core.backend.Scheduler;
 import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.LagProcessor;
+import core.annotations.Critical;
 
 import core.data.PlayerMeta;
 import core.events.ChatListener;
@@ -18,6 +19,8 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 
 // Playtime processor (every 20 ticks)
+
+@Critical
 public class ProcessPlaytime extends TimerTask {
 	public static long lowTpsCounter = 0;
 

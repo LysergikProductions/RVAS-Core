@@ -1,6 +1,7 @@
 package core.backend;
 
 import core.data.PlayerMeta;
+import core.annotations.Critical;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 // INTERNAL USE ONLY
 
+@Critical
 @SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 public class DupeHand implements CommandExecutor {
 

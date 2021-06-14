@@ -1,5 +1,6 @@
 package core.data;
 
+import core.annotations.Critical;
 import core.backend.Config;
 import core.commands.Ignore;
 import core.events.ChatListener;
@@ -107,6 +108,8 @@ public class PlayerMeta {
 	}
 
 	// --- SAVE/LOAD MUTED --- \\
+
+	@Critical
 	public static void loadMuted() throws IOException {
 		
 		List<String> lines = Files.readAllLines(Paths.get("plugins/core/muted.db"));

@@ -27,6 +27,7 @@ import core.Main;
 import core.backend.Config;
 import core.data.FileManager;
 import core.backend.LagProcessor;
+import core.annotations.Critical;
 
 import java.io.*;
 import java.util.*;
@@ -36,6 +37,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 
+@Critical
 @SuppressWarnings({"StringBufferReplaceableByString", "StringConcatenationInsideStringBufferAppend"})
 public class Analytics extends TimerTask {
 	

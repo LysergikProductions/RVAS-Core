@@ -1,12 +1,13 @@
 package core.commands;
 
-import core.frontend.ChatPrint;
-import core.commands.restricted.Admin;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
+import core.frontend.ChatPrint;
+import core.commands.restricted.Admin;
+import core.annotations.Critical;
 
-import java.util.Arrays;
 import java.util.UUID;
+import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class Reply implements CommandExecutor {
 
