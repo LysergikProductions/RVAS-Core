@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class PlayerMeta {
 
@@ -108,8 +109,6 @@ public class PlayerMeta {
 	}
 
 	// --- SAVE/LOAD MUTED --- \\
-
-	@Critical
 	public static void loadMuted() throws IOException {
 		
 		List<String> lines = Files.readAllLines(Paths.get("plugins/core/muted.db"));

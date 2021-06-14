@@ -1,5 +1,7 @@
 package core.tasks;
 
+// Playtime processor (every 20 ticks)
+
 import core.Main;
 import core.backend.Config;
 import core.backend.Scheduler;
@@ -15,10 +17,7 @@ import core.commands.restricted.Speeds;
 
 import java.util.TimerTask;
 import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
-
-// Playtime processor (every 20 ticks)
 
 @Critical
 public class ProcessPlaytime extends TimerTask {

@@ -22,6 +22,7 @@ package core;
  *
  * */
 
+import core.annotations.Critical;
 import core.data.*; import core.events.*;
 import core.tasks.*; import core.backend.*;
 import static core.data.ThemeManager.replaceDefaultJSON;
@@ -46,7 +47,7 @@ import org.bukkit.World.Environment;
 public class Main extends JavaPlugin {
 	public static Plugin instance;
 
-	public final static String version = "0.3.5"; public final static int build = 319;
+	public final static String version = "0.3.5"; public final static int build = 320;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -84,16 +85,14 @@ public class Main extends JavaPlugin {
 
 		// LOADING DATA FROM STORAGE \\
 		try { FileManager.setup();
-		} catch (IOException e) { shutdownWithException(e); }
+		} catch (IOException e) { if (isFatal(FileManager.class)) shutdownWithException(e); }
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
 
 		try { ChatPrint.init();
 		} catch (Exception e) {
-
-			console.log(Level.WARNING,
-					"Exception in ChatPrint.init().. creating a default theme instead");
+			console.log(Level.WARNING, "Exception in ChatPrint.init().. creating a default theme instead");
 
 			if (Config.debug) e.printStackTrace();
 			ThemeManager.currentTheme.setToInternalDefaults();
@@ -113,7 +112,7 @@ public class Main extends JavaPlugin {
 			PlayerMeta.loadMuted();
 			PrisonerManager.loadPrisoners();
 
-		} catch (IOException e) { shutdownWithException(e); }
+		} catch (Exception e) { shutdownWithException(e); }
 
 		System.out.println();
 		System.out.println("[core.main] _________________");
@@ -439,5 +438,10 @@ public class Main extends JavaPlugin {
 	void shutdownWithException(Exception e) {
 		console.log(Level.SEVERE, "Failed to enable a critical feature. Shutting down server..");
 		e.printStackTrace(); Bukkit.shutdown();
+	}
+
+	boolean isFatal(Class<?> clazz) {
+		if (clazz.isAnnotationPresent(Critical.class)) return clazz.getAnnotation(Critical.class).isFatal();
+		else return false;
 	}
 }

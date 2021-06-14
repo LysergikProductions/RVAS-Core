@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import core.annotations.Critical;
 import org.bukkit.entity.Player;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class PrisonerManager {
 
@@ -63,7 +64,6 @@ public class PrisonerManager {
                 _prisonerList.containsValue(Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
     }
 
-    @Critical
     public static void loadPrisoners() throws IOException {
         List<String> lines = Files.readAllLines(Paths.get("plugins/core/prisoners.db"));
         lines.forEach(val -> _prisonerList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));

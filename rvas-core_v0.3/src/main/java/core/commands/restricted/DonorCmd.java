@@ -107,7 +107,7 @@ public class DonorCmd implements CommandExecutor {
 
                     String newKey = args[2].trim();
 
-                    if (!DonationManager.isValidKey(newKey)) {
+                    if (DonationManager.isInvalidKey(newKey)) {
                         sender.sendMessage(ChatPrint.fail + "Invalid key."); return false; }
 
                     if (DonationManager.DonorCodes.contains(newKey) &&
@@ -226,13 +226,13 @@ public class DonorCmd implements CommandExecutor {
                     .getPlayer(thisDonor.getUserID())).getName();
 
         } catch (Exception ignore) {
-            sender.sendMessage(ChatPrint.fail + "Internal error. Failed to get Bukkit player name."); return false; }
+            sender.sendMessage(ChatPrint.fail + "This player is not online"); return false; }
 
         sender.sendMessage("");
 
         sender.sendMessage(ChatPrint.primary + "Real IGN: " + ChatPrint.clear + donorRealIGN);
-        sender.sendMessage(ChatPrint.primary + "UUID: " + ChatPrint.clear + thisDonor.getUserID());
         sender.sendMessage(ChatPrint.primary + "Custom IGN: " + ChatPrint.clear + thisDonor.getCustomIGN());
+        sender.sendMessage(ChatPrint.primary + "UUID: " + ChatPrint.clear + thisDonor.getUserID());
         sender.sendMessage(ChatPrint.primary + "Donation Key: " + ChatPrint.clear + thisDonor.getDonationKey());
         sender.sendMessage(ChatPrint.primary + "First Donation Date: " + ChatPrint.clear + thisDonor.getFirstDonationDate());
         sender.sendMessage(ChatPrint.primary + "Recent Donation Date: " + ChatPrint.clear + thisDonor.getRecentDonationDate());

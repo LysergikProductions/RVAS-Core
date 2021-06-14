@@ -23,9 +23,9 @@ package core.data;
  * */
 
 import core.Main;
-import core.annotations.Critical;
 import core.backend.Config;
 import core.data.objects.Donor;
+import core.annotations.Critical;
 
 import java.io.*;
 import java.util.*;
@@ -42,6 +42,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class DonationManager {
 
@@ -53,7 +54,7 @@ public class DonationManager {
     public static boolean setDonor(Player thisPlayer, String thisKey, Double donationSum) throws IOException {
 
         if (thisPlayer == null || thisKey == null || donationSum == null) return false;
-        if (!isValidKey(thisKey)) Main.console.log(Level.WARNING, "Tried setting invalid donor key!");
+        if (isInvalidKey(thisKey)) Main.console.log(Level.WARNING, "Tried setting invalid donor key!");
 
         UUID thisID = thisPlayer.getUniqueId();
         if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(thisID));
@@ -93,17 +94,16 @@ public class DonationManager {
     }
 
     // JSON management \\
-
-    @Critical
-    public static void loadDonors() {
+    public static void loadDonors() throws Exception {
         _donorList.clear();
 
         try { _donorList.addAll(
-                Optional.of(getDonorsFromJSON(FileManager.donor_database))
-                        .orElse(Collections.emptyList()));
+                Optional.of(getDonorsFromJSON(FileManager.donor_database)).orElse(Collections.emptyList()));
+
         } catch (Exception e) {
+            e.printStackTrace();
             _donorList.addAll(Collections.emptyList());
-            e.printStackTrace(); }
+        }
     }
 
     public static void saveDonors() {
@@ -165,30 +165,30 @@ public class DonationManager {
         } catch (Exception ignore) { return false; }
 
         return isDonor(p) && isAboveThreshold(DonationManager.getDonorByUUID(p.getUniqueId()))
-                && !key.equalsIgnoreCase("INVALID") && !key.isEmpty();
+                && !key.equalsIgnoreCase("INVALID") && !key.isEmpty() && !isInvalidKey(key);
     }
 
     public static boolean isValidString(String thisString) {
         return thisString != null && !thisString.isEmpty() && !thisString.equals("tbd");
     }
 
-    public static boolean isValidKey(String thisKey) {
+    public static boolean isInvalidKey(String thisKey) {
         System.out.println("Checking: " + thisKey + " | Length: " + thisKey.length());
-        if (thisKey.length() != 19) return false;
+        if (thisKey.length() != 19) return true;
 
         for (int i = 0; i < thisKey.length(); i++){
             char c = thisKey.charAt(i);
 
             // abcd-2021-jhas-06ds
-            if (i < 4 && c == '-') return false;
-            else if (i == 4 && c != '-') return false;
-            else if (i > 4 && i < 9 && c == '-') return false;
-            else if (i == 9 && c != '-') return false;
-            else if (i > 9 && i < 14 && c == '-') return false;
-            else if (i == 14 && c != '-') return false;
-            else if (i > 14 && c == '-') return false;
+            if (i < 4 && c == '-') return true;
+            else if (i == 4 && c != '-') return true;
+            else if (i > 4 && i < 9 && c == '-') return true;
+            else if (i == 9 && c != '-') return true;
+            else if (i > 9 && i < 14 && c == '-') return true;
+            else if (i == 14 && c != '-') return true;
+            else if (i > 14 && c == '-') return true;
         }
-        return true;
+        return false;
     }
 
     public static boolean isRestrictedIGN(String ign) {

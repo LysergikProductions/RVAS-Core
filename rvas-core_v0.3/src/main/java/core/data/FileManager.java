@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.text.SimpleDateFormat;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class FileManager {
 	
@@ -23,7 +24,6 @@ public class FileManager {
 			core_restrictions_config, core_spawn_config, motd_message_list, auto_announce_list,
 			donor_database, all_donor_codes, used_donor_codes, defaultThemeFile, halloweenThemeFile, customThemeFile;
 
-	@Critical
 	public static void backupData(File thisFile, String thisFileName, String ext) throws IOException {
 	    
 	    SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
@@ -56,7 +56,6 @@ public class FileManager {
 		} else Main.console.log(Level.WARNING, "FAILED TO COPY ONE OR MORE FILES");
 	}
 
-	@Critical
 	public static void setup() throws IOException {
 
 		// Instantiate File objects \\
