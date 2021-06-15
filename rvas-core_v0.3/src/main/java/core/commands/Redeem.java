@@ -26,14 +26,15 @@ public class Redeem implements CommandExecutor {
 		if (args.length != 1) {
 			player.sendMessage(ChatPrint.fail + "Syntax: /redeem [code]"); return true; }
 
-		if (DonationManager.isValidDonor(player)) {
+		if (DonationManager._validDonors.contains(player.getUniqueId())) {
 			player.sendMessage(ChatPrint.secondary + "You are already a donator. You keep it for life!"); return true; }
 
 		if (DonationManager.DonorCodes.contains(args[0]) && !DonationManager.UsedDonorCodes.contains(args[0])) {
 
 			DonationManager.UsedDonorCodes.add(args[0]);
 
-			try { DonationManager.setDonor(player, args[0], 0.00);
+			try { if (!DonationManager.setDonor(
+						player, args[0], 0.00)) sender.sendMessage(ChatPrint.fail + "Invalid key");
 			} catch (IOException e) { e.printStackTrace(); }
 
 			Bukkit.getServer().spigot()

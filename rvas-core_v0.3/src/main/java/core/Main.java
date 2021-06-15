@@ -51,7 +51,7 @@ public class Main extends JavaPlugin {
 	public static Plugin instance; public DiscordBot DiscordHandler;
 
 	public final static Logger console = Bukkit.getLogger();
-	public final static String version = "0.3.5"; public final static int build = 322;
+	public final static String version = "0.3.5"; public final static int build = 323;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -105,9 +105,7 @@ public class Main extends JavaPlugin {
 
 		// LOADING DATA FROM STORAGE \\
 		try { FileManager.setup();
-		} catch (Exception e) {
-			if (isFatal(e)) shutdownWithException(e);
-			else e.printStackTrace(); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
@@ -149,7 +147,7 @@ public class Main extends JavaPlugin {
 			initCommand("msg", Message.class); initCommand("w", Message.class);
 			initCommand("r", Reply.class); initCommand("say", Say.class);
 			initCommand("tps", Tps.class); initCommand("kill", Kill.class);
-			initCommand("setdonator", SetDonator.class); initCommand("donor", DonorCmd.class);
+			initCommand("setdonator", SetDonorCmd.class); initCommand("donor", DonorCmd.class);
 			initCommand("admin", Admin.class); initCommand("redeem", Redeem.class);
 			initCommand("backup", Backup.class); initCommand("prison", Prison.class);
 			initCommand("repair", Repair.class); initCommand("slowchat", SlowChat.class);
@@ -170,22 +168,14 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");
 
-		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		try {
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 
-		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		System.out.println();
@@ -194,40 +184,20 @@ public class Main extends JavaPlugin {
 
 		PluginManager core_pm = getServer().getPluginManager();
 
-		try { core_pm.registerEvents(new ChatListener(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		try {
+			core_pm.registerEvents(new PVP(), this);
+			core_pm.registerEvents(new ChatListener(), this);
+			core_pm.registerEvents(new MoveListener(), this);
+			core_pm.registerEvents(new SpawnController(), this);
+			core_pm.registerEvents(new ConnectionController(), this);
+			core_pm.registerEvents(new LagManager(), this);
+			core_pm.registerEvents(new SpeedLimiter(), this);
+			core_pm.registerEvents(new ItemCheckTriggers(), this);
+			core_pm.registerEvents(new BlockListener(), this);
+			core_pm.registerEvents(new ChunkManager(), this);
+			core_pm.registerEvents(new OpListener(), this);
+			core_pm.registerEvents(new Check(), this);
 
-		try { core_pm.registerEvents(new ConnectionController(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new PVP(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new MoveListener(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new SpawnController(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new LagManager(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new SpeedLimiter(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new ItemCheckTriggers(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new BlockListener(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new ChunkManager(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new OpListener(), this);
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
-
-		try { core_pm.registerEvents(new Check(), this);
 		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		// INIT PROTOCOL_LIB METHODS \\

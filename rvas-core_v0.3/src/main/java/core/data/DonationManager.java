@@ -62,8 +62,8 @@ public class DonationManager {
 
         Donor newDonor = getDonorByUUID(thisID);
         if (newDonor != null) {
-            newDonor.updateValidity();
-            if (newDonor.isValid()) _validDonors.add(thisID); }
+            newDonor.updateAboveThreshold();
+            if (newDonor.isAboveThreshold()) _validDonors.add(thisID); }
 
         saveDonors(); return true;
     }
@@ -100,10 +100,12 @@ public class DonationManager {
                 Optional.of(getDonorsFromJSON(FileManager.donor_database)).orElse(Collections.emptyList()));
 
             for (Donor d: _donorList) {
+                if (d.isAboveThreshold()) {
+                    UUID thisID = d.getUserID();
 
-                d.updateValidity();
-                if (d.isValid() && isAboveThreshold(d)) {
-                    _validDonors.remove(d.getUserID()); _validDonors.add(d.getUserID()); }
+                    _validDonors.remove(thisID);
+                    _validDonors.add(thisID);
+                }
             }
 
         } catch (Exception e) {
@@ -121,10 +123,6 @@ public class DonationManager {
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    static boolean isAboveThreshold(Donor donor) {
-        return donor.getSumDonated() >= 25.0;
-    }
-
     static List<Donor> getDonorsFromJSON(File thisFile) throws IOException {
         Gson gson = new Gson();
 
@@ -138,7 +136,7 @@ public class DonationManager {
 
         try { return gson.fromJson(reader, new TypeToken<List<Donor>>(){}.getType());
         } catch (Exception e) {
-            e.printStackTrace();
+            if (Config.debug) e.printStackTrace();
             return Collections.emptyList();
         }
     }
@@ -164,17 +162,14 @@ public class DonationManager {
         return false;
     }
 
-    public static boolean isValidDonor(Player p) {
-        String key; Donor thisDonor;
+    public static boolean isValidDonor(Donor d) {
+        String key;
 
-        try {
-            thisDonor = Objects.requireNonNull(getDonorByUUID(p.getUniqueId()));
-            key = thisDonor.getDonationKey();
-
+        try { key = d.getDonationKey();
         } catch (Exception ignore) { return false; }
 
-        thisDonor.updateValidity();
-        return thisDonor.isValid() && !isInvalidKey(key);
+        d.updateAboveThreshold();
+        return d.isAboveThreshold() && !isInvalidKey(key);
     }
 
     public static boolean isValidString(String thisString) {

@@ -22,8 +22,9 @@ package core.frontend;
  * 
  * */
 
-import java.util.*;
+import core.frontend.GUI.CommandList;
 
+import java.util.*;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
@@ -57,7 +58,7 @@ public class HelpPages {
 		receiver.sendMessage("");
 		receiver.sendMessage(finalFooter);
 
-		List<TextComponent> out = GUI.getHelpListArray(page);
+		List<TextComponent> out = CommandList.getHelpListArray(page);
 		if (out != null) out.forEach(receiver::sendMessage);
 
 		receiver.sendMessage(finalFooter);

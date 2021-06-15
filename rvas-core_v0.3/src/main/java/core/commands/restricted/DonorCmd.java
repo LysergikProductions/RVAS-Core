@@ -23,6 +23,7 @@ package core.commands.restricted;
  * */
 
 import core.frontend.ChatPrint;
+import core.frontend.GUI.DonorList;
 import core.data.DonationManager;
 import core.data.objects.Donor;
 import core.backend.anno.Critical;
@@ -32,9 +33,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import org.bukkit.entity.Player;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -121,7 +119,7 @@ public class DonorCmd implements CommandExecutor {
                     sender.sendMessage(ChatPrint.primary +
                             "Successfully set donation key to " + thisDonor.getDonationKey());
 
-                    thisDonor.updateValidity(); return true;
+                    thisDonor.updateAboveThreshold(); return true;
 
                 case "tag":
 
@@ -191,15 +189,26 @@ public class DonorCmd implements CommandExecutor {
                 default: return false;
             }
 
-        } else if (args.length != 1) {
+        } else if (args.length == 2) {
             sender.sendMessage(ChatPrint.fail + "Invalid syntax. Syntax: /donor [name]"); return false;
 
         } else if (!sender.isOp()) {
             sender.sendMessage(ChatPrint.fail + "yeah no"); return false; }
 
+        if (args.length == 0) {
+            Player p = ((Player) sender);
+
+            DonorList.updateDonorGUI();
+            p.openInventory(DonorList._donorGUI);
+            return true;
+        }
+
+        // There is just 1 argument
         String thisSearch = args[0].trim();
-        UUID thisID = null; Donor thisDonor;
-        TextComponent resultMsg; boolean isID = false;
+
+        UUID thisID = null;
+        boolean isID = false;
+        Donor thisDonor;
 
         try { thisID = UUID.fromString(thisSearch); isID = true;
         } catch (IllegalArgumentException ignore) { }
@@ -208,20 +217,9 @@ public class DonorCmd implements CommandExecutor {
         else thisDonor = DonationManager.getDonorByName(thisSearch);
 
         if (thisDonor == null) {
-            resultMsg = new TextComponent(ChatPrint.primary +
-                    "Click here to set " + thisSearch + " as a donor!");
-
-            if (isID) thisSearch = Objects.requireNonNull(
-                    sender.getServer().getPlayer(thisID)).getName();
-
-            resultMsg.setClickEvent(new ClickEvent(
-                    ClickEvent.Action.RUN_COMMAND, "/setdonator " + thisSearch));
-
-            sender.sendMessage(resultMsg); return true;
-        }
+            sender.sendMessage(ChatPrint.fail + thisSearch + " is not a donor!"); return true; }
 
         String donorRealIGN;
-
         try { donorRealIGN = Objects.requireNonNull(sender.getServer()
                     .getPlayer(thisDonor.getUserID())).getName();
 

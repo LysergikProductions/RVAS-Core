@@ -51,7 +51,7 @@ public class Donor {
         this.sumDonated = amountDonated;
 
         this.msgOtd = "tbd"; this.tagLine = "tbd"; this.customIGN = "tbd";
-        this.realIGN = Objects.requireNonNull(this.getPlayer()).getName();
+        this.realIGN = Objects.requireNonNull(Bukkit.getServer().getPlayer(this.userID)).getName();
         this.validity = this.sumDonated >= 25.0;
     }
 
@@ -64,19 +64,19 @@ public class Donor {
     public void addToSum(Double sumToAdd) {
         this.sumDonated += sumToAdd;
         this.recentDonationDate = new Date();
-        this.updateValidity();
+        this.updateAboveThreshold();
     }
 
     public void setSumDonated(Double sumDonated) {
         this.sumDonated = sumDonated;
-        this.updateValidity();
+        this.updateAboveThreshold();
     }
 
     // Getters
     public UUID getUserID() { return userID; }
     public String getRealIGN() { return realIGN; }
     public String getDonationKey() { return donationKey; }
-    public boolean isValid() { return validity; }
+    public boolean isAboveThreshold() { return validity; }
 
     public Date getFirstDonationDate() { return firstDonationDate; }
     public Date getRecentDonationDate() { return recentDonationDate; }
@@ -91,7 +91,7 @@ public class Donor {
     public OfflinePlayer getOfflinePlayer() { return Bukkit.getOfflinePlayer(this.userID); }
 
     // Actions
-    public void updateValidity() { this.validity = this.sumDonated >= 25.0; }
+    public void updateAboveThreshold() { this.validity = this.sumDonated >= 25.0; }
 
     public void updateDonorIGN() {
         Player p = this.getPlayer(); if (p == null) return;
