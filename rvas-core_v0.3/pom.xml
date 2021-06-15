@@ -75,7 +75,7 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.3.5-323</finalName>
+        <finalName>rvas-core-0.3.5-324</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

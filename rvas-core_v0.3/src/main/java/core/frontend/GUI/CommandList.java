@@ -1,8 +1,8 @@
 package core.frontend.GUI;
 
 /* *
- *
- *  About: Things player see and interact with .java
+ *  About: List of TextComponent command descriptions that
+ *      display the command syntax using hover events
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)

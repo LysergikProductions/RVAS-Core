@@ -1,9 +1,12 @@
 package core.commands;
 
+import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
 
 import java.util.UUID;
 import java.util.ArrayList;
+
+import core.tasks.Analytics;
 import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
@@ -19,6 +22,8 @@ public class AFK implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
+
+        if (!PlayerMeta.isAdmin(player)) Analytics.afk_cmd++;
 
         String result;
         UUID playerid = player.getUniqueId();

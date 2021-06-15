@@ -1,9 +1,7 @@
 package core.tasks;
 
 /* *
- * 
- *  About: Track overall use of various commands by the player-base,
- *  as well as newly generated chunks, new players, and total joins
+ *  About: Track overall use of various commands by the player-base
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -52,13 +50,14 @@ public class Analytics extends TimerTask {
 	public static int about_cmd, admin_cmd, discord_cmd, help_cmd,
 			kill_cmd, kit_cmd, w_cmd, r_cmd, msg_cmd, local_cmd,
 			server_cmd, sign_cmd, tjm_cmd, tps_cmd, vm_cmd,
-			stats_total, stats_help, stats_info = 0;
+			stats_total, stats_help, stats_info, afk_cmd,
+			donate_cmd, ignore_cmd, last_cmd = 0;
 
 	public static String performance_work_path = FileManager.plugin_work_path
 			+ "analytics/RVAS_Analytics-performance.csv";
 	public static String commands_work_path = FileManager.plugin_work_path
 			+ "analytics/RVAS_Analytics-commands.csv";
-	
+
 	public static String CSV_perfHeader; static {
 
 		StringBuilder sb = new StringBuilder(128);
@@ -72,7 +71,7 @@ public class Analytics extends TimerTask {
 
 		CSV_perfHeader = sb.toString();
 	}
-	
+
 	public static String CSV_cmdHeader; static {
 		
 		StringBuilder sb = new StringBuilder(128);
@@ -87,6 +86,8 @@ public class Analytics extends TimerTask {
 		sb.append("\"/stats help\","); sb.append("\"/stats info\",");
 		sb.append("\"/tjm\","); sb.append("\"/tps\",");
 		sb.append("\"/vm\","); sb.append("\"/local\"");
+		sb.append("\"/afk\""); sb.append("\"/donate\"");
+		sb.append("\"/ignore\""); sb.append("\"/last\"");
 		
 		CSV_cmdHeader = sb.toString();
 	}
@@ -121,10 +122,7 @@ public class Analytics extends TimerTask {
 						.writeNewData(commandsFile, CSV_cmdHeader);
 			}
 			
-		} catch (Exception e) {
-			e.getCause();
-			return;
-		}
+		} catch (Exception e) { e.getCause(); return; }
 		
 		int conPlayers = Bukkit.getOnlinePlayers().size();
 		
@@ -141,15 +139,15 @@ public class Analytics extends TimerTask {
 				about_cmd, admin_cmd, discord_cmd, help_cmd, kill_cmd,
 				kit_cmd, w_cmd, r_cmd, msg_cmd, server_cmd, sign_cmd,
 				stats_total, stats_help, stats_info, tjm_cmd, tps_cmd,
-				vm_cmd, local_cmd
+				vm_cmd, local_cmd, afk_cmd, donate_cmd, ignore_cmd, last_cmd
 			);
 		
 		// append data to file
-		try {Analytics.writeNewData(performanceFile, performanceLine);}
-		catch (Exception e) {e.getStackTrace();}
+		try { Analytics.writeNewData(performanceFile, performanceLine); }
+		catch (Exception e) { e.getStackTrace(); }
 		
-		try {Analytics.writeNewData(commandsFile, commandsLine);}
-		catch (Exception e) {e.getStackTrace();}
+		try { Analytics.writeNewData(commandsFile, commandsLine); }
+		catch (Exception e) { e.getStackTrace(); }
 		
 		// reset data
 		new_players = 0; total_joins = 0; new_chunks = 0;
@@ -160,6 +158,7 @@ public class Analytics extends TimerTask {
 		kill_cmd = 0; kit_cmd = 0; w_cmd = 0; r_cmd = 0; msg_cmd = 0;
 		server_cmd = 0; sign_cmd = 0; stats_total = 0; stats_help = 0;
 		stats_info = 0; tjm_cmd = 0; tps_cmd = 0; vm_cmd = 0; local_cmd = 0;
+		afk_cmd = 0; donate_cmd = 0; ignore_cmd = 0; last_cmd = 0;
 		
 		if (Config.debug && Config.verbose) Main.console.log(Level.INFO, "[core.tasks.analytics] Analytics updated!");
 	}
@@ -171,7 +170,7 @@ public class Analytics extends TimerTask {
 			int speed_warns, int speed_kicks, int wither_spawns,
 			int failed_wither_spawns, int removed_skulls, int loaded_withers
 			) {
-		
+		// TODO: use a List<Integer> to store and parse these with a loop
 		StringBuilder sb = new StringBuilder(128);
 		
 		sb.append('"' + date + "\",");
@@ -193,11 +192,11 @@ public class Analytics extends TimerTask {
 	
 	// convert data in RAM to a single commands CSV-file line
 	public static String toCommandsCSV(
-			String date,
+			String date, // TODO: use a List<Integer> to store and parse these with a loop
 			int about_cmd, int admin_cmd, int discord_cmd, int help_cmd, int kill_cmd,
 			int kit_cmd, int w_cmd, int r_cmd, int msg_cmd, int server_cmd, int sign_cmd,
 			int stats_total, int stats_help, int stats_info, int tjm_cmd, int tps_cmd, int vm_cmd,
-			int local_cmd) {
+			int local_cmd, int afk_cmd, int donate_cmd, int ignore_cmd, int last_cmd) {
 		
 		StringBuilder sb = new StringBuilder(128);
 		
@@ -219,7 +218,11 @@ public class Analytics extends TimerTask {
 		sb.append(String.valueOf(tjm_cmd) + ',');
 		sb.append(String.valueOf(tps_cmd) + ',');
 		sb.append(String.valueOf(vm_cmd) + ',');
-		sb.append(local_cmd);
+		sb.append(String.valueOf(local_cmd) + ',');
+		sb.append(String.valueOf(afk_cmd) + ',');
+		sb.append(String.valueOf(donate_cmd) + ',');
+		sb.append(String.valueOf(ignore_cmd) + ',');
+		sb.append(last_cmd);
 		
 		return sb.toString();
 	}

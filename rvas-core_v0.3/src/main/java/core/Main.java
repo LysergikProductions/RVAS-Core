@@ -1,7 +1,6 @@
 package core;
 
 /* *
- *
  *  About: Main class for RVAS-Core v0.3.4, Paper-Spigot #446+
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -51,7 +50,7 @@ public class Main extends JavaPlugin {
 	public static Plugin instance; public DiscordBot DiscordHandler;
 
 	public final static Logger console = Bukkit.getLogger();
-	public final static String version = "0.3.5"; public final static int build = 323;
+	public final static String version = "0.3.5"; public final static int build = 324;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -283,7 +282,7 @@ public class Main extends JavaPlugin {
 			FileManager.backupData(FileManager.playtime_user_database, "playtimes-backup-", ".db");
 			FileManager.backupData(FileManager.settings_user_database, "player_settings-backup-", ".txt");
 			FileManager.backupData(FileManager.muted_user_database, "muted-backup-", ".db");			
-			FileManager.backupData(FileManager.donor_database, "donator-backup-", ".db");
+			FileManager.backupData(FileManager.donor_database, "donors-backup-", ".json");
 			FileManager.backupData(FileManager.prison_user_database, "prisoners-backup-", ".db");			
 			
 		} catch (IOException ex) {

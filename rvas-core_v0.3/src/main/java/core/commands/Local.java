@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import core.tasks.Analytics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -33,6 +34,8 @@ public class Local implements CommandExecutor {
             sender = (Player)commandSender;
             sendName = sender.getName();
         } else return false;
+
+        if (!PlayerMeta.isAdmin(sender)) Analytics.local_cmd++;
 
         if (args.length < 1) {
             sender.sendMessage(new TextComponent(ChatPrint.fail +

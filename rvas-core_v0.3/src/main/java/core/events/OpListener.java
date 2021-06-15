@@ -1,10 +1,12 @@
 package core.events;
 
 /* *
- * 
  *  About: Ensure only configured 'admin' account has overpowered
  *  	abilities, allowing ops to only do things that cannot permanently
  *  	and/or negatively affect the world or gameplay; for RVAS-core
+ *
+ * 		Also grants ops some extra abilities including patches to `/tp`
+ * 		that allows for the saving of up to 10 unique privately saved locations per op
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -27,8 +29,9 @@ package core.events;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
-import core.frontend.ChatPrint;
 import core.backend.anno.Critical;
+import core.frontend.ChatPrint;
+import core.frontend.GUI.DonorList;
 
 import core.data.PlayerMeta;
 import core.data.objects.Pair;
@@ -37,13 +40,13 @@ import core.commands.restricted.Speeds;
 import core.commands.restricted.Check;
 
 import java.util.*;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.Inventory;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
@@ -54,7 +57,6 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 @Critical
-@SuppressWarnings("SpellCheckingInspection")
 public class OpListener implements Listener {
 
 	static Map<UUID, Pair<Location, Location>> lastTPs = new HashMap<>();
@@ -71,6 +73,7 @@ public class OpListener implements Listener {
 	}
 
 	// this happens *before* the OP Lock plugin will see the command
+	@SuppressWarnings("SpellCheckingInspection")
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void preCommandSend(PlayerCommandPreprocessEvent event) {
 		
@@ -80,8 +83,8 @@ public class OpListener implements Listener {
 		
 		boolean isAdmin = PlayerMeta.isAdmin(sender);
 		String msg = event.getMessage();
-		
-		// ignore (and allow) /execute when used specifcally for teleporting
+
+		// ignore (and allow) /execute when used specifically for teleporting
 		if (
 				msg.startsWith("/execute in the_end run tp") ||
 				msg.startsWith("/execute in the_nether run tp") ||
@@ -251,30 +254,24 @@ public class OpListener implements Listener {
 	// prevent moving GUI items into player inventories
 	@EventHandler (priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
+		Inventory thisInv = event.getClickedInventory();
 
-		if (event.getClickedInventory() == Speeds.speedGUI) event.setCancelled(true);
+		if (thisInv == Speeds.speedGUI) event.setCancelled(true);
+		else if (thisInv == DonorList._donorGUI) event.setCancelled(true);
 		else if (!event.getWhoClicked().getGameMode().equals(GameMode.SURVIVAL) &&
 				!PlayerMeta.isAdmin((Player)event.getWhoClicked())) { event.setCancelled(true); }
 	}
 
 	@EventHandler (priority = EventPriority.HIGH)
 	public void onInventoryMove(InventoryMoveItemEvent event) {
+		Inventory initiator = event.getInitiator();
+		Inventory destination = event.getDestination();
 
-		if (event.getInitiator() == Speeds.speedGUI) event.setCancelled(true);
-		else if (event.getDestination() == Speeds.speedGUI) event.setCancelled(true);
-		else if (event.getInitiator() == Check.lagCheckGUI) event.setCancelled(true);
-		else if (event.getDestination() == Check.lagCheckGUI) event.setCancelled(true);
+		if (initiator == Speeds.speedGUI) event.setCancelled(true);
+		else if (initiator == Check.lagCheckGUI) event.setCancelled(true);
+		else if (initiator == DonorList._donorGUI) event.setCancelled(true);
+		else if (destination == Speeds.speedGUI) event.setCancelled(true);
+		else if (destination == Check.lagCheckGUI) event.setCancelled(true);
+		else if (destination == DonorList._donorGUI) event.setCancelled(true);
 	}
-
-	@Deprecated
-	public static ArrayList<String> OwnerCommands = new ArrayList<>();/* static {
-		OwnerCommands.addAll(Arrays.asList(
-				"/op", "/deop", "/ban", "/attribute", "/default", "/execute", "/rl",
-				"/summon", "/give", "/set", "/difficulty", "/replace", "/enchant",
-				"/function", "/bukkit", "/time", "/weather", "/schedule", "/clone",
-				"/data", "/fill", "/save", "/oplock", "/loot", "/default", "/minecraft",
-				"/experience", "/forceload", "/function", "/spreadplayers", "/xp",
-				"/reload", "/whitelist", "/packet", "/protocol", "/plugins", "/spigot",
-				"/restart", "/worldb", "/gamerule", "/score", "/tell", "/dupe", "/global"));
-	}*/
 }

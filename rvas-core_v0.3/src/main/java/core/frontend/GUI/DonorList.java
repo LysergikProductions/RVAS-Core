@@ -1,5 +1,27 @@
 package core.frontend.GUI;
 
+/* *
+ *  About: Inventory-type GUI for ops to see all the players
+ *      that have donated to the server and details about their donation/s
+ *
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * */
+
 import core.Main;
 import core.data.DonationManager;
 import core.data.objects.Donor;
@@ -37,18 +59,29 @@ public class DonorList {
                 String validityStr = thisDonor.isAboveThreshold() ? "Valid" : "Invalid";
                 ChatColor validityClr = thisDonor.isAboveThreshold() ? ChatPrint.succeed : ChatPrint.fail;
 
+                String custom_ign = thisDonor.getCustomIGN();
+                ChatColor custom_ign_clr = DonationManager
+                        .isValidString(custom_ign) ? ChatPrint.clear : ChatPrint.faded;
+
+                String tag = thisDonor.getTagLine();
+                ChatColor tag_clr = DonationManager.isValidString(tag) ? ChatPrint.clear : ChatPrint.faded;
+
+                String motd = thisDonor.getTagLine();
+                ChatColor motd_clr = DonationManager.isValidString(motd) ? ChatPrint.clear : ChatPrint.faded;
+
                 @SuppressWarnings("SpellCheckingInspection")
                 List<String> lore = Arrays.asList(
                         ChatPrint.primary + thisDonor.getPlayer().getName(),
                         ChatPrint.controls + "$" + thisDonor.getSumDonated(),
                         thisDonor.getDonationKey(),
                         validityClr + validityStr + " key!",
+                        ChatPrint.desc + "----------------------------",
                         "UUID: " + thisDonor.getUserID(),
-                        "Custom IGN: " + thisDonor.getCustomIGN(),
+                        "Custom IGN: " + custom_ign_clr + custom_ign,
                         "First Dono: " + thisDonor.getFirstDonationDate(),
                         "Last Dono: " + thisDonor.getRecentDonationDate(),
-                        "Tagline: " + thisDonor.getTagLine(),
-                        "MOTD: " + thisDonor.getMsgOtd());
+                        "Tagline: " + tag_clr + tag,
+                        "MOTD: " + motd_clr + motd);
 
                 thisHeadMeta.setLore(lore);
                 newHead.setItemMeta(thisHeadMeta);
