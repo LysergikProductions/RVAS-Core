@@ -40,12 +40,12 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 @Critical
-@SuppressWarnings("SpellCheckingInspection")
 public class Backup implements CommandExecutor {
 	
 	public static int opBackupCounter = 0;
 	
 	@Override
+	@SuppressWarnings("SpellCheckingInspection")
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		Player player = (Player) sender;

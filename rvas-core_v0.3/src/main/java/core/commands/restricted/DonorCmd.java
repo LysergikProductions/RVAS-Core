@@ -41,10 +41,10 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 @Critical
-@SuppressWarnings("SpellCheckingInspection")
 public class DonorCmd implements CommandExecutor {
 
     @Override
+    @SuppressWarnings("SpellCheckingInspection")
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (!(sender instanceof Player)) {

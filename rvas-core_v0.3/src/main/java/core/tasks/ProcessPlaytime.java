@@ -8,12 +8,12 @@ import core.backend.Scheduler;
 import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.LagProcessor;
-import core.annotations.Critical;
 
 import core.data.PlayerMeta;
 import core.events.ChatListener;
 import core.commands.VoteMute;
 import core.commands.restricted.Speeds;
+import core.annotations.Critical;
 
 import java.util.TimerTask;
 import java.util.logging.Level;

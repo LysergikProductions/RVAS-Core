@@ -43,7 +43,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 @Critical
-@SuppressWarnings("SpellCheckingInspection")
 public class DonationManager {
 
     public final static List<UUID> _validDonors = new ArrayList<>();
@@ -70,9 +69,8 @@ public class DonationManager {
 
     public static Donor getDonorByUUID(UUID thisID) {
         for (Donor thisDonor: _donorList) {
-            thisDonor.updateValidity();
-            if (thisDonor.getUserID().equals(thisID)) return thisDonor;
-        }
+            if (thisDonor.getUserID().equals(thisID)) return thisDonor; }
+
         return null;
     }
 
@@ -94,11 +92,18 @@ public class DonationManager {
     }
 
     // JSON management \\
-    public static void loadDonors() throws Exception {
+    public static void loadDonors() {
         _donorList.clear();
 
         try { _donorList.addAll(
                 Optional.of(getDonorsFromJSON(FileManager.donor_database)).orElse(Collections.emptyList()));
+
+            for (Donor d: _donorList) {
+
+                d.updateValidity();
+                if (d.isValid() && isAboveThreshold(d)) {
+                    _validDonors.remove(d.getUserID()); _validDonors.add(d.getUserID()); }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,8 +155,8 @@ public class DonationManager {
 
         try {
             UUID playerID = p.getUniqueId();
-            for (Donor thisDonator: _donorList) {
-                if (thisDonator.getUserID().equals(playerID)) return true;
+            for (Donor thisDonor: _donorList) {
+                if (thisDonor.getUserID().equals(playerID)) return true;
             }
         } catch (Exception ignore) { return false; }
 
@@ -159,13 +164,16 @@ public class DonationManager {
     }
 
     public static boolean isValidDonor(Player p) {
-        String key;
+        String key; Donor thisDonor;
 
-        try { key = Objects.requireNonNull(getDonorByUUID(p.getUniqueId())).getDonationKey();
+        try {
+            thisDonor = Objects.requireNonNull(getDonorByUUID(p.getUniqueId()));
+            key = thisDonor.getDonationKey();
+
         } catch (Exception ignore) { return false; }
 
-        return isDonor(p) && isAboveThreshold(DonationManager.getDonorByUUID(p.getUniqueId()))
-                && !key.equalsIgnoreCase("INVALID") && !key.isEmpty() && !isInvalidKey(key);
+        thisDonor.updateValidity();
+        return thisDonor.isValid() && !isInvalidKey(key);
     }
 
     public static boolean isValidString(String thisString) {
@@ -173,13 +181,13 @@ public class DonationManager {
     }
 
     public static boolean isInvalidKey(String thisKey) {
-        System.out.println("Checking: " + thisKey + " | Length: " + thisKey.length());
+        Main.console.log(Level.INFO, "Checking: " + thisKey + " | Length: " + thisKey.length());
         if (thisKey.length() != 19) return true;
 
         for (int i = 0; i < thisKey.length(); i++){
             char c = thisKey.charAt(i);
 
-            // abcd-2021-jhas-06ds
+            // example key: 5sdf-2021-jh2s-06ds
             if (i < 4 && c == '-') return true;
             else if (i == 4 && c != '-') return true;
             else if (i > 4 && i < 9 && c == '-') return true;
@@ -188,6 +196,7 @@ public class DonationManager {
             else if (i == 14 && c != '-') return true;
             else if (i > 14 && c == '-') return true;
         }
+        if (Config.debug) Main.console.log(Level.INFO, "Key format is valid!");
         return false;
     }
 

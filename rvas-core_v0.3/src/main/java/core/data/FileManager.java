@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.text.SimpleDateFormat;
 
 @Critical
-@SuppressWarnings("SpellCheckingInspection")
 public class FileManager {
 	
 	public static final String plugin_work_path = "plugins/core/";
@@ -56,6 +55,7 @@ public class FileManager {
 		} else Main.console.log(Level.WARNING, "FAILED TO COPY ONE OR MORE FILES");
 	}
 
+	@SuppressWarnings("SpellCheckingInspection")
 	public static void setup() throws IOException {
 
 		// Instantiate File objects \\
