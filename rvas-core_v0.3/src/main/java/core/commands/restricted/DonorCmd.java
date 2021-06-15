@@ -25,7 +25,7 @@ package core.commands.restricted;
 import core.frontend.ChatPrint;
 import core.data.DonationManager;
 import core.data.objects.Donor;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.UUID;
 import java.util.Arrays;

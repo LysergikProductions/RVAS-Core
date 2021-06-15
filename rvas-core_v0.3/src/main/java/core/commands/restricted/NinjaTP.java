@@ -25,7 +25,7 @@ package core.commands.restricted;
  * */
 
 import core.frontend.ChatPrint;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

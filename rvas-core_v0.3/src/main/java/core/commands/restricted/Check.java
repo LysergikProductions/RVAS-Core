@@ -27,7 +27,7 @@ import core.data.objects.Pair;
 import core.frontend.ChatPrint;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.*;
 

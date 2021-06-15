@@ -2,7 +2,7 @@ package core.commands;
 
 import core.frontend.ChatPrint;
 import core.data.DonationManager;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.io.IOException;
 

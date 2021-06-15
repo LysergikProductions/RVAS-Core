@@ -30,7 +30,7 @@ import core.backend.utils.Chunks;
 import core.backend.utils.Util;
 import core.tasks.Analytics;
 import core.commands.restricted.Repair;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import net.md_5.bungee.api.chat.TextComponent;
 

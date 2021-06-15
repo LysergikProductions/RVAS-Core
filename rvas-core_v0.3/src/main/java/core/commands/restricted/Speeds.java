@@ -5,7 +5,7 @@ import core.frontend.ChatPrint;
 import core.backend.utils.Util;
 import core.data.objects.Pair;
 import core.events.SpeedLimiter;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.*;
 import java.util.logging.Level;

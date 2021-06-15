@@ -24,7 +24,7 @@ package core.commands.restricted;
 
 import core.events.ChunkManager;
 import core.backend.utils.Chunks;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

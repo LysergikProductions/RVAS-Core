@@ -3,7 +3,7 @@ package core.commands.restricted;
 import core.backend.Config;
 import core.frontend.ChatPrint;
 import core.data.DonationManager;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

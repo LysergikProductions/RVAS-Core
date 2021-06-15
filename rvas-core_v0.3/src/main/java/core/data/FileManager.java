@@ -3,7 +3,7 @@ package core.data;
 import core.Main;
 import core.data.objects.*;
 import core.backend.Config;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.io.*;
 import java.util.Date;

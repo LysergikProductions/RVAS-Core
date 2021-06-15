@@ -2,7 +2,7 @@ package core.commands;
 
 import core.tasks.Analytics;
 import core.data.PlayerMeta;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.Objects;
 import org.bukkit.Bukkit;

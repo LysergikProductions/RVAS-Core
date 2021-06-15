@@ -25,7 +25,7 @@ package core.events;
 import core.Main;
 import core.backend.Config;
 import core.backend.ItemCheck;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.List;
 import java.util.ArrayList;

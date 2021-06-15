@@ -2,7 +2,7 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.ItemCheck;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

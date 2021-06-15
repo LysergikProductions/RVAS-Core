@@ -30,7 +30,7 @@ import core.backend.utils.*;
 import core.backend.ItemCheck;
 import core.frontend.ChatPrint;
 import core.commands.restricted.Repair;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.*;
 import java.text.DecimalFormat;

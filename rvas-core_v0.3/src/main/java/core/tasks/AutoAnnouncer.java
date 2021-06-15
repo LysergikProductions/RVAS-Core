@@ -27,7 +27,7 @@ import core.backend.Config;
 import core.backend.Scheduler;
 import core.frontend.ChatPrint;
 import core.commands.restricted.Check;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.*;
 import java.nio.file.Files;

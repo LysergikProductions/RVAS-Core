@@ -4,7 +4,7 @@ import core.data.PlayerMeta;
 import core.tasks.Analytics;
 import core.frontend.ChatPrint;
 import core.backend.LagProcessor;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.text.DecimalFormat;
 import org.apache.commons.lang.math.IntRange;

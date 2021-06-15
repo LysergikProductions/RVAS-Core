@@ -28,7 +28,7 @@ import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.events.ConnectionController;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.logging.Level;
 import net.md_5.bungee.api.chat.ClickEvent;

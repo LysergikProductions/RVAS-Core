@@ -28,7 +28,7 @@ import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
 import core.frontend.ChatPrint;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import core.data.PlayerMeta;
 import core.data.objects.Pair;

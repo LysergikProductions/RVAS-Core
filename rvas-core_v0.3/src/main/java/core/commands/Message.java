@@ -4,7 +4,7 @@ import core.tasks.Analytics;
 import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
 import core.commands.restricted.Admin;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.*;
 

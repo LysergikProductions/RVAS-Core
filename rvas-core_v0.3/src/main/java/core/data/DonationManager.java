@@ -24,8 +24,9 @@ package core.data;
 
 import core.Main;
 import core.backend.Config;
+import core.backend.ex.CoreException;
 import core.data.objects.Donor;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.io.*;
 import java.util.*;
@@ -92,7 +93,7 @@ public class DonationManager {
     }
 
     // JSON management \\
-    public static void loadDonors() {
+    public static void loadDonors() throws CoreException {
         _donorList.clear();
 
         try { _donorList.addAll(
@@ -106,8 +107,8 @@ public class DonationManager {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             _donorList.addAll(Collections.emptyList());
+            throw new CoreException(DonationManager.class, e);
         }
     }
 

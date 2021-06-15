@@ -5,7 +5,7 @@ import core.frontend.ChatPrint;
 import core.commands.AFK;
 import core.commands.Message;
 import core.commands.restricted.Admin;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import core.data.PlayerMeta;
 import core.data.objects.Donor;

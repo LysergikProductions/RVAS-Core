@@ -1,7 +1,7 @@
 package core.commands.restricted;
 
 import java.util.Arrays;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.chat.TextComponent;

@@ -3,7 +3,7 @@ package core.commands.restricted;
 import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
 import core.backend.utils.Restart;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

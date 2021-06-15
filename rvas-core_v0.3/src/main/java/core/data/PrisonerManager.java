@@ -35,7 +35,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 import org.bukkit.entity.Player;
 
 @Critical

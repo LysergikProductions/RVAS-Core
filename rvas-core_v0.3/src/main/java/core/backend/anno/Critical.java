@@ -1,4 +1,4 @@
-package core.annotations;
+package core.backend.anno;
 
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;

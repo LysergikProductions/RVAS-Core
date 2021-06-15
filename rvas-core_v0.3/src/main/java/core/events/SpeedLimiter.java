@@ -6,7 +6,7 @@ import core.data.objects.Pair;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
 import core.commands.restricted.Admin;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.UUID;
 import java.util.Map;

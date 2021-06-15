@@ -24,7 +24,7 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.utils.Util;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.*;
 

@@ -22,7 +22,6 @@ package core;
  *
  * */
 
-import core.annotations.Critical;
 import core.data.*; import core.events.*;
 import core.tasks.*; import core.backend.*;
 import static core.data.ThemeManager.replaceDefaultJSON;
@@ -30,14 +29,17 @@ import static core.data.ThemeManager.replaceDefaultJSON;
 import core.commands.*;
 import core.commands.restricted.*;
 import core.frontend.ChatPrint;
+import core.backend.ex.CoreException;
+import core.backend.anno.Critical;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.IOException;
 
 import org.bukkit.*;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,17 +47,35 @@ import org.bukkit.World.Environment;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class Main extends JavaPlugin {
-	public static Plugin instance;
 
-	public final static String version = "0.3.5"; public final static int build = 321;
+	public static Plugin instance; public DiscordBot DiscordHandler;
+
+	public final static Logger console = Bukkit.getLogger();
+	public final static String version = "0.3.5"; public final static int build = 322;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
-
-	public DiscordBot DiscordHandler;
 	public static OfflinePlayer Top = null;
 
-	public final static Logger console = Bukkit.getLogger();
+	private void initCommand(String label, Class<?> clazz) throws InstantiationException, IllegalAccessException {
+		if (Config.debug) System.out.println("/" + label); Objects.requireNonNull(
+				this.getCommand(label)).setExecutor((CommandExecutor) clazz.newInstance()); }
+
+	private void shutdownWithException(Exception e) {
+		console.log(Level.SEVERE, "Failed to enable a critical feature. Shutting down server..");
+		e.printStackTrace(); getServer().shutdown(); }
+
+	private boolean isFatal(Exception exception) {
+		if (exception.getClass() != CoreException.class) return false;
+
+		CoreException ce = (CoreException) exception;
+		Class<?> source = ce.getSourceClass();
+
+		if (source.isAnnotationPresent(Critical.class))
+			return source.getAnnotation(Critical.class).isFatal();
+
+		else return false;
+	}
 
 	@Override
 	public void onEnable() {
@@ -85,7 +105,9 @@ public class Main extends JavaPlugin {
 
 		// LOADING DATA FROM STORAGE \\
 		try { FileManager.setup();
-		} catch (IOException e) { if (isFatal(FileManager.class)) shutdownWithException(e); }
+		} catch (Exception e) {
+			if (isFatal(e)) shutdownWithException(e);
+			else e.printStackTrace(); }
 
 		try { ThemeManager.load();
 		} catch (Exception e) { e.printStackTrace(); }
@@ -112,7 +134,9 @@ public class Main extends JavaPlugin {
 			PlayerMeta.loadMuted();
 			PrisonerManager.loadPrisoners();
 
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) {
+			if (isFatal(e)) shutdownWithException(e); else e.printStackTrace();
+		}
 
 		System.out.println();
 		System.out.println("[core.main] _________________");
@@ -120,146 +144,49 @@ public class Main extends JavaPlugin {
 
 		// INIT BUKKIT METHODS \\
 		try {
-			System.out.println("/mute");
-			Objects.requireNonNull(this.getCommand("mute")).setExecutor(new Mute());
+			initCommand("mute", Mute.class); initCommand("dupehand", DupeHand.class);
+			initCommand("ninjatp", NinjaTP.class); initCommand("vm", VoteMute.class);
+			initCommand("msg", Message.class); initCommand("w", Message.class);
+			initCommand("r", Reply.class); initCommand("say", Say.class);
+			initCommand("tps", Tps.class); initCommand("kill", Kill.class);
+			initCommand("setdonator", SetDonator.class); initCommand("donor", DonorCmd.class);
+			initCommand("admin", Admin.class); initCommand("redeem", Redeem.class);
+			initCommand("backup", Backup.class); initCommand("prison", Prison.class);
+			initCommand("repair", Repair.class); initCommand("slowchat", SlowChat.class);
+			initCommand("check", Check.class); initCommand("speeds", Speeds.class);
+			initCommand("restart", RestartCmd.class); initCommand("info", core.commands.restricted.Info.class);
+			initCommand("server", ServerCmd.class); initCommand("help", Help.class);
+			initCommand("local", Local.class); initCommand("l", Local.class);
+			initCommand("stats", Stats.class); initCommand("sign", Sign.class);
+			initCommand("discord", Discord.class); initCommand("about", About.class);
+			initCommand("vote", VoteCmd.class); initCommand("tjm", ToggleJoinMessages.class);
+			initCommand("global", Global.class); initCommand("ignore", Ignore.class);
+			initCommand("afk", AFK.class); initCommand("last", Last.class);
+			initCommand("fig", ConfigCmd.class); initCommand("donate", Donate.class);
 
-			System.out.println("/dupehand");
-			Objects.requireNonNull(this.getCommand("dupehand")).setExecutor(new DupeHand());
-
-			System.out.println("/ninjatp");
-			Objects.requireNonNull(this.getCommand("ninjatp")).setExecutor(new NinjaTP());
-
-			System.out.println("/vm");
-			Objects.requireNonNull(this.getCommand("vm")).setExecutor(new VoteMute());
-
-			System.out.println("/msg");
-			Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
-
-			System.out.println("/w");
-			Objects.requireNonNull(this.getCommand("w")).setExecutor(new Message());
-
-			System.out.println("/r");
-			Objects.requireNonNull(this.getCommand("r")).setExecutor(new Reply());
-
-			System.out.println("/say");
-			Objects.requireNonNull(this.getCommand("say")).setExecutor(new Say());
-
-			System.out.println("/tps");
-			Objects.requireNonNull(this.getCommand("tps")).setExecutor(new Tps());
-
-			System.out.println("/kill");
-			Objects.requireNonNull(this.getCommand("kill")).setExecutor(new Kill());
-
-			System.out.println("/setdonator");
-			Objects.requireNonNull(this.getCommand("setdonator")).setExecutor(new SetDonator());
-
-			System.out.println("/restart");
-			Objects.requireNonNull(this.getCommand("restart")).setExecutor(new RestartCmd());
-
-			System.out.println("/admin");
-			Objects.requireNonNull(this.getCommand("admin")).setExecutor(new Admin());
-
-			System.out.println("/redeem");
-			Objects.requireNonNull(this.getCommand("redeem")).setExecutor(new Redeem());
-
-			System.out.println("/repair");
-			Objects.requireNonNull(this.getCommand("repair")).setExecutor(new Repair());
-
-			System.out.println("/slowchat");
-			Objects.requireNonNull(this.getCommand("slowchat")).setExecutor(new SlowChat());
-
-			System.out.println("/backup");
-			Objects.requireNonNull(this.getCommand("backup")).setExecutor(new Backup());
-
-			System.out.println("/prison");
-			Objects.requireNonNull(this.getCommand("prison")).setExecutor(new core.commands.restricted.Prison());
-
-			System.out.println("/check");
-			Objects.requireNonNull(this.getCommand("check")).setExecutor(new Check());
-
-			System.out.println("/speeds");
-			Objects.requireNonNull(this.getCommand("speeds")).setExecutor(new Speeds());
-
-			System.out.println("/donor");
-			Objects.requireNonNull(this.getCommand("donor")).setExecutor(new DonorCmd());
-
-		} catch (Exception e) { shutdownWithException(e); }
-
-		System.out.println("/info");
-		Objects.requireNonNull(this.getCommand("info")).setExecutor(new core.commands.restricted.Info());
-
-		System.out.println("/server");
-		Objects.requireNonNull(this.getCommand("server")).setExecutor(new ServerCmd());
-
-		System.out.println("/help");
-		Objects.requireNonNull(this.getCommand("help")).setExecutor(new Help());
-
-		System.out.println("/local");
-		Objects.requireNonNull(this.getCommand("local")).setExecutor(new Local());
-
-		System.out.println("/l");
-		Objects.requireNonNull(this.getCommand("l")).setExecutor(new Local());
-
-		System.out.println("/stats");
-		Objects.requireNonNull(this.getCommand("stats")).setExecutor(new Stats());
-
-		System.out.println("/sign");
-		Objects.requireNonNull(this.getCommand("sign")).setExecutor(new Sign());
-
-		System.out.println("/kit");
-		Objects.requireNonNull(this.getCommand("kit")).setExecutor(new Kit());
-
-		System.out.println("/discord");
-		Objects.requireNonNull(this.getCommand("discord")).setExecutor(new Discord());
-
-		System.out.println("/about");
-		Objects.requireNonNull(this.getCommand("about")).setExecutor(new About());
-
-		System.out.println("/vote");
-		Objects.requireNonNull(this.getCommand("vote")).setExecutor(new VoteCmd());
-
-		System.out.println("/tjm");
-		Objects.requireNonNull(this.getCommand("tjm")).setExecutor(new ToggleJoinMessages());
-
-		System.out.println("/global");
-		Objects.requireNonNull(this.getCommand("global")).setExecutor(new Global());
-
-		System.out.println("/ignore");
-		Objects.requireNonNull(this.getCommand("ignore")).setExecutor(new Ignore());
-
-		System.out.println("/afk");
-		Objects.requireNonNull(this.getCommand("afk")).setExecutor(new AFK());
-
-		System.out.println("/last");
-		Objects.requireNonNull(this.getCommand("last")).setExecutor(new Last());
-
-		System.out.println("/fig");
-		Objects.requireNonNull(this.getCommand("fig")).setExecutor(new ConfigCmd());
-
-		System.out.println("/donate");
-		Objects.requireNonNull(this.getCommand("donate")).setExecutor(new Donate());
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		System.out.println();
 		System.out.println("[core.main] _______________________");
 		System.out.println("[core.main] Scheduling synced tasks");
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		System.out.println();
 		System.out.println("[core.main] _______________________");
@@ -268,40 +195,40 @@ public class Main extends JavaPlugin {
 		PluginManager core_pm = getServer().getPluginManager();
 
 		try { core_pm.registerEvents(new ChatListener(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new ConnectionController(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new PVP(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new MoveListener(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new SpawnController(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new LagManager(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new SpeedLimiter(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new ItemCheckTriggers(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new BlockListener(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new ChunkManager(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new OpListener(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		try { core_pm.registerEvents(new Check(), this);
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		// INIT PROTOCOL_LIB METHODS \\
 		try {
@@ -309,7 +236,7 @@ public class Main extends JavaPlugin {
 			PacketListener.S2C_MapChunkPackets();
 			PacketListener.S2C_WitherSpawnSound();
 
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 		// OTHER STUFF \\
 		System.out.println();
@@ -333,13 +260,14 @@ public class Main extends JavaPlugin {
 
 		// Enable speed limit
 		try { SpeedLimiter.scheduleSlTask();
-		} catch (Exception e) { shutdownWithException(e); }
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 		
 		// Enable discord notifications for this instance
 		try {
 			DiscordHandler = new DiscordBot();
 			getServer().getPluginManager().registerEvents(DiscordHandler, this);
-		} catch (Exception e) { shutdownWithException(e); }
+
+		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
 
 
 		// Load chunk at 0,0 to test for world age
@@ -433,15 +361,5 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] ____________________________");
 		System.out.println("[core.main] --- RVAS-Core : Disabled ---");
 		System.out.println("[core.main] ____________________________");
-	}
-
-	void shutdownWithException(Exception e) {
-		console.log(Level.SEVERE, "Failed to enable a critical feature. Shutting down server..");
-		e.printStackTrace(); Bukkit.shutdown();
-	}
-
-	boolean isFatal(Class<?> clazz) {
-		if (clazz.isAnnotationPresent(Critical.class)) return clazz.getAnnotation(Critical.class).isFatal();
-		else return false;
 	}
 }

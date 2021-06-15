@@ -29,7 +29,7 @@ import core.backend.Config;
 import core.backend.utils.Util;
 import core.data.PlayerMeta;
 import core.data.StatsManager;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.UUID;
 import java.util.Objects;

@@ -13,7 +13,7 @@ import core.data.PlayerMeta;
 
 import core.tasks.Analytics;
 import core.events.SpeedLimiter;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.*;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class Admin implements CommandExecutor {
 
 	@Override
 	@SuppressWarnings("SpellCheckingInspection")
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		Player player = (Player) sender;
 		
 		if (!player.isOp()) Analytics.admin_cmd++;

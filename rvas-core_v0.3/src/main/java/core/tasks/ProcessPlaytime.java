@@ -13,7 +13,7 @@ import core.data.PlayerMeta;
 import core.events.ChatListener;
 import core.commands.VoteMute;
 import core.commands.restricted.Speeds;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.TimerTask;
 import java.util.logging.Level;

@@ -24,7 +24,7 @@ package core.commands.restricted;
 
 import core.events.ChatListener;
 import org.bukkit.entity.Player;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -2,7 +2,7 @@ package core.tasks;
 
 import core.backend.Scheduler;
 import core.commands.VoteMute;
-import core.annotations.Critical;
+import core.backend.anno.Critical;
 
 import java.util.TimerTask;
 
