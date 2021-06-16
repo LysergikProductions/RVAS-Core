@@ -26,23 +26,23 @@ import core.tasks.*; import core.backend.*;
 import core.commands.*; import core.commands.op.*;
 import static core.data.ThemeManager.replaceDefaultJSON;
 
+import core.backend.ex.*;
 import core.frontend.ChatPrint;
 import core.backend.cmd.DupeHand;
-import core.backend.ex.CoreException;
-import core.backend.ex.Critical;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.IOException;
+import java.lang.reflect.Method;
 
 import org.bukkit.*;
-import org.bukkit.command.CommandExecutor;
+import org.bukkit.World.Environment;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.World.Environment;
+import org.bukkit.command.CommandExecutor;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class Main extends JavaPlugin {
@@ -50,7 +50,7 @@ public class Main extends JavaPlugin {
 	public static Plugin instance; public DiscordBot DiscordHandler;
 
 	public final static Logger console = Bukkit.getLogger();
-	public final static String version = "0.3.5"; public final static int build = 326;
+	public final static String version = "0.3.5"; public final static int build = 327;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -72,6 +72,18 @@ public class Main extends JavaPlugin {
 
 		if (source.isAnnotationPresent(Critical.class))
 			return source.getAnnotation(Critical.class).isFatal();
+
+		else return false;
+	}
+
+	private boolean isPhoenix(Exception exception) {
+		if (exception.getClass() != CoreException.class) return false;
+
+		CoreException ce = (CoreException) exception;
+		Method method = ce.getSourceMethod();
+
+		if (method.isAnnotationPresent(Phoenix.class))
+			return method.getAnnotation(Phoenix.class).doRestart();
 
 		else return false;
 	}

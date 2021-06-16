@@ -1,7 +1,7 @@
 package core.backend.ex;
 
 /* *
- *  About: Custom Exception used in tandem with the 'Critical' annotation
+ *  About: Custom Exception used in tandem with the 'Critical' and 'Phoenix' annotations
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -21,15 +21,26 @@ package core.backend.ex;
  *
  * */
 
+import java.lang.reflect.Method;
+
 public class CoreException extends Exception {
 
     private final Class<?> sourceClass;
+    private final Method sourceMethod;
 
     public CoreException(Class<?> clazz, Throwable thr) {
         super("Fatal exception in " + clazz.getName(), thr);
         this.setStackTrace(thr.getStackTrace());
-        this.sourceClass = clazz;
+        this.sourceClass = clazz; this.sourceMethod = null;
+    }
+
+    public CoreException(Method sourceMethod, Throwable thr) {
+        super("Fatal exception in " + sourceMethod.getDeclaringClass().getName() + sourceMethod.getName(), thr);
+        this.setStackTrace(thr.getStackTrace());
+        this.sourceMethod = sourceMethod;
+        this.sourceClass = this.sourceMethod.getDeclaringClass();
     }
 
     public Class<?> getSourceClass() { return sourceClass; }
+    public Method getSourceMethod() { return sourceMethod; }
 }

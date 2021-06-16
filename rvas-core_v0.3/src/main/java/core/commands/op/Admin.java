@@ -1,6 +1,7 @@
 package core.commands.op;
 
 import core.backend.*;
+import core.backend.ex.Phoenix;
 import core.backend.utils.Util;
 import core.backend.utils.Restart;
 import core.frontend.ChatPrint;
@@ -108,15 +109,17 @@ public class Admin implements CommandExecutor {
 					}
 
 					try { Config.load();
-					} catch (IOException e) {
-						sender.sendMessage(ChatPrint.fail + "Failed to reload configs, restarting..");
-						Restart.restart();
+					} catch (Exception e) {
+						sender.sendMessage(ChatPrint.fail + "Failed to reload configs.");
+						try {
+							if (Config.class.getDeclaredMethod("load").getAnnotation(Phoenix.class).doRestart()) {
+								Restart.restart(true);
+							}
+						} catch (Exception ignore) { }
 					}
 
 					try { DonationManager.loadDonors();
-					} catch (Exception ignore) {
-						sender.sendMessage(ChatPrint.fail + "Failed to reload donors..");
-					}
+					} catch (Exception ignore) { sender.sendMessage(ChatPrint.fail + "Failed to reload donors.."); }
 
 					player.sendMessage(ChatPrint.succeed + "Successfully reloaded!");
 					return true;

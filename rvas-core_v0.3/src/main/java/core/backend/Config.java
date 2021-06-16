@@ -2,10 +2,10 @@ package core.backend;
 
 import core.Main;
 import core.events.*;
+import core.backend.ex.*;
 import core.tasks.Analytics;
 import core.tasks.AutoAnnouncer;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -33,39 +33,42 @@ public class Config {
 				"[core.backend.config.modify] Result: " + _values.get(thisConfig));
 	}
 
-	public static void load() throws IOException {
-		Files.readAllLines(Paths.get("plugins/core/configs/config.txt")).stream()
-				.filter(cases -> !cases.startsWith("//"))
-				.filter(cases -> !(cases.length() == 0)).forEach( val -> {
+	@Phoenix
+	public static void load() throws CoreException, NoSuchMethodException {
+		try {
+			Files.readAllLines(Paths.get("plugins/core/configs/config.txt")).stream()
+					.filter(cases -> !cases.startsWith("//"))
+					.filter(cases -> !(cases.length() == 0)).forEach( val -> {
 
-			try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
-			} catch (Exception e) {
-				Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
-				if (debug) e.printStackTrace();
-			}
-		});
+				try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
+				} catch (Exception ignore) {
+					Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
+				}
+			});
 
-		Files.readAllLines(Paths.get("plugins/core/configs/restrictions.txt")).stream()
-				.filter(cases -> !cases.startsWith("//"))
-				.filter(cases -> !(cases.length() == 0)).forEach( val -> {
+			Files.readAllLines(Paths.get("plugins/core/configs/restrictions.txt")).stream()
+					.filter(cases -> !cases.startsWith("//"))
+					.filter(cases -> !(cases.length() == 0)).forEach( val -> {
 
-			try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
-			} catch (Exception e) {
-				Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
-				if (debug) e.printStackTrace();
-			}
-		});
+				try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
+				} catch (Exception e) {
+					Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
+					if (debug) e.printStackTrace();
+				}
+			});
 
-		Files.readAllLines(Paths.get("plugins/core/configs/spawn_controller.txt")).stream()
-				.filter(cases -> !cases.startsWith("//"))
-				.filter(cases -> !(cases.length() == 0)).forEach( val -> {
+			Files.readAllLines(Paths.get("plugins/core/configs/spawn_controller.txt")).stream()
+					.filter(cases -> !cases.startsWith("//"))
+					.filter(cases -> !(cases.length() == 0)).forEach( val -> {
 
-			try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
-			} catch (Exception e) {
-				Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
-				if (debug) e.printStackTrace();
-			}
-		});
+				try { _values.put(val.split("=")[0].trim(), val.split("=")[1].trim());
+				} catch (Exception e) {
+					Main.console.log(Level.WARNING, "Failed to store value for " + val.split("=")[0].trim());
+					if (debug) e.printStackTrace();
+				}
+			});
+
+		} catch (Exception e) { throw new CoreException(Config.class.getDeclaredMethod("load"), e); }
 
 		debug = Boolean.parseBoolean(getValue("debug"));
 		verbose = Boolean.parseBoolean(getValue("verbose"));

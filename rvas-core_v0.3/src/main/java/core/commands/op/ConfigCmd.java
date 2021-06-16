@@ -53,7 +53,7 @@ public class ConfigCmd implements CommandExecutor {
                 Config.load();
                 sender.sendMessage(ChatPrint.succeed + "Successfully reloaded");
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 sender.sendMessage(ChatPrint.fail + "Failed to reload");
                 if (Config.debug) Restart.restart();
             }
