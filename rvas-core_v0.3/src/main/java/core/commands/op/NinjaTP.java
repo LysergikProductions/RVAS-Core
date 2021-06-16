@@ -1,7 +1,6 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
- *
  *  About: Allow ops to vanish and teleport at the same time.
  *          Teleporting to other dimensions also requires simpler
  *          syntax. Developed primarily for internal use.
@@ -25,6 +24,7 @@ package core.commands.restricted;
  * */
 
 import core.frontend.ChatPrint;
+import core.backend.ex.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,6 +35,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 public class NinjaTP implements CommandExecutor {
 
     @Override

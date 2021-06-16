@@ -1,4 +1,4 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
  * 
@@ -27,6 +27,7 @@ import core.backend.Config;
 import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
 import core.data.FileManager;
+import core.backend.ex.Critical;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -38,12 +39,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("SpellCheckingInspection")
+@Critical
 public class Backup implements CommandExecutor {
 	
 	public static int opBackupCounter = 0;
 	
 	@Override
+	@SuppressWarnings("SpellCheckingInspection")
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		Player player = (Player) sender;

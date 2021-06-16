@@ -1,17 +1,17 @@
 package core.commands;
 
 import core.frontend.ChatPrint;
+import core.data.PlayerMeta;
+import core.tasks.Analytics;
 
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
+import java.util.Random;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-import core.data.PlayerMeta;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,31 +24,30 @@ public class Ignore implements CommandExecutor {
     private final Random r = new Random();
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
         if (!(sender instanceof Player)) return false;
 
         Player player = (Player)sender;
         UUID playerID = player.getUniqueId();
 
+        if (!PlayerMeta.isAdmin(player)) Analytics.ignore_cmd++;
+
         if (args.length != 1) {
-            player.sendMessage(new TextComponent(ChatPrint.fail +
-                    "Incorrect syntax. Syntax: /ignore [player]").toLegacyText());
+            player.sendMessage(ChatPrint.fail + "Incorrect syntax. Syntax: /ignore [player]");
             return true;
         }
 
         Player toIgnore = Bukkit.getServer().getPlayer(args[0]);
 
         if (toIgnore == null) {
-            player.sendMessage(new TextComponent(ChatPrint.fail +
-                    "Player is not online").toLegacyText());
+            player.sendMessage(ChatPrint.fail + "Player is not online");
             return true;
         }
 
         UUID toIgnoreID = toIgnore.getUniqueId();
 
         if (toIgnore.isOp() || PlayerMeta.isAdmin(toIgnore)) {
-            player.sendMessage(new TextComponent(ChatPrint.fail +
-                    "You can't ignore this person").toLegacyText());
+            player.sendMessage(ChatPrint.fail + "You can't ignore this person");
             return true;
         }
 

@@ -1,7 +1,6 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
- *
  *  About: A command for ops to toggle the configured per-user chat cool-down
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -24,17 +23,19 @@ package core.commands.restricted;
 
 import core.events.ChatListener;
 import org.bukkit.entity.Player;
+import core.backend.ex.Critical;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 public class SlowChat implements CommandExecutor {
 	static String msg;
 	
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;

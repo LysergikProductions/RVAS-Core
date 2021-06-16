@@ -1,7 +1,6 @@
 package core.data;
 
 /* *
- *
  *  About: Reads, writes, and mutates PlayerSettings objects
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)

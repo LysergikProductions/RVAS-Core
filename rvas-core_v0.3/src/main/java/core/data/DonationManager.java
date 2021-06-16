@@ -1,7 +1,6 @@
 package core.data;
 
 /* *
- *
  *  About: Reads, writes, and mutates Donor objects
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -24,7 +23,9 @@ package core.data;
 
 import core.Main;
 import core.backend.Config;
+import core.backend.ex.CoreException;
 import core.data.objects.Donor;
+import core.backend.ex.Critical;
 
 import java.io.*;
 import java.util.*;
@@ -41,7 +42,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("SpellCheckingInspection")
+@Critical
 public class DonationManager {
 
     public final static List<UUID> _validDonors = new ArrayList<>();
@@ -52,7 +53,7 @@ public class DonationManager {
     public static boolean setDonor(Player thisPlayer, String thisKey, Double donationSum) throws IOException {
 
         if (thisPlayer == null || thisKey == null || donationSum == null) return false;
-        if (!isValidKey(thisKey)) Main.console.log(Level.WARNING, "Tried setting invalid donor key!");
+        if (isInvalidKey(thisKey)) Main.console.log(Level.WARNING, "Tried setting invalid donor key!");
 
         UUID thisID = thisPlayer.getUniqueId();
         if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(thisID));
@@ -60,17 +61,16 @@ public class DonationManager {
 
         Donor newDonor = getDonorByUUID(thisID);
         if (newDonor != null) {
-            newDonor.updateValidity();
-            if (newDonor.isValid()) _validDonors.add(thisID); }
+            newDonor.updateAboveThreshold();
+            if (newDonor.isAboveThreshold()) _validDonors.add(thisID); }
 
         saveDonors(); return true;
     }
 
     public static Donor getDonorByUUID(UUID thisID) {
         for (Donor thisDonor: _donorList) {
-            thisDonor.updateValidity();
-            if (thisDonor.getUserID().equals(thisID)) return thisDonor;
-        }
+            if (thisDonor.getUserID().equals(thisID)) return thisDonor; }
+
         return null;
     }
 
@@ -92,15 +92,25 @@ public class DonationManager {
     }
 
     // JSON management \\
-    public static void loadDonors() {
+    public static void loadDonors() throws CoreException {
         _donorList.clear();
 
         try { _donorList.addAll(
-                Optional.of(getDonorsFromJSON(FileManager.donor_database))
-                        .orElse(Collections.emptyList()));
+                Optional.of(getDonorsFromJSON(FileManager.donor_database)).orElse(Collections.emptyList()));
+
+            for (Donor d: _donorList) {
+                if (d.isAboveThreshold()) {
+                    UUID thisID = d.getUserID();
+
+                    _validDonors.remove(thisID);
+                    _validDonors.add(thisID);
+                }
+            }
+
         } catch (Exception e) {
             _donorList.addAll(Collections.emptyList());
-            e.printStackTrace(); }
+            throw new CoreException(DonationManager.class, e);
+        }
     }
 
     public static void saveDonors() {
@@ -110,10 +120,6 @@ public class DonationManager {
                     Paths.get("plugins/core/codes/used.db"), String.join("\n", UsedDonorCodes).getBytes());
 
         } catch (Exception e) { e.printStackTrace(); }
-    }
-
-    static boolean isAboveThreshold(Donor donor) {
-        return donor.getSumDonated() >= 25.0;
     }
 
     static List<Donor> getDonorsFromJSON(File thisFile) throws IOException {
@@ -129,7 +135,7 @@ public class DonationManager {
 
         try { return gson.fromJson(reader, new TypeToken<List<Donor>>(){}.getType());
         } catch (Exception e) {
-            e.printStackTrace();
+            if (Config.debug) e.printStackTrace();
             return Collections.emptyList();
         }
     }
@@ -147,45 +153,46 @@ public class DonationManager {
 
         try {
             UUID playerID = p.getUniqueId();
-            for (Donor thisDonator: _donorList) {
-                if (thisDonator.getUserID().equals(playerID)) return true;
+            for (Donor thisDonor: _donorList) {
+                if (thisDonor.getUserID().equals(playerID)) return true;
             }
         } catch (Exception ignore) { return false; }
 
         return false;
     }
 
-    public static boolean isValidDonor(Player p) {
+    public static boolean isValidDonor(Donor d) {
         String key;
 
-        try { key = Objects.requireNonNull(getDonorByUUID(p.getUniqueId())).getDonationKey();
+        try { key = d.getDonationKey();
         } catch (Exception ignore) { return false; }
 
-        return isDonor(p) && isAboveThreshold(DonationManager.getDonorByUUID(p.getUniqueId()))
-                && !key.equalsIgnoreCase("INVALID") && !key.isEmpty();
+        d.updateAboveThreshold();
+        return d.isAboveThreshold() && !isInvalidKey(key);
     }
 
     public static boolean isValidString(String thisString) {
         return thisString != null && !thisString.isEmpty() && !thisString.equals("tbd");
     }
 
-    public static boolean isValidKey(String thisKey) {
-        System.out.println("Checking: " + thisKey + " | Length: " + thisKey.length());
-        if (thisKey.length() != 19) return false;
+    public static boolean isInvalidKey(String thisKey) {
+        Main.console.log(Level.INFO, "Checking: " + thisKey + " | Length: " + thisKey.length());
+        if (thisKey.length() != 19) return true;
 
         for (int i = 0; i < thisKey.length(); i++){
             char c = thisKey.charAt(i);
 
-            // abcd-2021-jhas-06ds
-            if (i < 4 && c == '-') return false;
-            else if (i == 4 && c != '-') return false;
-            else if (i > 4 && i < 9 && c == '-') return false;
-            else if (i == 9 && c != '-') return false;
-            else if (i > 9 && i < 14 && c == '-') return false;
-            else if (i == 14 && c != '-') return false;
-            else if (i > 14 && c == '-') return false;
+            // example key: 5sdf-2021-jh2s-06ds
+            if (i < 4 && c == '-') return true;
+            else if (i == 4 && c != '-') return true;
+            else if (i > 4 && i < 9 && c == '-') return true;
+            else if (i == 9 && c != '-') return true;
+            else if (i > 9 && i < 14 && c == '-') return true;
+            else if (i == 14 && c != '-') return true;
+            else if (i > 14 && c == '-') return true;
         }
-        return true;
+        if (Config.debug) Main.console.log(Level.INFO, "Key format is valid!");
+        return false;
     }
 
     public static boolean isRestrictedIGN(String ign) {

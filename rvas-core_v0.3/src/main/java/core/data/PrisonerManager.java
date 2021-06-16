@@ -1,7 +1,6 @@
 package core.data;
 
 /* *
- *
  *  About: Reads, writes, and mutates lag-prisoner data
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -35,8 +34,10 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import core.backend.ex.Critical;
 import org.bukkit.entity.Player;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class PrisonerManager {
 
@@ -62,15 +63,15 @@ public class PrisonerManager {
                 _prisonerList.containsValue(Objects.requireNonNull(p.getAddress()).toString().split(":")[0]);
     }
 
+    public static void loadPrisoners() throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get("plugins/core/prisoners.db"));
+        lines.forEach(val -> _prisonerList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
+    }
+
     public static void savePrisoners() throws IOException {
         List<String> list = _prisonerList.keySet().stream().map(u -> u.toString() + ":" + _prisonerList.get(u))
                 .collect(Collectors.toList());
 
         Files.write(Paths.get("plugins/core/prisoners.db"), String.join("\n", list).getBytes());
-    }
-
-    public static void loadPrisoners() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get("plugins/core/prisoners.db"));
-        lines.forEach(val -> _prisonerList.put(UUID.fromString(val.split(":")[0]), val.split(":")[1]));
     }
 }

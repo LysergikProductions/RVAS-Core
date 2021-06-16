@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 public class ServerCmd implements CommandExecutor {
 	
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		if (!PlayerMeta.isAdmin((Player)sender)) Analytics.server_cmd++;
 		
@@ -51,23 +51,12 @@ public class ServerCmd implements CommandExecutor {
 		final double speed_limit;
 		double tps = LagProcessor.getTPS();
 		
-		if (tps >= 16.0) {
-			speed_limit = tier1;
-			
-		} else if (tps < 16.0 && tps >= 14.0) {
-			speed_limit = tier2;
-			
-		} else if (tps < 14.0 && tps >= 10.0) {
-			speed_limit = tier3;
-			
-		} else if (tps < 10.0 && tps >= 7.0) {
-			speed_limit = tier4;
-			
-		} else if (tps < 7) {
-			speed_limit = tier5;
-		} else {
-			speed_limit = tier1;
-		}
+		if (tps >= 16.0) speed_limit = tier1;
+		else if (tps < 16.0 && tps >= 14.0) speed_limit = tier2;
+		else if (tps < 14.0 && tps >= 10.0) speed_limit = tier3;
+		else if (tps < 10.0 && tps >= 7.0) speed_limit = tier4;
+		else if (tps < 7) speed_limit = tier5;
+		else speed_limit = tier1;
 		
 		TextComponent title_sep = new TextComponent("===========");
 		TextComponent title_name = new TextComponent(" SERVER HEALTH ");

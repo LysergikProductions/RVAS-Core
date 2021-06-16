@@ -22,13 +22,14 @@ package core.commands;
  * 
  * */
 
+import core.tasks.Analytics;
+import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
 import core.data.SettingsManager;
 import core.data.objects.SettingsContainer;
-import core.tasks.Analytics;
 
-import org.bukkit.entity.Player;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 public class ToggleJoinMessages implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		Player player = (Player) sender;
 		if (!PlayerMeta.isAdmin(player)) Analytics.tjm_cmd++;
 		
@@ -50,16 +51,15 @@ public class ToggleJoinMessages implements CommandExecutor {
 		} else {
 			theseSettings = SettingsManager.getNewSettings(Bukkit.getOfflinePlayer(player.getUniqueId()));
 			
-			theseSettings.show_player_join_messages = false; // default is true, so this cmd should set setting of new users of cmd to false
+			theseSettings.show_player_join_messages = false;
 			PlayerMeta.sPlayerSettings.put(theseSettings.playerid, theseSettings);
 		}
 		
 		if (theseSettings.show_player_join_messages) {
-			player.sendMessage("\u00A76Enabled join and leave messages.");
+			player.sendMessage(ChatPrint.primary + "Enabled join and leave messages.");
 			
-		} else {
-			player.sendMessage("\u00A76Disabled join and leave messages.");
-		}
+		} else player.sendMessage(ChatPrint.primary + "Disabled join and leave messages.");
+
 		return true;
 	}
 }

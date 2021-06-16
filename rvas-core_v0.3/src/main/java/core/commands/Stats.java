@@ -34,7 +34,7 @@ public class Stats implements CommandExecutor {
 	}
 	
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		sessionUses++;
 		
 		Player player = (Player) sender;
@@ -176,7 +176,7 @@ public class Stats implements CommandExecutor {
 			
 			if (!offline_player.hasPlayedBefore()) {
 				
-				player.sendMessage("This player has never joined.");
+				player.sendMessage(ChatPrint.faded + "This player has never joined.");
 				return true;
 			}
 			

@@ -1,13 +1,14 @@
 package core.commands;
 
-import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
-import core.commands.restricted.Admin;
+import core.frontend.ChatPrint;
+import core.commands.op.Admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import core.tasks.Analytics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -26,13 +27,15 @@ public class Local implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         Player sender; String sendName;
 
         if (commandSender instanceof Player) {
             sender = (Player)commandSender;
             sendName = sender.getName();
         } else return false;
+
+        if (!PlayerMeta.isAdmin(sender)) Analytics.local_cmd++;
 
         if (args.length < 1) {
             sender.sendMessage(new TextComponent(ChatPrint.fail +
@@ -83,9 +86,9 @@ public class Local implements CommandExecutor {
         final String[] msg = {""};
         final int[] x = {1};
 
-        Arrays.stream(args).forEach(s ->  {
+        Arrays.stream(args).forEach(ln ->  {
             x[0]++;
-            msg[0] += s + " ";
+            msg[0] += ln + " ";
         });
         msg[0] = msg[0].trim();
 

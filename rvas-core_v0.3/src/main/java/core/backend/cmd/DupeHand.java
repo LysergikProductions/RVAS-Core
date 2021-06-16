@@ -1,17 +1,18 @@
-package core.backend;
+package core.backend.cmd;
 
+import core.backend.Config;
 import core.data.PlayerMeta;
+import core.frontend.ChatPrint;
+import core.backend.ex.Critical;
 
 import java.util.*;
 import java.util.stream.IntStream;
 
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
-
+import org.bukkit.attribute.Attribute;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,15 +21,15 @@ import org.jetbrains.annotations.NotNull;
 
 // INTERNAL USE ONLY
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@Critical
 public class DupeHand implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	@SuppressWarnings("SpellCheckingInspection")
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args)  {
 		Player player;
 
-		try {
-			player = (Player) sender;
+		try { player = (Player) sender;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			player = null;
@@ -39,12 +40,12 @@ public class DupeHand implements CommandExecutor {
 			return true;
 		} else {
 			if (args.length != 1) {
-				sender.spigot().sendMessage(new TextComponent("\u00A7cInvalid syntax. Syntax: /dupehand [name]"));
+				sender.sendMessage(ChatPrint.fail + "Invalid syntax. Syntax: /dupehand [name]");
 				return true;
 			}
 			Player target = Bukkit.getPlayer(args[0]);
 			if (target == null) {
-				sender.spigot().sendMessage(new TextComponent("\u00A7cPlayer is not online."));
+				sender.sendMessage(ChatPrint.fail + "Player is not online.");
 				return true;
 			}
 

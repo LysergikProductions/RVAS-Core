@@ -1,31 +1,33 @@
-package core.commands.restricted;
+package core.commands.op;
 
 import core.backend.*;
-import core.backend.utils.Restart;
+import core.backend.ex.*;
 import core.backend.utils.Util;
-import core.data.objects.Aliases;
-import core.data.ThemeManager;
-import core.data.objects.Pair;
-import core.data.PlayerMeta;
+import core.backend.utils.Restart;
 import core.frontend.ChatPrint;
-import core.tasks.Analytics;
-import core.events.SpeedLimiter;
+
+import core.data.DonationManager;
+import core.data.objects.Aliases;
+import core.data.objects.Pair;
+import core.data.ThemeManager;
+import core.data.PlayerMeta;
 
 import java.util.*;
-import java.io.IOException;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
+import core.tasks.Analytics;
+import core.events.SpeedLimiter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("SpellCheckingInspection")
+@Critical
 public class Admin implements CommandExecutor {
 
 	public static List<UUID> Spies = new ArrayList<>();
@@ -37,15 +39,15 @@ public class Admin implements CommandExecutor {
 	public static boolean disableWarnings = false;
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	@SuppressWarnings("SpellCheckingInspection")
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		Player player = (Player) sender;
 		
-		if (!player.isOp()) Analytics.admin_cmd++;
+		if (player.isOp()) Analytics.admin_cmd++;
 		
 		if (args.length == 1) {
 			if (!PlayerMeta.isOp(sender)) {
-				sender.sendMessage(new TextComponent(
-						ChatPrint.fail + "You can't use this.").toLegacyText());
+				sender.sendMessage(ChatPrint.fail + "You can't use this.");
 				return true;
 			}
 
@@ -55,48 +57,40 @@ public class Admin implements CommandExecutor {
 
 				case "QUIET":
 					if (doNotDisturb.contains(senderID)) {
-						player.sendMessage(new TextComponent(ChatPrint.fail +
-								"Disabled warnings").toLegacyText());
+						player.sendMessage(ChatPrint.fail + "Disabled warnings");
 						doNotDisturb.remove(senderID);
 					} else {
-						player.sendMessage(new TextComponent(ChatPrint.succeed +
-								"Enabled warnings!").toLegacyText());
+						player.sendMessage(ChatPrint.succeed + "Enabled warnings!");
 						doNotDisturb.add(senderID);
 					}
 					return true;
 
 				case "COLOR":
 					if (UseRedName.contains(senderID)) {
-						player.sendMessage(new TextComponent(ChatPrint.fail +
-								"Disabled red name").toLegacyText());
+						player.sendMessage(ChatPrint.fail + "Disabled red name");
 						UseRedName.remove(senderID);
 					} else {
-						player.sendMessage(new TextComponent(ChatPrint.succeed +
-								"Enabled red name!").toLegacyText());
+						player.sendMessage(ChatPrint.succeed + "Enabled red name!");
 						UseRedName.add(senderID);
 					}
 					return true;
 					
 				case "SPY":
 					if (Spies.contains(senderID)) {
-						player.sendMessage(new TextComponent(ChatPrint.fail +
-								"Disabled spying on player messages").toLegacyText());
+						player.sendMessage(ChatPrint.fail + "Disabled spying on player messages");
 						Spies.remove(senderID);
 					} else {
-						player.sendMessage(new TextComponent(ChatPrint.succeed +
-								"Enabled spying on player messages!").toLegacyText());
+						player.sendMessage(ChatPrint.succeed + "Enabled spying on player messages!");
 						Spies.add(player.getUniqueId());
 					}
 					return true;
 					
 				case "MSGTOGGLE":
 					if (MsgToggle.contains(senderID)) {
-						player.sendMessage(new TextComponent(ChatPrint.succeed +
-								"Enabled receiving player messages!").toLegacyText());
+						player.sendMessage(ChatPrint.succeed + "Enabled receiving player messages!");
 						MsgToggle.remove(senderID);
 					} else {
-						player.sendMessage(new TextComponent(ChatPrint.fail +
-								"Disabled receiving player messages!").toLegacyText());
+						player.sendMessage(ChatPrint.fail + "Disabled receiving player messages!");
 						MsgToggle.add(senderID);
 					}
 					return true;
@@ -105,25 +99,30 @@ public class Admin implements CommandExecutor {
 
 					try { ChatPrint.init();
 					} catch (Exception ignore) {
-						sender.sendMessage(new TextComponent(ChatPrint.fail +
-								"Failed to reload colors, setting internal theme..").toLegacyText());
+						sender.sendMessage(ChatPrint.fail + "Failed to reload colors, setting internal theme..");
 						ThemeManager.currentTheme.setToInternalDefaults();
 						ChatPrint.init();
 					}
 
 					try { Config.load();
-					} catch (IOException e) {
-						sender.sendMessage(new TextComponent(ChatPrint.fail +
-								"Failed to reload configs, restarting..").toLegacyText());
-						Restart.restart();
+					} catch (Exception e) {
+						sender.sendMessage(ChatPrint.fail + "Failed to reload configs.");
+						try {
+							if (Config.class.getDeclaredMethod("load").getAnnotation(Phoenix.class).doRestart()) {
+								Restart.restart(true);
+							}
+						} catch (Exception ignore) { }
 					}
 
-					player.sendMessage(new TextComponent(ChatPrint.succeed +
-							"Successfully reloaded!").toLegacyText());
+					try { DonationManager.loadDonors();
+					} catch (Exception ignore) { sender.sendMessage(ChatPrint.fail + "Failed to reload donors.."); }
+
+					player.sendMessage(ChatPrint.succeed + "Successfully reloaded!");
 					return true;
-					
+
+				//deprecated
 				case "SPEED":
-					player.sendMessage(new TextComponent(ChatPrint.primary + "Player speeds:").toLegacyText());
+					player.sendMessage(ChatPrint.primary + "Player speeds:");
 					List<Pair<Double, String>> speeds = SpeedLimiter.getSpeeds();
 					
 					for (Pair<Double, String> speedEntry : speeds) {
@@ -137,40 +136,28 @@ public class Admin implements CommandExecutor {
 							color += "e"; // yellow
 						else
 							color += "a"; // green
-						player.sendMessage(new TextComponent(color
-								+ String.format("%4.1f: %s", speed, playerName)).toLegacyText());
+						player.sendMessage(color + String.format("%4.1f: %s", speed, playerName));
 					}
 					player.sendMessage("\u00A76End of speed list.");
 					return true;
 					
 				case "AGRO":
 					disableWarnings = !disableWarnings;
-					if(disableWarnings) {
-						sender.sendMessage(new TextComponent(ChatPrint.succeed +
-								"Enabled aggressive speed limit!").toLegacyText());
-					}
-					else {
-						sender.sendMessage(new TextComponent(ChatPrint.fail +
-								"Disabled aggressive speed limit").toLegacyText());
-					}
+
+					if (disableWarnings) sender.sendMessage(ChatPrint.succeed + "Enabled aggressive speed limit!");
+					else sender.sendMessage(ChatPrint.fail + "Disabled aggressive speed limit");
+
 					return true;
 
-				case "CRYSTAL":
-					player.chat(Aliases.invulCrystal);
-					return true;
-
-				case "ILLEGALS":
-				case "ILLEGAL":
-					player.chat(Aliases.illegals_kit);
-					return true;
+				case "CRYSTAL": player.chat(Aliases.invulCrystal); return true;
+				case "ILLEGALS": case "ILLEGAL": player.chat(Aliases.illegals_kit); return true;
 			}
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("spot")) {
 				
 				Location loc = LogOutSpots.get(args[1]);
 				
-				if (loc == null) sender.sendMessage(new TextComponent(ChatPrint.fail +
-							"No logout spot logged for " + args[1]).toLegacyText());
+				if (loc == null) sender.sendMessage(ChatPrint.fail + "No logout spot logged for " + args[1]);
 				else {
 					
 					String dimension = Util.getDimensionName(loc);
@@ -180,7 +167,7 @@ public class Admin implements CommandExecutor {
 
 					logSpot.setClickEvent(new ClickEvent(
 							ClickEvent.Action.RUN_COMMAND, "/ninjatp " + dimension + " " + location));
-					
+
 					sender.spigot().sendMessage(logSpot);
 				}
 				return true;

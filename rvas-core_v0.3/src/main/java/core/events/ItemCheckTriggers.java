@@ -2,6 +2,7 @@ package core.events;
 
 import core.backend.Config;
 import core.backend.ItemCheck;
+import core.backend.ex.Critical;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
-// trigger illegals checks from inventory related events
+@Critical
 public class ItemCheckTriggers implements Listener {
 
 	@EventHandler

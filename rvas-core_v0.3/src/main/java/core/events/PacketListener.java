@@ -25,6 +25,7 @@ package core.events;
 import core.Main;
 import core.backend.Config;
 import core.backend.ItemCheck;
+import core.backend.ex.Critical;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@Critical
 public class PacketListener implements Listener {
 
 	public static ProtocolManager PacketManager = ProtocolLibrary.getProtocolManager();

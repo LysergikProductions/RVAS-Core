@@ -1,7 +1,6 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
- * 
  *  About: A command for ops to see current session data
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -41,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 public class Info implements CommandExecutor {
 	
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;

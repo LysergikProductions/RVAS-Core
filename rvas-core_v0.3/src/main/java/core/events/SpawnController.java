@@ -27,6 +27,7 @@ import core.Main;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.tasks.Analytics;
+import core.backend.ex.Critical;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -47,6 +48,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
+@Critical
 public class SpawnController implements Listener {
 	static double max_x, max_z, min_x, min_z, radius_X, radius_Z;
 	

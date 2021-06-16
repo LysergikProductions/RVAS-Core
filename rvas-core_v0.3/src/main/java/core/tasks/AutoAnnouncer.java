@@ -1,7 +1,6 @@
 package core.tasks;
 
 /* *
- *
  *  About: Announce string randomly selected from
  * 			announcements.txt as a synced scheduled task
  *
@@ -26,7 +25,8 @@ package core.tasks;
 import core.backend.Config;
 import core.backend.Scheduler;
 import core.frontend.ChatPrint;
-import core.commands.restricted.Check;
+import core.commands.op.Check;
+import core.backend.ex.Critical;
 
 import java.util.*;
 import java.nio.file.Files;
@@ -40,7 +40,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-@SuppressWarnings("deprecation")
+@Critical
 public class AutoAnnouncer extends TimerTask {
 
 	String lastAnnouncement = "";
@@ -67,6 +67,7 @@ public class AutoAnnouncer extends TimerTask {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void run() {
 		if (Config.getValue("announcer.enabled").equals("false")) return;
 

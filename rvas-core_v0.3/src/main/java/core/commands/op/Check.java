@@ -1,4 +1,4 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
  *
@@ -27,8 +27,10 @@ import core.data.objects.Pair;
 import core.frontend.ChatPrint;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
+import core.backend.ex.Critical;
 
 import java.util.*;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
@@ -45,21 +47,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
+@Critical
 public class Check implements CommandExecutor, Listener {
 
     public static Map<UUID, Pair<Integer, Location>> lagList = new HashMap<>();
     public static Map<Player, Integer> sortedLagList = new HashMap<>();
 
     private static Player checker = null;
-    public static Inventory lagCheckGUI;
-
-    static {
-        lagCheckGUI = Bukkit.createInventory(checker, 54, ChatPrint.fail + "Occupied Laggy Chunks");
-    }
+    public static Inventory lagCheckGUI; static {
+        lagCheckGUI = Bukkit.createInventory(checker, 54, ChatPrint.fail + "Occupied Laggy Chunks"); }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, String[] args) {
         if (!(commandSender instanceof Player)) return false;
 
         try { checker = (Player)commandSender;
@@ -78,7 +77,7 @@ public class Check implements CommandExecutor, Listener {
             lagCheckGUI.clear(); // do not also clear sorted list, to keep results persistent
 
             for (Player thisPlayer: Bukkit.getServer().getOnlinePlayers()) {
-                int thisCount = 0;
+                int thisCount;
 
                 if (!thisPlayer.isOp()) {
 

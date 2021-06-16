@@ -1,5 +1,6 @@
 package core.data;
 
+import core.backend.ex.Critical;
 import core.backend.Config;
 import core.commands.Ignore;
 import core.events.ChatListener;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
+@Critical
 @SuppressWarnings("SpellCheckingInspection")
 public class PlayerMeta {
 

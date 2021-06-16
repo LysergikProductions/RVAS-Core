@@ -1,7 +1,8 @@
-package core.commands.restricted;
+package core.commands.op;
 
 import core.data.PlayerMeta;
 import core.data.PlayerMeta.MuteType;
+import core.backend.ex.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,11 +13,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+@Critical
 @SuppressWarnings("deprecation")
 public class Mute implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		String name;
 
 		if (sender instanceof Player) name = sender.getName();

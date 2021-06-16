@@ -1,8 +1,8 @@
-package core.frontend;
+package core.frontend.GUI;
 
 /* *
- *
- *  About: Things player see and interact with .java
+ *  About: List of TextComponent command descriptions that
+ *      display the command syntax using hover events
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -22,6 +22,8 @@ package core.frontend;
  *
  * */
 
+import core.frontend.ChatPrint;
+
 import java.util.List;
 import java.util.Arrays;
 
@@ -29,7 +31,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
-public class GUI {
+public class CommandList {
 
     public static TextComponent sign_syntax, vote_syntax, local_syntax, afk_syntax, last_syntax,
             ignore_syntax, msg_syntax, vm_syntax, donate_syntax, discord_syntax, kit_syntax,

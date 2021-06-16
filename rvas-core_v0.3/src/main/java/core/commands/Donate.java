@@ -1,12 +1,13 @@
 package core.commands;
 
 import core.backend.Config;
+import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
+import core.tasks.Analytics;
 
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 
@@ -36,10 +37,13 @@ public class Donate implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (!(sender instanceof Player)) return false;
 
-        if (args.length != 0) { sender.sendMessage(new TextComponent(ChatPrint.fail +
-                    "Invalid syntax. Syntax: /donate").toLegacyText()); return false; }
+        if (args.length != 0) { sender.sendMessage(
+                ChatPrint.fail + "Invalid syntax. Syntax: /donate"); return false; }
 
-        String id = ((Player) sender).getUniqueId().toString();
+        Player player = (Player)sender;
+        String id = player.getUniqueId().toString();
+
+        if (!PlayerMeta.isAdmin(player)) Analytics.donate_cmd++;
 
         TextComponent msg1 = new TextComponent(ChatPrint.primary + "Click here to copy your UUID to your clipboard");
         TextComponent msg2 = new TextComponent(ChatPrint.controls + "Click here to donate with " + link1_id + "!");
@@ -54,8 +58,8 @@ public class Donate implements CommandExecutor {
         msg3.setBold(true); msg3.setItalic(true); msg3.setUnderlined(true);
 
         // Print messages
-        sender.sendMessage(new TextComponent(ChatPrint.warn, new TextComponent("Please DM " + Config.getValue("admin") +
-                " your IGN and UUID before donating to get your perks!")).toLegacyText());
+        sender.sendMessage(ChatPrint.warn + "Please DM " + Config.getValue("admin") +
+                " your IGN and UUID before donating to get your perks!");
 
         sender.sendMessage(msg1); sender.sendMessage(msg2);
         if (!link1_url.equals(link2_url)) sender.sendMessage(msg3);

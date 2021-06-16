@@ -1,4 +1,4 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
  *
@@ -22,14 +22,12 @@ package core.commands.restricted;
  *
  * */
 
+import core.data.PlayerMeta;
 import core.backend.Config;
 import core.backend.utils.Restart;
-import core.data.PlayerMeta;
+import core.frontend.ChatPrint;
 
 import java.io.IOException;
-
-import core.frontend.ChatPrint;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 import org.bukkit.command.Command;
@@ -55,7 +53,7 @@ public class ConfigCmd implements CommandExecutor {
                 Config.load();
                 sender.sendMessage(ChatPrint.succeed + "Successfully reloaded");
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 sender.sendMessage(ChatPrint.fail + "Failed to reload");
                 if (Config.debug) Restart.restart();
             }

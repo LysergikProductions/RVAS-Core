@@ -1,7 +1,6 @@
 package core.data.objects;
 
 /* *
- * 
  *  About: The data container for toggleable player settings and other information
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -25,7 +24,6 @@ package core.data.objects;
 import java.util.UUID;
 import java.io.Serializable;
 
-@SuppressWarnings("SpellCheckingInspection")
 public class SettingsContainer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

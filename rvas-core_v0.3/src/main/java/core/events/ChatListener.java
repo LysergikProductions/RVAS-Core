@@ -4,7 +4,8 @@ import core.backend.Config;
 import core.frontend.ChatPrint;
 import core.commands.AFK;
 import core.commands.Message;
-import core.commands.restricted.Admin;
+import core.commands.op.Admin;
+import core.backend.ex.Critical;
 
 import core.data.PlayerMeta;
 import core.data.objects.Donor;
@@ -25,13 +26,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 
-@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
+@Critical
 public class ChatListener implements Listener {
 
 	private static final Set<String> allUserCommands = new HashSet<>(Arrays.asList(
 		"about", "admin", "discord", "dupehand", "help", "kill", "kit", "kys", "msg", "w", "r", "l", "local",
-		"redeem", "stats", "tdm", "tjm", "tps", "vm", "vote", "ignore", "server", "sign", "afk", "last", "donate"
-	));
+		"redeem", "stats", "tdm", "tjm", "tps", "vm", "vote", "ignore", "server", "sign", "afk", "last", "donate"));
 	
 	private final HashMap<UUID, Long> lastChatTimes = new HashMap<>();
 	private final HashMap<UUID, String> lastChatMessages = new HashMap<>();
@@ -40,6 +40,7 @@ public class ChatListener implements Listener {
 	public static boolean slowChatEnabled = false;
 
 	@EventHandler
+	@SuppressWarnings({"SpellCheckingInspection", "deprecation"})
 	public void onChat(AsyncPlayerChatEvent e) {
 		e.setCancelled(true); // <- override vanilla chat
 
@@ -55,8 +56,7 @@ public class ChatListener implements Listener {
 			Message.AFK_warned.remove(playerid);
 			AFK._AFKs.remove(playerid);
 
-			player.sendMessage(new TextComponent(ChatPrint.succeed +
-					"You are no longer AFK!").toLegacyText());
+			player.sendMessage(ChatPrint.succeed + "You are no longer AFK!");
 		}
 
 		boolean isValidDonor = DonationManager._validDonors.contains(playerid);
@@ -79,8 +79,8 @@ public class ChatListener implements Listener {
 				break;
 		}
 
-		if (isValidDonor && !Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A76";
-		else if (Admin.UseRedName.contains(player.getUniqueId())) usernameColor = "\u00A7c";
+		if (isValidDonor && !Admin.UseRedName.contains(playerid)) usernameColor = "\u00A76";
+		else if (Admin.UseRedName.contains(playerid)) usernameColor = "\u00A7c";
 		else usernameColor = "\u00A7f";
 
 		// -- STRING MODIFICATION -- //
@@ -122,16 +122,16 @@ public class ChatListener implements Listener {
 		if (doSend) {
 			String username = player.getName();
 
-			if (DonationManager.isValidDonor(player)) {
+			if (DonationManager._validDonors.contains(playerid)) {
 
-				Donor thisDonor = DonationManager.getDonorByName(username);
+				Donor thisDonor = DonationManager.getDonorByUUID(playerid);
 				String customIGN = Objects.requireNonNull(thisDonor).getCustomIGN();
 
 				if (DonationManager.isValidString(customIGN)) username = customIGN;
 			}
 
-			TextComponent finalCom = new TextComponent("\u00A7f<" + usernameColor + username +
-					"\u00A7f> " + color + finalMessage);
+			TextComponent finalCom = new TextComponent(
+					"\u00A7f<" + usernameColor + username + "\u00A7f> " + color + finalMessage);
 			
 			if(Config.getValue("spam.enable").equals("true")) {	
 				boolean censored = false;
@@ -146,10 +146,8 @@ public class ChatListener implements Listener {
 						if(violationLevels.containsKey(e.getPlayer().getUniqueId())) {
 							violationLevels.put(e.getPlayer().getUniqueId(),
 									violationLevels.get(e.getPlayer().getUniqueId()) + 1);
-						}
-						else {
-							violationLevels.put(e.getPlayer().getUniqueId(), 1);
-						}
+
+						} else violationLevels.put(e.getPlayer().getUniqueId(), 1);
 					}
 				}
 				
@@ -197,7 +195,6 @@ public class ChatListener implements Listener {
 					return;
 				}
 			}
-			
 			Bukkit.getLogger().log(Level.INFO, "\u00A7f<" + usernameColor + username + "\u00A7f> " + color + finalMessage);
 			Bukkit.getServer().spigot().broadcast(finalCom);
 		}
@@ -220,28 +217,27 @@ public class ChatListener implements Listener {
 	
 	public int editDistance(String s1, String s2) {
 		
-	    s1 = s1.toLowerCase();
-	    s2 = s2.toLowerCase();
+	    s1 = s1.toLowerCase(); s2 = s2.toLowerCase();
 
 	    int[] costs = new int[s2.length() + 1];
 	    for (int i = 0; i <= s1.length(); i++) {
+
 	      int lastValue = i;
 	      for (int j = 0; j <= s2.length(); j++) {
-	        if (i == 0)
-	          costs[j] = j;
-	        else {
-	          if (j > 0) {
+
+	        if (i == 0) costs[j] = j;
+	        else if (j > 0) {
+
 	            int newValue = costs[j - 1];
-	            if (s1.charAt(i - 1) != s2.charAt(j - 1))
-	              newValue = Math.min(Math.min(newValue, lastValue),
-	                  costs[j]) + 1;
+
+	            if (s1.charAt(i - 1) != s2.charAt(j - 1)) {
+	            	newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1; }
+
 	            costs[j - 1] = lastValue;
 	            lastValue = newValue;
 	          }
-	        }
 	      }
-	      if (i > 0)
-	        costs[s2.length()] = lastValue;
+	      if (i > 0) costs[s2.length()] = lastValue;
 	    }
 	    return costs[s2.length()];
 	  }
@@ -251,11 +247,11 @@ public class ChatListener implements Listener {
 		
 		if (e.getMessage().split(" ")[0].contains(":") && !e.getPlayer().isOp()) {
 			e.setCancelled(true);
-			e.getPlayer().sendMessage("\u00A7cUnknown command.");
+			e.getPlayer().sendMessage(ChatPrint.fail + "Unknown command.");
 			
 		} else if (e.getMessage().split("")[1].contains(Config.getValue("admin")) && !e.getPlayer().isOp()) {
 			e.setCancelled(true);
-			e.getPlayer().sendMessage("\u00A7cCannot target admin account.");
+			e.getPlayer().sendMessage(ChatPrint.fail + "Cannot target admin account.");
 		}
 		return true;
 	}

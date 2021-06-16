@@ -1,7 +1,6 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
- *
  *  About: Allow ops to read and modify Donor objects stored in memory
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -23,30 +22,37 @@ package core.commands.restricted;
  * */
 
 import core.frontend.ChatPrint;
+import core.frontend.GUI.DonorList;
 import core.data.DonationManager;
 import core.data.objects.Donor;
+import core.backend.ex.Critical;
 
 import java.util.UUID;
 import java.util.Arrays;
 import java.util.Objects;
 
-import org.bukkit.entity.Player;
-import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-
+import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("SpellCheckingInspection")
+@Critical
 public class DonorCmd implements CommandExecutor {
 
     @Override
+    @SuppressWarnings("SpellCheckingInspection")
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (!(sender instanceof Player)) {
             System.out.println("TODO: sending donor info to console"); return false; }
+
+        boolean showNonOpItself = false;
+        Player player = (Player)sender;
+
+        if (!player.isOp() && args.length == 0 && DonationManager.isDonor(player)) showNonOpItself = true;
+        else if (!player.isOp()) return false; // <- Only ops can use code after this point
 
         if (args.length >= 3) {
 
@@ -80,11 +86,15 @@ public class DonorCmd implements CommandExecutor {
                     } catch (Exception ignore) {
                         sender.sendMessage(ChatPrint.fail + "Invalid number."); return false; }
 
-                    thisDonor.addToSum(Double.parseDouble(args[2]));
+                    thisDonor.addToSum(Double.parseDouble(args[2])); // <- updates validity automatically
                     thisDonor.setRecentDonationDate();
 
                     sender.sendMessage(ChatPrint.primary + "Successfully added $" + args[2] + " to " +
                             args[0] + "'s profile for a total of $" + thisDonor.getSumDonated());
+
+                    thisDonor.sendMessage(new TextComponent(ChatPrint.primary + "Successfully added $"
+                            + args[2] + "to your private donation history for a total of $" + thisDonor.getSumDonated()));
+
                     return true;
 
                 case "set":
@@ -105,7 +115,7 @@ public class DonorCmd implements CommandExecutor {
 
                     String newKey = args[2].trim();
 
-                    if (!DonationManager.isValidKey(newKey)) {
+                    if (DonationManager.isInvalidKey(newKey)) {
                         sender.sendMessage(ChatPrint.fail + "Invalid key."); return false; }
 
                     if (DonationManager.DonorCodes.contains(newKey) &&
@@ -114,13 +124,12 @@ public class DonorCmd implements CommandExecutor {
                         thisDonor = new Donor(thisDonor.getUserID(), newKey, thisDonor.getSumDonated());
                         DonationManager.UsedDonorCodes.add(newKey);
 
-                    } else {
-                        sender.sendMessage(ChatPrint.fail + "Invalid key."); return false;
-                    }
+                    } else { sender.sendMessage(ChatPrint.fail + "Invalid key."); return false; }
 
                     sender.sendMessage(ChatPrint.primary +
                             "Successfully set donation key to " + thisDonor.getDonationKey());
-                    return true;
+
+                    thisDonor.updateAboveThreshold(); return true;
 
                 case "tag":
 
@@ -183,22 +192,43 @@ public class DonorCmd implements CommandExecutor {
 
                 case "refresh":
 
-                    try { Objects.requireNonNull(DonationManager.getDonorByName(args[0])).updateDonorIGN();
-                    } catch (Exception ignore) {
-                        sender.sendMessage(ChatPrint.fail + "Internal error. Failed to update IGN."); return false; }
+                    for (Donor d: DonationManager._donorList) {
+                        d.updateDonorIGN(); d.updateAboveThreshold();
+
+                        UUID id = d.getUserID();
+                        if (!DonationManager.isInvalidKey(d.getDonationKey())) {
+                            DonationManager._validDonors.remove(id);
+                            DonationManager._validDonors.add(id);
+                        }
+                    }
+                    DonationManager.saveDonors();
 
                 default: return false;
             }
 
-        } else if (args.length != 1) {
+        } else if (args.length == 2) {
             sender.sendMessage(ChatPrint.fail + "Invalid syntax. Syntax: /donor [name]"); return false;
 
         } else if (!sender.isOp()) {
             sender.sendMessage(ChatPrint.fail + "yeah no"); return false; }
 
-        String thisSearch = args[0].trim();
+        if (args.length == 0 && player.isOp()) {
+            Player p = ((Player) sender);
+
+            if (!DonorList.updateDonorGUI()) {
+                player.sendActionBar(ChatPrint.fail + "There are no donors yet :/"); return false; }
+
+            p.openInventory(DonorList._donorGUI);
+            return true;
+        }
+
+        // There is either just 1 argument or a non-op with zero arguments remaining
+        String thisSearch;
+        if (showNonOpItself) thisSearch = player.getName();
+        else thisSearch = args[0].trim();
+
+        boolean isID = false;
         UUID thisID = null; Donor thisDonor;
-        TextComponent resultMsg; boolean isID = false;
 
         try { thisID = UUID.fromString(thisSearch); isID = true;
         } catch (IllegalArgumentException ignore) { }
@@ -207,31 +237,20 @@ public class DonorCmd implements CommandExecutor {
         else thisDonor = DonationManager.getDonorByName(thisSearch);
 
         if (thisDonor == null) {
-            resultMsg = new TextComponent(ChatPrint.primary +
-                    "Click here to set " + thisSearch + " as a donor!");
-
-            if (isID) thisSearch = Objects.requireNonNull(
-                    sender.getServer().getPlayer(thisID)).getName();
-
-            resultMsg.setClickEvent(new ClickEvent(
-                    ClickEvent.Action.RUN_COMMAND, "/setdonator " + thisSearch));
-
-            sender.sendMessage(resultMsg); return true;
-        }
+            sender.sendMessage(ChatPrint.fail + thisSearch + " is not a donor!"); return true; }
 
         String donorRealIGN;
-
         try { donorRealIGN = Objects.requireNonNull(sender.getServer()
                     .getPlayer(thisDonor.getUserID())).getName();
 
         } catch (Exception ignore) {
-            sender.sendMessage(ChatPrint.fail + "Internal error. Failed to get Bukkit player name."); return false; }
+            sender.sendMessage(ChatPrint.fail + "This player is not online"); return false; }
 
         sender.sendMessage("");
 
         sender.sendMessage(ChatPrint.primary + "Real IGN: " + ChatPrint.clear + donorRealIGN);
-        sender.sendMessage(ChatPrint.primary + "UUID: " + ChatPrint.clear + thisDonor.getUserID());
         sender.sendMessage(ChatPrint.primary + "Custom IGN: " + ChatPrint.clear + thisDonor.getCustomIGN());
+        sender.sendMessage(ChatPrint.primary + "UUID: " + ChatPrint.clear + thisDonor.getUserID());
         sender.sendMessage(ChatPrint.primary + "Donation Key: " + ChatPrint.clear + thisDonor.getDonationKey());
         sender.sendMessage(ChatPrint.primary + "First Donation Date: " + ChatPrint.clear + thisDonor.getFirstDonationDate());
         sender.sendMessage(ChatPrint.primary + "Recent Donation Date: " + ChatPrint.clear + thisDonor.getRecentDonationDate());
