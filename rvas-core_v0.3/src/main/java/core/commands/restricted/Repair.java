@@ -1,7 +1,6 @@
 package core.commands.restricted;
 
 /* *
- * 
  *  About: A command for ops to repair various naturally-generated structures
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -42,7 +41,7 @@ public class Repair implements CommandExecutor {
 	public static int y_low;
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		Player player = (Player) sender;
 		Chunk chunk = player.getLocation().getChunk();

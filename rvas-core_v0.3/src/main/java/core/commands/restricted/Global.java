@@ -46,7 +46,7 @@ public class Global implements CommandExecutor {
 	}
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		Player op = (Player)sender;
 
 		if (args.length != 0) {
@@ -80,7 +80,7 @@ public class Global implements CommandExecutor {
 
 						Location playerSpawn = p.getBedSpawnLocation();
 						Location baseLoc = p.getLocation();
-						Location finalTP = null; Vector distance;
+						Location finalTP; Vector distance;
 
 						if (playerSpawn != null) {
 

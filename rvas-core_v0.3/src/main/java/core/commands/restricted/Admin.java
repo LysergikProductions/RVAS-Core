@@ -46,7 +46,7 @@ public class Admin implements CommandExecutor {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		Player player = (Player) sender;
 		
-		if (!player.isOp()) Analytics.admin_cmd++;
+		if (player.isOp()) Analytics.admin_cmd++;
 		
 		if (args.length == 1) {
 			if (!PlayerMeta.isOp(sender)) {

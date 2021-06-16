@@ -32,6 +32,7 @@ import java.util.UUID;
 import java.util.Arrays;
 import java.util.Objects;
 
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -48,7 +49,16 @@ public class DonorCmd implements CommandExecutor {
         if (!(sender instanceof Player)) {
             System.out.println("TODO: sending donor info to console"); return false; }
 
-        if (args.length >= 3) {
+        Player player = (Player)sender;
+        if (!player.isOp() || args[0].equalsIgnoreCase(player.getName())) {
+
+            Donor ofNonOpSender = DonationManager.getDonorByUUID(player.getUniqueId());
+            if (ofNonOpSender == null) player.sendMessage(ChatPrint.fail + "Sorry, you are not a donor, eh :/");
+            else
+            return true;
+        }
+
+        if (args.length >= 3 && player.isOp()) {
 
             if (!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("tag") &&
                     !args[1].equalsIgnoreCase("motd") && !args[1].equalsIgnoreCase("set") &&
@@ -85,6 +95,10 @@ public class DonorCmd implements CommandExecutor {
 
                     sender.sendMessage(ChatPrint.primary + "Successfully added $" + args[2] + " to " +
                             args[0] + "'s profile for a total of $" + thisDonor.getSumDonated());
+
+                    thisDonor.sendMessage(new TextComponent(ChatPrint.primary + "Successfully added $"
+                            + args[2] + "to your private donation history for a total of $" + thisDonor.getSumDonated()));
+
                     return true;
 
                 case "set":
@@ -182,9 +196,15 @@ public class DonorCmd implements CommandExecutor {
 
                 case "refresh":
 
-                    try { Objects.requireNonNull(DonationManager.getDonorByName(args[0])).updateDonorIGN();
-                    } catch (Exception ignore) {
-                        sender.sendMessage(ChatPrint.fail + "Internal error. Failed to update IGN."); return false; }
+                    for (Donor d: DonationManager._donorList) {
+                        d.updateDonorIGN(); d.updateAboveThreshold();
+
+                        UUID id = d.getUserID();
+                        if (!DonationManager.isInvalidKey(d.getDonationKey())) {
+                            DonationManager._validDonors.remove(id);
+                            DonationManager._validDonors.add(id);
+                        }
+                    }
 
                 default: return false;
             }
@@ -195,7 +215,7 @@ public class DonorCmd implements CommandExecutor {
         } else if (!sender.isOp()) {
             sender.sendMessage(ChatPrint.fail + "yeah no"); return false; }
 
-        if (args.length == 0) {
+        if (args.length == 0 && player.isOp()) {
             Player p = ((Player) sender);
 
             DonorList.updateDonorGUI();

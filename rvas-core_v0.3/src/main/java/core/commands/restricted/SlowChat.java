@@ -1,7 +1,6 @@
 package core.commands.restricted;
 
 /* *
- *
  *  About: A command for ops to toggle the configured per-user chat cool-down
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -36,7 +35,7 @@ public class SlowChat implements CommandExecutor {
 	static String msg;
 	
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;

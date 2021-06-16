@@ -22,6 +22,9 @@ package core.commands;
  *
  * */
 
+
+import core.data.PlayerMeta;
+import core.tasks.Analytics;
 import core.backend.utils.Reversed;
 
 import java.util.UUID;
@@ -35,9 +38,11 @@ import org.jetbrains.annotations.NotNull;
 public class Last implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
         Player player = (Player)sender; UUID playerid;
         playerid = player.getUniqueId();
+
+        if (!PlayerMeta.isAdmin(player)) Analytics.last_cmd++;
 
         if (!Message.recentWhispers.containsKey(playerid)) player.sendMessage(
                 "\u00A76You don't have any recent whispers!");

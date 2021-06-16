@@ -23,10 +23,8 @@ package core.data.objects;
  * */
 
 import java.util.*;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
@@ -87,19 +85,18 @@ public class Donor {
     public String getCustomIGN() { return customIGN; }
 
     // Bukkit Getters
-    public Player getPlayer() { return Bukkit.getPlayer(this.userID); }
     public OfflinePlayer getOfflinePlayer() { return Bukkit.getOfflinePlayer(this.userID); }
 
     // Actions
     public void updateAboveThreshold() { this.validity = this.sumDonated >= 25.0; }
 
     public void updateDonorIGN() {
-        Player p = this.getPlayer(); if (p == null) return;
+        OfflinePlayer p = this.getOfflinePlayer(); if (p == null) return;
         this.realIGN = p.getName();
     }
 
     public void sendMessage(@NotNull TextComponent msg) {
-        Player p = this.getPlayer(); if (!p.isOnline()) return;
+        OfflinePlayer p = this.getOfflinePlayer(); if (!p.isOnline()) return;
         p.getPlayer().sendMessage(msg);
     }
 }

@@ -2,6 +2,7 @@ package core.commands;
 
 import core.backend.ItemCheck;
 import core.data.PlayerMeta;
+import core.frontend.ChatPrint;
 import core.tasks.Analytics;
 
 import java.util.ArrayList;
@@ -30,14 +31,12 @@ import org.jetbrains.annotations.NotNull;
 public class Sign implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-		if (!(sender instanceof Player)) {
-			return true;
-		}
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 
+		if (!(sender instanceof Player)) return true;
 		Player p = (Player) sender;
-		if (!PlayerMeta.isAdmin(p)) Analytics.sign_cmd++;
 
+		if (!PlayerMeta.isAdmin(p)) Analytics.sign_cmd++;
 		ItemStack thisStack = p.getInventory().getItemInMainHand();
 
 		if (!thisStack.getType().equals(Material.AIR)) {
@@ -49,17 +48,14 @@ public class Sign implements CommandExecutor {
 				return true;
 			}
 		}
-		p.sendMessage("\u00A7cYou cannot sign this item.");
+		p.sendMessage(ChatPrint.fail + "You cannot sign this item.");
 		return true;
 	}
 
 	private boolean sign(ItemStack i, Player p) {
 
 		ItemCheck.IllegalCheck(i, "ITEM_SIGNED", p);
-
-		if (i == null || i.getType().equals(Material.AIR)) {
-			return false;
-		}
+		if (i == null || i.getType().equals(Material.AIR)) return false;
 
 		double x = p.getLocation().getX();
 		double y = p.getLocation().getY();
@@ -72,21 +68,17 @@ public class Sign implements CommandExecutor {
 		String code = String.valueOf(Calendar.getInstance().getTimeInMillis());
 
 		MessageDigest m;
-		try {
-			m = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			return false;
-		}
+		try { m = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) { e.printStackTrace(); return false; }
+
 		m.reset();
 		m.update(code.getBytes());
 		byte[] digest = m.digest();
 		BigInteger bigInt = new BigInteger(1, digest);
 		StringBuilder hashtext = new StringBuilder(bigInt.toString(16));
+
 		// Now we need to zero pad it if you actually want the full 32 chars.
-		while (hashtext.length() < 32) {
-			hashtext.insert(0, "0");
-		}
+		while (hashtext.length() < 32) hashtext.insert(0, "0");
 
 		DateFormat dateTimeInstance = SimpleDateFormat.getDateTimeInstance();
 		String verifier = "\u00A7f\u00A7oThis item is signed.";
@@ -97,16 +89,11 @@ public class Sign implements CommandExecutor {
 
 		ItemMeta im;
 
-		if (i.getItemMeta() == null) {
-			im = Bukkit.getItemFactory().getItemMeta(i.getType());
-		} else {
-			im = i.getItemMeta();
-		}
+		if (i.getItemMeta() == null) im = Bukkit
+				.getItemFactory().getItemMeta(i.getType());
+		else im = i.getItemMeta();
 
-		if (im.hasLore()) {
-			return false;
-		}
-
+		if (im.hasLore()) return false;
 		List<String> lores = new ArrayList<>();
 
 		lores.add(verifier);

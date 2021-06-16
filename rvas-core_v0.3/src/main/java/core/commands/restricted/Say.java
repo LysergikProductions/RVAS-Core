@@ -1,8 +1,9 @@
 package core.commands.restricted;
 
-import java.util.Arrays;
+import core.frontend.ChatPrint;
 import core.backend.anno.Critical;
 
+import java.util.Arrays;
 import org.bukkit.Bukkit;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -16,10 +17,10 @@ import org.jetbrains.annotations.NotNull;
 public class Say implements CommandExecutor {
 
 	@Override
-	public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 
 		if (!sender.isOp() && !(sender instanceof ConsoleCommandSender)) {
-			sender.sendMessage("\u00A7cUnknown command.");
+			sender.sendMessage(ChatPrint.fail + "Unknown command.");
 			return true;
 		}
 
@@ -29,7 +30,7 @@ public class Say implements CommandExecutor {
 		data[0] = data[0].replace("\u00A7", "");
 
 		if (data[0].isEmpty()) {
-			sender.sendMessage("\u00A7cNo message specified.");
+			sender.sendMessage(ChatPrint.fail + "No message specified.");
 			return true;
 		}
 

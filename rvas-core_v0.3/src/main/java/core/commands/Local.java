@@ -1,7 +1,7 @@
 package core.commands;
 
-import core.frontend.ChatPrint;
 import core.data.PlayerMeta;
+import core.frontend.ChatPrint;
 import core.commands.restricted.Admin;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class Local implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         Player sender; String sendName;
 
         if (commandSender instanceof Player) {
@@ -86,9 +86,9 @@ public class Local implements CommandExecutor {
         final String[] msg = {""};
         final int[] x = {1};
 
-        Arrays.stream(args).forEach(s ->  {
+        Arrays.stream(args).forEach(ln ->  {
             x[0]++;
-            msg[0] += s + " ";
+            msg[0] += ln + " ";
         });
         msg[0] = msg[0].trim();
 

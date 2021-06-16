@@ -50,7 +50,7 @@ public class Main extends JavaPlugin {
 	public static Plugin instance; public DiscordBot DiscordHandler;
 
 	public final static Logger console = Bukkit.getLogger();
-	public final static String version = "0.3.5"; public final static int build = 324;
+	public final static String version = "0.3.5"; public final static int build = 325;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;

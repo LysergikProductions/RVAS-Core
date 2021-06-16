@@ -56,8 +56,11 @@ public class DonorList {
                 ItemMeta thisHeadMeta = newHead.getItemMeta();
                 thisHeadMeta.setDisplayName(thisDonor.getRealIGN());
 
-                String validityStr = thisDonor.isAboveThreshold() ? "Valid" : "Invalid";
-                ChatColor validityClr = thisDonor.isAboveThreshold() ? ChatPrint.succeed : ChatPrint.fail;
+                boolean valid = thisDonor.isAboveThreshold() &&
+                        !DonationManager.isInvalidKey(thisDonor.getDonationKey());
+
+                String validityStr = valid ? "Valid" : "Invalid";
+                ChatColor validityClr = valid ? ChatPrint.succeed : ChatPrint.fail;
 
                 String custom_ign = thisDonor.getCustomIGN();
                 ChatColor custom_ign_clr = DonationManager
@@ -66,16 +69,16 @@ public class DonorList {
                 String tag = thisDonor.getTagLine();
                 ChatColor tag_clr = DonationManager.isValidString(tag) ? ChatPrint.clear : ChatPrint.faded;
 
-                String motd = thisDonor.getTagLine();
+                String motd = thisDonor.getMsgOtd();
                 ChatColor motd_clr = DonationManager.isValidString(motd) ? ChatPrint.clear : ChatPrint.faded;
 
                 @SuppressWarnings("SpellCheckingInspection")
                 List<String> lore = Arrays.asList(
-                        ChatPrint.primary + thisDonor.getPlayer().getName(),
+                        ChatPrint.primary + thisDonor.getOfflinePlayer().getName(),
                         ChatPrint.controls + "$" + thisDonor.getSumDonated(),
                         thisDonor.getDonationKey(),
                         validityClr + validityStr + " key!",
-                        ChatPrint.desc + "----------------------------",
+                        ChatPrint.desc + "--------------------",
                         "UUID: " + thisDonor.getUserID(),
                         "Custom IGN: " + custom_ign_clr + custom_ign,
                         "First Dono: " + thisDonor.getFirstDonationDate(),

@@ -2,13 +2,12 @@ package core.commands;
 
 import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
+import core.tasks.Analytics;
 
 import java.util.UUID;
 import java.util.ArrayList;
 
-import core.tasks.Analytics;
 import org.bukkit.entity.Player;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +18,7 @@ public class AFK implements CommandExecutor {
     public static ArrayList<UUID> _AFKs = new ArrayList<>();
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
         if (!(sender instanceof Player)) return false;
         Player player = (Player) sender;
 

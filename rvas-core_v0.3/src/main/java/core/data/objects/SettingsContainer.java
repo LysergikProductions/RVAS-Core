@@ -25,7 +25,6 @@ package core.data.objects;
 import java.util.UUID;
 import java.io.Serializable;
 
-@SuppressWarnings("SpellCheckingInspection")
 public class SettingsContainer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
