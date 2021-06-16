@@ -1,7 +1,7 @@
-package core.commands.restricted;
+package core.commands.op;
 
 import core.frontend.ChatPrint;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.Arrays;
 import org.bukkit.Bukkit;

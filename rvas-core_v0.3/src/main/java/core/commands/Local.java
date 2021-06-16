@@ -2,7 +2,7 @@ package core.commands;
 
 import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
-import core.commands.restricted.Admin;
+import core.commands.op.Admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;

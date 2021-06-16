@@ -29,8 +29,8 @@ import core.backend.Config;
 import core.backend.utils.Chunks;
 import core.backend.utils.Util;
 import core.tasks.Analytics;
-import core.commands.restricted.Repair;
-import core.backend.anno.Critical;
+import core.commands.op.Repair;
+import core.backend.ex.Critical;
 
 import net.md_5.bungee.api.chat.TextComponent;
 

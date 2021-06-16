@@ -1,7 +1,6 @@
 package core.data.objects;
 
 /* *
- * 
  *  About: The data container for toggleable player settings and other information
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)

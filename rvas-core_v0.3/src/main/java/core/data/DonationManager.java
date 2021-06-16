@@ -1,7 +1,6 @@
 package core.data;
 
 /* *
- *
  *  About: Reads, writes, and mutates Donor objects
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -26,7 +25,7 @@ import core.Main;
 import core.backend.Config;
 import core.backend.ex.CoreException;
 import core.data.objects.Donor;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.io.*;
 import java.util.*;

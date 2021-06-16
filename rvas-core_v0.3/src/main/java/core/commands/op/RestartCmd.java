@@ -1,9 +1,9 @@
-package core.commands.restricted;
+package core.commands.op;
 
 import core.data.PlayerMeta;
 import core.frontend.ChatPrint;
 import core.backend.utils.Restart;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -1,4 +1,4 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
  *

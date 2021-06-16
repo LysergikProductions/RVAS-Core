@@ -5,8 +5,8 @@ import core.backend.*;
 import core.backend.utils.Util;
 import core.frontend.ChatPrint;
 import core.commands.Kit;
-import core.commands.restricted.Admin;
-import core.backend.anno.Critical;
+import core.commands.op.Admin;
+import core.backend.ex.Critical;
 
 import core.data.DonationManager;
 import core.data.PlayerMeta;

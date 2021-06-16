@@ -1,4 +1,4 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
  *  About: A command for ops to repair various naturally-generated structures
@@ -23,7 +23,7 @@ package core.commands.restricted;
 
 import core.events.ChunkManager;
 import core.backend.utils.Chunks;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

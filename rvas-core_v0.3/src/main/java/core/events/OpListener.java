@@ -29,15 +29,15 @@ package core.events;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 import core.frontend.ChatPrint;
 import core.frontend.GUI.DonorList;
 
 import core.data.PlayerMeta;
 import core.data.objects.Pair;
 import core.data.objects.Aliases;
-import core.commands.restricted.Speeds;
-import core.commands.restricted.Check;
+import core.commands.op.Speeds;
+import core.commands.op.Check;
 
 import java.util.*;
 import org.bukkit.Bukkit;

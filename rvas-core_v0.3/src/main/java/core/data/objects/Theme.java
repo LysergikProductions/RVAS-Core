@@ -1,7 +1,6 @@
 package core.data.objects;
 
 /* *
- *
  *  About: The data container that stores ChatColor objects and their theme-based ids
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)

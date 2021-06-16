@@ -1,4 +1,4 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
  *
@@ -27,7 +27,7 @@ import core.data.objects.Pair;
 import core.frontend.ChatPrint;
 import core.backend.utils.Util;
 import core.backend.utils.Chunks;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.*;
 

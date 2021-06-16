@@ -1,4 +1,4 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
  *  About: Allow ops to vanish and teleport at the same time.
@@ -24,7 +24,7 @@ package core.commands.restricted;
  * */
 
 import core.frontend.ChatPrint;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

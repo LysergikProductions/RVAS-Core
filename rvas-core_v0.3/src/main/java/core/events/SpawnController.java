@@ -27,7 +27,7 @@ import core.Main;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.tasks.Analytics;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.*;
 import java.util.logging.Level;

@@ -5,8 +5,8 @@ import core.backend.*;
 import core.data.objects.Pair;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
-import core.commands.restricted.Admin;
-import core.backend.anno.Critical;
+import core.commands.op.Admin;
+import core.backend.ex.Critical;
 
 import java.util.UUID;
 import java.util.Map;

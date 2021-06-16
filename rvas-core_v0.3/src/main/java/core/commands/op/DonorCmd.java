@@ -1,7 +1,6 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
- *
  *  About: Allow ops to read and modify Donor objects stored in memory
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -26,7 +25,7 @@ import core.frontend.ChatPrint;
 import core.frontend.GUI.DonorList;
 import core.data.DonationManager;
 import core.data.objects.Donor;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.UUID;
 import java.util.Arrays;
@@ -49,16 +48,13 @@ public class DonorCmd implements CommandExecutor {
         if (!(sender instanceof Player)) {
             System.out.println("TODO: sending donor info to console"); return false; }
 
+        boolean showNonOpItself = false;
         Player player = (Player)sender;
-        if (!player.isOp() || args[0].equalsIgnoreCase(player.getName())) {
 
-            Donor ofNonOpSender = DonationManager.getDonorByUUID(player.getUniqueId());
-            if (ofNonOpSender == null) player.sendMessage(ChatPrint.fail + "Sorry, you are not a donor, eh :/");
-            else
-            return true;
-        }
+        if (!player.isOp() && args.length == 0 && DonationManager.isDonor(player)) showNonOpItself = true;
+        else if (!player.isOp()) return false; // <- Only ops can use code after this point
 
-        if (args.length >= 3 && player.isOp()) {
+        if (args.length >= 3) {
 
             if (!args[1].equalsIgnoreCase("add") && !args[1].equalsIgnoreCase("tag") &&
                     !args[1].equalsIgnoreCase("motd") && !args[1].equalsIgnoreCase("set") &&
@@ -205,6 +201,7 @@ public class DonorCmd implements CommandExecutor {
                             DonationManager._validDonors.add(id);
                         }
                     }
+                    DonationManager.saveDonors();
 
                 default: return false;
             }
@@ -218,17 +215,20 @@ public class DonorCmd implements CommandExecutor {
         if (args.length == 0 && player.isOp()) {
             Player p = ((Player) sender);
 
-            DonorList.updateDonorGUI();
+            if (!DonorList.updateDonorGUI()) {
+                player.sendActionBar(ChatPrint.fail + "There are no donors yet :/"); return false; }
+
             p.openInventory(DonorList._donorGUI);
             return true;
         }
 
-        // There is just 1 argument
-        String thisSearch = args[0].trim();
+        // There is either just 1 argument or a non-op with zero arguments remaining
+        String thisSearch;
+        if (showNonOpItself) thisSearch = player.getName();
+        else thisSearch = args[0].trim();
 
-        UUID thisID = null;
         boolean isID = false;
-        Donor thisDonor;
+        UUID thisID = null; Donor thisDonor;
 
         try { thisID = UUID.fromString(thisSearch); isID = true;
         } catch (IllegalArgumentException ignore) { }

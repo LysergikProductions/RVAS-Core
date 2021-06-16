@@ -1,7 +1,6 @@
 package core.data;
 
 /* *
- *
  *  About: Reads, writes, and mutates lag-prisoner data
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -35,7 +34,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 import org.bukkit.entity.Player;
 
 @Critical

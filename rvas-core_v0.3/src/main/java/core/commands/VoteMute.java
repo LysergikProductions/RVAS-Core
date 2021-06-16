@@ -6,7 +6,7 @@ import core.tasks.Analytics;
 import core.data.PlayerMeta;
 import core.data.PrisonerManager;
 import core.data.PlayerMeta.MuteType;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.*;
 import org.bukkit.Bukkit;

@@ -29,8 +29,8 @@ import core.backend.Config;
 import core.backend.utils.*;
 import core.backend.ItemCheck;
 import core.frontend.ChatPrint;
-import core.commands.restricted.Repair;
-import core.backend.anno.Critical;
+import core.commands.op.Repair;
+import core.backend.ex.Critical;
 
 import java.util.*;
 import java.text.DecimalFormat;

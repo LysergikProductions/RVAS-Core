@@ -24,7 +24,7 @@ package core.backend.utils;
 
 import core.Main;
 import core.backend.Config;
-import core.commands.restricted.Admin;
+import core.commands.op.Admin;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;

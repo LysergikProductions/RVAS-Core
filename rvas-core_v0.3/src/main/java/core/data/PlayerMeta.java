@@ -1,6 +1,6 @@
 package core.data;
 
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 import core.backend.Config;
 import core.commands.Ignore;
 import core.events.ChatListener;

@@ -1,8 +1,8 @@
-package core.commands.restricted;
+package core.commands.op;
 
 import core.data.PlayerMeta;
 import core.data.PlayerMeta.MuteType;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

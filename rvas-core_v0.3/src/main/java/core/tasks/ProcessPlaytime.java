@@ -1,19 +1,18 @@
 package core.tasks;
 
 // Playtime processor (every 20 ticks)
-
 import core.Main;
+import core.data.PlayerMeta;
+import core.events.ChatListener;
+import core.commands.VoteMute;
+import core.commands.op.Speeds;
+
 import core.backend.Config;
 import core.backend.Scheduler;
 import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.LagProcessor;
-
-import core.data.PlayerMeta;
-import core.events.ChatListener;
-import core.commands.VoteMute;
-import core.commands.restricted.Speeds;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -74,13 +73,10 @@ public class ProcessPlaytime extends TimerTask {
 		}
 
 		timeTillReset = timeTillReset - sinceLast;
-
-		if (timeTillReset <= 0) {
-			timeTillReset = 3600000; lowTpsCounter = 0; }
-
+		if (timeTillReset <= 0) timeTillReset = 3600000; lowTpsCounter = 0;
 		lastTime = System.currentTimeMillis();
-		Scheduler.setLastTaskId("oneSecondTasks");
 
+		Scheduler.setLastTaskId("oneSecondTasks");
 		Speeds.updateGUI();
 	}
 }

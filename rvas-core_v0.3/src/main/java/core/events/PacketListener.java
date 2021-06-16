@@ -25,7 +25,7 @@ package core.events;
 import core.Main;
 import core.backend.Config;
 import core.backend.ItemCheck;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.List;
 import java.util.ArrayList;

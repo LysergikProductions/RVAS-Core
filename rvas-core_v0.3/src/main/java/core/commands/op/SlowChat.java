@@ -1,8 +1,8 @@
-package core.commands.restricted;
+package core.commands.op;
 
 /* *
- *  About: A command for ops to see current session data
- * 
+ *  About: A command for ops to toggle the configured per-user chat cool-down
+ *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
  *
@@ -18,47 +18,33 @@ package core.commands.restricted;
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- * 
+ *
  * */
 
-import core.frontend.ChatPrint;
-import core.backend.ServerMeta;
-import core.backend.utils.Util;
-
-import core.events.ChunkManager;
-import core.events.BlockListener;
-import core.events.SpawnController;
-
+import core.events.ChatListener;
 import org.bukkit.entity.Player;
-import net.md_5.bungee.api.chat.TextComponent;
+import core.backend.ex.Critical;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class Info implements CommandExecutor {
+@Critical
+public class SlowChat implements CommandExecutor {
+	static String msg;
 	
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
 		
 		Player player = (Player) sender;
 		if (!player.isOp()) return false;
-			
-		String humanUptime = Util.durationFormat(ServerMeta.getUptime());
 		
-		TextComponent head = new TextComponent("--- Session Stats ---");
-		head.setColor(ChatPrint.primary); head.setBold(true);
+		if (args.length == 0) ChatListener.slowChatEnabled = !ChatListener.slowChatEnabled;
 		
-		player.sendMessage(head.toLegacyText());
-		player.sendMessage("Uptime: " + humanUptime);
-		player.sendMessage("New Chunks: " + ChunkManager.newCount);
-		player.sendMessage("New Players: " + SpawnController.sessionNewPlayers);
-		player.sendMessage("Total Respawns: " + SpawnController.sessionTotalRespawns);
+		if (ChatListener.slowChatEnabled) msg = "enabled!"; else msg = "disabled!";
 		
-		player.sendMessage("Bedrock Placed: " + BlockListener.placedBedrockCounter);
-		player.sendMessage("Bedrock Broken: " + BlockListener.brokenBedrockCounter);
-		// TODO : add total BlockPlaceEvent's and BlockBreakEvent's
+		player.sendMessage("Slow chat is " + msg);
 		
 		return true;
 	}

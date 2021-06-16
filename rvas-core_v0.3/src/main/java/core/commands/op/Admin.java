@@ -1,4 +1,4 @@
-package core.commands.restricted;
+package core.commands.op;
 
 import core.backend.*;
 import core.backend.utils.Util;
@@ -13,7 +13,7 @@ import core.data.PlayerMeta;
 
 import core.tasks.Analytics;
 import core.events.SpeedLimiter;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.*;
 import java.io.IOException;

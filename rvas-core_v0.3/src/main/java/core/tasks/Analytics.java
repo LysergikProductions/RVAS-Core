@@ -25,7 +25,7 @@ import core.Main;
 import core.backend.Config;
 import core.data.FileManager;
 import core.backend.LagProcessor;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.io.*;
 import java.util.*;

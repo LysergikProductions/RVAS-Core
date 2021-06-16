@@ -45,7 +45,9 @@ public class DonorList {
         _donorGUI.setMaxStackSize(1);
     }
 
-    public static void updateDonorGUI() {
+    public static boolean updateDonorGUI() {
+        if (DonationManager._donorList.isEmpty()) return false;
+
         Bukkit.getScheduler().runTask(Main.instance, () -> {
             _donorGUI.clear();
 
@@ -91,5 +93,6 @@ public class DonorList {
                 _donorGUI.addItem(newHead);
             }
         });
+        return true;
     }
 }

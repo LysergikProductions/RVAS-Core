@@ -1,7 +1,6 @@
 package core.data.objects;
 
 /* *
- *
  *  About: Aliases for exceptionally long and / or complex
  *          minecraft commands and other blobs of code
  *

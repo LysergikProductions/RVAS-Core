@@ -23,13 +23,13 @@ package core;
 
 import core.data.*; import core.events.*;
 import core.tasks.*; import core.backend.*;
+import core.commands.*; import core.commands.op.*;
 import static core.data.ThemeManager.replaceDefaultJSON;
 
-import core.commands.*;
-import core.commands.restricted.*;
 import core.frontend.ChatPrint;
+import core.backend.cmd.DupeHand;
 import core.backend.ex.CoreException;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -50,7 +50,7 @@ public class Main extends JavaPlugin {
 	public static Plugin instance; public DiscordBot DiscordHandler;
 
 	public final static Logger console = Bukkit.getLogger();
-	public final static String version = "0.3.5"; public final static int build = 325;
+	public final static String version = "0.3.5"; public final static int build = 326;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -151,7 +151,7 @@ public class Main extends JavaPlugin {
 			initCommand("backup", Backup.class); initCommand("prison", Prison.class);
 			initCommand("repair", Repair.class); initCommand("slowchat", SlowChat.class);
 			initCommand("check", Check.class); initCommand("speeds", Speeds.class);
-			initCommand("restart", RestartCmd.class); initCommand("info", core.commands.restricted.Info.class);
+			initCommand("restart", RestartCmd.class); initCommand("info", core.commands.op.Info.class);
 			initCommand("server", ServerCmd.class); initCommand("help", Help.class);
 			initCommand("local", Local.class); initCommand("l", Local.class);
 			initCommand("stats", Stats.class); initCommand("sign", Sign.class);

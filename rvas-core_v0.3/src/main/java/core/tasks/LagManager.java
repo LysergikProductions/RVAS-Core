@@ -1,7 +1,6 @@
 package core.tasks;
 
 /* *
- * 
  *  About: Manages potentially lag-inducing situations in various ways
  *  	by clearing entities and checking entity counts
  * 
@@ -28,7 +27,7 @@ import core.frontend.ChatPrint;
 import core.backend.Config;
 import core.backend.utils.Util;
 import core.events.ConnectionController;
-import core.backend.anno.Critical;
+import core.backend.ex.Critical;
 
 import java.util.logging.Level;
 import net.md_5.bungee.api.chat.ClickEvent;
