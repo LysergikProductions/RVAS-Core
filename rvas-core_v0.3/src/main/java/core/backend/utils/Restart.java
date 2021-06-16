@@ -1,7 +1,6 @@
 package core.backend.utils;
 
 /* *
- *
  *  About: Safely restart the server with either a one minute or five minute countdown
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
@@ -31,12 +30,16 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 @SuppressWarnings("deprecation")
 public class Restart {
+
 	public static boolean restarting = false;
 
-	// slow == false by default
+	public static void restartWithException(Exception e) {
+		Main.console.log(Level.SEVERE, "Failed to enable a critical feature. Trying to restart..");
+		e.printStackTrace(); new Thread(() -> Bukkit.getServer().shutdown()).start(); }
+
 	public static void restart() { restart(false); }
 
-	// restart countdown
+	// threaded restart timer (slow/true = 5min, fast/false = 1min)
 	public static void restart(boolean slow) {
 		if (restarting) return;
 		else restarting = true;

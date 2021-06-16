@@ -22,25 +22,53 @@ package core.backend.ex;
  * */
 
 import java.lang.reflect.Method;
+import org.jetbrains.annotations.NotNull;
 
 public class CoreException extends Exception {
 
     private final Class<?> sourceClass;
     private final Method sourceMethod;
 
-    public CoreException(Class<?> clazz, Throwable thr) {
+    public CoreException(@NotNull Class<?> clazz, @NotNull Throwable thr) {
         super("Fatal exception in " + clazz.getName(), thr);
+
         this.setStackTrace(thr.getStackTrace());
-        this.sourceClass = clazz; this.sourceMethod = null;
+        this.sourceMethod = null;
+        this.sourceClass = clazz;
     }
 
-    public CoreException(Method sourceMethod, Throwable thr) {
-        super("Fatal exception in " + sourceMethod.getDeclaringClass().getName() + sourceMethod.getName(), thr);
+    public CoreException(@NotNull Method method, @NotNull Throwable thr) {
+        super("Fatal exception in " + method.getDeclaringClass().getName() + "." + method.getName(), thr);
+
         this.setStackTrace(thr.getStackTrace());
-        this.sourceMethod = sourceMethod;
-        this.sourceClass = this.sourceMethod.getDeclaringClass();
+        this.sourceMethod = method;
+        this.sourceClass = method.getDeclaringClass(); // <- https://stackoverflow.com/a/68006233/12916761
     }
 
     public Class<?> getSourceClass() { return sourceClass; }
     public Method getSourceMethod() { return sourceMethod; }
+
+    public static boolean isFatalCoreException(Exception exception) {
+        if (exception.getClass() != CoreException.class) return false;
+
+        CoreException ce = (CoreException) exception;
+        Class<?> source = ce.getSourceClass();
+
+        if (source.isAnnotationPresent(Critical.class))
+            return source.getAnnotation(Critical.class).isFatal();
+
+        else return false;
+    }
+
+    public static boolean isPhoenixException(Exception exception) {
+        if (exception.getClass() != CoreException.class) return false;
+
+        CoreException ce = (CoreException) exception;
+        Method method = ce.getSourceMethod();
+
+        if (method.isAnnotationPresent(Phoenix.class))
+            return method.getAnnotation(Phoenix.class).doRestart();
+
+        else return false;
+    }
 }

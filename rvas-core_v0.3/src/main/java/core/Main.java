@@ -29,13 +29,13 @@ import static core.data.ThemeManager.replaceDefaultJSON;
 import core.backend.ex.*;
 import core.frontend.ChatPrint;
 import core.backend.cmd.DupeHand;
+import core.backend.utils.Restart;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.reflect.Method;
 
 import org.bukkit.*;
 import org.bukkit.World.Environment;
@@ -50,7 +50,7 @@ public class Main extends JavaPlugin {
 	public static Plugin instance; public DiscordBot DiscordHandler;
 
 	public final static Logger console = Bukkit.getLogger();
-	public final static String version = "0.3.5"; public final static int build = 327;
+	public final static String version = "0.3.5"; public final static int build = 328;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
@@ -64,28 +64,10 @@ public class Main extends JavaPlugin {
 		console.log(Level.SEVERE, "Failed to enable a critical feature. Shutting down server..");
 		e.printStackTrace(); getServer().shutdown(); }
 
-	private boolean isFatal(Exception exception) {
-		if (exception.getClass() != CoreException.class) return false;
-
-		CoreException ce = (CoreException) exception;
-		Class<?> source = ce.getSourceClass();
-
-		if (source.isAnnotationPresent(Critical.class))
-			return source.getAnnotation(Critical.class).isFatal();
-
-		else return false;
-	}
-
-	private boolean isPhoenix(Exception exception) {
-		if (exception.getClass() != CoreException.class) return false;
-
-		CoreException ce = (CoreException) exception;
-		Method method = ce.getSourceMethod();
-
-		if (method.isAnnotationPresent(Phoenix.class))
-			return method.getAnnotation(Phoenix.class).doRestart();
-
-		else return false;
+	private void parseException(Exception e) {
+		if (CoreException.isFatalCoreException(e)) shutdownWithException(e);
+		else if (CoreException.isPhoenixException(e)) { Restart.restartWithException(e); }
+		else e.printStackTrace();
 	}
 
 	@Override
@@ -116,10 +98,10 @@ public class Main extends JavaPlugin {
 
 		// LOADING DATA FROM STORAGE \\
 		try { FileManager.setup();
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		} catch (Exception e) { parseException(e); }
 
 		try { ThemeManager.load();
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) { parseException(e); }
 
 		try { ChatPrint.init();
 		} catch (Exception e) {
@@ -143,9 +125,7 @@ public class Main extends JavaPlugin {
 			PlayerMeta.loadMuted();
 			PrisonerManager.loadPrisoners();
 
-		} catch (Exception e) {
-			if (isFatal(e)) shutdownWithException(e); else e.printStackTrace();
-		}
+		} catch (Exception e) { parseException(e); }
 
 		System.out.println();
 		System.out.println("[core.main] _________________");
@@ -173,7 +153,7 @@ public class Main extends JavaPlugin {
 			initCommand("afk", AFK.class); initCommand("last", Last.class);
 			initCommand("fig", ConfigCmd.class); initCommand("donate", Donate.class);
 
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		} catch (Exception e) { parseException(e); }
 
 		System.out.println();
 		System.out.println("[core.main] _______________________");
@@ -187,7 +167,7 @@ public class Main extends JavaPlugin {
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new AutoAnnouncer(), 15000L, 15000L);
 
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		} catch (Exception e) { parseException(e); }
 
 		System.out.println();
 		System.out.println("[core.main] _______________________");
@@ -209,7 +189,7 @@ public class Main extends JavaPlugin {
 			core_pm.registerEvents(new OpListener(), this);
 			core_pm.registerEvents(new Check(), this);
 
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		} catch (Exception e) { parseException(e); }
 
 		// INIT PROTOCOL_LIB METHODS \\
 		try {
@@ -217,7 +197,7 @@ public class Main extends JavaPlugin {
 			PacketListener.S2C_MapChunkPackets();
 			PacketListener.S2C_WitherSpawnSound();
 
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		} catch (Exception e) { parseException(e); }
 
 		// OTHER STUFF \\
 		System.out.println();
@@ -241,14 +221,14 @@ public class Main extends JavaPlugin {
 
 		// Enable speed limit
 		try { SpeedLimiter.scheduleSlTask();
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		} catch (Exception e) { parseException(e); }
 		
 		// Enable discord notifications for this instance
 		try {
 			DiscordHandler = new DiscordBot();
 			getServer().getPluginManager().registerEvents(DiscordHandler, this);
 
-		} catch (Exception e) { if (isFatal(e)) shutdownWithException(e); else e.printStackTrace(); }
+		} catch (Exception e) { parseException(e); }
 
 
 		// Load chunk at 0,0 to test for world age
