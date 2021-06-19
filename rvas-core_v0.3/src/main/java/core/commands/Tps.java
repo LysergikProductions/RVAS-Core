@@ -3,7 +3,7 @@ package core.commands;
 import core.data.PlayerMeta;
 import core.tasks.Analytics;
 import core.frontend.ChatPrint;
-import core.backend.LagProcessor;
+import core.tasks.TickProcessor;
 import core.backend.ex.Critical;
 
 import java.text.DecimalFormat;
@@ -25,7 +25,7 @@ public class Tps implements CommandExecutor {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		if (!PlayerMeta.isAdmin((Player)sender)) Analytics.tps_cmd++;
 
-		double tps = LagProcessor.getTPS();
+		double tps = TickProcessor.getTPS();
 		if (tps > 20) tps = 20;
 
 		if (!new IntRange(1, 20).containsInteger(tps)) {

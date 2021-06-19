@@ -6,6 +6,7 @@ import java.util.*;
 import java.text.DecimalFormat;
 import java.util.function.Consumer;
 
+import core.tasks.TickProcessor;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.DiscordClientBuilder;
@@ -67,7 +68,7 @@ public class DiscordBot implements Listener {
 													.setAuthor("HappyDroid Bot", "https://avas.cc/", "https://avas.cc/favicon.png")
 									 .setColor(Color.RUBY)
 													.addField("Server Info",
-															"TPS is currently " + new DecimalFormat("0.00").format(LagProcessor.getTPS()),
+															"TPS is currently " + new DecimalFormat("0.00").format(TickProcessor.getTPS()),
 															false)
 													.addField("\u200B", "\u200B", false)
 													.addField("Current Player Count",

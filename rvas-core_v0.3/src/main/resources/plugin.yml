@@ -83,3 +83,5 @@ commands:
     description: set players as donors and retrieve donor info
   donate:
     description: give users the link to donate
+  sl:
+    description: toggles a constant action bar with the live speed limit

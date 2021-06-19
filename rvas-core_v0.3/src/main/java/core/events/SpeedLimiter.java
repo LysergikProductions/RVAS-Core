@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import core.tasks.TickProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -30,17 +31,17 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class SpeedLimiter implements Listener {
 
 	private static long lastCheck = -1;
-	private static final int GRACE_PERIOD = 5;
+	private final static int GRACE_PERIOD = 5;
 
-	private static HashMap<UUID, Location> locs = new HashMap<>();
-	private static HashMap<String, Double> speeds = new HashMap<>();
-	private static HashMap<UUID, Integer> gracePeriod = new HashMap<>();
-	private static List<UUID> tped = new ArrayList<>();
+	private final static HashMap<UUID, Location> locs = new HashMap<>();
+	private final static HashMap<String, Double> speeds = new HashMap<>();
+	private final static HashMap<UUID, Integer> gracePeriod = new HashMap<>();
+	private final static List<UUID> tped = new ArrayList<>();
 
 	public static int totalKicks = 0;
 	public static double currentSpeedLimit = 96;
 
-	// Speed Monitor
+	// Monitor and manage players speeds
 	public static void scheduleSlTask() {
 		
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.instance, () -> {
@@ -69,7 +70,7 @@ public class SpeedLimiter implements Listener {
 			double duration = (now - lastCheck) / 1000.0;
 			lastCheck = now;
 
-			double tps = LagProcessor.getTPS();
+			double tps = TickProcessor.getTPS();
 			
 			if (tps >= 17.0) speed_limit = tier1;
 			else if (tps < 17.0 && tps >= 14.0) speed_limit = tier2;

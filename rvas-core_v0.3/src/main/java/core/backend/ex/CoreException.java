@@ -4,7 +4,7 @@ package core.backend.ex;
  *  About: Custom Exception used in tandem with the 'Critical' and 'Phoenix' annotations
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
- *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *  Copyright (C) 2021 Lysergik Productions (https://github.com/LysergikProductions)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as

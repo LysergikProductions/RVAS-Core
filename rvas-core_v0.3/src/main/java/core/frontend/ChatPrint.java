@@ -48,9 +48,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 public class ChatPrint {
 
 	public final static TextComponent warn = new TextComponent(
-			org.bukkit.ChatColor.RED + "WARN "); static {
-		warn.setBold(true);
-	}
+			org.bukkit.ChatColor.RED + "WARN "); static { warn.setBold(true); }
 
 	public static ChatColor primary, secondary, tertiary, clear, faded,
 			succeed, fail, help_title, desc, cmd, controls;
@@ -172,11 +170,8 @@ public class ChatPrint {
 		String setTimeZone = receiverSettings.timezone.trim();
 		if (!setTimeZone.contains("/")) setTimeZone = setTimeZone.toUpperCase();
 
-		try {
-			if (!setTimeZone.equals("")) sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
-		} catch (Exception e) {
-			if (Config.debug) System.out.println(e.getMessage());
-		}
+		try { if (!setTimeZone.equals("")) sdf.setTimeZone(TimeZone.getTimeZone(setTimeZone));
+		} catch (Exception e) { if (Config.debug) System.out.println(e.getMessage()); }
 
 		String firstPlayed = sdf.format(date);
 		String lastPlayed = sdf.format(new Date(target.getLastSeen()));
@@ -233,9 +228,8 @@ public class ChatPrint {
 		
 		title.setColor(ChatColor.YELLOW); title.setBold(true);
 		
-		ArrayList<TextComponent> statsLines; {
-			statsLines = new ArrayList<>(Arrays.asList(title, joined, lastSeen, rank, playtime));
-		}
+		ArrayList<TextComponent> statsLines = new ArrayList<>(
+				Arrays.asList(title, joined, lastSeen, rank, playtime));
 
 		SettingsContainer targetSettings = SettingsManager.getSettings(target);
 		if (targetSettings.show_PVPstats) {

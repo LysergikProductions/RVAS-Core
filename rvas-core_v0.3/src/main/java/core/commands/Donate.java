@@ -26,7 +26,7 @@ public class Donate implements CommandExecutor {
     static String link1_id = Config.getValue("id.donation.1").trim();
     static String link2_id = Config.getValue("id.donation.2").trim();
 
-    static {
+    static { // Config.getValue() returns "false" when failing to retrieve a value
         if (link1_url.equals("false") || link1_url.isEmpty()) link1_url = default_link;
         if (link2_url.equals("false") || link2_url.isEmpty()) link2_url = default_link;
         if (link1_id.equals("false") || link1_id.isEmpty()) link1_id = "crypto";
@@ -58,8 +58,8 @@ public class Donate implements CommandExecutor {
         msg3.setBold(true); msg3.setItalic(true); msg3.setUnderlined(true);
 
         // Print messages
-        sender.sendMessage(ChatPrint.warn + "Please DM " + Config.getValue("admin") +
-                " your IGN and UUID before donating to get your perks!");
+        sender.sendMessage(new TextComponent(ChatPrint.warn + "Please DM " + Config.getValue("admin") +
+                " your IGN and UUID before donating to get your perks!").toLegacyText());
 
         sender.sendMessage(msg1); sender.sendMessage(msg2);
         if (!link1_url.equals(link2_url)) sender.sendMessage(msg3);

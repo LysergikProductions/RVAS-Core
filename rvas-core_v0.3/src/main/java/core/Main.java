@@ -1,7 +1,7 @@
 package core;
 
 /* *
- *  About: Main class for RVAS-Core v0.3.4, Paper-Spigot #446+
+ *  About: Main class for RVAS-Core v0.3.6, Paper-Spigot #446+
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
  *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
@@ -50,25 +50,28 @@ public class Main extends JavaPlugin {
 	public static Plugin instance; public DiscordBot DiscordHandler;
 
 	public final static Logger console = Bukkit.getLogger();
-	public final static String version = "0.3.5"; public final static int build = 328;
+	public final static String version = "0.3.6"; public final static int build = 330;
 
 	public static long worldAge_atStart;
 	public static boolean isNewWorld, isOfficialVersion;
 	public static OfflinePlayer Top = null;
 
 	private void initCommand(String label, Class<?> clazz) throws InstantiationException, IllegalAccessException {
-		if (Config.debug) System.out.println("/" + label); Objects.requireNonNull(
-				this.getCommand(label)).setExecutor((CommandExecutor) clazz.newInstance()); }
 
-	private void shutdownWithException(Exception e) {
-		console.log(Level.SEVERE, "Failed to enable a critical feature. Shutting down server..");
+		if (Config.debug) System.out.println("/" + label);
+		Objects.requireNonNull(this.getCommand(label)).setExecutor((CommandExecutor) clazz.newInstance()); }
+
+	private void shutdownWithException(CoreException e) {
+
+		console.log(Level.SEVERE, "Failed to instantiate a critical feature (" + e.getSourceClass() + ")");
+		console.log(Level.SEVERE, "Shutting down server..");
 		e.printStackTrace(); getServer().shutdown(); }
 
 	private void parseException(Exception e) {
-		if (CoreException.isFatalCoreException(e)) shutdownWithException(e);
-		else if (CoreException.isPhoenixException(e)) { Restart.restartWithException(e); }
-		else e.printStackTrace();
-	}
+
+		if (CoreException.isFatalCoreException(e)) shutdownWithException((CoreException) e);
+		else if (CoreException.isPhoenixException(e)) Restart.restartWithException(e);
+		else e.printStackTrace(); }
 
 	@Override
 	public void onEnable() {
@@ -143,7 +146,7 @@ public class Main extends JavaPlugin {
 			initCommand("backup", Backup.class); initCommand("prison", Prison.class);
 			initCommand("repair", Repair.class); initCommand("slowchat", SlowChat.class);
 			initCommand("check", Check.class); initCommand("speeds", Speeds.class);
-			initCommand("restart", RestartCmd.class); initCommand("info", core.commands.op.Info.class);
+			initCommand("restart", RestartCmd.class); initCommand("sl", SLCmd.class);
 			initCommand("server", ServerCmd.class); initCommand("help", Help.class);
 			initCommand("local", Local.class); initCommand("l", Local.class);
 			initCommand("stats", Stats.class); initCommand("sign", Sign.class);
@@ -152,6 +155,7 @@ public class Main extends JavaPlugin {
 			initCommand("global", Global.class); initCommand("ignore", Ignore.class);
 			initCommand("afk", AFK.class); initCommand("last", Last.class);
 			initCommand("fig", ConfigCmd.class); initCommand("donate", Donate.class);
+			initCommand("info", core.commands.op.Info.class);
 
 		} catch (Exception e) { parseException(e); }
 
@@ -161,7 +165,7 @@ public class Main extends JavaPlugin {
 
 		try {
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new OnTick(), 1L, 1L);
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagProcessor(), 1L, 1L);
+			getServer().getScheduler().scheduleSyncRepeatingTask(this, new TickProcessor(), 1L, 1L);
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new ProcessPlaytime(), 20L, 20L);
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new LagManager(), 1200L, 1200L);
 			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Analytics(), 6000L, 6000L);
@@ -174,6 +178,7 @@ public class Main extends JavaPlugin {
 		System.out.println("[core.main] Loading event listeners");
 
 		PluginManager core_pm = getServer().getPluginManager();
+		System.out.println("[core.main] initializing Core event listeners..");
 
 		try {
 			core_pm.registerEvents(new PVP(), this);
@@ -192,6 +197,8 @@ public class Main extends JavaPlugin {
 		} catch (Exception e) { parseException(e); }
 
 		// INIT PROTOCOL_LIB METHODS \\
+		System.out.println("[core.main] initializing ProtocolLib packet listeners..");
+
 		try {
 			PacketListener.C2S_AnimationPackets();
 			PacketListener.S2C_MapChunkPackets();

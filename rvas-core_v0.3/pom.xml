@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>core</groupId>
     <artifactId>rvas-core</artifactId>
-    <version>0.3.5</version>
+    <version>0.3.6</version>
     <name>rvas</name>
     <description>paper-plugin</description>
 
@@ -75,7 +75,7 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.3.5-328</finalName>
+        <finalName>rvas-core-0.3.6-330</finalName>
         <plugins>
 
             <plugin>

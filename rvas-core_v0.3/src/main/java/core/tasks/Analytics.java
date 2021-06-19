@@ -24,7 +24,6 @@ package core.tasks;
 import core.Main;
 import core.backend.Config;
 import core.data.FileManager;
-import core.backend.LagProcessor;
 import core.backend.ex.Critical;
 
 import java.io.*;
@@ -127,7 +126,7 @@ public class Analytics extends TimerTask {
 		int conPlayers = Bukkit.getOnlinePlayers().size();
 		
 		String performanceLine = toPerformanceCSV(
-				current_date, LagProcessor.getTPS(),
+				current_date, TickProcessor.getTPS(),
 				conPlayers, new_players, total_joins,
 				new_chunks, loaded_chunks, speed_warns, speed_kicks,
 				wither_spawns, failed_wither_spawns, removed_skulls,

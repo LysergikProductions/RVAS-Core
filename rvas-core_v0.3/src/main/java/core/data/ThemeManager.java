@@ -43,15 +43,16 @@ public class ThemeManager {
         if (thisFile.exists()) {
             try { currentTheme = getThemeFromJSON(thisFile);
             } catch (Exception e) {
-                currentTheme.setToInternalDefaults();
                 Main.console.log(Level.WARNING, "getThemeFromJSON Exception");
+
+                currentTheme = new Theme(); currentTheme.setToInternalDefaults();
                 throw new IOException(e.getMessage());
             }
         } else {
             Main.console.log(Level.WARNING, "Failed to load the specified theme :(");
             Main.console.log(Level.WARNING, "Creating the default theme from scratch..");
 
-            currentTheme.setToInternalDefaults();
+            currentTheme = new Theme(); currentTheme.setToInternalDefaults();
         }
     }
 

@@ -2,7 +2,7 @@ package core.commands;
 
 import core.frontend.ChatPrint;
 import core.backend.Config;
-import core.backend.LagProcessor;
+import core.tasks.TickProcessor;
 import core.backend.ServerMeta;
 import core.backend.utils.Restart;
 import core.backend.utils.Util;
@@ -49,7 +49,7 @@ public class ServerCmd implements CommandExecutor {
 		double tier5 = Double.parseDouble(Config.getValue("speedlimit.tier_five"));
 		
 		final double speed_limit;
-		double tps = LagProcessor.getTPS();
+		double tps = TickProcessor.getTPS();
 		
 		if (tps >= 16.0) speed_limit = tier1;
 		else if (tps < 16.0 && tps >= 14.0) speed_limit = tier2;
@@ -68,7 +68,7 @@ public class ServerCmd implements CommandExecutor {
 		TextComponent players_a = new TextComponent("Connected Players: ");
 		TextComponent players_b = new TextComponent("" + Bukkit.getOnlinePlayers().size());
 		TextComponent tps_a = new TextComponent("Current TPS: ");
-		TextComponent tps_b = new TextComponent(new DecimalFormat("0.00").format(LagProcessor.getTPS()));
+		TextComponent tps_b = new TextComponent(new DecimalFormat("0.00").format(TickProcessor.getTPS()));
 		TextComponent slimit_a = new TextComponent("Current Speed Limit: ");
 		TextComponent slimit_b = new TextComponent(speed_limit + " bps");
 		TextComponent skicks_a = new TextComponent("Speed Limit Kicks: ");

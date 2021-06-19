@@ -5,7 +5,7 @@ package core.commands.op;
  * 		objects when they have a valid donation key
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
- *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *  Copyright (C) 2021 Lysergik Productions (https://github.com/LysergikProductions)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
@@ -24,6 +24,7 @@ package core.commands.op;
 
 import core.backend.Config;
 import core.frontend.ChatPrint;
+import core.data.objects.Donor;
 import core.data.DonationManager;
 import core.backend.ex.Critical;
 
@@ -49,10 +50,16 @@ public class SetDonorCmd implements CommandExecutor {
 
 		int argCount = args.length;
 		if (argCount == 2 && args[1].equals("DELETE")) {
+			try {
+				Donor d = DonationManager.getDonorByName(args[0]);
+				DonationManager._donorList.remove(d);
 
-			try { DonationManager._donorList.remove(DonationManager.getDonorByName(args[0]));
-			} catch (Exception ignore) { sender.sendMessage(ChatPrint.fail + "Failed to remove this donor."); }
-			return true;
+				if (!DonationManager._donorList.contains(d)) { sender.sendMessage(
+						ChatPrint.secondary + "Succesfully deleted " + args[0] + " from the donor list"); }
+				return true;
+
+			} catch (Exception ignore) { sender.sendMessage(ChatPrint.fail + "Failed to remove this donor.");
+				return false; }
 
 		} else if (argCount != 3) {
 			sender.sendMessage(ChatPrint.fail + "Invalid syntax. Syntax: /setdonator [name] [key] [$amount]");

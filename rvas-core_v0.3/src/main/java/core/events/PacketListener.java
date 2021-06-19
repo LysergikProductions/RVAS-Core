@@ -25,6 +25,7 @@ package core.events;
 import core.Main;
 import core.backend.Config;
 import core.backend.ItemCheck;
+import core.backend.ex.CoreException;
 import core.backend.ex.Critical;
 
 import java.util.List;
@@ -49,98 +50,105 @@ public class PacketListener implements Listener {
 	public static ProtocolManager PacketManager = ProtocolLibrary.getProtocolManager();
 
 	// prevent use of illegal weapons, tools, and other items
-	public static void C2S_AnimationPackets() {
+	public static void C2S_AnimationPackets() throws NoSuchMethodException, CoreException {
 
-		PacketManager.addPacketListener(new PacketAdapter(
-				Main.instance, ListenerPriority.LOW, PacketType.Play.Client.ARM_ANIMATION) {
+		try {
+			PacketManager.addPacketListener(new PacketAdapter(
+					Main.instance, ListenerPriority.LOW, PacketType.Play.Client.ARM_ANIMATION) {
 
-			@Override
-			public void onPacketReceiving(PacketEvent event) {
-				Player sender = event.getPlayer();
+				@Override
+				public void onPacketReceiving(PacketEvent event) {
+					Player sender = event.getPlayer();
+					if (!sender.isOnline()) return;
 
-				ItemStack inHand;
-				try { inHand = sender.getInventory().getItem(sender.getInventory().getHeldItemSlot());
-				} catch (Exception e) { inHand = null; }
-
-				try {
-					if (inHand != null) {
-						if (Config.debug && Config.verbose) Main.console.log(Level.INFO, "Checking item for legality..");
-						ItemCheck.IllegalCheck(inHand, "Animation Packet", sender);
-					}
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
+					ItemStack inHand = sender.getInventory().getItem(sender.getInventory().getHeldItemSlot());
+					try {
+						if (inHand != null) {
+							if (Config.debug && Config.verbose) Main.console.log(Level.INFO, "Checking item for legality..");
+							ItemCheck.IllegalCheck(inHand, "Animation Packet", sender);
+						}
+					} catch (Exception e) { System.out.println(e.getMessage()); }
 				}
-			}
-		});
+			});
+		} catch (Exception e) {
+			throw new CoreException(PacketListener.class.getDeclaredMethod("C2S_AnimationPackets"), e);
+		}
 	}
 
 	// listen for PacketPLayOutMapChunk packets to prevent chunk-bans
-	public static void S2C_MapChunkPackets() {
+	public static void S2C_MapChunkPackets() throws NoSuchMethodException, CoreException {
+		try {
+			PacketManager.addPacketListener(new PacketAdapter(
+					Main.instance, ListenerPriority.LOWEST, PacketType.Play.Server.MAP_CHUNK) {
 
-		PacketManager.addPacketListener(new PacketAdapter(
-				Main.instance, ListenerPriority.LOWEST, PacketType.Play.Server.MAP_CHUNK) {
+				@Override
+				public void onPacketSending(PacketEvent event) {
+					if (event.isCancelled()) return;
 
-			@Override
-			public void onPacketSending(PacketEvent event) {
-				if (event.isCancelled()) return;
+					PacketContainer thisPacket = event.getPacket();
+					World thisWorld = event.getPlayer().getWorld();
 
-				PacketContainer thisPacket = event.getPacket();
-				World thisWorld = event.getPlayer().getWorld();
+					int chunk_x = thisPacket.getIntegers().read(0);
+					int chunk_z = thisPacket.getIntegers().read(1);
 
-				int chunk_x = thisPacket.getIntegers().read(0);
-				int chunk_z = thisPacket.getIntegers().read(1);
+					List<NbtBase<?>> blockEntityData = thisPacket.getListNbtModifier().read(0);
+					int thisSize = blockEntityData.size();
 
-				List<NbtBase<?>> blockEntityData = thisPacket.getListNbtModifier().read(0);
-				int thisSize = blockEntityData.size();
+					// limit BE list size in Map_Chunk packets
+					if (thisSize > ChunkManager.TE_limiter) {
 
-				// limit BE list size in Map_Chunk packets
-				if (thisSize > ChunkManager.TE_limiter) {
+						event.setCancelled(true); // <- always protect players from these packets
+						Main.console.log(Level.WARNING,
+								"Packet MAP_CHUNK contains " + thisSize + " entries in getListNbtModifier().read(0)");
 
-					event.setCancelled(true); // <- always protect players from these packets
-					Main.console.log(Level.WARNING,
-							"Packet MAP_CHUNK contains " + thisSize + " entries in getListNbtModifier().read(0)");
+						if (Config.getValue("remove.chunk_bans").equals("true")) {
+							if (Config.debug) Main.console.log(Level.INFO, "Calling ChunkManager.removeChunkBan()..");
 
-					if (Config.getValue("remove.chunk_bans").equals("true")) {
-						if (Config.debug) Main.console.log(Level.INFO, "Calling ChunkManager.removeChunkBan()..");
+							// count the block entities and remove any discovered chunk bans
+							Chunk thisChunk = thisWorld.getChunkAt(chunk_x, chunk_z);
+							ChunkManager.removeChunkBan(thisChunk);
 
-						// count the block entities and remove any discovered chunk bans
-						Chunk thisChunk = thisWorld.getChunkAt(chunk_x, chunk_z);
-						ChunkManager.removeChunkBan(thisChunk);
+							// save and reload the chunk
+							thisChunk.unload(true); int i = 0;
+							while (!thisChunk.isLoaded()) {
+								thisChunk.load(); i++;
+								if (i > 2) break;
+							}
 
-						// save and reload the chunk
-						thisChunk.unload(true); int i = 0;
-						while (!thisChunk.isLoaded()) {
-							thisChunk.load(); i++;
-							if (i > 2) break;
+						} else { // truncate the list and fix the packet
+							List<NbtBase<?>> truncatedList = new ArrayList<>(
+									blockEntityData.subList(0, ChunkManager.TE_limiter));
+
+							thisPacket.getListNbtModifier().write(0, truncatedList);
+							event.setCancelled(false);
 						}
-
-					} else { // truncate the list and fix the packet
-						List<NbtBase<?>> truncatedList = new ArrayList<>(
-								blockEntityData.subList(0, ChunkManager.TE_limiter));
-
-						thisPacket.getListNbtModifier().write(0, truncatedList);
-						event.setCancelled(false);
 					}
 				}
-			}
-		});
+			});
+		} catch (Exception e) {
+			throw new CoreException(PacketListener.class.getDeclaredMethod("S2C_MapChunkPackets"), e);
+		}
 	}
 
 	// Disable global wither-spawn sound
-	public static void S2C_WitherSpawnSound() {
-		PacketManager.addPacketListener(new PacketAdapter(
-				Main.instance, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
+	public static void S2C_WitherSpawnSound() throws NoSuchMethodException, CoreException {
+		try {
+			PacketManager.addPacketListener(new PacketAdapter(
+					Main.instance, ListenerPriority.HIGHEST, PacketType.Play.Server.WORLD_EVENT) {
 
-			@Override
-			public void onPacketSending(PacketEvent event) {
-				PacketContainer packetContainer = event.getPacket();
+				@Override
+				public void onPacketSending(PacketEvent event) {
+					PacketContainer packetContainer = event.getPacket();
 
-				if (Config.getValue("global.sound.no_wither").equals("true")) {
-					if (packetContainer.getIntegers().read(0) == 1023) {
-						packetContainer.getBooleans().write(0, false);
+					if (Config.getValue("global.sound.no_wither").equals("true")) {
+						if (packetContainer.getIntegers().read(0) == 1023) {
+							packetContainer.getBooleans().write(0, false);
+						}
 					}
 				}
-			}
-		});
+			});
+		} catch (Exception e) {
+			throw new CoreException(PacketListener.class.getDeclaredMethod("S2C_WitherSpawnSound"), e);
+		}
 	}
 }

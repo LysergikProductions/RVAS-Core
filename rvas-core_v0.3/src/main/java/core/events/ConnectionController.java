@@ -6,13 +6,14 @@ import core.backend.utils.Util;
 import core.frontend.ChatPrint;
 import core.commands.Kit;
 import core.commands.op.Admin;
-import core.backend.ex.Critical;
+import core.tasks.TickProcessor;
 
 import core.data.DonationManager;
 import core.data.PlayerMeta;
 import core.data.SettingsManager;
 import core.data.objects.Donor;
 import core.data.objects.SettingsContainer;
+import core.backend.ex.Critical;
 
 import java.util.*;
 import java.io.IOException;
@@ -230,7 +231,7 @@ public class ConnectionController implements Listener {
 	public void onPing(ServerListPingEvent e) {
 
 		int rnd = r.nextInt(allMotds.size());
-		String tps = new DecimalFormat("0.00").format(LagProcessor.getTPS());
+		String tps = new DecimalFormat("0.00").format(TickProcessor.getTPS());
 
 		final String msg1 = "\u00A73\u00A7lRVA-Survival 1.16.5 \u00A7r\u00A77 |  TPS: " + tps;
 		final String msg2 = "\u00A7r\u00A76\u00A7o" + allMotds.get(rnd);

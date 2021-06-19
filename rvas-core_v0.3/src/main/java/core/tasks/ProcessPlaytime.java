@@ -11,11 +11,12 @@ import core.backend.Config;
 import core.backend.Scheduler;
 import core.backend.ServerMeta;
 import core.backend.utils.Restart;
-import core.backend.LagProcessor;
 import core.backend.ex.Critical;
 
 import java.util.TimerTask;
 import java.util.logging.Level;
+
+import core.frontend.GUI.SL;
 import org.bukkit.Bukkit;
 
 @Critical
@@ -29,7 +30,7 @@ public class ProcessPlaytime extends TimerTask {
 
 	@Override
 	public void run() {
-		double difference; double currentTPS = LagProcessor.getTPS();
+		double difference; double currentTPS = TickProcessor.getTPS();
 
 		if (lastTPS == 0.00) difference = 0.00;
 		else difference = lastTPS - currentTPS;
@@ -44,8 +45,7 @@ public class ProcessPlaytime extends TimerTask {
 		// get time since last tick in milliseconds
 		if (lastTime == 0) {
 			lastTime = System.currentTimeMillis();
-			lastHour = System.currentTimeMillis();
-			return;
+			lastHour = lastTime; return;
 		}
 		
 		long sinceLast = System.currentTimeMillis() - lastTime;		
@@ -77,6 +77,6 @@ public class ProcessPlaytime extends TimerTask {
 		lastTime = System.currentTimeMillis();
 
 		Scheduler.setLastTaskId("oneSecondTasks");
-		Speeds.updateGUI();
+		Speeds.updateGUI(); SL.dispSL();
 	}
 }
