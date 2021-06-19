@@ -4,7 +4,7 @@ package core.data;
  *  About: Reads, writes, and mutates Donor objects
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
- *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *  Copyright (C) 2021 Lysergik Productions (https://github.com/LysergikProductions)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
@@ -53,17 +53,20 @@ public class DonationManager {
     public static boolean setDonor(Player thisPlayer, String thisKey, Double donationSum) throws IOException {
 
         if (thisPlayer == null || thisKey == null || donationSum == null) return false;
-        if (isInvalidKey(thisKey)) Main.console.log(Level.WARNING, "Tried setting invalid donor key!");
+        if (isInvalidKey(thisKey)) { Main.console.log(Level.WARNING, "Tried setting invalid donor key!"); return false; }
 
         UUID thisID = thisPlayer.getUniqueId();
         if (isDonor(thisPlayer)) _donorList.remove(getDonorByUUID(thisID));
         else _donorList.add(new Donor(thisPlayer.getUniqueId(), thisKey, donationSum));
 
-        Donor newDonor = getDonorByUUID(thisID);
+        Donor newDonor = null;
+        if (isDonor(thisPlayer)) newDonor = getDonorByUUID(thisID);
+
         if (newDonor != null) {
             newDonor.updateAboveThreshold();
             if (newDonor.isAboveThreshold()) _validDonors.add(thisID); }
 
+        DonationManager.UsedDonorCodes.add(thisKey);
         saveDonors(); return true;
     }
 
@@ -192,7 +195,7 @@ public class DonationManager {
             else if (i > 14 && c == '-') return true;
         }
         if (Config.debug) Main.console.log(Level.INFO, "Key format is valid!");
-        return false;
+        return UsedDonorCodes.contains(thisKey);
     }
 
     public static boolean isRestrictedIGN(String ign) {

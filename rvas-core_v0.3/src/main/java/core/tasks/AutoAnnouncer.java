@@ -25,13 +25,13 @@ package core.tasks;
 import core.backend.Config;
 import core.backend.Scheduler;
 import core.frontend.ChatPrint;
-import core.commands.op.Check;
 import core.backend.ex.Critical;
 
 import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import core.frontend.GUI.LagList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -99,7 +99,7 @@ public class AutoAnnouncer extends TimerTask {
 			Bukkit.spigot().broadcast(new TextComponent(ChatPrint.primary.toString() + tryMsg));
 		}
 		Scheduler.setLastTaskId("autoAnnounce");
-		Check.updateGUI();
+		LagList.updateGUI();
 	}
 
 	public static boolean init() {

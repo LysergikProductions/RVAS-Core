@@ -1,5 +1,26 @@
 package core.frontend.GUI;
 
+/* *
+ *  About: Action Message GUI element for displaying the current speed limit
+ *
+ *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
+ *  Copyright (C) 2021 Lysergik Productions (https://github.com/LysergikProductions)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * */
+
 import core.Main;
 import core.events.SpeedLimiter;
 import core.frontend.ChatPrint;
@@ -27,6 +48,8 @@ public class SL {
         final BaseComponent limit = _speed_limit.getExtra().get(0);
 
         for (Player p: _slViewers) {
+            if (!p.isOnline()) continue;
+
             Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, () ->
                     p.sendMessage(ChatMessageType.ACTION_BAR, limit), i); i++;
         }
@@ -45,6 +68,7 @@ public class SL {
     }
 
     public static boolean isSlViewer(Player p) {
+        if (p == null) return false;
         return _slViewers.contains(p);
     }
 }

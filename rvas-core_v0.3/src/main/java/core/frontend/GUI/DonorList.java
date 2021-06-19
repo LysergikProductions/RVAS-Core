@@ -5,7 +5,7 @@ package core.frontend.GUI;
  *      that have donated to the server and details about their donation/s
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
- *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *  Copyright (C) 2021 Lysergik Productions (https://github.com/LysergikProductions)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
@@ -58,9 +58,7 @@ public class DonorList {
                 ItemMeta thisHeadMeta = newHead.getItemMeta();
                 thisHeadMeta.setDisplayName(thisDonor.getRealIGN());
 
-                boolean valid = thisDonor.isAboveThreshold() &&
-                        !DonationManager.isInvalidKey(thisDonor.getDonationKey());
-
+                boolean valid = thisDonor.isAboveThreshold();
                 String validityStr = valid ? "Valid" : "Invalid";
                 ChatColor validityClr = valid ? ChatPrint.succeed : ChatPrint.fail;
 
@@ -76,10 +74,9 @@ public class DonorList {
 
                 @SuppressWarnings("SpellCheckingInspection")
                 List<String> lore = Arrays.asList(
-                        ChatPrint.primary + thisDonor.getOfflinePlayer().getName(),
                         ChatPrint.controls + "$" + thisDonor.getSumDonated(),
                         thisDonor.getDonationKey(),
-                        validityClr + validityStr + " key!",
+                        validityClr + validityStr + "!",
                         ChatPrint.desc + "--------------------",
                         "UUID: " + thisDonor.getUserID(),
                         "Custom IGN: " + custom_ign_clr + custom_ign,

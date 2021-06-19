@@ -1,9 +1,11 @@
 package core.commands.op;
 
+import core.Main;
 import core.backend.*;
 import core.backend.ex.*;
 import core.backend.utils.Util;
 import core.backend.utils.Restart;
+import core.data.FileManager;
 import core.frontend.ChatPrint;
 
 import core.data.DonationManager;
@@ -12,7 +14,10 @@ import core.data.objects.Pair;
 import core.data.ThemeManager;
 import core.data.PlayerMeta;
 
+import java.nio.file.Files;
 import java.util.*;
+import java.util.logging.Level;
+
 import core.tasks.Analytics;
 import core.events.SpeedLimiter;
 
@@ -116,6 +121,13 @@ public class Admin implements CommandExecutor {
 
 					try { DonationManager.loadDonors();
 					} catch (Exception ignore) { sender.sendMessage(ChatPrint.fail + "Failed to reload donors.."); }
+
+					try { Files.readAllLines(FileManager.all_donor_codes.toPath())
+							.forEach(val -> DonationManager.DonorCodes.add(val.replace("\"", "").trim()));
+					} catch (Exception e) { Main.console.log(Level.WARNING, "WARN Exception while reading all.db : " + e); }
+
+					try { DonationManager.UsedDonorCodes.addAll(Files.readAllLines(FileManager.used_donor_codes.toPath()));
+					} catch (Exception e) { Main.console.log(Level.WARNING, "WARN Exception while reading used.db : " + e); }
 
 					player.sendMessage(ChatPrint.succeed + "Successfully reloaded!");
 					return true;

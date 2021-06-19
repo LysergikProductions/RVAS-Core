@@ -4,7 +4,7 @@ package core.commands.op;
  *  About: Allow ops to read and modify Donor objects stored in memory
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
- *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *  Copyright (C) 2021 Lysergik Productions (https://github.com/LysergikProductions)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
@@ -31,8 +31,10 @@ import java.util.UUID;
 import java.util.Arrays;
 import java.util.Objects;
 
-import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -77,7 +79,11 @@ public class DonorCmd implements CommandExecutor {
             });
             msg[0] = msg[0].trim();
 
-            Donor thisDonor = Objects.requireNonNull(DonationManager.getDonorByName(args[0]));
+            Donor thisDonor;
+            try { thisDonor = Objects.requireNonNull(DonationManager.getDonorByName(args[0]));
+            } catch (Exception ignore) {
+                thisDonor = new Donor(Bukkit.getServer().getOfflinePlayer(args[0]).getUniqueId(), "INVALID", 0.00);
+            }
             switch (args[1].toLowerCase()) {
 
                 case "add":
@@ -112,23 +118,17 @@ public class DonorCmd implements CommandExecutor {
                     return true;
 
                 case "key":
-
                     String newKey = args[2].trim();
 
-                    if (DonationManager.isInvalidKey(newKey)) {
-                        sender.sendMessage(ChatPrint.fail + "Invalid key."); return false; }
-
-                    if (DonationManager.DonorCodes.contains(newKey) &&
-                            !DonationManager.UsedDonorCodes.contains(newKey)) {
+                    if (!DonationManager.isInvalidKey(newKey) &&
+                            DonationManager.DonorCodes.contains(newKey) && !DonationManager.UsedDonorCodes.contains(newKey)) {
 
                         thisDonor = new Donor(thisDonor.getUserID(), newKey, thisDonor.getSumDonated());
                         DonationManager.UsedDonorCodes.add(newKey);
 
                     } else { sender.sendMessage(ChatPrint.fail + "Invalid key."); return false; }
 
-                    sender.sendMessage(ChatPrint.primary +
-                            "Successfully set donation key to " + thisDonor.getDonationKey());
-
+                    sender.sendMessage(ChatPrint.primary + "Successfully set donation key!");
                     thisDonor.updateAboveThreshold(); return true;
 
                 case "tag":

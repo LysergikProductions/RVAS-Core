@@ -9,7 +9,7 @@ package core.events;
  * 		that allows for the saving of up to 10 unique privately saved locations per op
  * 
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
- *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *  Copyright (C) 2021 Lysergik Productions (https://github.com/LysergikProductions)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
@@ -36,10 +36,11 @@ import core.frontend.GUI.DonorList;
 import core.data.PlayerMeta;
 import core.data.objects.Pair;
 import core.data.objects.Aliases;
-import core.commands.op.Speeds;
-import core.commands.op.Check;
 
 import java.util.*;
+
+import core.frontend.GUI.LagList;
+import core.frontend.GUI.SpeedList;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -175,6 +176,8 @@ public class OpListener implements Listener {
 
 			} else sender.sendMessage(ChatPrint.fail + "Nononono, zeeeeeroooo to niiiiine");
 		}
+
+		if (msg.startsWith("/setdonator ") && sender.isOp()) return;
 		
 		// prevent ops from using certain commands, but allow for admin (config.txt)
 		if (!isAdmin) {
@@ -256,7 +259,7 @@ public class OpListener implements Listener {
 	public void onInventoryClick(InventoryClickEvent event) {
 		Inventory thisInv = event.getClickedInventory();
 
-		if (thisInv == Speeds.speedGUI) event.setCancelled(true);
+		if (thisInv == SpeedList.speedGUI) event.setCancelled(true);
 		else if (thisInv == DonorList._donorGUI) event.setCancelled(true);
 		else if (!event.getWhoClicked().getGameMode().equals(GameMode.SURVIVAL) &&
 				!PlayerMeta.isAdmin((Player)event.getWhoClicked())) { event.setCancelled(true); }
@@ -267,11 +270,11 @@ public class OpListener implements Listener {
 		Inventory initiator = event.getInitiator();
 		Inventory destination = event.getDestination();
 
-		if (initiator == Speeds.speedGUI) event.setCancelled(true);
-		else if (initiator == Check.lagCheckGUI) event.setCancelled(true);
+		if (initiator == SpeedList.speedGUI) event.setCancelled(true);
+		else if (initiator == LagList.lagCheckGUI) event.setCancelled(true);
 		else if (initiator == DonorList._donorGUI) event.setCancelled(true);
-		else if (destination == Speeds.speedGUI) event.setCancelled(true);
-		else if (destination == Check.lagCheckGUI) event.setCancelled(true);
+		else if (destination == SpeedList.speedGUI) event.setCancelled(true);
+		else if (destination == LagList.lagCheckGUI) event.setCancelled(true);
 		else if (destination == DonorList._donorGUI) event.setCancelled(true);
 	}
 }

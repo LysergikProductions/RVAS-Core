@@ -28,7 +28,6 @@ import core.data.objects.Donor;
 import core.data.DonationManager;
 import core.backend.ex.Critical;
 
-import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -69,7 +68,11 @@ public class SetDonorCmd implements CommandExecutor {
 		Player donator = sender.getServer().getPlayer(args[0].trim());
 		if (donator == null) {
 			sender.sendMessage(ChatPrint.fail + "Player is not online");
-			return true;
+			return false;
+
+		} else if (DonationManager.isDonor(donator)) {
+			sender.sendMessage(ChatPrint.fail + "Player is already a donor!");
+			return false;
 		}
 
 		String key = args[1].trim();
@@ -86,16 +89,14 @@ public class SetDonorCmd implements CommandExecutor {
 			e.printStackTrace(); return false;
 		}
 
-		if (DonationManager.isValidDonor(DonationManager.getDonorByUUID(donator.getUniqueId()))) {
+		Donor thisD = DonationManager.getDonorByUUID(donator.getUniqueId());
+		if (DonationManager.isValidDonor(thisD)) {
 			Bukkit.getServer().spigot().broadcast(
 					new TextComponent("\u00A76" + donator.getName() + " just donated to the server!"));
 
-			try {
-				Objects.requireNonNull(DonationManager.getDonorByUUID(donator.getUniqueId()))
-						.sendMessage(new TextComponent(ChatPrint.controls +
-								"/w an op about setting your custom IGN, tag, and motd!"));
+			if (donator.isOnline() && thisD != null) thisD.sendMessage(new TextComponent(
+					ChatPrint.controls + "/w an op about setting your custom IGN, tag, and motd!"));
 
-			} catch (Exception ignore) { }
 			return true;
 		}
 		return false;

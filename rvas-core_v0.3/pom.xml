@@ -75,7 +75,7 @@
     </dependencies>
 
     <build>
-        <finalName>rvas-core-0.3.6-330</finalName>
+        <finalName>rvas-core-0.3.6-333</finalName>
         <plugins>
 
             <plugin>

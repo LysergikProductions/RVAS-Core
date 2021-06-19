@@ -6,6 +6,7 @@ import core.backend.utils.Util;
 import core.frontend.ChatPrint;
 import core.commands.Kit;
 import core.commands.op.Admin;
+import core.frontend.GUI.SL;
 import core.tasks.TickProcessor;
 
 import core.data.DonationManager;
@@ -161,9 +162,7 @@ public class ConnectionController implements Listener {
 		else if (!everyMsg.isEmpty()) thisPlayer.spigot().sendMessage(firstComp);
 	}
 
-	public enum MessageType {
-		JOIN, LEAVE
-	}
+	public enum MessageType { JOIN, LEAVE }
 
 	public void doJoinMessage(MessageType msg, Player player) {
 		if (player.isOp()) return;
@@ -185,24 +184,26 @@ public class ConnectionController implements Listener {
 
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
-
 		e.setQuitMessage(null);
-		if (e.getPlayer().isOp()) return;
+
+		Player leaver = e.getPlayer();
+		if (leaver.isOp()) return;
 		
-		if (!PlayerMeta.isMuted(e.getPlayer()) && !Kit.kickedFromKit.contains(e.getPlayer().getUniqueId())) {
-			doJoinMessage(MessageType.LEAVE, e.getPlayer());
-		}
-		Location l = e.getPlayer().getLocation();            //store Location floored to block
-		Admin.LogOutSpots.put(e.getPlayer().getName(), l);
-		ServerMeta.preventReconnect(e.getPlayer(), Integer.parseInt(Config.getValue("speedlimit.rc_delay_safe")));
+		if (!PlayerMeta.isMuted(leaver) && !Kit.kickedFromKit.contains(leaver.getUniqueId())) {
+			doJoinMessage(MessageType.LEAVE, leaver); }
+
+		Location l = leaver.getLocation();
+		Admin.LogOutSpots.put(leaver.getName(), l);
+		ServerMeta.preventReconnect(leaver, Integer.parseInt(Config.getValue("speedlimit.rc_delay_safe")));
+
+		SL.rmSlViewer(leaver);
 	}
 
 	private static final String[] motds = {
 		"⛏ i'm not high, we're high"  , "⛏ vanilla exploits rejoice!" , "⛏ needs more carpet" ,
-		"⛏ imagine imagining..", "⛏ what is sleep?"
-	};
+		"⛏ imagine imagining..", "⛏ what is sleep?" };
 
-	private Random r = new Random();
+	private final Random r = new Random();
 
 	private static List<String> allMotds; static {
 		try {

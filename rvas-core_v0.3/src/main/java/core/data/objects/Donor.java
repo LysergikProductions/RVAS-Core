@@ -4,7 +4,7 @@ package core.data.objects;
  *  About: The data container for players who have donated to the server
  *
  *  LICENSE: AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.en.html)
- *  Copyright (C) 2021  Lysergik Productions (https://github.com/LysergikProductions)
+ *  Copyright (C) 2021 Lysergik Productions (https://github.com/LysergikProductions)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
@@ -24,7 +24,6 @@ package core.data.objects;
 import java.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-
 import net.md_5.bungee.api.chat.TextComponent;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +47,7 @@ public class Donor {
         this.sumDonated = amountDonated;
 
         this.msgOtd = "tbd"; this.tagLine = "tbd"; this.customIGN = "tbd";
-        this.realIGN = Objects.requireNonNull(Bukkit.getServer().getPlayer(this.userID)).getName();
+        this.realIGN = Bukkit.getServer().getOfflinePlayer(this.userID).getName();
         this.validity = this.sumDonated >= 25.0;
     }
 

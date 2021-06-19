@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import core.tasks.TickProcessor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -171,6 +173,9 @@ public class SpeedLimiter implements Listener {
 						// display speed with one decimal
 						player.sendMessage("\u00A74Your speed is " + speed + ", speed limit is " + final_limit +
 								". Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s"));
+
+						if (grace <= 2) player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
+								"Slow down or be kicked in " + grace + " second" + (grace == 1 ? "" : "s")));
 					}
 					--grace;
 					gracePeriod.put(player.getUniqueId(), grace);

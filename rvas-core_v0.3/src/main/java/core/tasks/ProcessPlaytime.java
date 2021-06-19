@@ -5,7 +5,6 @@ import core.Main;
 import core.data.PlayerMeta;
 import core.events.ChatListener;
 import core.commands.VoteMute;
-import core.commands.op.Speeds;
 
 import core.backend.Config;
 import core.backend.Scheduler;
@@ -17,6 +16,7 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 
 import core.frontend.GUI.SL;
+import core.frontend.GUI.SpeedList;
 import org.bukkit.Bukkit;
 
 @Critical
@@ -77,6 +77,6 @@ public class ProcessPlaytime extends TimerTask {
 		lastTime = System.currentTimeMillis();
 
 		Scheduler.setLastTaskId("oneSecondTasks");
-		Speeds.updateGUI(); SL.dispSL();
+		SpeedList.updateGUI(); SL.dispSL();
 	}
 }
